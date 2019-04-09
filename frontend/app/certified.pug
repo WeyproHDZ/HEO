@@ -1,0 +1,25 @@
+extends layouts/default.pug
+
+block value
+  - var currentPage = 'start';
+
+block main
+  section.banner-container(style="background-image: url('images/banner_start.png')")
+    .block_container
+      .restrict.allpadding
+        h1 認證FB會員
+      
+      .single-item-restrict  
+        .single-item-container
+          .certified-content
+            h2 SELENA瑋瑋
+            .fb-photo
+              img(src="images/fb-photo.png")
+            form(action="")
+              .controls_group
+                input(type="checkbox" id="real")
+                label(for="real") 申請真人帳號(可獲取更多免費時間與更多獎勵金)
+            //- 出現錯誤時顯示下方error
+            .error *無法通過認證！請上傳FB大頭貼後再試一次。
+            a.btn(href="operate.html") 下一步
+            

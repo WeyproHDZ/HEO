@@ -1,0 +1,286 @@
+@include susy-breakpoint(768px, 12) {
+  #vote-wrapper {
+    .vote-container {
+      .vote-item {
+        @include gallery(6 of 12 .2);
+      }
+    }
+  }
+
+  // Index
+  .related_instructions {
+    padding: 2em 0;
+    h2 {
+      font-size: 3.25em;
+    }
+  }
+  .news {
+    .block_inner {
+      display: flex;
+    }
+    .title {
+      width: 110px;
+      margin-bottom: 0;
+      border-right: $gray-light 1px solid;
+      box-sizing: border-box;
+    }
+    ul {
+      width: calc(100% - 110px);
+      padding-left: 2.5em;
+      box-sizing: border-box;
+    }
+  }
+  .promote-section {
+    p {
+      margin-bottom: 2em;
+    }
+  }
+
+  // About
+  .about-bg {
+    &.purple {
+      background-color: $gray-purple;
+      border-radius: 8px;
+      .about-bg-block {
+        .intro-img {
+          padding-left: 2em;
+          padding-right: 0;
+        }
+      }
+    }
+    .about-bg-block {
+      display: table;
+      .intro-img {
+        display: table-cell;
+        width: calc(40% - 2em);
+        padding-right: 2em;
+        vertical-align: middle;
+        &.show {
+          display: table-cell;
+        }
+        &.hide {
+          display: none;
+        }
+      }
+      .intro-content {
+        display: table-cell;
+        width: 60%;
+        vertical-align: middle;
+        text-align: left;
+        h2 {
+          color: $main;
+        }
+      }
+    }
+    &.linkto-hdz {
+      padding-bottom: .5em;
+    }
+  }
+  .about-content {
+    margin: 0 auto 2em;
+  }
+  // About Page
+.banner-container {
+	h1 {
+    font-size: 3.25em;
+	}
+}
+
+  // Support
+  
+  .support-menu {
+    float: left;
+    width: calc(35% - 1em);
+    margin-right: 1em;
+  }
+  .support-content {
+    float: left;
+    width: 65%;
+  }
+  
+  .reduced, .opener {
+    display: none;
+  }
+  .all-menu {
+    display: block !important;
+    position: relative;
+    box-shadow: none;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 0;
+  }
+
+  .scroll-top {
+    margin: 0 auto 0 auto;
+    margin-left: calc(67.5% - 60px - 1em);
+  }
+
+  // Operate
+.operate-section {
+  .single-item-container {
+    margin: 1em auto 1em 0;
+  }
+  .instruction {
+    .about-content {
+      margin: 1em auto 1em 2em;
+    }
+  }
+}
+
+// Result
+.result-section {
+  padding-top: 4em;
+  .block_container {
+    min-height: calc(100vh - 74px - 257px);
+  }
+}
+.result-block {
+  max-width: 600px;
+}
+
+  // Free
+  .common_form {
+    display: flex;
+    align-items: center;
+  }
+
+  // Stored
+  .stored {
+    padding: 3em 1.5em 4.5em;
+    .block_title.big {
+      margin-bottom: 1em;
+    }
+    .instructions_stored {
+      margin-bottom: 3em;
+    }
+    .stored_form_blocks {
+      .form_block {
+        margin-bottom: 3em;
+      }
+      .submit {
+        margin-top: 3.5em;
+      }
+    }
+    .price_choose {
+      .item {
+        @include gallery(1 of 6 0.1);
+      }
+    }
+  }
+
+  // Member
+  .member {
+    .member_navigation {
+      margin-bottom: 1.5em;
+      margin-top: 2em;
+      .item {
+        text-align: left;
+        a {
+          padding: 1em;
+        }
+        .title {
+          font-size: 1.25em;
+        }
+        .text {
+          display: block;
+        }
+      }
+    }
+    .member_container {
+      .content-block {
+        .main-content {
+          .transfer-number {
+            float: left;
+            width: 70%;
+            &.caculate {
+              width: 100%;
+            }
+          }
+          .transfer-submit {
+            float: right;
+            width: 30%;
+            .btn {
+              float: right;
+            }
+          }
+        }
+      }
+    }
+  }
+  .buy-vip-wrap{
+    h2 {
+      margin-top: 0.5em;
+    }
+  }
+  .block_container {
+    min-height: calc(100vh - 74px - 197px);
+  }
+  // Login
+  .login {
+    display: flex;
+    align-items: center;
+    padding: 2em 1.5em 4em 1.5em;
+    .login_items {
+      display: flex;
+      .item {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        width: calc((100% - 1em) / 2);
+        margin-right: 1em;
+        margin-bottom: 0;
+        &:last-child {
+          margin-right: 0;
+        }
+      }
+      .instruction {
+        display: flex;
+        justify-content: center;
+        width: 50%;
+      }
+    }
+  }
+
+  // Success Page
+  .member-success {
+    text-align: center;
+    background-image: url('../images/bg_success.png');
+    background-size: cover;
+    background-position: center;
+    .block_container {
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      height: calc(100vh - 74px - 197px);
+      margin: 0 auto;
+    }
+
+    .success-content {
+      padding: 5em 1em;
+      margin: auto;
+      h1 {
+        color: $gray-dark;
+      }
+      .btn-wrap {
+        .btn {
+          margin: 0 1em;
+        }
+      }
+    }
+
+    .transfer-content {
+      .main-content {
+        padding: 1.8em 1em;
+        .transfer-account {
+          width: calc(100% - 150px);
+        }
+        .transfer-submit {
+          width: 150px;
+        }
+      }
+    }
+  }
+
+
+}

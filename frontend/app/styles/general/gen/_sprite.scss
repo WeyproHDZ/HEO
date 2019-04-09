@@ -1,0 +1,274 @@
+// SCSS variables are information about icon's compiled state, stored under its original file name
+//
+// .icon-home {
+//   width: $icon-home-width;
+// }
+//
+// The large array-like variables contain all information about a single icon
+// $icon-home: x y offset_x offset_y width height total_width total_height image_path;
+//
+// At the bottom of this section, we provide information about the spritesheet itself
+// $spritesheet: width height image $spritesheet-sprites;
+$icon-arrow-name: 'icon_arrow';
+$icon-arrow-x: 50px;
+$icon-arrow-y: 40px;
+$icon-arrow-offset-x: -50px;
+$icon-arrow-offset-y: -40px;
+$icon-arrow-width: 12px;
+$icon-arrow-height: 8px;
+$icon-arrow-total-width: 90px;
+$icon-arrow-total-height: 82px;
+$icon-arrow-image: '../images/sprite.png';
+$icon-arrow: (50px, 40px, -50px, -40px, 12px, 8px, 90px, 82px, '../images/sprite.png', 'icon_arrow', );
+$icon-arrow-down-name: 'icon_arrow_down';
+$icon-arrow-down-x: 32px;
+$icon-arrow-down-y: 50px;
+$icon-arrow-down-offset-x: -32px;
+$icon-arrow-down-offset-y: -50px;
+$icon-arrow-down-width: 22px;
+$icon-arrow-down-height: 22px;
+$icon-arrow-down-total-width: 90px;
+$icon-arrow-down-total-height: 82px;
+$icon-arrow-down-image: '../images/sprite.png';
+$icon-arrow-down: (32px, 50px, -32px, -50px, 22px, 22px, 90px, 82px, '../images/sprite.png', 'icon_arrow_down', );
+$icon-blog-white-name: 'icon_blog_white';
+$icon-blog-white-x: 0px;
+$icon-blog-white-y: 0px;
+$icon-blog-white-offset-x: 0px;
+$icon-blog-white-offset-y: 0px;
+$icon-blog-white-width: 50px;
+$icon-blog-white-height: 50px;
+$icon-blog-white-total-width: 90px;
+$icon-blog-white-total-height: 82px;
+$icon-blog-white-image: '../images/sprite.png';
+$icon-blog-white: (0px, 0px, 0px, 0px, 50px, 50px, 90px, 82px, '../images/sprite.png', 'icon_blog_white', );
+$icon-close-name: 'icon_close';
+$icon-close-x: 50px;
+$icon-close-y: 0px;
+$icon-close-offset-x: -50px;
+$icon-close-offset-y: 0px;
+$icon-close-width: 40px;
+$icon-close-height: 40px;
+$icon-close-total-width: 90px;
+$icon-close-total-height: 82px;
+$icon-close-image: '../images/sprite.png';
+$icon-close: (50px, 0px, -50px, 0px, 40px, 40px, 90px, 82px, '../images/sprite.png', 'icon_close', );
+$icon-link-name: 'icon_link';
+$icon-link-x: 54px;
+$icon-link-y: 50px;
+$icon-link-offset-x: -54px;
+$icon-link-offset-y: -50px;
+$icon-link-width: 21px;
+$icon-link-height: 18px;
+$icon-link-total-width: 90px;
+$icon-link-total-height: 82px;
+$icon-link-image: '../images/sprite.png';
+$icon-link: (54px, 50px, -54px, -50px, 21px, 18px, 90px, 82px, '../images/sprite.png', 'icon_link', );
+$icon-search-name: 'icon_search';
+$icon-search-x: 0px;
+$icon-search-y: 50px;
+$icon-search-offset-x: 0px;
+$icon-search-offset-y: -50px;
+$icon-search-width: 32px;
+$icon-search-height: 32px;
+$icon-search-total-width: 90px;
+$icon-search-total-height: 82px;
+$icon-search-image: '../images/sprite.png';
+$icon-search: (0px, 50px, 0px, -50px, 32px, 32px, 90px, 82px, '../images/sprite.png', 'icon_search', );
+$icon-arrow-2x-name: 'icon_arrow-2x';
+$icon-arrow-2x-x: 100px;
+$icon-arrow-2x-y: 80px;
+$icon-arrow-2x-offset-x: -100px;
+$icon-arrow-2x-offset-y: -80px;
+$icon-arrow-2x-width: 24px;
+$icon-arrow-2x-height: 16px;
+$icon-arrow-2x-total-width: 180px;
+$icon-arrow-2x-total-height: 164px;
+$icon-arrow-2x-image: '../images/sprite-2x.png';
+$icon-arrow-2x: (100px, 80px, -100px, -80px, 24px, 16px, 180px, 164px, '../images/sprite-2x.png', 'icon_arrow-2x', );
+$icon-arrow-down-2x-name: 'icon_arrow_down-2x';
+$icon-arrow-down-2x-x: 64px;
+$icon-arrow-down-2x-y: 100px;
+$icon-arrow-down-2x-offset-x: -64px;
+$icon-arrow-down-2x-offset-y: -100px;
+$icon-arrow-down-2x-width: 44px;
+$icon-arrow-down-2x-height: 44px;
+$icon-arrow-down-2x-total-width: 180px;
+$icon-arrow-down-2x-total-height: 164px;
+$icon-arrow-down-2x-image: '../images/sprite-2x.png';
+$icon-arrow-down-2x: (64px, 100px, -64px, -100px, 44px, 44px, 180px, 164px, '../images/sprite-2x.png', 'icon_arrow_down-2x', );
+$icon-blog-white-2x-name: 'icon_blog_white-2x';
+$icon-blog-white-2x-x: 0px;
+$icon-blog-white-2x-y: 0px;
+$icon-blog-white-2x-offset-x: 0px;
+$icon-blog-white-2x-offset-y: 0px;
+$icon-blog-white-2x-width: 100px;
+$icon-blog-white-2x-height: 100px;
+$icon-blog-white-2x-total-width: 180px;
+$icon-blog-white-2x-total-height: 164px;
+$icon-blog-white-2x-image: '../images/sprite-2x.png';
+$icon-blog-white-2x: (0px, 0px, 0px, 0px, 100px, 100px, 180px, 164px, '../images/sprite-2x.png', 'icon_blog_white-2x', );
+$icon-close-2x-name: 'icon_close-2x';
+$icon-close-2x-x: 100px;
+$icon-close-2x-y: 0px;
+$icon-close-2x-offset-x: -100px;
+$icon-close-2x-offset-y: 0px;
+$icon-close-2x-width: 80px;
+$icon-close-2x-height: 80px;
+$icon-close-2x-total-width: 180px;
+$icon-close-2x-total-height: 164px;
+$icon-close-2x-image: '../images/sprite-2x.png';
+$icon-close-2x: (100px, 0px, -100px, 0px, 80px, 80px, 180px, 164px, '../images/sprite-2x.png', 'icon_close-2x', );
+$icon-link-2x-name: 'icon_link-2x';
+$icon-link-2x-x: 108px;
+$icon-link-2x-y: 100px;
+$icon-link-2x-offset-x: -108px;
+$icon-link-2x-offset-y: -100px;
+$icon-link-2x-width: 42px;
+$icon-link-2x-height: 36px;
+$icon-link-2x-total-width: 180px;
+$icon-link-2x-total-height: 164px;
+$icon-link-2x-image: '../images/sprite-2x.png';
+$icon-link-2x: (108px, 100px, -108px, -100px, 42px, 36px, 180px, 164px, '../images/sprite-2x.png', 'icon_link-2x', );
+$icon-search-2x-name: 'icon_search-2x';
+$icon-search-2x-x: 0px;
+$icon-search-2x-y: 100px;
+$icon-search-2x-offset-x: 0px;
+$icon-search-2x-offset-y: -100px;
+$icon-search-2x-width: 64px;
+$icon-search-2x-height: 64px;
+$icon-search-2x-total-width: 180px;
+$icon-search-2x-total-height: 164px;
+$icon-search-2x-image: '../images/sprite-2x.png';
+$icon-search-2x: (0px, 100px, 0px, -100px, 64px, 64px, 180px, 164px, '../images/sprite-2x.png', 'icon_search-2x', );
+$spritesheet-width: 90px;
+$spritesheet-height: 82px;
+$spritesheet-image: '../images/sprite.png';
+$spritesheet-sprites: ($icon-arrow, $icon-arrow-down, $icon-blog-white, $icon-close, $icon-link, $icon-search, );
+$spritesheet: (90px, 82px, '../images/sprite.png', $spritesheet-sprites, );
+$retina-spritesheet-width: 180px;
+$retina-spritesheet-height: 164px;
+$retina-spritesheet-image: '../images/sprite-2x.png';
+$retina-spritesheet-sprites: ($icon-arrow-2x, $icon-arrow-down-2x, $icon-blog-white-2x, $icon-close-2x, $icon-link-2x, $icon-search-2x, );
+$retina-spritesheet: (180px, 164px, '../images/sprite-2x.png', $retina-spritesheet-sprites, );
+
+// These "retina group" variables are mappings for the naming and pairing of normal and retina sprites.
+//
+// The list formatted variables are intended for mixins like `retina-sprite` and `retina-sprites`.
+$icon-arrow-group-name: 'icon_arrow';
+$icon-arrow-group: ('icon_arrow', $icon-arrow, $icon-arrow-2x, );
+$icon-arrow-down-group-name: 'icon_arrow_down';
+$icon-arrow-down-group: ('icon_arrow_down', $icon-arrow-down, $icon-arrow-down-2x, );
+$icon-blog-white-group-name: 'icon_blog_white';
+$icon-blog-white-group: ('icon_blog_white', $icon-blog-white, $icon-blog-white-2x, );
+$icon-close-group-name: 'icon_close';
+$icon-close-group: ('icon_close', $icon-close, $icon-close-2x, );
+$icon-link-group-name: 'icon_link';
+$icon-link-group: ('icon_link', $icon-link, $icon-link-2x, );
+$icon-search-group-name: 'icon_search';
+$icon-search-group: ('icon_search', $icon-search, $icon-search-2x, );
+$retina-groups: ($icon-arrow-group, $icon-arrow-down-group, $icon-blog-white-group, $icon-close-group, $icon-link-group, $icon-search-group, );
+
+// The provided mixins are intended to be used with the array-like variables
+//
+// .icon-home {
+//   @include sprite-width($icon-home);
+// }
+//
+// .icon-email {
+//   @include sprite($icon-email);
+// }
+//
+// Example usage in HTML:
+//
+// `display: block` sprite:
+// <div class="icon-home"></div>
+//
+// To change `display` (e.g. `display: inline-block;`), we suggest using a common CSS class:
+//
+// // CSS
+// .icon {
+//   display: inline-block;
+// }
+//
+// // HTML
+// <i class="icon icon-home"></i>
+@mixin sprite-width($sprite) {
+  width: nth($sprite, 5);
+}
+
+@mixin sprite-height($sprite) {
+  height: nth($sprite, 6);
+}
+
+@mixin sprite-position($sprite) {
+  $sprite-offset-x: nth($sprite, 3);
+  $sprite-offset-y: nth($sprite, 4);
+  background-position: $sprite-offset-x  $sprite-offset-y;
+}
+
+@mixin sprite-image($sprite) {
+  $sprite-image: nth($sprite, 9);
+  background-image: url(#{$sprite-image});
+}
+
+@mixin sprite($sprite) {
+  @include sprite-image($sprite);
+  @include sprite-position($sprite);
+  @include sprite-width($sprite);
+  @include sprite-height($sprite);
+}
+
+// The `retina-sprite` mixin sets up rules and a media query for a sprite/retina sprite.
+//   It should be used with a "retina group" variable.
+//
+// The media query is from CSS Tricks: https://css-tricks.com/snippets/css/retina-display-media-query/
+//
+// $icon-home-group: ('icon-home', $icon-home, $icon-home-2x, );
+//
+// .icon-home {
+//   @include retina-sprite($icon-home-group);
+// }
+@mixin sprite-background-size($sprite) {
+  $sprite-total-width: nth($sprite, 7);
+  $sprite-total-height: nth($sprite, 8);
+  background-size: $sprite-total-width $sprite-total-height;
+}
+
+@mixin retina-sprite($retina-group) {
+  $normal-sprite: nth($retina-group, 2);
+  $retina-sprite: nth($retina-group, 3);
+  @include sprite($normal-sprite);
+
+  @media (-webkit-min-device-pixel-ratio: 2),
+         (min-resolution: 192dpi) {
+    @include sprite-image($retina-sprite);
+    @include sprite-background-size($normal-sprite);
+  }
+}
+
+// The `sprites` mixin generates identical output to the CSS template
+//   but can be overridden inside of SCSS
+//
+// @include sprites($spritesheet-sprites);
+@mixin sprites($sprites) {
+  @each $sprite in $sprites {
+    $sprite-name: nth($sprite, 10);
+    .#{$sprite-name} {
+      @include sprite($sprite);
+    }
+  }
+}
+
+// The `retina-sprites` mixin generates a CSS rule and media query for retina groups
+//   This yields the same output as CSS retina template but can be overridden in SCSS
+//
+// @include retina-sprites($retina-groups);
+@mixin retina-sprites($retina-groups) {
+  @each $retina-group in $retina-groups {
+    $sprite-name: nth($retina-group, 1);
+    .#{$sprite-name} {
+      @include retina-sprite($retina-group);
+    }
+  }
+}

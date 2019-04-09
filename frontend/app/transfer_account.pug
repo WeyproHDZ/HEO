@@ -1,0 +1,18 @@
+extends layouts/default.pug
+
+block value
+  - var currentPage = 'member';
+
+block main
+  section.banner-container.member-success(style="background-image: url('images/bg_success.png')")
+   .block_container.restrict-small
+      .transfer-content
+        h1 請輸入欲轉入的 HDz 帳號
+        .main-content
+          .transfer-account
+            input.transfer(type="text", name="transfer", placeholder="請填寫您的HDz帳號")
+          .transfer-submit
+            a.btn.ajax-popup-link(href="transfer_confirm.html" title="轉出") 轉出
+        .btn-wrap
+          a.btn.cancel(href="member_reward.html") 查看紀錄
+          a.btn(href="https://www.hdzbulk.com/index.php/tw", target="_blank") 前往HDz

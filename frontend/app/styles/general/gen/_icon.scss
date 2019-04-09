@@ -1,0 +1,14 @@
+*[class^='icon_'] {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.icon_arrow {
+  @include retina-sprite($icon-arrow-group);
+}
+.icon_arrow_down {
+  @include retina-sprite($icon-arrow-down-group);
+}
+.icon_link {
+  @include retina-sprite($icon-link-group);
+}

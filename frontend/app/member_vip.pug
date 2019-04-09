@@ -1,0 +1,88 @@
+extends layouts/default.pug
+
+block value
+  - var currentPage = 'member';
+
+block main
+  section.member.block_container
+    .block_inner
+      //- VIP會員才加class="member_vip"↓
+      .member_navigation.member_vip
+        .item
+          a(href="member.html", title="會員管理")
+            .title 會員管理
+            .text
+              | 真人帳號、開放社群功能
+        .item
+          a(href="member_reward.html", title="獎勵金")
+            .title 獎勵金
+            .text
+              | 回饋的獎勵金紀錄、申請轉出獎勵金
+        .item
+          a(href="member_history.html", title="使用次數")
+            .title 使用次數
+            .text
+              | 會員臉書帳號授權服務使用次數
+        //- VIP會員才顯示↓
+        .item
+          a(href="member_vip.html", title="使用次數")
+            .title VIP
+            .text
+              | VIP購買紀錄
+        
+      
+      .member_container
+        .content-block
+          h1 VIP會員
+          .buy-vip-wrap
+            h2 剩餘天數
+              span.font-purple  25
+            a.btn(href="vip.html", title="購買VIP") 購買VIP
+          .text 購買HeO平台的月制VIP後，使用冷卻會大幅度下降，並且HeO承諾您的帳號不會加入互惠被其他人使用，至於開放買家購買您帳號服務您也可以自由選擇開放或關閉
+
+        .content-block
+          .content-block-title VIP紀錄列表
+          .stored_history
+            .history
+              .rwd_table_wrapper
+                table
+                  thead
+                    tr
+                      th 購買日期
+                      th 到期日期
+                      th 購買金額
+                      th 使用天數
+                      th 備註
+     
+                  tbody
+                    each i in Array(5)
+                      tr
+                        td.align_left 2019/03/10
+                        td.align_left 2019/04/10
+                        td 500
+                        td 30
+                        td
+      
+                      tr
+                        td.align_left 2019/03/18
+                        td.align_left 2019/04/18
+                        td 1000
+                        td 60
+                        td 
+    
+       
+//- block JS
+//-   script.
+//-     $(function() {
+//-       var noty = new Noty({
+//-         type: 'warning',
+//-         layout: 'bottomLeft',
+//-         theme: 'metroui',
+//-         text: '公告文字公告文字公告文字公告文字公告文字公告文字公告文字公告文字',
+//-         timeout: 60000,
+//-         progressBar: true,
+//-         closeWith: ['click', 'button']
+//-       })
+      
+//-       noty.show();
+//-     });

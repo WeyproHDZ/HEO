@@ -1,0 +1,20 @@
+extends layouts/default.pug
+
+block value
+  - var currentPage = 'start';
+
+block main
+  section.banner-container.result-section(style="background-image: url('images/banner_start.png')")
+    .block_container
+      .restrict.allpadding
+        //- 進行中的運行狀態↓      
+        //- 冷卻的運行狀態↓
+        .result-block
+          h1 冷卻中...        
+          .controls_group
+            .result-title 哎呀！系統冷卻時間未到！
+            
+          .controls_group
+            .result-title 請稍候
+              span.wait-sec 600
+              | 秒再使用！

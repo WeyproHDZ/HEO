@@ -1,0 +1,18 @@
+{
+  "name": "hdz-subsite",
+  "description": "HDz website",
+  "authors": [
+    "Jessie Liu <qqopp45@gmail.com>"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.1",
+    "magnific-popup": "^1.1.0",
+    "slick-carousel": "^1.8.0",
+    "jquery.scrollTo": "^2.1.2",
+    "noty": "^3.1.4"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.3.0"
+  }
+}

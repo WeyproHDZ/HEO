@@ -1,0 +1,41 @@
+extends layouts/default.pug
+
+block value
+  - var currentPage = 'start';
+
+block main
+  section.banner-container.operate-section(style="background-image: url('images/banner_start.png')")
+    .block_container
+      .restrict.allpadding
+        h1.pull_left 互惠一起來
+        .online-wrap
+          .online 目前在線人數
+          span.online-number 88
+          | 人
+          .online / 
+          .online 使用人數 2886 人
+      
+        .single-item-container
+          .certified-content  
+            form(action="").operate-form
+              .controls_group
+                label(for="post") 請輸入臉書的貼文網址或是貼文編號(POST ID)
+                input(type="text" id="post" placeholder="POST ID 或FB貼文/影片/照片網址")
+                //- 出現錯誤時顯示下方error
+                .error *請輸入正確網址或編號。
+              .controls_group
+                label(for="amount") 請設定讚數
+                input(type="text" id="amount" placeholder="88")
+                //- 出現錯誤時顯示下方error
+                .error *請輸入純數字。
+            a.btn(href="result.html" title="下一步") 下一步
+        
+        .instruction
+          .content-block
+            .about-content
+              h3 使用說明
+              ul
+                li
+                  p 「誰可以追蹤我」、「公開貼文的留言」、「公開的個人檔案資料」全部都調成為「公開」 
+                li
+                  p 發布的貼文務必設置為「公開」

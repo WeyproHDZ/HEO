@@ -1,0 +1,25 @@
+nav.sb_menu
+  //a標籤的 class 加入 current 表示現在所在頁面
+  ul
+    li
+      a(href="login.html", title="免費使用", class={current:currentPage === 'login'}) 免費使用
+    li
+      a(href="about.html", title="關於我們", class={current:currentPage === 'about'}) 關於我們
+    li
+      a(href="support.html", title="使用教學", class={current:currentPage === 'support'}) 使用教學
+    //- 登入時才顯示VIP↓
+    li
+      a(href="vip.html", title="購買VIP", class={current:currentPage === 'vip'}) 購買VIP
+  .divider
+  //↓未登入時顯示↓
+  ul.fb-login
+    li
+      //- 一般會員顯示↓
+      a(href="member.html", title="登入", class={current:currentPage === 'login'}) 會員中心
+      //- VIP會員顯示↓
+      a(href="login.html", title="登入", class={current:currentPage === 'login'}) VIP-30天
+    li
+      a(href="https://www.hdzbulk.com/index.php/tw", target="_blank") HDz行銷平台
+    li
+      a.logout(href="javascript:;") 登出
+  //↑未登入時顯示↑

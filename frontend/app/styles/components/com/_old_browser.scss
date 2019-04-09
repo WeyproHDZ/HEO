@@ -1,0 +1,31 @@
+/*----Old Browser----*/
+.old_browser {
+    position: fixed;
+    z-index: 99999;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 30px 0;
+    background-color: $main-brown;
+    text-align: center;
+    .old_browser_inner {
+        color: #fff;
+        .oops {
+            font-size: 4em;
+            font-weight: bold;
+        }
+        .oops_title {
+            margin-bottom: 30px;
+            font-size: 32px;
+            font-weight: bold;
+        }
+        p {
+            margin: 30px 0;
+        }
+        a {
+            color: $main-yellow;
+            text-decoration: underline;
+        }
+    }
+}

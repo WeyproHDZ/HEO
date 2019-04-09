@@ -1,0 +1,27 @@
+extends layouts/default.pug
+
+block value
+  - var currentPage = 'start';
+
+block main
+  section.banner-container.result-section(style="background-image: url('images/banner_start.png')")
+    .block_container
+      .restrict.allpadding
+        .result-block
+          h1 完 成！        
+          .controls_group
+            .result-title 完成運行的貼文網址：
+            a.result-text(href="https://www.tfoodies.com", target="_blank") https://www.facebook.com/trulyfoodies/
+              .icon_link
+          .controls_group
+            .result-title 需求數量：
+            .result-text 88
+          .controls_group
+            .result-title 目前完成數量：
+            .result-text 88
+        .btn-wrap
+          a.btn(href="operate.html", title="互惠") 互惠Again!
+          a.btn(href="member.html", title="會員中心") 會員中心
+
+       
+

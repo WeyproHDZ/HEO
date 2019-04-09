@@ -1,0 +1,43 @@
+@include susy-breakpoint(1024px, 12) {
+	// Header Nav
+	.head_nav {
+    display: block;
+    width: calc(100% - 252px - 1em);
+    float: right;
+    line-height: 40px;
+    text-align: right;
+    ul {
+      width: auto;
+      display: inline-block;
+      vertical-align: middle;
+      li {
+        display: inline-block;
+        margin-right: 2rem;
+        font-size: 1.125em;
+        &:last-child {
+          margin-right: 0;
+        }
+        a {
+          color: $white;
+          &:hover, &.current {
+            color: $main-green;
+          }
+        }
+        a.id_vip {
+          color: $main-green;
+          &:hover {
+            color: darken($main-green, 10%);
+          }
+        }
+      }
+    }
+    .divider {
+      display: inline-block;
+      width: 1px;
+      height: 20px;
+      margin: 0 2.5em;
+      background-color: $white;
+      vertical-align: middle;
+    }
+	}
+}

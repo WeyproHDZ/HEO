@@ -1,0 +1,19 @@
+.row {
+  @extend .clear;
+  .grid {
+    margin-bottom: 1.5em;
+  }
+}
+
+@include breakpoint(768px) {
+  .row {
+    .grid {
+      &.g_6_12 {
+        @include span(1 of 2 0.05);
+      }
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+}

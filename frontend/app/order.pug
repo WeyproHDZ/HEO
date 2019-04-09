@@ -1,0 +1,46 @@
+extends layouts/default.pug
+
+block value
+  - var currentPage = 'member';
+
+block main
+  section.banner-container.member-success(style="background-image: url('images/bg_success.png')")
+   .block_container
+      .success-content
+        h2 購買VIP
+        .rwd_table_wrapper
+          table
+            thead
+              tr
+                th 類別
+                th 內容
+            tbody
+              tr
+                td 商品說明
+                td 購買HeO臉書互惠系統VIP
+              //↓使用超商付款時顯示↓
+              //
+                <tr>
+                  <td>代碼</td>
+                  <td><big>LLL181164640928</big><br />(請記下來至7-11 / 全家 / 萊爾富 / OK 做繳費)</td>
+                </tr>
+              //↑使用超商付款時顯示↑
+              //↓使用銀行付款時顯示↓
+              tr
+                td 銀行代碼
+                td #[big 007]&nbsp;第一銀行
+              tr
+                td 銀行代碼
+                td #[big 928374119438528395]#[br](轉帳帳號為一次性，請勿多次轉帳)
+              //↑使用銀行付款時顯示↑
+              tr
+                td 實際付款金額
+                td NT$&nbsp;#[big 750]&nbsp;元#[br](包含系統手續費)
+              tr
+                td 繳費期限
+                td 2018/05/03 10:36:58
+              tr
+                td VIP天數
+                td #[big 60] 天
+        p.font_gray.align_center
+          | 前往&nbsp;&gt;&nbsp;#[a.font-purple(href="member_vip.html") 會員中心]

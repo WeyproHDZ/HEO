@@ -1,0 +1,42 @@
+#header {
+	position: relative;
+	z-index: 998;
+	width: 100%;
+	padding: 1em;
+	box-sizing: border-box;
+	background-color: $main;
+	@extend .transition;
+	&.scroll {
+		box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+	}
+	.header_inner {
+		@extend .clear;
+		a {
+			cursor: pointer;
+		}
+	}
+	.head_logo {
+		display: block;
+		width: 252px;
+		max-width: calc(100% - 40px - 1em);
+		float: left;
+		img {
+			display: block;
+		}
+	}
+
+}
+
+#header-sticky-wrapper {
+  position: relative;
+	z-index: 998;
+}
+
+@include breakpoint(1024px) {
+	#header {
+	  .header_inner {
+	    max-width: 1100px;
+			margin: 0 auto;
+		}
+	}
+}

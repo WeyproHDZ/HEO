@@ -1,0 +1,132 @@
+nav {
+    ul {
+    	list-style: none;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        @extend .clear;
+    }
+}
+
+// Header Nav
+.head_nav {
+	display: none;
+	.fb-login {
+		margin-left: 1.5em;
+		line-height: 38px;
+		li {
+			padding: 0;
+			font-size: 15px;
+			line-height: 32px;
+			margin-right: 1em;
+			border-left: 1px solid rgba($color: #FFF, $alpha: 0.6);
+			a {
+				font-size: 15px;
+				padding: .3em 1em;
+				border: 1px solid $white;
+				border-radius: 50px;
+				&:hover {
+					color: $main-green;
+					border: 1px solid $main-green;
+				}
+				&.logout {
+					border: none;
+				}
+			}
+			&:first-child {
+				border-left: none;
+			}
+			&:last-child {
+				padding-left: 1em;
+				a {
+					color: $main-green;
+					border: 1px solid $main-green;
+					&:hover {
+						color: $main-green-light;
+						border: 1px solid $main-green-light;
+					}
+				}
+
+			}
+		}
+	}
+}
+
+// Slide Bar
+#sideBar {
+	display: none;
+	position: fixed;
+	z-index: 999;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	padding: 4em 1.5em;
+	box-sizing: border-box;
+	background-color: $main;
+	.sideBar_inner {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		min-height: 100%;
+	}
+	.sb_logo {
+		max-width: 252px;
+		margin: 0 auto 1rem;
+		text-align: center;
+		font-size: 0;
+	}
+	.sb_menu {
+		ul {
+			li {
+				position: relative;
+				text-align: center;
+				a {
+					display: inline-block;
+					padding: 0.5em;
+					color: $white;
+					font-size: 1.25em;
+					&:hover, &.current {
+						color: $main-green;
+					}
+				}
+				a.id_vip {
+					color: $main-green;
+					&:hover {
+						color: darken($main-green, 10%);
+					}
+				}
+			}
+		}
+		.divider {
+			width: 50px;
+			height: 1px;
+			margin: 0.8em auto;
+			background-color: $white;
+		}
+		.fb-login {
+			padding-top: 1em;
+			li {
+				margin-bottom: 1em;
+				a {
+					border: 1px solid $white;
+					border-radius: 50px;
+					padding: .3em 1em;
+					&.logout {
+						border: none;
+					}
+					&:hover {
+						border: 1px solid $main-green;
+					}
+				}
+				&:nth-child(2) {
+					a {
+						border: 1px solid $main-green;
+						color: $main-green;
+					}
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,101 @@
+extends layouts/default.pug
+
+block value
+  - var currentPage = 'about';
+
+block main
+  section.banner-container(style="background-image: url('images/banner.png')")
+    .restrict.allpadding
+      h1 VIP 會員
+      .content-block
+        .about-content
+          p 購買HeO平台的月制VIP後，使用冷卻會大幅度下降，並且HeO承諾您的帳號不會加入互惠被其他人使用，至於開放買家購買您帳號服務您也可以自由選擇開放或關閉#[br]
+            |(VIP默認互惠關閉不被使用，授權獎金服務可自由決定是否開放使用)
+
+          ul
+            li(data-num="(ㄧ)") VIP屬於付費服務。
+            li(data-num="(二)") 若非台灣使用者，可以聯繫管理員使用「PayPal」或「WeChat微信錢包」「SKrill」儲值。
+            li(data-num="(三)") 可使用「超商（7-11、全家、萊爾富、OK）代碼繳費」、「轉帳付款」、「信用卡」儲值。
+            li(data-num="(四)") 
+              strong 注意儲值之點數無法進行退款 （不接受任何原因，儲值後即同意規定）。
+            li(data-num="(五)") 我們是使用第三方金流「EZpay」，讓你付款安心無疑！
+            li(data-num="(六)") 儲值金額10000元（含）以上只能使用「超商代碼繳費」或「轉帳付款」，9999元以下皆可使用，超過10000元以上若需要使用「信用卡」請聯繫管理員詢問處理
+           
+          
+  section.vip-container
+    .restrict.allpadding
+      form.vip_form(action="order.html")
+        .form_block
+          h2.title 購買金額(新台幣)
+          .content-block
+            .price_choose
+              .item
+                label
+                  input(type="radio", name="price", checked)
+                  | 500元(30天)
+              .item
+                label
+                  input(type="radio", name="price")
+                  | 750元(45天)
+              .item
+                label
+                  input(type="radio", name="price")
+                  | 1000元(75天)
+              .item
+                label
+                  input(type="radio", name="price")
+                  | 1500元(125天)
+              .item
+                label
+                  input(type="radio", name="price")
+                  | 750元(45天)
+              .item
+                label
+                  input(type="radio", name="price")
+                  | 1000元(75天)
+              .item
+                label
+                  input(type="radio", name="price")
+                  | 1500元(125天)
+              .item
+                label
+                  input(type="radio", name="price")
+                  | 2000元(200天)
+              .item
+                label
+                  input(type="radio", name="price")
+                  | 2500元(250天)
+                  //- span.font_green (不支援信用卡服務/ 反利7%)
+
+        .form_block
+          h2.title 選擇付款方式
+          .content-block
+            .content
+              .payment_method
+                .item
+                  input#payment1(type="radio", name="payment", checked)
+                  .text
+                    label(for="payment1") 超商代碼繳費(7-11、全家、萊爾富、OK)
+                .item
+                  input#payment2(type="radio", name="payment")
+                  .text
+                    label(for="payment2") 轉帳付款
+                .item
+                  input#payment3(type="radio", name="payment")
+                  .text
+                    label(for="payment3") 信用卡
+        
+       
+          
+        .form_block
+          h2.title 總計
+          .content-block
+            .payment_method
+              .item.font_gray 
+                h3 新台幣 
+                  span.font-purple 5000元
+        
+        .btn-wrap
+          button.btn.submit(type="submit") 確認送出
+                    
+            

@@ -1,0 +1,49 @@
+.popup_block {
+    position: relative;
+    width: 90%;
+    max-width: 800px;
+    padding: 3em 1.5em;
+    margin: 0 auto;
+    
+    
+    box-sizing: border-box;
+    @include breakpoint(768px) {
+        padding: 2.5em;
+    }   
+}
+.mfp-close {
+    background-color: $white !important;
+    border-radius: 50px;
+    width: 30px !important;
+    height: 30px !important;
+    line-height: 30px !important;
+   
+}
+.popup_inner {
+    background-color: $white;
+    border-radius: 5px;
+    padding: 1em;
+    text-align: center;
+    .popup-img {
+        margin: 1em auto;
+    }
+    .popup-title {
+        font-size: 1.75em;
+        font-weight: 500;
+        color: $gray-dark;
+    }
+    .reward-number {
+        color: $main-light;
+        font-weight: 600;
+        padding: 0 .5em;
+    }
+    .btn-wrap {
+        .btn {
+            margin: 1em 1em 2em 1em;
+        }
+    }
+    .popup-content {
+        text-align: left;
+        color: $gray-dark;
+    }
+}

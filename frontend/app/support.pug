@@ -1,0 +1,59 @@
+extends layouts/default.pug
+
+block value
+  - var currentPage = 'support';
+
+block main
+  section.banner-container(style="background-image: url('images/banner.png')")
+    .restrict.allpadding
+      h1 網站使用導引
+      
+  section.bg-purple.support-block
+    .block_container
+      .restrict.allpadding
+        .support-menu
+          h2 幫助中心
+          .list-opener
+            ul.reduced
+              li
+                //- 當前頁面加class="active"
+                a.active(href="javascript:;") 請問在哪邊下單？
+              li
+                a(href="javascript:;") 帳號安全問題
+              li
+                a(href="javascript:;") 我要怎麼兌換獎勵金？
+              li
+                a(href="javascript:;") 為什麼有冷卻時間？
+            a.opener(href="javascript:;")
+              .icon_arrow_down.glyphicon.glyphicon-menu-down(aria-hidden="true") 
+              p.open-more 查看
+                br 
+                | 更多
+            ul.all-menu
+              li
+                a(href="support.html") 請問在哪邊下單？
+              li
+                a(href="javascript:;") 帳號安全問題
+              li
+                a(href="javascript:;") 我要怎麼兌換獎勵金？
+              li
+                a(href="javascript:;") 為什麼有冷卻時間？
+              li
+                a(href="javascript:;") 如何修改/取消訂單?
+              li
+                a(href="javascript:;") HeO會怎麼「使用」這些內容？
+            
+        .support-content
+          h3 請問在哪邊下單？
+          .support-text
+            p 說明文字說明文字，說明文字說明文字，說明文字說明文字，
+            p 僅提供臉書互惠,請先使用臉書登入HEO,登入後會員可在使用頁面輸入您要作業的網址,並填入數量送出後,其他會員就會在登入HEO平台期間為您的輸入的網址進行作業,在您登入期間若有人像您帳號購買您的服務,則會額外得到獎勵金。
+            img(src="images/support.png")
+            p.
+              說明文字說明文字，說明文字說明文字，說明文字說明文字，
+            | 僅提供臉書互惠,請先使用臉書登入HEO,登入後會員可在使用頁面輸入您要作業的網址,並填入數量送出後,其他會員就會在登入HEO平台期間為您的輸入的網址進行作業,在您登入期間若有人像您帳號購買您的服務,則會額外得到獎勵金。
+    .clear
+      .restrict.allpadding
+        a#backTop.scroll-top
+          img(src="images/scroll_top.png")
+          span 置頂

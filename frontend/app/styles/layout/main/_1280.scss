@@ -1,0 +1,40 @@
+@include susy-breakpoint(1280px, 12) {
+  // Index
+  .banner {
+    padding: 5em 1em 6em 1em;
+    h1 {
+      font-size: 4.5em;
+      margin-top: .5em;
+    }
+    h2 {
+      font-size: 2.3em;
+    }
+  }
+
+  // Member
+  .member {
+    .block_inner {
+      display: flex;
+    }
+    .member_navigation {
+      display: block;
+      width: 324px;
+      margin-right: 2.5em;
+      margin-bottom: 0;
+      .item {
+        width: auto;
+        min-height: 150px;
+        margin-right: 0;
+        margin-bottom: 2em;
+      }
+      &.member_vip {
+        .item {
+          width: auto;
+        }
+      }
+    }
+    .member_container {
+      width: calc(100% - 324px - 2.5em);
+    }
+  }
+}

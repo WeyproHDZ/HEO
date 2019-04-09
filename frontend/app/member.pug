@@ -1,0 +1,84 @@
+extends layouts/default.pug
+
+block value
+  - var currentPage = 'member';
+
+block main
+  section.member.block_container
+    .block_inner
+      .member_navigation
+        .item
+          a(href="member.html", title="會員管理")
+            .title 會員管理
+            .text
+              | 真人帳號、開放社群功能
+        .item
+          a(href="member_reward.html", title="獎勵金")
+            .title 獎勵金
+            .text
+              | 回饋的獎勵金紀錄、申請轉出獎勵金
+        .item
+          a(href="member_history.html", title="使用次數")
+            .title 使用次數
+            .text
+              | 會員臉書帳號授權服務使用次數
+
+      .member_container
+        .content-block
+          h1 申請真人帳號
+          .text 若登入HeO互惠的臉書帳號,是有長時間使用帳號,或者極像真人帳號,即可申請真人帳號,會由管理者或工作人員進行人工審核判斷,每組帳號僅一次機會,若認定像假號或小號
+            br
+            | 該會員往後則無法再次送出送審,由於是人工審核,送出後大約需要1~2天會員才會收到系統通知(遇假日則延期)
+          .main-content
+            p 我要申請真人帳號
+            a.btn(href="javascript:;" title="申請") 申請
+
+          //- 送出真人申請後，顯示下方狀態表格↓
+          .rwd_table_wrapper
+            table.member-table
+              tbody
+                tr
+                  th 申請帳號
+                  th 審核狀態
+
+                tr
+                  td SELENA瑋瑋
+                  td 審核中
+       
+
+        .content-block
+          h1 授權開放帳號的社群功能
+          .text 您可以任意選擇想要開放給其他買家購買您哪些服務，也可以全關閉HeO就不會拿來使用，也不會加入HeO賺錢計畫 #[br]
+            |(開關可能會有延遲，並非關閉或開啟當下就會立即停止使用，請等候幾小時，建議開或關閉前先考慮後再開或關閉)
+          .switcher-wrap
+            .switcher-item
+              .minion-switcher
+                input.check(type="checkbox")
+                .btn
+                  .circle 
+              .switch-title 我願意開放-讚
+                span ( 1個讚 = 1 $ )
+            .switcher-item
+              .minion-switcher
+                input.check(type="checkbox")
+                .btn
+                  .circle 
+              .switch-title 我願意開放-留言
+                span ( 1個留言 = 0.579 $ )
+            
+     
+//- block JS
+//-   script.
+//-     $(function() {
+//-       var noty = new Noty({
+//-         type: 'warning',
+//-         layout: 'centerLeft',
+//-         theme: 'metroui',
+//-         text: '公告文字公告文字公告文字公告文字公告文字公告文字公告文字公告文字',
+//-         timeout: 60000,
+//-         progressBar: true,
+//-         closeWith: ['click', 'button']
+//-       })
+      
+//-       noty.show();
+//-     });

@@ -1,0 +1,97 @@
+extends layouts/default.pug
+
+block value
+  - var currentPage = 'member';
+
+block main
+  section.member.block_container
+    .block_inner
+      .member_navigation
+        .item
+          a(href="member.html", title="會員管理")
+            .title 會員管理
+            .text
+              | 真人帳號、開放社群功能
+        .item
+          a(href="member_reward.html", title="獎勵金")
+            .title 獎勵金
+            .text
+              | 回饋的獎勵金紀錄、申請轉出獎勵金
+        .item
+          a(href="member_history.html", title="使用次數")
+            .title 使用次數
+            .text
+              | 會員臉書帳號授權服務使用次數
+        
+      
+      .member_container
+        .content-block
+          h1 您目前的獎勵金
+            span.reward-number  100 $
+          .text 獎勵金累積5000$可轉換成台幣(需聯繫客服處理)。
+            br
+            | 目前獎勵金:台幣比值為1:0.5(5000獎勵金轉換2500台幣),僅限於HEO上的獎勵金,
+            br
+            | 若該獎勵金已轉去HDZ則不接受轉換現金。
+          .main-content
+            .transfer-number
+              p 我要轉出
+              input.transfer(type="text", name="transfer")
+              p 獎勵金至HDz
+            .transfer-submit
+              a.btn(href="transfer_account.html" title="轉出") 轉出
+
+    
+        .content-block
+          .content-block-title 獎勵金轉出列表
+          .stored_history
+            .history
+              .rwd_table_wrapper
+                table
+                  thead
+                    tr
+                      th 日期
+                      th 轉至HDz帳號
+                      th 轉前獎勵金
+                      th 轉出獎勵金
+                      th 剩餘獎勵金
+                      th 狀態
+                  tbody
+                    each i in Array(4)
+                      tr
+                        td.align_left 2018/04/24  09:10
+                        td JESSIE
+                        td 5000
+                        td 5000
+                        td 4500
+                        td 提交等待中
+                      tr
+                        td.align_left 2018/03/10  16:38
+                        td Selena
+                        td 500
+                        td 500
+                        td 0
+                        td 轉換台幣
+                      tr
+                        td.align_left 2018/03/10  16:38
+                        td Selena
+                        td 500
+                        td 500
+                        td 0
+                        td 完成轉入HDz
+         
+//- block JS
+//-   script.
+//-     $(function() {
+//-       var noty = new Noty({
+//-         type: 'warning',
+//-         layout: 'bottomLeft',
+//-         theme: 'metroui',
+//-         text: '公告文字公告文字公告文字公告文字公告文字公告文字公告文字公告文字',
+//-         timeout: 60000,
+//-         progressBar: true,
+//-         closeWith: ['click', 'button']
+//-       })
+      
+//-       noty.show();
+//-     });

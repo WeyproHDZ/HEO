@@ -1,0 +1,98 @@
+@include susy-breakpoint(1024px, 12) {
+  #vote-wrapper {
+    .vote-container {
+      .vote-item {
+        @include gallery(4 of 12 .2);
+      }
+    }
+  }
+  // Index
+  .index_banner {
+    padding: 5em 1.5em;
+  }
+
+  // Index instro
+  .related_instructions {
+    padding: 4em 0;
+    h2 {
+      font-size: 3.75em;
+    }
+    h3 {
+      font-size: 1.75em;
+    }
+    .instructions_items {
+      .item {
+        width: calc((100% - 3em) / 4);
+        margin-right: 1em;
+        &:nth-child(2n) {
+          margin-right: 1em;
+        }
+        &:nth-child(4n) {
+          margin-right: 0;
+        }
+      }
+    }
+  }
+
+  // Banner
+  .banner-container {
+    h1 {
+      font-size: 3.75em;
+      margin-bottom: .5em;
+    }
+  }
+  // Solution
+  .support-menu {
+    width: calc(30% - 2em);
+    margin-right: 2em;
+  }
+  .support-content {
+    width: 70%;
+  }
+  .scroll-top {
+    margin: 0 auto 0 auto;
+    margin-left: calc(65% - 60px - 1em);
+  }
+
+  // START
+  // Login
+  .login {
+    .login_items {
+      .item {
+
+        width: calc((100% - 1em) / 3);
+        margin-right: 1em;
+      }
+      .instruction {
+        width: calc((100% - 1em) / 3 * 2);
+      }
+    }
+  }
+
+  // Member
+  .member {
+    .member_navigation {
+      .item {
+        a {
+          padding: 1.5em 2em;
+        }
+        .title {
+          font-size: 1.5em;
+        }
+      }
+    }
+  }
+  
+  // VIP
+  .vip-container {
+    padding: 2em 0;
+  }
+  .vip_form {
+    .price_choose {
+      .item {
+        @include gallery(4 of 12 .1);
+      }
+    }
+  }
+
+}
