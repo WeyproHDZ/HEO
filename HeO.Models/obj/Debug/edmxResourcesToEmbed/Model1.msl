@@ -1,0 +1,280 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="HeOModelStoreContainer" CdmEntityContainer="HeOEntities">
+    <EntitySetMapping Name="AdminLims">
+      <EntityTypeMapping TypeName="HeOModel.AdminLims">
+        <MappingFragment StoreEntitySet="AdminLims">
+          <ScalarProperty Name="AdminLimID" ColumnName="AdminLimID" />
+          <ScalarProperty Name="AdminID" ColumnName="AdminID" />
+          <ScalarProperty Name="LimID" ColumnName="LimID" />
+          <ScalarProperty Name="IsAdd" ColumnName="IsAdd" />
+          <ScalarProperty Name="IsUpdate" ColumnName="IsUpdate" />
+          <ScalarProperty Name="IsDelete" ColumnName="IsDelete" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Admins">
+      <EntityTypeMapping TypeName="HeOModel.Admins">
+        <MappingFragment StoreEntitySet="Admins">
+          <ScalarProperty Name="AdminID" ColumnName="AdminID" />
+          <ScalarProperty Name="Username" ColumnName="Username" />
+          <ScalarProperty Name="Password" ColumnName="Password" />
+          <ScalarProperty Name="Isenable" ColumnName="Isenable" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Feedbackproduct">
+      <EntityTypeMapping TypeName="HeOModel.Feedbackproduct">
+        <MappingFragment StoreEntitySet="Feedbackproduct">
+          <ScalarProperty Name="Feedbackproductid" ColumnName="Feedbackproductid" />
+          <ScalarProperty Name="Feedbackproductname" ColumnName="Feedbackproductname" />
+          <ScalarProperty Name="Uuid" ColumnName="Uuid" />
+          <ScalarProperty Name="Updatedate" ColumnName="Updatedate" />
+          <ScalarProperty Name="Createdate" ColumnName="Createdate" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Guide">
+      <EntityTypeMapping TypeName="HeOModel.Guide">
+        <MappingFragment StoreEntitySet="Guide">
+          <ScalarProperty Name="Guideid" ColumnName="Guideid" />
+          <ScalarProperty Name="Orders" ColumnName="Orders" />
+          <ScalarProperty Name="Uuid" ColumnName="Uuid" />
+          <ScalarProperty Name="Createdate" ColumnName="Createdate" />
+          <ScalarProperty Name="Updatedate" ColumnName="Updatedate" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Guidelang">
+      <EntityTypeMapping TypeName="HeOModel.Guidelang">
+        <MappingFragment StoreEntitySet="Guidelang">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Langid" ColumnName="Langid" />
+          <ScalarProperty Name="Guideid" ColumnName="Guideid" />
+          <ScalarProperty Name="Title" ColumnName="Title" />
+          <ScalarProperty Name="Contents" ColumnName="Contents" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Lims">
+      <EntityTypeMapping TypeName="HeOModel.Lims">
+        <MappingFragment StoreEntitySet="Lims">
+          <ScalarProperty Name="LimID" ColumnName="LimID" />
+          <ScalarProperty Name="Key" ColumnName="Key" />
+          <ScalarProperty Name="Value" ColumnName="Value" />
+          <ScalarProperty Name="Icon" ColumnName="Icon" />
+          <ScalarProperty Name="Sort" ColumnName="Sort" />
+          <ScalarProperty Name="ParentID" ColumnName="ParentID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Memberlevel">
+      <EntityTypeMapping TypeName="HeOModel.Memberlevel">
+        <MappingFragment StoreEntitySet="Memberlevel">
+          <ScalarProperty Name="Levelid" ColumnName="Levelid" />
+          <ScalarProperty Name="Levelname" ColumnName="Levelname" />
+          <ScalarProperty Name="Createdate" ColumnName="Createdate" />
+          <ScalarProperty Name="Updatetime" ColumnName="Updatetime" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Memberlevelcooldown">
+      <EntityTypeMapping TypeName="HeOModel.Memberlevelcooldown">
+        <MappingFragment StoreEntitySet="Memberlevelcooldown">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Levelid" ColumnName="Levelid" />
+          <ScalarProperty Name="Cooldowntime" ColumnName="Cooldowntime" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Newslang">
+      <EntityTypeMapping TypeName="HeOModel.Newslang">
+        <MappingFragment StoreEntitySet="Newslang">
+          <ScalarProperty Name="Newsid" ColumnName="Newsid" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Title" ColumnName="Title" />
+          <ScalarProperty Name="Langid" ColumnName="Langid" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Orderfaceooklist">
+      <EntityTypeMapping TypeName="HeOModel.Orderfaceooklist">
+        <MappingFragment StoreEntitySet="Orderfaceooklist">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Orderid" ColumnName="Orderid" />
+          <ScalarProperty Name="Memberid" ColumnName="Memberid" />
+          <ScalarProperty Name="Facebookaccount" ColumnName="Facebookaccount" />
+          <ScalarProperty Name="Createdate" ColumnName="Createdate" />
+          <ScalarProperty Name="Updatedate" ColumnName="Updatedate" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Returnstatus">
+      <EntityTypeMapping TypeName="HeOModel.Returnstatus">
+        <MappingFragment StoreEntitySet="Returnstatus">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Text" ColumnName="Text" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Setting">
+      <EntityTypeMapping TypeName="HeOModel.Setting">
+        <MappingFragment StoreEntitySet="Setting">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Time" ColumnName="Time" />
+          <ScalarProperty Name="Max" ColumnName="Max" />
+          <ScalarProperty Name="Min" ColumnName="Min" />
+          <ScalarProperty Name="Createdate" ColumnName="Createdate" />
+          <ScalarProperty Name="Updatedate" ColumnName="Updatedate" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Term">
+      <EntityTypeMapping TypeName="HeOModel.Term">
+        <MappingFragment StoreEntitySet="Term">
+          <ScalarProperty Name="Termid" ColumnName="Termid" />
+          <ScalarProperty Name="Uuid" ColumnName="Uuid" />
+          <ScalarProperty Name="Orders" ColumnName="Orders" />
+          <ScalarProperty Name="Createdate" ColumnName="Createdate" />
+          <ScalarProperty Name="Updatedate" ColumnName="Updatedate" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Termlang">
+      <EntityTypeMapping TypeName="HeOModel.Termlang">
+        <MappingFragment StoreEntitySet="Termlang">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Termid" ColumnName="Termid" />
+          <ScalarProperty Name="Langid" ColumnName="Langid" />
+          <ScalarProperty Name="Title" ColumnName="Title" />
+          <ScalarProperty Name="Contents" ColumnName="Contents" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Memberauthorization">
+      <EntityTypeMapping TypeName="HeOModel.Memberauthorization">
+        <MappingFragment StoreEntitySet="Memberauthorization">
+          <ScalarProperty Name="Checked" ColumnName="Checked" />
+          <ScalarProperty Name="Feedbackproductid" ColumnName="Feedbackproductid" />
+          <ScalarProperty Name="Memberid" ColumnName="Memberid" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="sysdiagrams">
+      <EntityTypeMapping TypeName="HeOModel.sysdiagrams">
+        <MappingFragment StoreEntitySet="sysdiagrams">
+          <ScalarProperty Name="definition" ColumnName="definition" />
+          <ScalarProperty Name="version" ColumnName="version" />
+          <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+          <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+          <ScalarProperty Name="name" ColumnName="name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Members">
+      <EntityTypeMapping TypeName="HeOModel.Members">
+        <MappingFragment StoreEntitySet="Members">
+          <ScalarProperty Name="Updatedate" ColumnName="Updatedate" />
+          <ScalarProperty Name="Createdate" ColumnName="Createdate" />
+          <ScalarProperty Name="Lastdate" ColumnName="Lastdate" />
+          <ScalarProperty Name="Isreal" ColumnName="Isreal" />
+          <ScalarProperty Name="Feedbackmoney" ColumnName="Feedbackmoney" />
+          <ScalarProperty Name="Facebookstatus" ColumnName="Facebookstatus" />
+          <ScalarProperty Name="Facebooklink" ColumnName="Facebooklink" />
+          <ScalarProperty Name="Password" ColumnName="Password" />
+          <ScalarProperty Name="Account" ColumnName="Account" />
+          <ScalarProperty Name="Facebookid" ColumnName="Facebookid" />
+          <ScalarProperty Name="Levelid" ColumnName="Levelid" />
+          <ScalarProperty Name="Memberid" ColumnName="Memberid" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Feedbackrecord">
+      <EntityTypeMapping TypeName="HeOModel.Feedbackrecord">
+        <MappingFragment StoreEntitySet="Feedbackrecord">
+          <ScalarProperty Name="Updatedate" ColumnName="Updatedate" />
+          <ScalarProperty Name="Createdate" ColumnName="Createdate" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="Remark" ColumnName="Remark" />
+          <ScalarProperty Name="Bankaccount" ColumnName="Bankaccount" />
+          <ScalarProperty Name="Cash" ColumnName="Cash" />
+          <ScalarProperty Name="Remains" ColumnName="Remains" />
+          <ScalarProperty Name="Money" ColumnName="Money" />
+          <ScalarProperty Name="Total" ColumnName="Total" />
+          <ScalarProperty Name="Hdzaccount" ColumnName="Hdzaccount" />
+          <ScalarProperty Name="Ishdz" ColumnName="Ishdz" />
+          <ScalarProperty Name="Memberid" ColumnName="Memberid" />
+          <ScalarProperty Name="Feedbackid" ColumnName="Feedbackid" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Vipdetail">
+      <EntityTypeMapping TypeName="HeOModel.Vipdetail">
+        <MappingFragment StoreEntitySet="Vipdetail">
+          <ScalarProperty Name="Updatedate" ColumnName="Updatedate" />
+          <ScalarProperty Name="Createdate" ColumnName="Createdate" />
+          <ScalarProperty Name="Money" ColumnName="Money" />
+          <ScalarProperty Name="Day" ColumnName="Day" />
+          <ScalarProperty Name="Vipdetailid" ColumnName="Vipdetailid" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="News">
+      <EntityTypeMapping TypeName="HeOModel.News">
+        <MappingFragment StoreEntitySet="News">
+          <ScalarProperty Name="Updatedate" ColumnName="Updatedate" />
+          <ScalarProperty Name="Createdate" ColumnName="Createdate" />
+          <ScalarProperty Name="Date" ColumnName="Date" />
+          <ScalarProperty Name="Uuid" ColumnName="Uuid" />
+          <ScalarProperty Name="Newsid" ColumnName="Newsid" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Viprecord">
+      <EntityTypeMapping TypeName="HeOModel.Viprecord">
+        <MappingFragment StoreEntitySet="Viprecord">
+          <ScalarProperty Name="Updatedate" ColumnName="Updatedate" />
+          <ScalarProperty Name="Createdate" ColumnName="Createdate" />
+          <ScalarProperty Name="Enddate" ColumnName="Enddate" />
+          <ScalarProperty Name="Startdate" ColumnName="Startdate" />
+          <ScalarProperty Name="Buydate" ColumnName="Buydate" />
+          <ScalarProperty Name="Paymentdate" ColumnName="Paymentdate" />
+          <ScalarProperty Name="Paymenttype" ColumnName="Paymenttype" />
+          <ScalarProperty Name="Day" ColumnName="Day" />
+          <ScalarProperty Name="Money" ColumnName="Money" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="Payway" ColumnName="Payway" />
+          <ScalarProperty Name="Memberid" ColumnName="Memberid" />
+          <ScalarProperty Name="Viprecordid" ColumnName="Viprecordid" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Order">
+      <EntityTypeMapping TypeName="HeOModel.Order">
+        <MappingFragment StoreEntitySet="Order">
+          <ScalarProperty Name="Createdate" ColumnName="Createdate" />
+          <ScalarProperty Name="Updatedate" ColumnName="Updatedate" />
+          <ScalarProperty Name="Cost" ColumnName="Cost" />
+          <ScalarProperty Name="Count" ColumnName="Count" />
+          <ScalarProperty Name="Service" ColumnName="Service" />
+          <ScalarProperty Name="Url" ColumnName="Url" />
+          <ScalarProperty Name="HDZoredernumber" ColumnName="HDZoredernumber" />
+          <ScalarProperty Name="Memberid" ColumnName="Memberid" />
+          <ScalarProperty Name="Ordernumber" ColumnName="Ordernumber" />
+          <ScalarProperty Name="Orderid" ColumnName="Orderid" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Feedbackdetail">
+      <EntityTypeMapping TypeName="HeOModel.Feedbackdetail">
+        <MappingFragment StoreEntitySet="Feedbackdetail">
+          <ScalarProperty Name="Money" ColumnName="Money" />
+          <ScalarProperty Name="Levelid" ColumnName="Levelid" />
+          <ScalarProperty Name="Feedbackproductid" ColumnName="Feedbackproductid" />
+          <ScalarProperty Name="Setid" ColumnName="Setid" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

@@ -1,0 +1,145 @@
+﻿@model Feedbackrecord
+
+<div id="content">
+
+    <!-- widget grid -->
+    <section id="widget-grid" class="">
+
+        <!-- row -->
+        <div class="row">
+
+            <!-- NEW WIDGET START -->
+            <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+                <!-- Widget ID (each widget will need unique ID)-->
+                <div class="jarviswidget" id="wid-id-4" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false" data-widget-collapsed="false" data-widget-sortable="false">
+                    <header>
+                        <span class="widget-icon"> <i class="fa fa-pencil-square-o"></i> </span>
+                        <h2>編輯回饋金紀錄</h2>
+                        <ul class="nav nav-tabs pull-right in">
+                            <li><a data-toggle="tab" href="#hb1">基本資料</a></li>
+                        </ul>
+                    </header>
+
+                    <!-- widget div-->
+                    <div>
+
+                        <!-- widget edit box -->
+                        <div class="jarviswidget-editbox">
+                            <!-- This area used as dropdown edit box -->
+
+                        </div>
+                        <!-- end widget edit box -->
+                        <!-- widget content -->
+                        <div class="widget-body">
+                            <form id="form" method="post" class="form-horizontal" enctype="multipart/form-data" action="@Url.Action("EditFeedbackrecord", "FeedbackMs")"
+                                  data-bv-message="This value is not valid"
+                                  data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
+                                  data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
+                                  data-bv-feedbackicons-validating="glyphicon glyphicon-refresh">
+
+                                @if (Html.ValidationSummary(true) != null)
+                                {
+                                    <div class="alert alert-danger alert-block">
+                                        <h4 class="alert-heading">Error!</h4>
+                                        @Html.ValidationSummary(true)
+                                    </div>
+                                }
+                                @Html.HiddenFor(model => model.Feedbackid)
+                                <div id="content" class="tab-content">
+                                    <div class="tab-pane" id="hb1">
+                                        <fieldset>
+                                            <div class="form-group">
+                                                <label class="col-lg-2 control-label" for="title">Facebook帳號</label>
+                                                <section class="col-lg-3">
+                                                    @Html.DropDownListFor(model => model.Memberid, null, "--請選擇--", new Dictionary<string, object>() { { "class", "form-control" } })
+                                                </section>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-lg-2 control-label" for="title">提出金額</label>
+                                                <section class="col-lg-3">
+                                                    @Html.TextBoxFor(model => model.Money, new Dictionary<string, object>() { { "class", "form-control" } })
+                                                    @Html.ValidationMessageFor(model => model.Money)
+                                                </section>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-lg-2 control-label" for="title">轉出方法</label>
+                                                <section class="col-lg-3">
+                                                    <input type="radio" name="Ishdz" value="0" checked=@(Model.Ishdz == 0 ? "checked" : "") />轉入HDZ<br />
+                                                    <input type="radio" name="Ishdz" value="1" checked=@(Model.Ishdz == 1 ? "checked" : "") />轉出現金<br />
+                                                </section>
+                                            </div> 
+                                            <div class="form-group">
+                                                <label class="col-lg-2 control-label" for="title">HDZ會員帳號</label>
+                                                <section class="col-lg-3">
+                                                    @Html.TextBoxFor(model => model.Hdzaccount, new Dictionary<string, object>() { { "class", "form-control" } })
+                                                    @Html.ValidationMessageFor(model => model.Hdzaccount)
+                                                </section>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-lg-2 control-label" for="title">現金帳戶</label>
+                                                <section class="col-lg-3">
+                                                    @Html.TextBoxFor(model => model.Bankaccount, new Dictionary<string, object>() { { "class", "form-control" } })
+                                                    @Html.ValidationMessageFor(model => model.Bankaccount)
+                                                </section>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-lg-2 control-label" for="title">備註</label>
+                                                <section class="col-lg-3">
+                                                    @Html.TextBoxFor(model => model.Remark, new Dictionary<string, object>() { { "class", "form-control" } })
+                                                    @Html.ValidationMessageFor(model => model.Remark)
+                                                </section>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-lg-2 control-label" for="title">狀態</label>
+                                                <section class="col-lg-3">
+                                                    <select class="form-control" id="status" name="status">
+                                                        <option value="0" @((Model.Status == 0) ? "selected" : "")>等待中</option>
+                                                        <option value="1" @((Model.Status == 1) ? "selected" : "")>完成轉入</option>
+                                                        <option value="2" @((Model.Status == 2) ? "selected" : "")>失敗</option>
+                                                    </select>
+                                                </section>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                </div>
+                                <div class="form-actions">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <a class="btn btn-default" href="@Url.Action("Feedbackrecord", "FeedbackMs")">
+                                                取消
+                                            </a>
+                                            <button class="btn btn-primary" type="submit">
+                                                <i class="fa fa-save"></i>
+                                                確認
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <!-- end widget content -->
+
+                    </div>
+                    <!-- end widget div -->
+
+                </div>
+                <!-- end widget -->
+
+            </article>
+            <!-- WIDGET END -->
+
+        </div>
+        <!-- end row -->
+
+    </section>
+    <!-- end widget grid -->
+
+</div>
+@section scripts {
+    <script>
+        var hash = window.location.hash;
+        $('ul.nav-tabs li').eq(hash.substr(1)).addClass('active');
+        $('.tab-pane').eq(hash.substr(1)).addClass('active');
+    </script>
+}

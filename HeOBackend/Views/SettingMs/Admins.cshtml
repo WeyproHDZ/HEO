@@ -1,0 +1,116 @@
+﻿@{
+    var data = ViewBag.Admins as IPagedList<Admins>;
+}
+
+<!-- MAIN CONTENT -->
+<div id="content">
+
+    <!-- widget grid -->
+    <section id="widget-grid" class="">
+        <!-- row -->
+        <div class="row">
+            <!-- NEW WIDGET START -->
+            <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+                <div class="well padding-10">
+
+                    <!-- widget content -->
+                    <div class="widget-body">
+
+                        <div class="widget-body-toolbar">
+
+                            <div class="row">
+
+                                <div class="col-sm-1">
+                                    <a class="btn btn-success btn-labeled" href="@Url.Action("AddAdmins", "SettingMs", new { p = ViewBag.pageNumber })"> <span class="btn-label"><i class="fa fa-plus"></i></span>新增管理者 </a>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        @if (Html.ValidationSummary(true) != null)
+                        {
+                            <div class="alert alert-danger alert-block fade in">
+                                <button class="close" data-dismiss="alert">
+                                    ×
+                                </button>
+                                <i class="fa-fw fa fa-info"></i>
+                                @Html.ValidationSummary(true)
+                            </div>
+                        }
+
+                        <div class="table-responsive">
+
+                            <table class="table table-hover table-bordered table-striped smart-form">
+                                <thead>
+                                    <tr>
+                                        <th>帳號</th>
+                                        <th width="8%" class="text-center">狀態</th>
+                                        <th width="5%" class="text-center">編輯</th>
+                                        <th width="5%" class="text-center">刪除</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (Admins admin in data)
+                                    {
+                                        <tr>
+                                            <td>@admin.Username</td>
+                                            <td class="text-center">@((admin.Isenable == 0) ? "關" : "開")</td>
+                                            <td class="text-center"><a href="@Url.Action("EditAdmins", "SettingMs", new { adminid = admin.AdminID, p = ViewBag.pageNumber })" class="btn btn-info btn-xs"><i class="fa fa-edit"></i></a></td>
+                                            <td class="text-center"><a href="#" class="btn btn-danger btn-xs del" data-href="@Url.Action("DeleteAdmins", "SettingMs", new { adminid = admin.AdminID, p = ViewBag.pageNumber })" data-toggle="modal" data-target="#confirm-delete"><i class="fa fa-trash-o"></i></a></td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="text-center">
+                            @Html.PagedListPager(list: data, generatePageUrl: page => Url.Action("Admins", new { p = page }))
+                        </div>
+
+                    </div>
+                    <!-- end widget content -->
+
+                </div>
+
+            </article>
+            <!-- WIDGET END -->
+
+        </div>
+        <!-- end row -->
+
+    </section>
+    <!-- end widget grid -->
+
+</div>
+<!-- END MAIN CONTENT -->
+<!-- Modal -->
+<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">確認</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    確定要刪除嗎？
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    取消
+                </button>
+                <a href="#" class="btn btn-primary btn-ok">
+                    確定
+                </a>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+@section scripts {
+
+}

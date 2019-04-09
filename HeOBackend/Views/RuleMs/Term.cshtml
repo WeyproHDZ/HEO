@@ -1,0 +1,116 @@
+﻿@{
+    var data = ViewBag.Term as IPagedList<Termlang>;
+    int x = 0;
+}
+
+<!-- MAIN CONTENT -->
+<div id="content">
+
+    <!-- widget grid -->
+    <section id="widget-grid" class="">
+        <!-- row -->
+        <div class="row">
+            <!-- NEW WIDGET START -->
+            <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+                <div class="well padding-10">
+
+                    <!-- widget content -->
+                    <div class="widget-body">
+                    @using (Html.BeginForm("OrdersTerm", "RuleMs", new { p = ViewBag.pageNumber }, FormMethod.Post, new { @id = "form" }))
+                    {
+                        <div class="widget-body-toolbar">
+
+                            <div class="row">
+
+                                <div class="form-inline">
+                                    <div class="col-sm-10">
+                                        <button class="btn btn-info btn-labeled" type="submit"> <span class="btn-label"><i class="fa fa-refresh"></i></span>儲存排序</button>
+                                        <a class="btn btn-success btn-labeled" href="@Url.Action("AddTerm", "RuleMs")"> <span class="btn-label"><i class="fa fa-plus"></i></span>新增使用條款 </a>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                        <div class="table-responsive">
+
+                            <table class="table table-hover table-bordered table-striped smart-form">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">標題</th>
+                                        <th class="text-center" width="10%">排序</th>
+                                        <th width="10%" class="text-center">編輯</th>
+                                        <th width="10%" class="text-center">刪除</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (Termlang entity in data)
+                                    {
+                                        <tr>
+                                            <td class="text-center">@entity.Title</td>
+                                            <td class="text-center">
+                                                <label class="input form-group">
+                                                    <input type="text" name="EntityLists[@x].orders" data-bv-notempty="true" data-bv-message="" class="text-center" value="@entity.Term.Orders">
+                                                    <input type="hidden" name="EntityLists[@x].termid" value="@entity.Termid">
+                                                </label>
+                                            </td>
+                                            <td class="text-center"><a href="@Url.Action("EditTerm", "RuleMs", new { termid = entity.Termid, p = ViewBag.pageNumber })" class="btn btn-info btn-xs"><i class="fa fa-edit"></i></a></td>
+                                            <td class="text-center"><a href="#" class="btn btn-danger btn-xs del" data-href="@Url.Action("DeleteTerm", "RuleMs", new { termid = entity.Termid, p = ViewBag.pageNumber })" data-toggle="modal" data-target="#confirm-delete"><i class="fa fa-trash-o"></i></a></td>
+                                        </tr>
+                                        x++;
+                                    }
+                                </tbody>
+                            </table>
+
+                        </div>
+                    }
+                    </div>
+                    <!-- end widget content -->
+
+                    <div class="text-center">
+                        @Html.PagedListPager(list: data, generatePageUrl: page => Url.Action("Term", new { p = page }))
+                    </div>
+
+                </div>
+
+            </article>
+            <!-- WIDGET END -->
+
+        </div>
+        <!-- end row -->
+
+    </section>
+    <!-- end widget grid -->
+
+</div>
+<!-- END MAIN CONTENT -->
+<!-- Modal -->
+<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">確認</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    確定要刪除嗎？
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    取消
+                </button>
+                <a href="#" class="btn btn-primary btn-ok">
+                    確定
+                </a>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+@section scripts {
+
+}

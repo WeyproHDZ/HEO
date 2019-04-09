@@ -1,0 +1,201 @@
+﻿@model Admins
+
+@{
+    var data = ViewBag.Lims as IEnumerable<Lims>;
+    var c = 0;
+}
+
+<div id="content">
+
+    <!-- widget grid -->
+    <section id="widget-grid" class="">
+
+        <!-- row -->
+        <div class="row">
+
+            <!-- NEW WIDGET START -->
+            <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+                <!-- Widget ID (each widget will need unique ID)-->
+                <div class="jarviswidget" id="wid-id-4" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false" data-widget-collapsed="false" data-widget-sortable="false">
+                    <header>
+                        <span class="widget-icon"> <i class="fa fa-pencil-square-o"></i> </span>
+                        <h2>編輯管理者</h2>
+
+                    </header>
+
+                    <!-- widget div-->
+                    <div>
+
+                        <!-- widget edit box -->
+                        <div class="jarviswidget-editbox">
+                            <!-- This area used as dropdown edit box -->
+
+                        </div>
+                        <!-- end widget edit box -->
+                        <!-- widget content -->
+                        <div class="widget-body">
+
+                            <form id="form" method="post" class="form-horizontal" action="@Url.Action("EditAdmins", "SettingMs", new { p = ViewBag.pageNumber})"
+                                  data-bv-message="This value is not valid"
+                                  data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
+                                  data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
+                                  data-bv-feedbackicons-validating="glyphicon glyphicon-refresh">
+
+                                @if (Html.ValidationSummary(true) != null)
+                                {
+                                    <div class="alert alert-danger alert-block">
+                                        <h4 class="alert-heading">Error!</h4>
+                                        @Html.ValidationSummary(true)
+                                    </div>
+                                }
+
+                                @Html.HiddenFor(model => model.AdminID)
+
+                                <fieldset>
+
+                                    <div class="form-group">
+                                        <label class="col-lg-2 control-label" for="username">帳號</label>
+                                        <section class="col-lg-3">
+                                            @Html.DisplayFor(model => model.Username)
+                                        </section>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-lg-2 control-label" for="password">密碼</label>
+                                        <section class="col-lg-2">
+                                            <input type="password" name="password" id="password" class="form-control" />
+                                        </section>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-lg-2 control-label" for="isenable">狀態</label>
+                                        <section class="col-lg-2">
+                                            <span class="onoffswitch">
+                                                @if (Model.Isenable == 1)
+                                                {
+                                                    <input type="checkbox" name="isenable" class="onoffswitch-checkbox" id="isenable" value="1" checked>
+                                                }
+                                                else
+                                                {
+                                                    <input type="checkbox" name="isenable" class="onoffswitch-checkbox" id="isenable" value="1">
+                                                }
+                                                <label class="onoffswitch-label" for="isenable">
+                                                    <span class="onoffswitch-inner" data-swchon-text="開" data-swchoff-text="關"></span>
+                                                    <span class="onoffswitch-switch"></span>
+                                                </label>
+                                            </span>
+                                        </section>
+                                    </div>
+
+                                </fieldset>
+
+                                <fieldset>
+
+                                    <table id="dt_basic" class="table table-sm table-striped table-bordered smart-form">
+                                        <thead>
+                                            <tr>
+                                                <th width="2%"></th>
+                                                <th></th>
+                                                <th width="6%" class="text-center">瀏覽</th>
+                                                <th width="6%" class="text-center">新增</th>
+                                                <th width="6%" class="text-center">修改</th>
+                                                <th width="6%" class="text-center">刪除</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (Lims lim in data)
+                                            {
+                                                <tr>
+                                                    <td colspan="6" class="text-left">@lim.Value</td>
+                                                </tr>
+                                                foreach (Lims sublim in lim.Lims1)
+                                                {
+                                                    <tr>
+                                                        <td></td>
+                                                        <td class="text-left">@sublim.Value</td>
+                                                        <td class="text-center">
+                                                            <input type="hidden" name="AdminLims[@c].AdminID" value="@Model.AdminID">
+                                                            @if (Model.AdminLims.ToList().Exists(a => a.LimID == sublim.LimID))
+                                                            {
+                                                                <input type="checkbox" name="AdminLims[@c].LimID" value="@sublim.LimID" checked>
+                                                            }
+                                                            else
+                                                            {
+                                                                <input type="checkbox" name="AdminLims[@c].LimID" value="@sublim.LimID">
+                                                            }
+                                                        </td>
+                                                        <td class="text-center">
+                                                            @if (Model.AdminLims.ToList().Exists(a => a.LimID == sublim.LimID && a.IsAdd == true))
+                                                            {
+                                                                <input type="checkbox" name="AdminLims[@c].IsAdd" value="true" checked>
+                                                            }
+                                                            else
+                                                            {
+                                                                <input type="checkbox" name="AdminLims[@c].IsAdd" value="true">
+                                                            }
+                                                        </td>
+                                                        <td class="text-center">
+                                                            @if (Model.AdminLims.ToList().Exists(a => a.LimID == sublim.LimID && a.IsUpdate == true))
+                                                            {
+                                                                <input type="checkbox" name="AdminLims[@c].IsUpdate" value="true" checked>
+                                                            }
+                                                            else
+                                                            {
+                                                                <input type="checkbox" name="AdminLims[@c].IsUpdate" value="true">
+                                                            }
+                                                        </td>
+                                                        <td class="text-center">
+                                                            @if (Model.AdminLims.ToList().Exists(a => a.LimID == sublim.LimID && a.IsDelete == true))
+                                                            {
+                                                                <input type="checkbox" name="AdminLims[@c].IsDelete" value="true" checked>
+                                                            }
+                                                            else
+                                                            {
+                                                                <input type="checkbox" name="AdminLims[@c].IsDelete" value="true">
+                                                            }
+                                                        </td>
+                                                    </tr>
+                                                    c++;
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+
+                                </fieldset>
+
+                                <div class="form-actions">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <a class="btn btn-default" href="@Url.Action("Admins", "SettingMs", new { p = ViewBag.pageNumber })">
+                                                取消
+                                            </a>
+                                            <button class="btn btn-primary" type="submit">
+                                                <i class="fa fa-save"></i>
+                                                確認
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </form>
+
+                        </div>
+                        <!-- end widget content -->
+
+                    </div>
+                    <!-- end widget div -->
+
+                </div>
+                <!-- end widget -->
+
+            </article>
+            <!-- WIDGET END -->
+
+        </div>
+        <!-- end row -->
+
+    </section>
+    <!-- end widget grid -->
+
+</div>

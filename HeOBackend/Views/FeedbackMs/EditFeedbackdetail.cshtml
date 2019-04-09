@@ -1,0 +1,121 @@
+﻿@model Feedbackproduct
+@{
+    int i = 0;
+}
+<div id="content">
+
+    <!-- widget grid -->
+    <section id="widget-grid" class="">
+
+        <!-- row -->
+        <div class="row">
+
+            <!-- NEW WIDGET START -->
+            <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+                <!-- Widget ID (each widget will need unique ID)-->
+                <div class="jarviswidget" id="wid-id-4" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false" data-widget-collapsed="false" data-widget-sortable="false">
+                    <header>
+                        <span class="widget-icon"> <i class="fa fa-pencil-square-o"></i> </span>
+                        <h2>編輯產品回饋金額</h2>
+                        <ul class="nav nav-tabs pull-right in">
+                            <li><a data-toggle="tab" href="#hb1">基本資料</a></li>
+                        </ul>
+                    </header>
+
+                    <!-- widget div-->
+                    <div>
+
+                        <!-- widget edit box -->
+                        <div class="jarviswidget-editbox">
+                            <!-- This area used as dropdown edit box -->
+
+                        </div>
+                        <!-- end widget edit box -->
+                        <!-- widget content -->
+                        <div class="widget-body">
+
+                            <form id="form" method="post" class="form-horizontal" enctype="multipart/form-data" action="@Url.Action("EditFeedbackdetail", "FeedbackMs")"
+                                  data-bv-message="This value is not valid"
+                                  data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
+                                  data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
+                                  data-bv-feedbackicons-validating="glyphicon glyphicon-refresh">
+
+                                @if (Html.ValidationSummary(true) != null)
+                                {
+                                    <div class="alert alert-danger alert-block">
+                                        <h4 class="alert-heading">Error!</h4>
+                                        @Html.ValidationSummary(true)
+                                    </div>
+                                }
+                                <div id="content" class="tab-content">
+                                    <div class="tab-pane" id="hb1">
+                                        <fieldset>
+                                            <div class="form-group">
+                                                <label class="col-lg-2 control-label" for="title">選擇產品</label>
+                                                <section class="col-lg-3">
+                                                    @Html.DropDownList("feedbackproductid", (SelectList)ViewBag.feedbackproductList, new Dictionary<string, object>() { { "class", "form-control" } })
+                                                </section>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-lg-2 control-label" for="title">階級價格</label>
+                                                <div class="col-sm-9 col-lg-5">
+                                                    @foreach (Memberlevel entity in ViewBag.Levelname)
+                                                    {
+                                                        <label class="col-sm-3 control-label" for="title">@entity.Levelname</label>
+                                                        @Html.HiddenFor(model => @entity.Levelid, new { Name = "feedbackdetail[" + i + "].Levelid" })
+                                                        @Html.HiddenFor(model => @entity.Feedbackdetail.FirstOrDefault(a => a.Levelid == entity.Levelid).Setid, new { Name = "feedbackdetail[" + i + "].Setid" })
+
+                                                        <section class="col-sm-9">
+                                                            @Html.TextBoxFor(model => model.Feedbackdetail.FirstOrDefault(a => a.Levelid == entity.Levelid).Money, new Dictionary<string, object>() { { "class", "form-control" }, { "Name", "feedbackdetail[" + i + "].Money" } })
+                                                            @Html.ValidationMessageFor(model => model.Feedbackdetail.FirstOrDefault(a => a.Levelid == entity.Levelid).Money)
+                                                        </section>
+                                                        <br /><br /><br />
+                                                        i++;
+
+                                                    }
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                </div>
+                                <div class="form-actions">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <a class="btn btn-default" href="@Url.Action("Feedbackdetail", "FeedbackMs")">
+                                                取消
+                                            </a>
+                                            <button class="btn btn-primary" type="submit">
+                                                <i class="fa fa-save"></i>
+                                                確認
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <!-- end widget content -->
+
+                    </div>
+                    <!-- end widget div -->
+
+                </div>
+                <!-- end widget -->
+
+            </article>
+            <!-- WIDGET END -->
+
+        </div>
+        <!-- end row -->
+
+    </section>
+    <!-- end widget grid -->
+
+</div>
+@section scripts {
+    <script>
+        var hash = window.location.hash;
+        $('ul.nav-tabs li').eq(hash.substr(1)).addClass('active');
+        $('.tab-pane').eq(hash.substr(1)).addClass('active');
+    </script>
+}

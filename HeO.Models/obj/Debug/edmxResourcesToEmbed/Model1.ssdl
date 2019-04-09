@@ -1,0 +1,568 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="HeOModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="AdminLims">
+    <Key>
+      <PropertyRef Name="AdminLimID" />
+    </Key>
+    <Property Name="AdminLimID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="AdminID" Type="int" Nullable="false" />
+    <Property Name="LimID" Type="int" Nullable="false" />
+    <Property Name="IsAdd" Type="bit" Nullable="false" />
+    <Property Name="IsUpdate" Type="bit" Nullable="false" />
+    <Property Name="IsDelete" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Admins">
+    <Key>
+      <PropertyRef Name="AdminID" />
+    </Key>
+    <Property Name="AdminID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Username" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Password" Type="nvarchar" MaxLength="20" Nullable="false" />
+    <Property Name="Isenable" Type="tinyint" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Feedbackdetail">
+    <Key>
+      <PropertyRef Name="Setid" />
+    </Key>
+    <Property Name="Setid" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Feedbackproductid" Type="uniqueidentifier" />
+    <Property Name="Levelid" Type="uniqueidentifier" />
+    <Property Name="Money" Type="float" />
+  </EntityType>
+  <EntityType Name="Feedbackproduct">
+    <Key>
+      <PropertyRef Name="Feedbackproductid" />
+    </Key>
+    <Property Name="Feedbackproductid" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Feedbackproductname" Type="nvarchar" MaxLength="100" />
+    <Property Name="Uuid" Type="uniqueidentifier" />
+    <Property Name="Updatedate" Type="datetime" />
+    <Property Name="Createdate" Type="datetime" />
+  </EntityType>
+  <EntityType Name="Feedbackrecord">
+    <Key>
+      <PropertyRef Name="Feedbackid" />
+    </Key>
+    <Property Name="Feedbackid" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Memberid" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Ishdz" Type="tinyint" Nullable="false" />
+    <Property Name="Hdzaccount" Type="nvarchar" MaxLength="50" />
+    <Property Name="Total" Type="int" Nullable="false" />
+    <Property Name="Money" Type="int" Nullable="false" />
+    <Property Name="Remains" Type="int" Nullable="false" />
+    <Property Name="Cash" Type="int" Nullable="false" />
+    <Property Name="Bankaccount" Type="nvarchar" MaxLength="50" />
+    <Property Name="Remark" Type="nvarchar" MaxLength="100" />
+    <Property Name="Status" Type="int" Nullable="false" />
+    <Property Name="Createdate" Type="datetime" />
+    <Property Name="Updatedate" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Guide">
+    <Key>
+      <PropertyRef Name="Guideid" />
+    </Key>
+    <Property Name="Guideid" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Orders" Type="int" Nullable="false" />
+    <Property Name="Uuid" Type="uniqueidentifier" />
+    <Property Name="Createdate" Type="datetime" />
+    <Property Name="Updatedate" Type="datetime" />
+  </EntityType>
+  <EntityType Name="Guidelang">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Langid" Type="int" />
+    <Property Name="Guideid" Type="uniqueidentifier" />
+    <Property Name="Title" Type="nvarchar" MaxLength="100" />
+    <Property Name="Contents" Type="text" />
+  </EntityType>
+  <EntityType Name="Lims">
+    <Key>
+      <PropertyRef Name="LimID" />
+    </Key>
+    <Property Name="LimID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Key" Type="text" />
+    <Property Name="Value" Type="nvarchar" MaxLength="50" />
+    <Property Name="Icon" Type="nvarchar" MaxLength="50" />
+    <Property Name="Sort" Type="int" Nullable="false" />
+    <Property Name="ParentID" Type="int" />
+  </EntityType>
+  <EntityType Name="Memberauthorization">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Memberid" Type="uniqueidentifier" />
+    <Property Name="Feedbackproductid" Type="uniqueidentifier" />
+    <Property Name="Checked" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Memberlevel">
+    <Key>
+      <PropertyRef Name="Levelid" />
+    </Key>
+    <Property Name="Levelid" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Levelname" Type="nvarchar" MaxLength="100" />
+    <Property Name="Createdate" Type="datetime" />
+    <Property Name="Updatetime" Type="datetime" />
+  </EntityType>
+  <EntityType Name="Memberlevelcooldown">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Levelid" Type="uniqueidentifier" />
+    <Property Name="Cooldowntime" Type="int" />
+  </EntityType>
+  <EntityType Name="Members">
+    <Key>
+      <PropertyRef Name="Memberid" />
+    </Key>
+    <Property Name="Memberid" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Levelid" Type="uniqueidentifier" />
+    <Property Name="Facebookid" Type="nvarchar" MaxLength="50" />
+    <Property Name="Account" Type="nvarchar" MaxLength="50" />
+    <Property Name="Password" Type="nvarchar" MaxLength="100" />
+    <Property Name="Facebooklink" Type="nvarchar" MaxLength="500" />
+    <Property Name="Facebookstatus" Type="int" Nullable="false" />
+    <Property Name="Feedbackmoney" Type="int" Nullable="false" />
+    <Property Name="Isreal" Type="bit" Nullable="false" />
+    <Property Name="Lastdate" Type="datetime" />
+    <Property Name="Createdate" Type="datetime" />
+    <Property Name="Updatedate" Type="datetime" />
+  </EntityType>
+  <EntityType Name="News">
+    <Key>
+      <PropertyRef Name="Newsid" />
+    </Key>
+    <Property Name="Newsid" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Uuid" Type="uniqueidentifier" />
+    <Property Name="Date" Type="nvarchar" MaxLength="50" />
+    <Property Name="Createdate" Type="datetime" />
+    <Property Name="Updatedate" Type="datetime" />
+  </EntityType>
+  <EntityType Name="Newslang">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Newsid" Type="uniqueidentifier" />
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Title" Type="text" />
+    <Property Name="Langid" Type="int" />
+  </EntityType>
+  <EntityType Name="Order">
+    <Key>
+      <PropertyRef Name="Orderid" />
+    </Key>
+    <Property Name="Orderid" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Ordernumber" Type="nvarchar" MaxLength="255" />
+    <Property Name="Memberid" Type="uniqueidentifier" />
+    <Property Name="HDZoredernumber" Type="nvarchar" MaxLength="255" />
+    <Property Name="Url" Type="nvarchar" MaxLength="500" />
+    <Property Name="Service" Type="nvarchar" MaxLength="255" />
+    <Property Name="Count" Type="int" />
+    <Property Name="Cost" Type="float" />
+    <Property Name="Updatedate" Type="datetime" />
+    <Property Name="Createdate" Type="datetime" />
+  </EntityType>
+  <EntityType Name="Orderfaceooklist">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Orderid" Type="uniqueidentifier" />
+    <Property Name="Memberid" Type="uniqueidentifier" />
+    <Property Name="Facebookaccount" Type="nvarchar" MaxLength="100" />
+    <Property Name="Createdate" Type="datetime" />
+    <Property Name="Updatedate" Type="datetime" />
+  </EntityType>
+  <EntityType Name="Returnstatus">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" />
+    <Property Name="Text" Type="text" />
+  </EntityType>
+  <EntityType Name="Setting">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Time" Type="int" />
+    <Property Name="Max" Type="int" />
+    <Property Name="Min" Type="int" />
+    <Property Name="Createdate" Type="datetime" />
+    <Property Name="Updatedate" Type="datetime" />
+  </EntityType>
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="principal_id" Type="int" Nullable="false" />
+    <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="version" Type="int" />
+    <Property Name="definition" Type="varbinary(max)" />
+  </EntityType>
+  <EntityType Name="Term">
+    <Key>
+      <PropertyRef Name="Termid" />
+    </Key>
+    <Property Name="Termid" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Uuid" Type="uniqueidentifier" />
+    <Property Name="Orders" Type="int" Nullable="false" />
+    <Property Name="Createdate" Type="datetime" />
+    <Property Name="Updatedate" Type="datetime" />
+  </EntityType>
+  <EntityType Name="Termlang">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Termid" Type="uniqueidentifier" />
+    <Property Name="Langid" Type="int" />
+    <Property Name="Title" Type="nvarchar" MaxLength="100" />
+    <Property Name="Contents" Type="text" />
+  </EntityType>
+  <EntityType Name="Vipdetail">
+    <Key>
+      <PropertyRef Name="Vipdetailid" />
+    </Key>
+    <Property Name="Vipdetailid" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Day" Type="int" />
+    <Property Name="Money" Type="int" />
+    <Property Name="Createdate" Type="datetime" />
+    <Property Name="Updatedate" Type="datetime" />
+  </EntityType>
+  <EntityType Name="Viprecord">
+    <Key>
+      <PropertyRef Name="Viprecordid" />
+    </Key>
+    <Property Name="Viprecordid" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Memberid" Type="uniqueidentifier" />
+    <Property Name="Payway" Type="tinyint" Nullable="false" />
+    <Property Name="Status" Type="tinyint" Nullable="false" />
+    <Property Name="Money" Type="int" />
+    <Property Name="Day" Type="int" />
+    <Property Name="Paymenttype" Type="nvarchar" MaxLength="50" />
+    <Property Name="Paymentdate" Type="datetime" />
+    <Property Name="Buydate" Type="datetime" />
+    <Property Name="Startdate" Type="datetime" />
+    <Property Name="Enddate" Type="datetime" Nullable="false" />
+    <Property Name="Createdate" Type="datetime" />
+    <Property Name="Updatedate" Type="datetime" />
+  </EntityType>
+  <Association Name="FK_Adminlims_Admins">
+    <End Role="Admins" Type="Self.Admins" Multiplicity="1" />
+    <End Role="AdminLims" Type="Self.AdminLims" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Admins">
+        <PropertyRef Name="AdminID" />
+      </Principal>
+      <Dependent Role="AdminLims">
+        <PropertyRef Name="AdminID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Adminlims_Lims">
+    <End Role="Lims" Type="Self.Lims" Multiplicity="1" />
+    <End Role="AdminLims" Type="Self.AdminLims" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Lims">
+        <PropertyRef Name="LimID" />
+      </Principal>
+      <Dependent Role="AdminLims">
+        <PropertyRef Name="LimID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Feedbackdetail_Feedbackproduct1">
+    <End Role="Feedbackproduct" Type="Self.Feedbackproduct" Multiplicity="0..1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Feedbackdetail" Type="Self.Feedbackdetail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Feedbackproduct">
+        <PropertyRef Name="Feedbackproductid" />
+      </Principal>
+      <Dependent Role="Feedbackdetail">
+        <PropertyRef Name="Feedbackproductid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Feedbackrecord_Members">
+    <End Role="Members" Type="Self.Members" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Feedbackrecord" Type="Self.Feedbackrecord" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Members">
+        <PropertyRef Name="Memberid" />
+      </Principal>
+      <Dependent Role="Feedbackrecord">
+        <PropertyRef Name="Memberid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Feedbackset_Memberlevel">
+    <End Role="Memberlevel" Type="Self.Memberlevel" Multiplicity="0..1" />
+    <End Role="Feedbackdetail" Type="Self.Feedbackdetail" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Memberlevel">
+        <PropertyRef Name="Levelid" />
+      </Principal>
+      <Dependent Role="Feedbackdetail">
+        <PropertyRef Name="Levelid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Guidelang_Guide">
+    <End Role="Guide" Type="Self.Guide" Multiplicity="0..1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Guidelang" Type="Self.Guidelang" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Guide">
+        <PropertyRef Name="Guideid" />
+      </Principal>
+      <Dependent Role="Guidelang">
+        <PropertyRef Name="Guideid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Lims_Lims1">
+    <End Role="Lims" Type="Self.Lims" Multiplicity="0..1" />
+    <End Role="Lims1" Type="Self.Lims" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Lims">
+        <PropertyRef Name="LimID" />
+      </Principal>
+      <Dependent Role="Lims1">
+        <PropertyRef Name="ParentID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Memberauthorization_Feedbackproduct">
+    <End Role="Feedbackproduct" Type="Self.Feedbackproduct" Multiplicity="0..1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Memberauthorization" Type="Self.Memberauthorization" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Feedbackproduct">
+        <PropertyRef Name="Feedbackproductid" />
+      </Principal>
+      <Dependent Role="Memberauthorization">
+        <PropertyRef Name="Feedbackproductid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Memberauthorization_Members">
+    <End Role="Members" Type="Self.Members" Multiplicity="0..1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Memberauthorization" Type="Self.Memberauthorization" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Members">
+        <PropertyRef Name="Memberid" />
+      </Principal>
+      <Dependent Role="Memberauthorization">
+        <PropertyRef Name="Memberid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Memberlevelcooldown_Memberlevel">
+    <End Role="Memberlevel" Type="Self.Memberlevel" Multiplicity="0..1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Memberlevelcooldown" Type="Self.Memberlevelcooldown" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Memberlevel">
+        <PropertyRef Name="Levelid" />
+      </Principal>
+      <Dependent Role="Memberlevelcooldown">
+        <PropertyRef Name="Levelid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Members_Memberlevel">
+    <End Role="Memberlevel" Type="Self.Memberlevel" Multiplicity="0..1" />
+    <End Role="Members" Type="Self.Members" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Memberlevel">
+        <PropertyRef Name="Levelid" />
+      </Principal>
+      <Dependent Role="Members">
+        <PropertyRef Name="Levelid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Newlang_News">
+    <End Role="News" Type="Self.News" Multiplicity="0..1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Newslang" Type="Self.Newslang" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="News">
+        <PropertyRef Name="Newsid" />
+      </Principal>
+      <Dependent Role="Newslang">
+        <PropertyRef Name="Newsid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Order_Members">
+    <End Role="Members" Type="Self.Members" Multiplicity="0..1" />
+    <End Role="Order" Type="Self.Order" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Members">
+        <PropertyRef Name="Memberid" />
+      </Principal>
+      <Dependent Role="Order">
+        <PropertyRef Name="Memberid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Orderfaceooklist_Members">
+    <End Role="Members" Type="Self.Members" Multiplicity="0..1" />
+    <End Role="Orderfaceooklist" Type="Self.Orderfaceooklist" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Members">
+        <PropertyRef Name="Memberid" />
+      </Principal>
+      <Dependent Role="Orderfaceooklist">
+        <PropertyRef Name="Memberid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Orderfaceooklist_Order">
+    <End Role="Order" Type="Self.Order" Multiplicity="0..1" />
+    <End Role="Orderfaceooklist" Type="Self.Orderfaceooklist" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Order">
+        <PropertyRef Name="Orderid" />
+      </Principal>
+      <Dependent Role="Orderfaceooklist">
+        <PropertyRef Name="Orderid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Termlang_Term">
+    <End Role="Term" Type="Self.Term" Multiplicity="0..1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Termlang" Type="Self.Termlang" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Term">
+        <PropertyRef Name="Termid" />
+      </Principal>
+      <Dependent Role="Termlang">
+        <PropertyRef Name="Termid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Viprecord_Members">
+    <End Role="Members" Type="Self.Members" Multiplicity="0..1" />
+    <End Role="Viprecord" Type="Self.Viprecord" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Members">
+        <PropertyRef Name="Memberid" />
+      </Principal>
+      <Dependent Role="Viprecord">
+        <PropertyRef Name="Memberid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="HeOModelStoreContainer">
+    <EntitySet Name="AdminLims" EntityType="Self.AdminLims" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Admins" EntityType="Self.Admins" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Feedbackdetail" EntityType="Self.Feedbackdetail" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Feedbackproduct" EntityType="Self.Feedbackproduct" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Feedbackrecord" EntityType="Self.Feedbackrecord" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Guide" EntityType="Self.Guide" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Guidelang" EntityType="Self.Guidelang" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Lims" EntityType="Self.Lims" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Memberauthorization" EntityType="Self.Memberauthorization" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Memberlevel" EntityType="Self.Memberlevel" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Memberlevelcooldown" EntityType="Self.Memberlevelcooldown" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Members" EntityType="Self.Members" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="News" EntityType="Self.News" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Newslang" EntityType="Self.Newslang" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Order" EntityType="Self.Order" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Orderfaceooklist" EntityType="Self.Orderfaceooklist" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Returnstatus" EntityType="Self.Returnstatus" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Setting" EntityType="Self.Setting" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Term" EntityType="Self.Term" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Termlang" EntityType="Self.Termlang" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Vipdetail" EntityType="Self.Vipdetail" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Viprecord" EntityType="Self.Viprecord" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_Adminlims_Admins" Association="Self.FK_Adminlims_Admins">
+      <End Role="Admins" EntitySet="Admins" />
+      <End Role="AdminLims" EntitySet="AdminLims" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Adminlims_Lims" Association="Self.FK_Adminlims_Lims">
+      <End Role="Lims" EntitySet="Lims" />
+      <End Role="AdminLims" EntitySet="AdminLims" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Feedbackdetail_Feedbackproduct1" Association="Self.FK_Feedbackdetail_Feedbackproduct1">
+      <End Role="Feedbackproduct" EntitySet="Feedbackproduct" />
+      <End Role="Feedbackdetail" EntitySet="Feedbackdetail" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Feedbackrecord_Members" Association="Self.FK_Feedbackrecord_Members">
+      <End Role="Members" EntitySet="Members" />
+      <End Role="Feedbackrecord" EntitySet="Feedbackrecord" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Feedbackset_Memberlevel" Association="Self.FK_Feedbackset_Memberlevel">
+      <End Role="Memberlevel" EntitySet="Memberlevel" />
+      <End Role="Feedbackdetail" EntitySet="Feedbackdetail" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Guidelang_Guide" Association="Self.FK_Guidelang_Guide">
+      <End Role="Guide" EntitySet="Guide" />
+      <End Role="Guidelang" EntitySet="Guidelang" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Lims_Lims1" Association="Self.FK_Lims_Lims1">
+      <End Role="Lims" EntitySet="Lims" />
+      <End Role="Lims1" EntitySet="Lims" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Memberauthorization_Feedbackproduct" Association="Self.FK_Memberauthorization_Feedbackproduct">
+      <End Role="Feedbackproduct" EntitySet="Feedbackproduct" />
+      <End Role="Memberauthorization" EntitySet="Memberauthorization" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Memberauthorization_Members" Association="Self.FK_Memberauthorization_Members">
+      <End Role="Members" EntitySet="Members" />
+      <End Role="Memberauthorization" EntitySet="Memberauthorization" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Memberlevelcooldown_Memberlevel" Association="Self.FK_Memberlevelcooldown_Memberlevel">
+      <End Role="Memberlevel" EntitySet="Memberlevel" />
+      <End Role="Memberlevelcooldown" EntitySet="Memberlevelcooldown" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Members_Memberlevel" Association="Self.FK_Members_Memberlevel">
+      <End Role="Memberlevel" EntitySet="Memberlevel" />
+      <End Role="Members" EntitySet="Members" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Newlang_News" Association="Self.FK_Newlang_News">
+      <End Role="News" EntitySet="News" />
+      <End Role="Newslang" EntitySet="Newslang" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Order_Members" Association="Self.FK_Order_Members">
+      <End Role="Members" EntitySet="Members" />
+      <End Role="Order" EntitySet="Order" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Orderfaceooklist_Members" Association="Self.FK_Orderfaceooklist_Members">
+      <End Role="Members" EntitySet="Members" />
+      <End Role="Orderfaceooklist" EntitySet="Orderfaceooklist" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Orderfaceooklist_Order" Association="Self.FK_Orderfaceooklist_Order">
+      <End Role="Order" EntitySet="Order" />
+      <End Role="Orderfaceooklist" EntitySet="Orderfaceooklist" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Termlang_Term" Association="Self.FK_Termlang_Term">
+      <End Role="Term" EntitySet="Term" />
+      <End Role="Termlang" EntitySet="Termlang" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Viprecord_Members" Association="Self.FK_Viprecord_Members">
+      <End Role="Members" EntitySet="Members" />
+      <End Role="Viprecord" EntitySet="Viprecord" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
