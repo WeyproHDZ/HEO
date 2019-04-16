@@ -1,0 +1,73 @@
+﻿@{ 
+    var News = (IEnumerable<News>)ViewBag.News;
+}
+<main id="main">
+    <section class="banner-wrap">
+        <div class="banner banner_index" style="background-image: url(/Content/images/banner_index.png)">
+            <div class="restrict">
+                <h1>團結按讚力量大</h1>
+                <h2>加入HeO臉書互惠系統<br>讓大家一起幫你按讚！</h2><a class="btn" href="@(Session["IsLogin"] != null && (bool)Session["IsLogin"] ? Url.Action("Order", "OrderMs") : Url.Action("Login", "HomeMs"))" title="免費加入">免費加入</a>
+            </div>
+        </div>
+    </section>
+    <section class="news">
+        <div class="block_inner allpadding">
+            <h2 class="title">最新公告</h2>
+            <ul>
+                @foreach (News NewsList in News)
+                {
+                    <li>
+                        <time datetime="@NewsList.Date">@NewsList.Date</time>
+                        <p class="news-letter">@NewsList.Newslang.FirstOrDefault().Title</p>
+                    </li>
+                }
+                @*<li>
+                    <time datetime="2018-04-03">2018/04/03</time>
+                    <p class="news-letter">別懷疑,立即註冊會員我們將提供給每個註冊會員免費使用部分服務</p>
+                </li>*@
+            </ul>
+        </div>
+    </section>
+    <section class="related_instructions">
+        <div class="block_inner allpadding">
+            <h2>加入互惠系統 成為人氣王</h2>
+            <div class="restrict-content">
+                <p>立即註冊加入HeO臉書互惠系統，一個人力量很薄弱，但只要很多人聚再一起，力量也可以變得很強大。HeO互惠是免費提供給各位會員使用，並不會強迫會員作業按讚。HeO是市面上唯一免費使用還可以賺錢的平台！<br>快立即註冊加入HeO的大家庭！</p><a class="btn" href="@Url.Action("About", "HomeMs")" title="關於我們">關於我們</a>
+            </div>
+            <div class="instructions_items">
+                <div class="item">
+                    <div class="icon"><img src="~/Content/images/strength-1.png"></div>
+                    <h3>團結力量大</h3>
+                    <p>HeO主要提供各位會員免費互助,藉由會員互相幫忙來達成會員互相互助的行銷手段,以互助的方式會員只需付出一點代價,就可以收到倍數的回報。</p>
+                </div>
+                <div class="item">
+                    <div class="icon"><img src="~/Content/images/strength-2.png"></div>
+                    <h3>真人帳號不虛假</h3>
+                    <p>系統自動把關使用HeO會員的臉書帳號，並提供真人帳號等多樣機制，杜絕所有空白或無頭貼帳號，讓所有按讚的用戶更符合真人，讓按讚更有效益與完美。</p>
+                </div>
+                <div class="item">
+                    <div class="icon"><img src="~/Content/images/strength-3.png"></div>
+                    <h3>安全方便又快速</h3>
+                    <p>我們保證不盜取或販售任何登入FB的臉書帳號,僅在會員登入期間同意授權會員互助使用,若不想參與互助按讚或不想等待按讚時間,也可以購買VIP。</p>
+                </div>
+                <div class="item">
+                    <div class="icon"><img src="~/Content/images/strength-4.png"></div>
+                    <h3>加入再拿回饋金</h3>
+                    <p>
+                        在會員(你/妳)幫助別人按取一個讚時,不但可以得到額外獎勵金,在同時間還會有許多其他會員幫助您指定的文章按讚,若會員本身沒有按讚需求,也可以線上掛機自動賺取獎勵金。
+
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="related_instructions promote-section" style="background-image: url(/Content/images/bg_link.png)">
+        <div class="block_inner allpadding">
+            <h3>想要獲得更多關注與流量嗎？</h3>
+            <h2>團結力量大 免費快速用</h2>
+            <div class="restrict-content">
+                <p>快加入HeO臉書互惠家庭，讓您無時無刻都有高人氣。HeO幫您篩選按讚質量，HeO讓您被動就有收入，越多人加入越多收入越多讚數，<br>快來註冊加入HeO體驗跨時代系統！</p><a class="btn" href="@Url.Action("Login" , "HomeMs")" title="開始使用">開始使用</a>
+            </div>
+        </div>
+    </section>
+</main>

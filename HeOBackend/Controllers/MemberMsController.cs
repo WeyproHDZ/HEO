@@ -162,12 +162,12 @@ namespace HeOBackend.Controllers
         [CheckSession(IsAuth = true)]
         public ActionResult AddMembers()
         {
-            var members = membersService.Get();
+            IEnumerable<Members> members = membersService.Get();
             /**** 回饋金產品 *****/
-            var feedbackproduct = feedbackproductService.Get();
+            IEnumerable<Feedbackproduct> feedbackproduct = feedbackproductService.Get();
             ViewBag.feedbackproduct = feedbackproduct;
             /**** 等級選單 *****/
-            var memberlevel = memberlevelService.Get();
+            IEnumerable<Memberlevel> memberlevel = memberlevelService.Get();
             SelectList memberlevelselectList = new SelectList(memberlevel, "Levelid", "Levelname");
             ViewBag.memberlevelList = memberlevelselectList;
             return View();
@@ -183,6 +183,7 @@ namespace HeOBackend.Controllers
                 members.Updatedate = DateTime.Now;
                 members.Isreal = members.Isreal;
                 members.Levelid = members.Levelid;
+                members.Lastdate = DateTime.Now.ToShortDateString();
                 membersService.Create(members);
                 foreach (Memberauthorization memberauthorization in members.Memberauthorization)
                 {
@@ -213,7 +214,7 @@ namespace HeOBackend.Controllers
             Members member = membersService.GetByID(Memberid);
             LevelDropDownList(member);
             /**** 回饋金產品 *****/
-            var feedbackproduct = feedbackproductService.Get();
+            IEnumerable<Feedbackproduct> feedbackproduct = feedbackproductService.Get();
             ViewBag.feedbackproduct = feedbackproduct;
             return View(member);
         }
@@ -251,7 +252,7 @@ namespace HeOBackend.Controllers
         [CheckSession(IsAuth = true)]
         public ActionResult Vipdetail(int p = 1)
         {
-            var data = vipdetailService.Get().OrderBy(o => o.Createdate);
+            var data = vipdetailService.Get().OrderBy(o => o.Money);
             ViewBag.pageNumber = p;
             ViewBag.Vipdetail = data.ToPagedList(pageNumber: p, pageSize: 20);
 
@@ -321,8 +322,8 @@ namespace HeOBackend.Controllers
             return View();
         }
         [CheckSession(IsAuth = true)]
-        [HttpPost]
-        public ActionResult Viprecord(Guid? Memberid, int p)
+        [HttpGet]
+        public ActionResult Viprecord(Guid? Memberid, int p = 1)
         {
             if (Memberid != null)
             {
@@ -346,7 +347,7 @@ namespace HeOBackend.Controllers
         public ActionResult AddViprecord()
         {
             MembersDropDownList();
-            var vipdetail = vipdetailService.Get().OrderByDescending(o => o.Day);
+            IEnumerable<Vipdetail> vipdetail = vipdetailService.Get().OrderByDescending(o => o.Day);
             SelectList VipdetailList = new SelectList(vipdetail, "Vipdetailid", "Day");
             ViewBag.VipdetailList = VipdetailList;
             return View();
@@ -371,13 +372,11 @@ namespace HeOBackend.Controllers
                 {
                     viprecord.Enddate = old_record.Enddate.AddDays(day);
                     viprecord.Startdate = old_record.Enddate;
-
                 }
                 else
                 {
                     viprecord.Enddate = DateTime.Now.AddDays(day);
                     viprecord.Startdate = DateTime.Now;
-
                 }
                 viprecordService.Create(viprecord);
                 viprecordService.SaveChanges();
@@ -400,7 +399,7 @@ namespace HeOBackend.Controllers
         public ActionResult EditViprecord(Guid Viprecordid, int p)
         {
             MembersDropDownList();
-            var vipdetail = vipdetailService.Get().OrderByDescending(o => o.Day);
+            IEnumerable<Vipdetail> vipdetail = vipdetailService.Get().OrderByDescending(o => o.Day);
             Viprecord viprecord = viprecordService.GetByID(Viprecordid);
             var selectday = vipdetailService.Get().FirstOrDefault(a => a.Day == viprecord.Day);
             SelectList VipdetailList = new SelectList(vipdetail, "Vipdetailid", "Day" , selectday.Vipdetailid);

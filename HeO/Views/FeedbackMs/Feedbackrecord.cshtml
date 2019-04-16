@@ -1,0 +1,95 @@
+﻿@{ 
+    var Feedbackrecord = (IEnumerable<Feedbackrecord>)ViewBag.Feedbackrecord;
+    string status;
+}
+<main id="main">
+    <section class="member block_container">
+        <div class="block_inner">
+            @{ Html.RenderPartial("_Member"); }
+            <div class="member_container">
+                <div class="content-block">
+                    <h1>您目前的獎勵金<span class="reward-number"> @ViewBag.Membermoney $</span></h1>
+                    <div class="text">獎勵金累積5000$可轉換成台幣(需聯繫客服處理)。<br>目前獎勵金:台幣比值為1:0.5(5000獎勵金轉換2500台幣),僅限於HEO上的獎勵金,<br>若該獎勵金已轉去HDZ則不接受轉換現金。</div>
+                    <div class="main-content">
+                        @using (Html.BeginForm("Feedbackrecord", "FeedbackMs", FormMethod.Post, new { @id = "form" }))
+                        {
+                            <div class="transfer-number">
+                                <p>我要轉出</p>
+                                <input class="transfer" type="text" name="Money">
+                                <p>獎勵金至HDz</p>
+                            </div>
+                            <div class="transfer-submit"><button class="btn" type="submit" title="轉出">轉出</button></div>
+                        }
+                    </div>
+                </div>
+                <div class="content-block">
+                    <div class="content-block-title">獎勵金轉出列表</div>
+                    <div class="stored_history">
+                        <div class="history">
+                            <div class="rwd_table_wrapper">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>日期</th>
+                                            <th>轉至HDz帳號</th>
+                                            <th>轉前獎勵金</th>
+                                            <th>轉出獎勵金</th>
+                                            <th>剩餘獎勵金</th>
+                                            <th>狀態</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (Feedbackrecord FeedbackrecordList in Feedbackrecord)
+                                        {
+                                            switch (FeedbackrecordList.Status)
+                                            {
+                                                case 0:
+                                                    status = "等待中";
+                                                    break;
+                                                case 1:
+                                                    status = "轉入HDZ";
+                                                    break;
+                                                case 2:
+                                                    status = "轉出台幣";
+                                                    break;
+                                                case 3:
+                                                    status = "失敗";
+                                                    break;
+                                                default:
+                                                    status = "Error";
+                                                    break;
+                                            }
+                                            if (FeedbackrecordList.Ishdz == 0)
+                                            {
+                                                <tr>
+                                                    <td class="align_left">@FeedbackrecordList.Createdate</td>
+                                                    <td>@FeedbackrecordList.Hdzaccount</td>
+                                                    <td>@(FeedbackrecordList.Remains + FeedbackrecordList.Money)</td>
+                                                    <td>@FeedbackrecordList.Money</td>
+                                                    <td>@FeedbackrecordList.Remains</td>
+                                                    <td>@status</td>
+                                                </tr>
+                                            }
+                                            else
+                                            {
+                                                <tr>
+                                                    <td class="align_left">@FeedbackrecordList.Createdate</td>
+                                                    <td>@FeedbackrecordList.Bankaccount</td>
+                                                    <td>@(FeedbackrecordList.Remains + FeedbackrecordList.Money)</td>
+                                                    <td>@FeedbackrecordList.Money</td>
+                                                    <td>@FeedbackrecordList.Remains</td>
+                                                    <td>@status</td>
+                                                </tr>
+                                            }
+
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>

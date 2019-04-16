@@ -17,11 +17,12 @@ namespace HeO.Models
         public int Id { get; set; }
         public Nullable<System.Guid> Orderid { get; set; }
         public Nullable<System.Guid> Memberid { get; set; }
+        public Nullable<System.Guid> Feedbackproductid { get; set; }
         public string Facebookaccount { get; set; }
         public Nullable<System.DateTime> Createdate { get; set; }
         public Nullable<System.DateTime> Updatedate { get; set; }
     
-        public virtual Members Members { get; set; }
         public virtual Order Order { get; set; }
+        public virtual Members Members { get; set; }
     }
 }

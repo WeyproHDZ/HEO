@@ -107,10 +107,10 @@ namespace HeOBackend.Controllers
         [CheckSession(IsAuth = true)]
         public ActionResult AddFeedbackdetail()
         {
-            var feedbackproduct = feedbackproductService.Get();
+            IEnumerable<Feedbackproduct> feedbackproduct = feedbackproductService.Get();
             SelectList selectList = new SelectList(feedbackproduct, "feedbackproductid", "feedbackproductname");
             ViewBag.feedbackproductList = selectList;
-            var Levelname = memberlevelService.Get();
+            IEnumerable<Memberlevel> Levelname = memberlevelService.Get();
             ViewBag.Levelname = Levelname;
             return View();
         }
@@ -153,9 +153,9 @@ namespace HeOBackend.Controllers
             ViewBag.pageNumber = p;
 
             Feedbackproduct feedbackproduct = feedbackproductService.GetByID(Feedbackproductid);
-            var feedbackproduct_select = feedbackproductService.Get();
+            IEnumerable<Feedbackproduct> feedbackproduct_select = feedbackproductService.Get();
             SelectList selectList = new SelectList(feedbackproduct_select, "feedbackproductid", "feedbackproductname");
-            var Levelname = memberlevelService.Get();
+            IEnumerable<Memberlevel> Levelname = memberlevelService.Get();
             ViewBag.Levelname = Levelname;
             ViewBag.feedbackproductList = selectList;
             return View(feedbackproduct);
@@ -210,8 +210,8 @@ namespace HeOBackend.Controllers
             return View();
         }
         [CheckSession(IsAuth = true)]
-        [HttpPost]
-        public ActionResult Feedbackrecord(Guid? Memberid , int p)
+        [HttpGet]
+        public ActionResult Feedbackrecord(Guid? Memberid , int p = 1)
         {
             /*** 下拉選單有填值 ****/
             if(Memberid != null)

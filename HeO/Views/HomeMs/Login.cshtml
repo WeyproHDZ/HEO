@@ -1,0 +1,93 @@
+﻿<main id="main">
+    <section class="banner-container" style="background-image: url('/Content/images/banner_start.png')">
+        <div class="block_container">
+            <div class="restrict allpadding">
+                <h1>歡迎登入使用</h1>
+            </div>
+            <div class="login">
+                <div class="block_inner">
+                    <div class="login_items">
+                        <div class="item">
+                            <h2>會員登入</h2>
+                            @*<form class="login_form">*@
+                            @using (Html.BeginForm("Login", "HomeMs", FormMethod.Post, new { @id = "form" , @class = "login_form" }))
+                            {
+                                <div class="controls_group">
+                                    <label>帳號</label>
+                                    <!--↓controls class 加入 "error" 可顯示錯誤提示↓-->
+                                    <div class="controls">
+                                        <input type="email" name="Account" id="Account" placeholder="請輸入FB帳號" required>
+                                        <div class="error_text">*請輸入Facebook帳號</div>
+                                    </div>
+                                </div>
+                                <div class="controls_group">
+                                    <label>密碼</label>
+                                    <!--↓controls class 加入 "error" 可顯示錯誤提示↓-->
+                                    <div class="controls">
+                                        <input type="password" name="Password" id="Password" placeholder="請輸入FB密碼" required>
+                                        <div class="error_text">*請輸入密碼</div>
+                                    </div>
+                                </div>
+                                <div class="captcha">
+                                    <div class="captcha_inner">
+                                        <div class="g-recaptcha" data-sitekey="6LcHGhITAAAAABIgEAplK2EWsVFkaE5o0DWUpsIs"> </div>
+                                    </div>
+                                </div>
+                                <div class="controls_group terms-group">
+                                    <input id="terms" type="checkbox" name="terms">
+                                    <label for="terms">我同意HeO臉書互惠系統<span> <a class="terms ajax-popup-link" href="@Url.Action("Term", "RuleMs")">使用條款</a></span></label>
+                                </div>
+                                @*<a class="btn" href="@Url.Action("Login", "HomeMs")" title="登入">登入</a>*@
+                                <button class="btn" type="button" onclick="send()" title="登入">登入</button>
+                            }
+
+                            @*</form>*@
+                        </div>
+                        <div class="instruction">
+                            <div class="content-block">
+                                <div class="about-content">
+                                    <h3>使用說明</h3>
+                                    <ul>
+                                        <li>
+                                            <p>登入後即同意HeO互惠平台相關規定,並接受該臉書在登入期間會自動幫有需要之會員作業服務。</p>
+                                        </li>
+                                        <li>
+                                            <p>HeO目前僅提供臉書互惠,請先使用臉書登入HEO,登入後會員可在使用頁面輸入您要作業的網址,並填入數量送出後,其他會員就會在登入HEO平台期間為您的輸入的網址進行作業,在您登入期間若有人像您帳號購買您的服務,則會額外得到獎勵金。</p>
+                                        </li>
+                                        <li>
+                                            <p>初次登入需要檢查該臉書基本門檻,認證過下次無需在認證,初步認證僅需簡單帳號檢測,若登入的臉書帳號是真人在使用,或極為像真人,每組帳號可以像工作人員申請真人帳號資格,真人帳號可獲取更多免費時間與更多獎勵金。</p>
+                                        </li>
+                                        <li>
+                                            <p>如若有操作上的問題可參考<span><a class="font-purple" href="@Url.Action("Guide", "RuleMs")" title="使用教學">使用教學。</a></span></p>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+@section scripts
+{
+    <script>
+        function send()
+        {
+            if ($('#terms').prop('checked')) {
+                $('#form').submit();
+            }
+            else {
+                console.log($('#Account').val());
+                swal({
+                    title: 'Error',
+                    text: '請勾選使用條款！',
+                    type: 'warning'
+                });
+            }
+        }
+    </script>
+}
+

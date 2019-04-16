@@ -24,6 +24,7 @@
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <WebGreaseLibPath>..\packages\WebGrease.1.5.2\lib</WebGreaseLibPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -43,6 +44,18 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Antlr3.Runtime, Version=3.4.1.9004, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.AI.Agent.Intercept, Version=1.2.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.ApplicationInsights.Agent.Intercept.1.2.1\lib\net45\Microsoft.AI.Agent.Intercept.dll</HintPath>
       <Private>True</Private>
@@ -76,6 +89,18 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.5.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="PagedList, Version=1.17.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="PagedList.Mvc, Version=4.5.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.Mvc.4.5.0.0\lib\net40\PagedList.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -85,6 +110,10 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Optimization, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
@@ -92,6 +121,10 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
+    <Reference Include="WebGrease, Version=1.5.2.14234, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebGrease.1.5.2\lib\WebGrease.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Web.Razor">
@@ -117,13 +150,86 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\images\banner.png" />
+    <Content Include="Content\images\banner_index.png" />
+    <Content Include="Content\images\banner_start.png" />
+    <Content Include="Content\images\bg_join.png" />
+    <Content Include="Content\images\bg_link.png" />
+    <Content Include="Content\images\bg_success.png" />
+    <Content Include="Content\images\favicon.ico" />
+    <Content Include="Content\images\fb-photo.png" />
+    <Content Include="Content\images\fb\photo-1.png" />
+    <Content Include="Content\images\fb\photo-2.png" />
+    <Content Include="Content\images\fb\photo-3.png" />
+    <Content Include="Content\images\fb\photo-4.png" />
+    <Content Include="Content\images\fb\photo-5.png" />
+    <Content Include="Content\images\fb\photo-6.png" />
+    <Content Include="Content\images\fb\photo-7.png" />
+    <Content Include="Content\images\fb\photo-8.png" />
+    <Content Include="Content\images\fb\photo-9.png" />
+    <Content Include="Content\images\intro_fb.png" />
+    <Content Include="Content\images\intro_feedback.png" />
+    <Content Include="Content\images\intro_link.png" />
+    <Content Include="Content\images\intro_union.png" />
+    <Content Include="Content\images\logo.png" />
+    <Content Include="Content\images\logo_footer.png" />
+    <Content Include="Content\images\reCAPTCHA.png" />
+    <Content Include="Content\images\scroll_top.png" />
+    <Content Include="Content\images\slick-ajax-loader.gif" />
+    <Content Include="Content\images\sprite-2x.png" />
+    <Content Include="Content\images\sprite.png" />
+    <Content Include="Content\images\sprite\icon_arrow-2x.png" />
+    <Content Include="Content\images\sprite\icon_arrow.png" />
+    <Content Include="Content\images\sprite\icon_arrow_down-2x.png" />
+    <Content Include="Content\images\sprite\icon_arrow_down.png" />
+    <Content Include="Content\images\sprite\icon_blog_white-2x.png" />
+    <Content Include="Content\images\sprite\icon_blog_white.png" />
+    <Content Include="Content\images\sprite\icon_close-2x.png" />
+    <Content Include="Content\images\sprite\icon_close.png" />
+    <Content Include="Content\images\sprite\icon_link-2x.png" />
+    <Content Include="Content\images\sprite\icon_link.png" />
+    <Content Include="Content\images\sprite\icon_search-2x.png" />
+    <Content Include="Content\images\sprite\icon_search.png" />
+    <Content Include="Content\images\strength-1.png" />
+    <Content Include="Content\images\strength-2.png" />
+    <Content Include="Content\images\strength-3.png" />
+    <Content Include="Content\images\strength-4.png" />
+    <Content Include="Content\images\support.png" />
+    <Content Include="Content\images\transfer-img.png" />
+    <Content Include="Content\PagedList.css" />
+    <Content Include="Content\styles\bootstrap.css" />
+    <Content Include="Content\styles\bootstrap.min.css" />
+    <Content Include="Content\styles\main.css" />
+    <Content Include="Content\styles\Site.css" />
+    <Content Include="Content\styles\sweetalert2.min.css" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="scripts\ai.0.22.9-build00167.js" />
     <Content Include="scripts\ai.0.22.9-build00167.min.js" />
+    <Content Include="scripts\bootstrap.js" />
+    <Content Include="scripts\bootstrap.min.js" />
+    <None Include="scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="scripts\jquery-1.10.2.js" />
+    <Content Include="scripts\jquery-1.10.2.min.js" />
+    <Content Include="scripts\main.js" />
+    <Content Include="scripts\modernizr-2.6.2.js" />
+    <Content Include="scripts\plugins.js" />
+    <Content Include="scripts\sweetalert.min.js" />
+    <Content Include="scripts\sweetalert2.all.min.js" />
+    <Content Include="scripts\vendor.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\AjaxController.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\DepositMsController.cs" />
+    <Compile Include="Controllers\FeedbackMsController.cs" />
+    <Compile Include="Controllers\HomeMsController.cs" />
+    <Compile Include="Controllers\MemberMsController.cs" />
+    <Compile Include="Controllers\OrderMsController.cs" />
+    <Compile Include="Controllers\RuleMsController.cs" />
+    <Compile Include="Filters\CheckSessionAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -135,6 +241,34 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Shared\_Header.cshtml" />
+    <Content Include="Views\Shared\_Footer.cshtml" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\_Sidebar.cshtml" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="scripts\jquery-1.10.2.min.map" />
+    <Content Include="Views\HomeMs\Home.cshtml" />
+    <Content Include="Views\Shared\_Script.cshtml" />
+    <Content Include="Views\Shared\_Style.cshtml" />
+    <Content Include="Views\HomeMs\About.cshtml" />
+    <Content Include="Views\RuleMs\Guide.cshtml" />
+    <Content Include="Views\HomeMs\Login.cshtml" />
+    <Content Include="Views\RuleMs\Term.cshtml" />
+    <Content Include="Views\HomeMs\Certified.cshtml" />
+    <Content Include="Views\OrderMs\Order.cshtml" />
+    <Content Include="Views\OrderMs\OrderResult.cshtml" />
+    <Content Include="Views\OrderMs\OrderCooldown.cshtml" />
+    <Content Include="Views\MemberMs\Member.cshtml" />
+    <Content Include="Views\FeedbackMs\Feedbackrecord.cshtml" />
+    <Content Include="Views\FeedbackMs\Feedbackcount.cshtml" />
+    <Content Include="Views\Shared\_Member.cshtml" />
+    <Content Include="Views\DepositMs\Deposit.cshtml" />
+    <Content Include="Views\FeedbackMs\Feedbacktransfer.cshtml" />
+    <Content Include="Views\FeedbackMs\Feedbackconfirm.cshtml" />
+    <Content Include="Views\FeedbackMs\Feedbacksuccess.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -143,7 +277,19 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Controllers\" />
+    <Folder Include="App_Data\" />
+    <Folder Include="Views\Ajax\" />
+    <Folder Include="Views\Base\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\HeO.Models\HeO.Models.csproj">
+      <Project>{eec21f1d-c28b-4023-a708-dd5b7e43f306}</Project>
+      <Name>HeO.Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\HeO.Service\HeO.Service.csproj">
+      <Project>{75f1cd16-973b-4bda-b9bc-13007c658491}</Project>
+      <Name>HeO.Service</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -158,7 +304,7 @@
         <WebProjectProperties>
           <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>65437</DevelopmentServerPort>
+          <DevelopmentServerPort>57901</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://localhost:65437/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>

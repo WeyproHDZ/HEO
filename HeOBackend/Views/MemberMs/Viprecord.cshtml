@@ -17,7 +17,7 @@
 
                     <!-- widget content -->
                     <div class="widget-body">
-                        @using (Html.BeginForm("Viprecord", "MemberMs", new { p = ViewBag.pageNumber }, FormMethod.Post, new { @id = "form" }))
+                        @using (Html.BeginForm("Viprecord", "MemberMs", new { p = ViewBag.pageNumber }, FormMethod.Get, new { @id = "form" }))
                         {
                         <div class="widget-body-toolbar">
 

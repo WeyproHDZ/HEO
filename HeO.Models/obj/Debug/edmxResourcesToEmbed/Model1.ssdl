@@ -127,8 +127,8 @@
     <Property Name="Facebookstatus" Type="int" Nullable="false" />
     <Property Name="Feedbackmoney" Type="int" Nullable="false" />
     <Property Name="Isreal" Type="bit" Nullable="false" />
-    <Property Name="Lastdate" Type="datetime" />
-    <Property Name="Createdate" Type="datetime" />
+    <Property Name="Lastdate" Type="nvarchar" MaxLength="50" />
+    <Property Name="Createdate" Type="datetime" Nullable="false" />
     <Property Name="Updatedate" Type="datetime" />
   </EntityType>
   <EntityType Name="News">
@@ -163,7 +163,7 @@
     <Property Name="Count" Type="int" />
     <Property Name="Cost" Type="float" />
     <Property Name="Updatedate" Type="datetime" />
-    <Property Name="Createdate" Type="datetime" />
+    <Property Name="Createdate" Type="datetime" Nullable="false" />
   </EntityType>
   <EntityType Name="Orderfaceooklist">
     <Key>
@@ -172,6 +172,7 @@
     <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="Orderid" Type="uniqueidentifier" />
     <Property Name="Memberid" Type="uniqueidentifier" />
+    <Property Name="Feedbackproductid" Type="uniqueidentifier" />
     <Property Name="Facebookaccount" Type="nvarchar" MaxLength="100" />
     <Property Name="Createdate" Type="datetime" />
     <Property Name="Updatedate" Type="datetime" />
@@ -435,7 +436,9 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_Orderfaceooklist_Order">
-    <End Role="Order" Type="Self.Order" Multiplicity="0..1" />
+    <End Role="Order" Type="Self.Order" Multiplicity="0..1">
+      <OnDelete Action="Cascade" />
+    </End>
     <End Role="Orderfaceooklist" Type="Self.Orderfaceooklist" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="Order">

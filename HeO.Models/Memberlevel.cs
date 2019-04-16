@@ -18,8 +18,8 @@ namespace HeO.Models
         public Memberlevel()
         {
             this.Memberlevelcooldown = new HashSet<Memberlevelcooldown>();
-            this.Members = new HashSet<Members>();
             this.Feedbackdetail = new HashSet<Feedbackdetail>();
+            this.Members = new HashSet<Members>();
         }
     
         public System.Guid Levelid { get; set; }
@@ -30,8 +30,8 @@ namespace HeO.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Memberlevelcooldown> Memberlevelcooldown { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Members> Members { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Feedbackdetail> Feedbackdetail { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Members> Members { get; set; }
     }
 }

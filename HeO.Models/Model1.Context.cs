@@ -34,19 +34,19 @@ namespace HeO.Models
         public virtual DbSet<Memberlevel> Memberlevel { get; set; }
         public virtual DbSet<Memberlevelcooldown> Memberlevelcooldown { get; set; }
         public virtual DbSet<Newslang> Newslang { get; set; }
-        public virtual DbSet<Orderfaceooklist> Orderfaceooklist { get; set; }
         public virtual DbSet<Returnstatus> Returnstatus { get; set; }
         public virtual DbSet<Setting> Setting { get; set; }
         public virtual DbSet<Term> Term { get; set; }
         public virtual DbSet<Termlang> Termlang { get; set; }
         public virtual DbSet<Memberauthorization> Memberauthorization { get; set; }
         public virtual DbSet<sysdiagrams> sysdiagrams { get; set; }
-        public virtual DbSet<Members> Members { get; set; }
-        public virtual DbSet<Feedbackrecord> Feedbackrecord { get; set; }
         public virtual DbSet<Vipdetail> Vipdetail { get; set; }
         public virtual DbSet<News> News { get; set; }
         public virtual DbSet<Viprecord> Viprecord { get; set; }
-        public virtual DbSet<Order> Order { get; set; }
         public virtual DbSet<Feedbackdetail> Feedbackdetail { get; set; }
+        public virtual DbSet<Feedbackrecord> Feedbackrecord { get; set; }
+        public virtual DbSet<Order> Order { get; set; }
+        public virtual DbSet<Orderfaceooklist> Orderfaceooklist { get; set; }
+        public virtual DbSet<Members> Members { get; set; }
     }
 }

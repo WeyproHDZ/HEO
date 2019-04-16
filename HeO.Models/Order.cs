@@ -29,10 +29,10 @@ namespace HeO.Models
         public Nullable<int> Count { get; set; }
         public Nullable<double> Cost { get; set; }
         public Nullable<System.DateTime> Updatedate { get; set; }
-        public Nullable<System.DateTime> Createdate { get; set; }
+        public System.DateTime Createdate { get; set; }
     
-        public virtual Members Members { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Orderfaceooklist> Orderfaceooklist { get; set; }
+        public virtual Members Members { get; set; }
     }
 }
