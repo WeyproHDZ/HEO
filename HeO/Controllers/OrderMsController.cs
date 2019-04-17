@@ -49,7 +49,7 @@ namespace HeO.Controllers
                     order.Createdate = DateTime.Now;
                     order.Updatedate = DateTime.Now;
                     order.Memberid = Memberid;
-                    order.Ordernumber = "heo" + DateTime.Now.ToString("yyyyMMddss");
+                    order.Ordernumber = "heoorder" + DateTime.Now.ToString("yyyyMMddss");
                     order.Service = "讚" + order.Count;
                     orderService.Create(order);
                     orderService.SaveChanges();

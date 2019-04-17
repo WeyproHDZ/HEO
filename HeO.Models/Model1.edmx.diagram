@@ -30,7 +30,6 @@
         <EntityTypeShape EntityType="HeOModel.Vipdetail" Width="1.5" PointX="13.375" PointY="0.75" />
         <EntityTypeShape EntityType="HeOModel.News" Width="1.5" PointX="13" PointY="5.5" />
         <AssociationConnector Association="HeOModel.FK_Newlang_News" />
-        <EntityTypeShape EntityType="HeOModel.Viprecord" Width="1.5" PointX="5.25" PointY="16" />
         <EntityTypeShape EntityType="HeOModel.Feedbackdetail" Width="1.5" PointX="6" PointY="6.25" />
         <AssociationConnector Association="HeOModel.FK_Feedbackdetail_Feedbackproduct1" />
         <AssociationConnector Association="HeOModel.FK_Feedbackset_Memberlevel" />
@@ -44,6 +43,7 @@
         <AssociationConnector Association="HeOModel.FK_Members_Memberlevel" />
         <AssociationConnector Association="HeOModel.FK_Order_Members" />
         <AssociationConnector Association="HeOModel.FK_Orderfaceooklist_Members" />
+        <EntityTypeShape EntityType="HeOModel.Viprecord" Width="1.5" PointX="5.25" PointY="15.875" />
         <AssociationConnector Association="HeOModel.FK_Viprecord_Members" />
         </Diagram>
     </edmx:Diagrams>

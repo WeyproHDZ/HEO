@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HeO.Service", "HeO.Service\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HeO", "HeO\HeO.csproj", "{C87C24D6-CB36-43C1-8DBA-368A8D094512}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HeO.Libs", "HeO.Libs\HeO.Libs.csproj", "{DC85F2DE-55C6-42A2-9593-155B663A8D9A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{C87C24D6-CB36-43C1-8DBA-368A8D094512}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C87C24D6-CB36-43C1-8DBA-368A8D094512}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C87C24D6-CB36-43C1-8DBA-368A8D094512}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DC85F2DE-55C6-42A2-9593-155B663A8D9A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC85F2DE-55C6-42A2-9593-155B663A8D9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC85F2DE-55C6-42A2-9593-155B663A8D9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC85F2DE-55C6-42A2-9593-155B663A8D9A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

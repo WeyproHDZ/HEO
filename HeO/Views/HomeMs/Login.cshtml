@@ -76,17 +76,30 @@
     <script>
         function send()
         {
-            if ($('#terms').prop('checked')) {
-                $('#form').submit();
+            var Account = $('#Account').val();
+            var Password = $('#Password').val();
+            if (Account.length != 0 && Password.length != 0)
+            {
+                if ($('#terms').prop('checked')) {
+                    $('#form').submit();
+                }
+                else {
+                    swal({
+                        title: 'Error',
+                        text: '請勾選使用條款！',
+                        type: 'warning'
+                    });
+                }
             }
-            else {
-                console.log($('#Account').val());
+            else
+            {
                 swal({
                     title: 'Error',
-                    text: '請勾選使用條款！',
+                    text: '請輸入帳號密碼！',
                     type: 'warning'
                 });
             }
+            
         }
     </script>
 }

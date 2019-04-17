@@ -17,11 +17,12 @@ namespace HeO.Controllers
     {
         private MembersService membersSerice;
         private MemberauthorizationService memberauthorizationService;
-
+        private VipdetailService vipdetailService;
         public AjaxController()
         {
             membersSerice = new MembersService();
             memberauthorizationService = new MemberauthorizationService();
+            vipdetailService = new VipdetailService();
         }
         // GET: Ajax
         [CheckSession]
@@ -54,6 +55,14 @@ namespace HeO.Controllers
                 memberauthorizationService.SaveChanges();
             }
             return this.Json("success");
+        }
+
+        [CheckSession]
+        [HttpPost]
+        public JsonResult AjaxDeposit(int Money)
+        {
+            Vipdetail vipdetail = vipdetailService.Get().Where(o => o.Money == Money).FirstOrDefault();
+            return this.Json(vipdetail);
         }
     }
 }

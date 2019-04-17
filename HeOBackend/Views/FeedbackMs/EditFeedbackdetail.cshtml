@@ -52,24 +52,24 @@
                                     <div class="tab-pane" id="hb1">
                                         <fieldset>
                                             <div class="form-group">
-                                                <label class="col-lg-2 control-label" for="title">選擇產品</label>
-                                                <section class="col-lg-3">
+                                                <label class="col-sm-3 control-label" for="title">選擇產品</label>
+                                                <div class="col-lg-2 col-sm-2">
                                                     @Html.DropDownList("feedbackproductid", (SelectList)ViewBag.feedbackproductList, new Dictionary<string, object>() { { "class", "form-control" } })
-                                                </section>
+                                                </div>
                                             </div>
                                             <div class="form-group">
-                                                <label class="col-lg-2 control-label" for="title">階級價格</label>
-                                                <div class="col-sm-9 col-lg-5">
+                                                <label class="col-sm-3 control-label" for="title">階級價格</label>
+                                                <div class="col-sm-5 col-lg-4">
                                                     @foreach (Memberlevel entity in ViewBag.Levelname)
                                                     {
-                                                        <label class="col-sm-3 control-label" for="title">@entity.Levelname</label>
+                                                        <label class="col-sm-3 col-lg-2 control-label" for="title">@entity.Levelname</label>
                                                         @Html.HiddenFor(model => @entity.Levelid, new { Name = "feedbackdetail[" + i + "].Levelid" })
                                                         @Html.HiddenFor(model => @entity.Feedbackdetail.FirstOrDefault(a => a.Levelid == entity.Levelid).Setid, new { Name = "feedbackdetail[" + i + "].Setid" })
 
-                                                        <section class="col-sm-9">
+                                                        <div class="col-sm-5 col-lg-4 control-label">
                                                             @Html.TextBoxFor(model => model.Feedbackdetail.FirstOrDefault(a => a.Levelid == entity.Levelid).Money, new Dictionary<string, object>() { { "class", "form-control" }, { "Name", "feedbackdetail[" + i + "].Money" } })
                                                             @Html.ValidationMessageFor(model => model.Feedbackdetail.FirstOrDefault(a => a.Levelid == entity.Levelid).Money)
-                                                        </section>
+                                                        </div>
                                                         <br /><br /><br />
                                                         i++;
 

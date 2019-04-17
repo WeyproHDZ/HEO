@@ -182,25 +182,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Viprecord">
-      <EntityTypeMapping TypeName="HeOModel.Viprecord">
-        <MappingFragment StoreEntitySet="Viprecord">
-          <ScalarProperty Name="Updatedate" ColumnName="Updatedate" />
-          <ScalarProperty Name="Createdate" ColumnName="Createdate" />
-          <ScalarProperty Name="Enddate" ColumnName="Enddate" />
-          <ScalarProperty Name="Startdate" ColumnName="Startdate" />
-          <ScalarProperty Name="Buydate" ColumnName="Buydate" />
-          <ScalarProperty Name="Paymentdate" ColumnName="Paymentdate" />
-          <ScalarProperty Name="Paymenttype" ColumnName="Paymenttype" />
-          <ScalarProperty Name="Day" ColumnName="Day" />
-          <ScalarProperty Name="Money" ColumnName="Money" />
-          <ScalarProperty Name="Status" ColumnName="Status" />
-          <ScalarProperty Name="Payway" ColumnName="Payway" />
-          <ScalarProperty Name="Memberid" ColumnName="Memberid" />
-          <ScalarProperty Name="Viprecordid" ColumnName="Viprecordid" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="Feedbackdetail">
       <EntityTypeMapping TypeName="HeOModel.Feedbackdetail">
         <MappingFragment StoreEntitySet="Feedbackdetail">
@@ -274,6 +255,26 @@
           <ScalarProperty Name="Facebookid" ColumnName="Facebookid" />
           <ScalarProperty Name="Levelid" ColumnName="Levelid" />
           <ScalarProperty Name="Memberid" ColumnName="Memberid" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Viprecord">
+      <EntityTypeMapping TypeName="HeOModel.Viprecord">
+        <MappingFragment StoreEntitySet="Viprecord">
+          <ScalarProperty Name="Updatedate" ColumnName="Updatedate" />
+          <ScalarProperty Name="Createdate" ColumnName="Createdate" />
+          <ScalarProperty Name="Enddate" ColumnName="Enddate" />
+          <ScalarProperty Name="Startdate" ColumnName="Startdate" />
+          <ScalarProperty Name="Buydate" ColumnName="Buydate" />
+          <ScalarProperty Name="Paymentdate" ColumnName="Paymentdate" />
+          <ScalarProperty Name="Paymenttype" ColumnName="Paymenttype" />
+          <ScalarProperty Name="Day" ColumnName="Day" />
+          <ScalarProperty Name="Money" ColumnName="Money" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="Payway" ColumnName="Payway" />
+          <ScalarProperty Name="Depositnumber" ColumnName="Depositnumber" />
+          <ScalarProperty Name="Memberid" ColumnName="Memberid" />
+          <ScalarProperty Name="Viprecordid" ColumnName="Viprecordid" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

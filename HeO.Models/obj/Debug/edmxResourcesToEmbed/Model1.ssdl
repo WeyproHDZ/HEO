@@ -241,6 +241,7 @@
     </Key>
     <Property Name="Viprecordid" Type="uniqueidentifier" Nullable="false" />
     <Property Name="Memberid" Type="uniqueidentifier" />
+    <Property Name="Depositnumber" Type="nvarchar" MaxLength="50" />
     <Property Name="Payway" Type="tinyint" Nullable="false" />
     <Property Name="Status" Type="tinyint" Nullable="false" />
     <Property Name="Money" Type="int" />

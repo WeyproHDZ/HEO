@@ -71,3 +71,6 @@ D:\web\HeO\HeO\obj\Debug\HeO.pdb
 D:\web\HeO\HeO\bin\EntityFramework.SqlServer.dll
 D:\web\HeO\HeO\bin\EntityFramework.SqlServer.xml
 D:\web\HeO\HeO\bin\zh-Hant\EntityFramework.SqlServer.resources.dll
+D:\web\HeO\HeO\bin\HeO.Libs.dll
+D:\web\HeO\HeO\bin\HeO.Libs.pdb
+D:\web\HeO\HeO\bin\zh-Hant\System.Web.Optimization.resources.dll

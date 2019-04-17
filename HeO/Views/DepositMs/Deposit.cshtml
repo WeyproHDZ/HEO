@@ -1,6 +1,7 @@
 ﻿@{ 
     var Vipdetail = (IEnumerable<Vipdetail>)ViewBag.Vipdetail;
 }
+@model Members
 <main id="main">
     <section class="banner-container" style="background-image: url('/Content/images/banner.png')">
         <div class="restrict allpadding">
@@ -22,7 +23,8 @@
     </section>
     <section class="vip-container">
         <div class="restrict allpadding">
-            <form class="vip_form" action="@Url.Action("Deposit", "DepositMs")">
+                @using (Html.BeginForm("Deposit", "DepositMs", FormMethod.Post, new { @class = "vip_form" }))
+                {
                 <div class="form_block">
                     <h2 class="title">購買金額(新台幣)</h2>
                     <div class="content-block">
@@ -31,7 +33,7 @@
                             {
                                 <div class="item">
                                     <label>
-                                        <input type="radio" name="price" id="price["@VipdetailList.Day"]">@VipdetailList.Money 元( @VipdetailList.Day 天)
+                                        <input type="radio" name="Money" value="@VipdetailList.Money" onclick="send('@VipdetailList.Money');">@VipdetailList.Money 元( @VipdetailList.Day 天)
                                     </label>
                                 </div>
                             }
@@ -44,19 +46,19 @@
                         <div class="content">
                             <div class="payment_method">
                                 <div class="item">
-                                    <input id="payment1" type="radio" name="payment" checked>
+                                    <input id="payment1" type="radio" name="Payway" value="0">
                                     <div class="text">
                                         <label for="payment1">超商代碼繳費(7-11、全家、萊爾富、OK)</label>
                                     </div>
                                 </div>
                                 <div class="item">
-                                    <input id="payment2" type="radio" name="payment">
+                                    <input id="payment2" type="radio" name="Payway" value="1">
                                     <div class="text">
                                         <label for="payment2">轉帳付款</label>
                                     </div>
                                 </div>
                                 <div class="item">
-                                    <input id="payment3" type="radio" name="payment">
+                                    <input id="payment3" type="radio" name="Payway" value="2">
                                     <div class="text">
                                         <label for="payment3">信用卡</label>
                                     </div>
@@ -70,7 +72,7 @@
                     <div class="content-block">
                         <div class="payment_method">
                             <div class="item font_gray">
-                                <h3>新台幣 <span class="font-purple">5000元</span></h3>
+                                <h3>新台幣 <span class="font-purple" id="pay">元</span></h3>
                             </div>
                         </div>
                     </div>
@@ -78,7 +80,7 @@
                 <div class="btn-wrap">
                     <button class="btn submit" type="submit">確認送出</button>
                 </div>
-            </form>
+            }
         </div>
     </section>
 </main>
@@ -86,17 +88,17 @@
 @section scripts
 {
     <script>
-        $('#hdz_account').on('click', function () {
-            var hdz_account = $('#transfer').val();
+        function send(Money)
+        {
             $.ajax({
-                'url':'@Url.Action("AjaxFeedbackconfirm", "Ajax")',
-                'data':{hdz_account : hdz_account},
-                'type':'post',
-                'dataType':'json',
-                'success':function(response){
-                    console.log(111);
+                url: '@Url.Action("AjaxDeposit", "Ajax")',
+                data: { Money: Money },
+                type: 'post',
+                dateType: 'json',
+                success: function (response){
+                    $('#pay').html(response['Money']+'元')
                 }
             });
-        });
+        }
     </script>
 }

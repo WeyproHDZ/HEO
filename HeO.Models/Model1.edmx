@@ -246,6 +246,7 @@
           </Key>
           <Property Name="Viprecordid" Type="uniqueidentifier" Nullable="false" />
           <Property Name="Memberid" Type="uniqueidentifier" />
+          <Property Name="Depositnumber" Type="nvarchar" MaxLength="50" />
           <Property Name="Payway" Type="tinyint" Nullable="false" />
           <Property Name="Status" Type="tinyint" Nullable="false" />
           <Property Name="Money" Type="int" />
@@ -847,7 +848,6 @@
             <End Role="News" EntitySet="News" />
             <End Role="Newslang" EntitySet="Newslang" />
           </AssociationSet>
-          <EntitySet Name="Viprecord" EntityType="HeOModel.Viprecord" />
           <EntitySet Name="Feedbackdetail" EntityType="HeOModel.Feedbackdetail" />
           <AssociationSet Name="FK_Feedbackdetail_Feedbackproduct1" Association="HeOModel.FK_Feedbackdetail_Feedbackproduct1">
             <End Role="Feedbackproduct" EntitySet="Feedbackproduct" />
@@ -885,6 +885,7 @@
             <End Role="Members" EntitySet="Members" />
             <End Role="Orderfaceooklist" EntitySet="Orderfaceooklist" />
           </AssociationSet>
+          <EntitySet Name="Viprecord" EntityType="HeOModel.Viprecord" />
           <AssociationSet Name="FK_Viprecord_Members" Association="HeOModel.FK_Viprecord_Members">
             <End Role="Members" EntitySet="Members" />
             <End Role="Viprecord" EntitySet="Viprecord" />
@@ -958,25 +959,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="Viprecord">
-          <Key>
-            <PropertyRef Name="Viprecordid" />
-          </Key>
-          <Property Name="Viprecordid" Type="Guid" Nullable="false" />
-          <Property Name="Memberid" Type="Guid" />
-          <Property Name="Payway" Type="Byte" Nullable="false" />
-          <Property Name="Status" Type="Byte" Nullable="false" />
-          <Property Name="Money" Type="Int32" />
-          <Property Name="Day" Type="Int32" />
-          <Property Name="Paymenttype" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Paymentdate" Type="DateTime" Precision="3" />
-          <Property Name="Buydate" Type="DateTime" Precision="3" />
-          <Property Name="Startdate" Type="DateTime" Precision="3" />
-          <Property Name="Enddate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="Createdate" Type="DateTime" Precision="3" />
-          <Property Name="Updatedate" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="Members" Relationship="HeOModel.FK_Viprecord_Members" FromRole="Viprecord" ToRole="Members" />
-        </EntityType>
         <EntityType Name="Feedbackdetail">
           <Key>
             <PropertyRef Name="Setid" />
@@ -1165,6 +1147,26 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="Viprecord">
+          <Key>
+            <PropertyRef Name="Viprecordid" />
+          </Key>
+          <Property Name="Viprecordid" Type="Guid" Nullable="false" />
+          <Property Name="Memberid" Type="Guid" />
+          <Property Name="Depositnumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Payway" Type="Byte" Nullable="false" />
+          <Property Name="Status" Type="Byte" Nullable="false" />
+          <Property Name="Money" Type="Int32" />
+          <Property Name="Day" Type="Int32" />
+          <Property Name="Paymenttype" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Paymentdate" Type="DateTime" Precision="3" />
+          <Property Name="Buydate" Type="DateTime" Precision="3" />
+          <Property Name="Startdate" Type="DateTime" Precision="3" />
+          <Property Name="Enddate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Createdate" Type="DateTime" Precision="3" />
+          <Property Name="Updatedate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Members" Relationship="HeOModel.FK_Viprecord_Members" FromRole="Viprecord" ToRole="Members" />
+        </EntityType>
         <Association Name="FK_Viprecord_Members">
           <End Type="HeOModel.Members" Role="Members" Multiplicity="0..1" />
           <End Type="HeOModel.Viprecord" Role="Viprecord" Multiplicity="*" />
@@ -1364,25 +1366,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Viprecord">
-            <EntityTypeMapping TypeName="HeOModel.Viprecord">
-              <MappingFragment StoreEntitySet="Viprecord">
-                <ScalarProperty Name="Updatedate" ColumnName="Updatedate" />
-                <ScalarProperty Name="Createdate" ColumnName="Createdate" />
-                <ScalarProperty Name="Enddate" ColumnName="Enddate" />
-                <ScalarProperty Name="Startdate" ColumnName="Startdate" />
-                <ScalarProperty Name="Buydate" ColumnName="Buydate" />
-                <ScalarProperty Name="Paymentdate" ColumnName="Paymentdate" />
-                <ScalarProperty Name="Paymenttype" ColumnName="Paymenttype" />
-                <ScalarProperty Name="Day" ColumnName="Day" />
-                <ScalarProperty Name="Money" ColumnName="Money" />
-                <ScalarProperty Name="Status" ColumnName="Status" />
-                <ScalarProperty Name="Payway" ColumnName="Payway" />
-                <ScalarProperty Name="Memberid" ColumnName="Memberid" />
-                <ScalarProperty Name="Viprecordid" ColumnName="Viprecordid" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Feedbackdetail">
             <EntityTypeMapping TypeName="HeOModel.Feedbackdetail">
               <MappingFragment StoreEntitySet="Feedbackdetail">
@@ -1456,6 +1439,26 @@
                 <ScalarProperty Name="Facebookid" ColumnName="Facebookid" />
                 <ScalarProperty Name="Levelid" ColumnName="Levelid" />
                 <ScalarProperty Name="Memberid" ColumnName="Memberid" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Viprecord">
+            <EntityTypeMapping TypeName="HeOModel.Viprecord">
+              <MappingFragment StoreEntitySet="Viprecord">
+                <ScalarProperty Name="Updatedate" ColumnName="Updatedate" />
+                <ScalarProperty Name="Createdate" ColumnName="Createdate" />
+                <ScalarProperty Name="Enddate" ColumnName="Enddate" />
+                <ScalarProperty Name="Startdate" ColumnName="Startdate" />
+                <ScalarProperty Name="Buydate" ColumnName="Buydate" />
+                <ScalarProperty Name="Paymentdate" ColumnName="Paymentdate" />
+                <ScalarProperty Name="Paymenttype" ColumnName="Paymenttype" />
+                <ScalarProperty Name="Day" ColumnName="Day" />
+                <ScalarProperty Name="Money" ColumnName="Money" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="Payway" ColumnName="Payway" />
+                <ScalarProperty Name="Depositnumber" ColumnName="Depositnumber" />
+                <ScalarProperty Name="Memberid" ColumnName="Memberid" />
+                <ScalarProperty Name="Viprecordid" ColumnName="Viprecordid" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

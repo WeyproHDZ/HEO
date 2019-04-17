@@ -269,6 +269,7 @@
     <Content Include="Views\FeedbackMs\Feedbacktransfer.cshtml" />
     <Content Include="Views\FeedbackMs\Feedbackconfirm.cshtml" />
     <Content Include="Views\FeedbackMs\Feedbacksuccess.cshtml" />
+    <Content Include="Views\DepositMs\DepositForm.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -282,6 +283,10 @@
     <Folder Include="Views\Base\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\HeO.Libs\HeO.Libs.csproj">
+      <Project>{dc85f2de-55c6-42a2-9593-155b663a8d9a}</Project>
+      <Name>HeO.Libs</Name>
+    </ProjectReference>
     <ProjectReference Include="..\HeO.Models\HeO.Models.csproj">
       <Project>{eec21f1d-c28b-4023-a708-dd5b7e43f306}</Project>
       <Name>HeO.Models</Name>

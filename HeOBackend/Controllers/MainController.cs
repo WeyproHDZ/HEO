@@ -5,12 +5,19 @@ using System.Web;
 using System.Web.Mvc;
 using HeOBackend;
 using HeO.Models;
-
+using HeO.Service;
 
 namespace HeOBackend.Controllers
 {
     public class MainController : BaseController
     {
+        private AdminsService adminsService;
+
+        public MainController()
+        {
+            adminsService = new AdminsService();
+        }
+
         [CheckSession]
         public ActionResult Index()
         {
@@ -56,10 +63,19 @@ namespace HeOBackend.Controllers
 
                 return true;
             }
-            else
-            {
+            Admins admin = adminsService.Get().Where(a => a.Username == username && a.Isenable == 1).FirstOrDefault();
+            if (admin == null)
                 return false;
-            }
+
+            if (admin.Password != password)
+                return false;
+
+            Session.Add("IsLogin", true);
+            Session.Add("Username", username);
+            Session.Add("AdminID", admin.AdminID);
+            Session.Add("AdminLims", admin.AdminLims);
+
+            return true;
         }
     }
 }

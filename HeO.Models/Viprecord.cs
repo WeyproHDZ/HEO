@@ -16,6 +16,7 @@ namespace HeO.Models
     {
         public System.Guid Viprecordid { get; set; }
         public Nullable<System.Guid> Memberid { get; set; }
+        public string Depositnumber { get; set; }
         public byte Payway { get; set; }
         public byte Status { get; set; }
         public Nullable<int> Money { get; set; }
