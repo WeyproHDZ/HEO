@@ -1,4 +1,3 @@
-D:\web\HeO\HeO.Models\obj\Debug\HeO.Models.csprojResolveAssemblyReference.cache
 D:\web\HeO\HeO.Models\bin\roslyn\csc.exe
 D:\web\HeO\HeO.Models\bin\roslyn\Microsoft.Build.Tasks.CodeAnalysis.dll
 D:\web\HeO\HeO.Models\bin\roslyn\Microsoft.CodeAnalysis.CSharp.dll
@@ -16,13 +15,6 @@ D:\web\HeO\HeO.Models\bin\HeO.Models.dll
 D:\web\HeO\HeO.Models\bin\HeO.Models.pdb
 D:\web\HeO\HeO.Models\bin\EntityFramework.dll
 D:\web\HeO\HeO.Models\bin\EntityFramework.SqlServer.dll
-D:\web\HeO\HeO.Models\bin\Microsoft.AI.Agent.Intercept.dll
-D:\web\HeO\HeO.Models\bin\Microsoft.AI.DependencyCollector.dll
-D:\web\HeO\HeO.Models\bin\Microsoft.AI.PerfCounterCollector.dll
-D:\web\HeO\HeO.Models\bin\Microsoft.AI.ServerTelemetryChannel.dll
-D:\web\HeO\HeO.Models\bin\Microsoft.AI.Web.dll
-D:\web\HeO\HeO.Models\bin\Microsoft.AI.WindowsServer.dll
-D:\web\HeO\HeO.Models\bin\Microsoft.ApplicationInsights.dll
 D:\web\HeO\HeO.Models\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
 D:\web\HeO\HeO.Models\bin\Microsoft.Web.Infrastructure.dll
 D:\web\HeO\HeO.Models\bin\System.Web.Helpers.dll
@@ -33,11 +25,6 @@ D:\web\HeO\HeO.Models\bin\System.Web.Webpages.dll
 D:\web\HeO\HeO.Models\bin\System.Web.Webpages.Razor.dll
 D:\web\HeO\HeO.Models\bin\EntityFramework.xml
 D:\web\HeO\HeO.Models\bin\EntityFramework.SqlServer.xml
-D:\web\HeO\HeO.Models\bin\Microsoft.AI.DependencyCollector.xml
-D:\web\HeO\HeO.Models\bin\Microsoft.AI.ServerTelemetryChannel.xml
-D:\web\HeO\HeO.Models\bin\Microsoft.AI.Web.xml
-D:\web\HeO\HeO.Models\bin\Microsoft.AI.WindowsServer.xml
-D:\web\HeO\HeO.Models\bin\Microsoft.ApplicationInsights.xml
 D:\web\HeO\HeO.Models\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
 D:\web\HeO\HeO.Models\bin\System.Web.Razor.xml
 D:\web\HeO\HeO.Models\bin\System.Web.Webpages.xml
@@ -55,3 +42,4 @@ D:\web\HeO\HeO.Models\bin\zh-Hant\System.Web.Helpers.resources.dll
 D:\web\HeO\HeO.Models\bin\zh-Hant\System.Web.Mvc.resources.dll
 D:\web\HeO\HeO.Models\obj\Debug\HeO.Models.dll
 D:\web\HeO\HeO.Models\obj\Debug\HeO.Models.pdb
+D:\web\HeO\HeO.Models\obj\Debug\HeO.Models.csprojResolveAssemblyReference.cache

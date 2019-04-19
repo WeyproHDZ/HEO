@@ -17,11 +17,13 @@ namespace HeO.Controllers
     {
         private MembersService membersService;
         private FeedbackproductService feedbackproductService;
+        private ViprecordService viprecordService;
 
         public MemberMsController()
         {
             membersService = new MembersService();
             feedbackproductService = new FeedbackproductService();
+            viprecordService = new ViprecordService();
         }
         // GET: MemberMs
         [CheckSession]
@@ -44,6 +46,14 @@ namespace HeO.Controllers
             membersService.SpecificUpdate(Member, new string[] { "Facebookstatus" });
             membersService.SaveChanges();
             return RedirectToAction("Member");
+        }
+
+        [CheckSession]
+        public ActionResult Membervip()
+        {
+            Guid Memberid = Guid.Parse((Session["Memberid"]).ToString());
+            ViewBag.Viprecord = viprecordService.Get().Where(a => a.Memberid == Memberid).Where(x => x.Status == 2);
+            return View();
         }
     }
 }

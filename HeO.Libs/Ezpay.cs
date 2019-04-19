@@ -19,32 +19,49 @@ namespace HeO.Libs
         static string MerchantID = "PG300000004533";
         static string HashKey = "quqMrp9Ijce4Mf0Kv29it8jIbFZGUYQS";
         static string HashIv = "yVfGbqv0QKKq5wkW";
-        static string[] data = new string[9];
-        public string[] paramer = new string[1000];
-        public static void set_paramer(Viprecord viprecord, string CustomerURL , string Number = null)
+        static string Verison = "1.0";
+        static string new_data;
+        public static void set_paramer(Viprecord viprecord, string CustomerURL , string NotifyURL , int TimeStamp)
         {            
             if(viprecord != null)
             {
-                data[0] = MerchantID;
-                data[1] = DateTime.Now.ToString();
-                data[2] = "1.0";
-                data[3] = viprecord.Depositnumber;
-                data[4] = viprecord.Money.ToString();
-                data[5] = "HeO 臉書互惠系統-儲值";
-                data[6] = CustomerURL;
-                data[7] = Number;
-                data[8] = viprecord.Payway.ToString();
+                int Payway = viprecord.Payway;                
+                string Depositnumber = viprecord.Depositnumber;
+                string Amt = viprecord.Money.ToString();
+                string ItemDesc = "HeO";
+                string type;            // 付款方式
+                switch (Payway)
+                {
+                    case 0:
+                        type = "&CVS=1";
+                        break;
+                    case 1:
+                        type = "&VACC=1";
+                        break;
+                    case 2:
+                        type = "&CREDIT=1";
+                        break;
+                    default:
+                        type = "Error";
+                        break;
+                }
+                new_data = "MerchantID=" + MerchantID + "&TimeStamp=" + TimeStamp + "&Version=" + Verison + "&MerchantOrderNo=" + Depositnumber + "&Amt=" + Amt + "&ItemDesc=" + ItemDesc + "&CustomerURL=" + CustomerURL + "&NotifyURL=" + NotifyURL + type;
             }
         }
         
         public static string excute()
         {
-            string TradeInfo = EncryptAES256(data);
-            string TradeSha = getHashSha256("HashKey=" + HashKey + "&Amt=78&MerchantID = " + MerchantID + " & MerchantOrderNo =  & TimeStamp = 1450940783 & Version = 1.& HashIV = " + HashIv);
+
+            string TradeInfo = EncryptAES256(new_data);
+            string TradeSha = getHashSha256("HashKey=quqMrp9Ijce4Mf0Kv29it8jIbFZGUYQS&" + TradeInfo+ "&HashIV=yVfGbqv0QKKq5wkW");
+
+            //string TradeSha = getHashSha256("HashKey=" + HashKey + TradeInfo + "HashIV=" + HashIv);
+            //string TradeSha = getHashSha256();
             string form =
             "<form id='ezpay' name='ezpay' action='" + transmit_url + "' method='post' >" +
             "<input type ='hidden' class = 'button-alt' name = 'MerchantID' value='" + MerchantID + "'/>" +
-            "<input type ='hidden' class = 'button-alt' name = 'Version' value='" + data[2] + "'/>" +
+            "<input type ='hidden' class = 'button-alt' name = 'Version' value='" + Verison + "'/>" +
+            "<input type ='hidden' class = 'button-alt' name = 'TradeInfo' value='" + TradeInfo + "'/>" +
             "<input type ='hidden' class = 'button-alt' name = 'TradeSha' value='" + TradeSha + "'/>" +
             "</form>"+
             "<script type='text/javascript'>document.getElementById('ezpay').submit();</script>";
@@ -66,10 +83,10 @@ namespace HeO.Libs
 
 
 
-        public string EncryptAES256(string source)//加密
+        public static string EncryptAES256(string source)//加密
         {
-            string sSecretKey = "12345678901234567890123456789012";
-            string iv = "1234567890123456";
+            string sSecretKey = HashKey;
+            string iv = HashIv;
             byte[] sourceBytes = AddPKCS7Padding(Encoding.UTF8.GetBytes(source),
            32);
             var aes = new RijndaelManaged();
@@ -81,10 +98,10 @@ namespace HeO.Libs
             return ByteArrayToHex(transform.TransformFinalBlock(sourceBytes, 0,
            sourceBytes.Length)).ToLower();
         }
-        public string DecryptAES256(string encryptData)//解密
+        public static string DecryptAES256(string encryptData)//解密
         {
-            string sSecretKey = "12345678901234567890123456789012";
-            string iv = "1234567890123456";
+            string sSecretKey = HashKey;
+            string iv = HashIv;
             var encryptBytes = HexStringToByteArray(encryptData.ToUpper());
             var aes = new RijndaelManaged();
             aes.Key = Encoding.UTF8.GetBytes(sSecretKey);

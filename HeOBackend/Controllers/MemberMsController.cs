@@ -367,20 +367,41 @@ namespace HeOBackend.Controllers
                 viprecord.Updatedate = DateTime.Now;
                 viprecord.Day = vipdetail.Day;
                 viprecord.Money = vipdetail.Money;
+                viprecord.Depositnumber = "heodeposit" + DateTime.Now.ToString("yyyyMMddHHmmssfff");
                 double day = Convert.ToDouble(viprecord.Day);
-                if (old_record.Enddate > now)
+                /** 假設沒有舊資料，就直接新增進去 **/
+                if(old_record != null)
                 {
-                    viprecord.Enddate = old_record.Enddate.AddDays(day);
-                    viprecord.Startdate = old_record.Enddate;
+                    if (old_record.Enddate > now)
+                    {
+                        viprecord.Enddate = old_record.Enddate.AddDays(day);
+                        viprecord.Startdate = old_record.Enddate;
+                    }
+                    else
+                    {
+                        viprecord.Enddate = DateTime.Now.AddDays(day);
+                        viprecord.Startdate = DateTime.Now;
+                    }
                 }
                 else
                 {
                     viprecord.Enddate = DateTime.Now.AddDays(day);
                     viprecord.Startdate = DateTime.Now;
                 }
+
+                /*** 如果有完成付款，就將開始日期填入今天，填寫付款方式，並且將該會員之層級提升至VIP ***/
+                if (viprecord.Status == 2)
+                {
+                    Members Member = membersService.GetByID(viprecord.Memberid);
+                    Memberlevel Memberlevel = memberlevelService.Get().Where(a => a.Levelname == "VIP").FirstOrDefault();
+                    Member.Levelid = Memberlevel.Levelid;
+                    membersService.SpecificUpdate(Member, new string[] { "Levelid" });
+                    membersService.SaveChanges();                   
+                }
                 viprecordService.Create(viprecord);
                 viprecordService.SaveChanges();
             }
+
             return RedirectToAction("Viprecord");
         }
 
@@ -422,6 +443,16 @@ namespace HeOBackend.Controllers
                 viprecord.Enddate = DateTime.Now.AddDays(day);
                 viprecordService.Update(viprecord);
                 viprecordService.SaveChanges();
+            }
+
+            /*** 如果有完成付款，就將該會員之層級提升至VIP ***/
+            if (viprecord.Status == 2)
+            {
+                Members Member = membersService.GetByID(viprecord.Memberid);
+                Memberlevel Memberlevel = memberlevelService.Get().Where(a => a.Levelname == "VIP").FirstOrDefault();
+                Member.Levelid = Memberlevel.Levelid;
+                membersService.SpecificUpdate(Member, new string[] { "Levelid" });
+                membersService.SaveChanges();
             }
             return RedirectToAction("Viprecord");
         }

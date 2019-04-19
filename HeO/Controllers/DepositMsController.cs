@@ -11,6 +11,8 @@ using HeO.Service;
 using HeO.Libs;
 using System.IO;
 using System.Configuration;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace HeO.Controllers
 {
@@ -44,7 +46,7 @@ namespace HeO.Controllers
             {
                 viprecord.Viprecordid = Guid.NewGuid();
                 viprecord.Memberid = Memberid;
-                viprecord.Depositnumber = "heodeposit" + DateTime.Now.ToString("yyyyMMddss");
+                viprecord.Depositnumber = "heodeposit" + DateTime.Now.ToString("yyyyMMddHHmmssfff");
                 viprecord.Day = data.Day;
                 viprecord.Enddate = DateTime.Now;
                 viprecord.Createdate = DateTime.Now;
@@ -52,8 +54,12 @@ namespace HeO.Controllers
                 viprecordService.Create(viprecord);
                 viprecordService.SaveChanges();          
             }
-            string CustomerURL = Url.Action("DepositSuccess", "Deposit");
-            Ezpay.set_paramer(viprecord , CustomerURL);                    
+            
+            string CustomerURL = "http://366777f8.ngrok.io/DepositMs/DepositSuccess";
+            string NotifyURL = "http://366777f8.ngrok.io/DepositMs/DepositReceive";
+
+            int ts2 =  (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;      // 總秒數
+            Ezpay.set_paramer(viprecord, CustomerURL, NotifyURL, ts2);
             return RedirectToAction("DepositForm");
         }
 
@@ -65,10 +71,27 @@ namespace HeO.Controllers
             return View();
         }
 
+        [HttpPost]
         [CheckSession]
-        public ActionResult DepositSuccess(string Number)
+        public string DepositReceive(string Number)
         {
-            Ezpay.set_paramer(null, null, Number);
+            return Number;
+        }
+
+        [HttpPost]
+        [CheckSession]
+        public ActionResult DepositSuccess(string TradeInfo)
+        {
+            string Reecive = Ezpay.DecryptAES256(TradeInfo);            
+            var EzpayRecive = JsonConvert.DeserializeObject<dynamic>(Reecive); // 將Expay回傳的json格式轉成物件 
+                       
+            string DepositNumber = EzpayRecive.Result.MerchantOrderNo;         // 取得儲值編號
+            Viprecord viprecord = viprecordService.Get().Where(a => a.Depositnumber == DepositNumber).FirstOrDefault();
+            ViewBag.Payway = viprecord.Payway;                                 // 付款方式
+            ViewBag.Amt =  EzpayRecive.Result.Amt;                             // 付款金額
+            ViewBag.Day = viprecord.Day;                                       // 購買天數
+            ViewBag.TradeNo = EzpayRecive.Result.TradeNo;                      // 超商編號
+            ViewBag.DueDate = DateTime.Now.AddDays(7).ToString("yyyy/MM/dd HH:mm:ss");  // 付款期限            
             return View();
         }
     }

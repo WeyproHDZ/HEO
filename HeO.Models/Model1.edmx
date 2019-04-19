@@ -152,7 +152,7 @@
           </Key>
           <Property Name="Newsid" Type="uniqueidentifier" />
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Title" Type="text" />
+          <Property Name="Title" Type="ntext" />
           <Property Name="Langid" Type="int" />
         </EntityType>
         <EntityType Name="Order">
@@ -246,12 +246,16 @@
           </Key>
           <Property Name="Viprecordid" Type="uniqueidentifier" Nullable="false" />
           <Property Name="Memberid" Type="uniqueidentifier" />
-          <Property Name="Depositnumber" Type="nvarchar" MaxLength="50" />
+          <Property Name="Depositnumber" Type="nvarchar" MaxLength="255" />
           <Property Name="Payway" Type="tinyint" Nullable="false" />
           <Property Name="Status" Type="tinyint" Nullable="false" />
           <Property Name="Money" Type="int" />
           <Property Name="Day" Type="int" />
           <Property Name="Paymenttype" Type="nvarchar" MaxLength="50" />
+          <Property Name="Tradenumber" Type="nvarchar" MaxLength="50" />
+          <Property Name="Paymentnumber" Type="nvarchar" MaxLength="50" />
+          <Property Name="Bankcode" Type="nvarchar" MaxLength="50" />
+          <Property Name="Virtualaccount" Type="nvarchar" MaxLength="50" />
           <Property Name="Paymentdate" Type="datetime" />
           <Property Name="Buydate" Type="datetime" />
           <Property Name="Startdate" Type="datetime" />
@@ -670,16 +674,6 @@
           <Property Name="Cooldowntime" Type="Int32" />
           <NavigationProperty Name="Memberlevel" Relationship="Self.FK_Memberlevelcooldown_Memberlevel" FromRole="Memberlevelcooldown" ToRole="Memberlevel" />
         </EntityType>
-        <EntityType Name="Newslang">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Newsid" Type="Guid" />
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Title" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="Langid" Type="Int32" />
-          <NavigationProperty Name="News" Relationship="HeOModel.FK_Newlang_News" FromRole="Newslang" ToRole="News" />
-        </EntityType>
         <EntityType Name="Returnstatus">
           <Key>
             <PropertyRef Name="Id" />
@@ -807,7 +801,6 @@
           <EntitySet Name="Lims" EntityType="Self.Lims" />
           <EntitySet Name="Memberlevel" EntityType="Self.Memberlevel" />
           <EntitySet Name="Memberlevelcooldown" EntityType="Self.Memberlevelcooldown" />
-          <EntitySet Name="Newslang" EntityType="Self.Newslang" />
           <EntitySet Name="Returnstatus" EntityType="Self.Returnstatus" />
           <EntitySet Name="Setting" EntityType="Self.Setting" />
           <EntitySet Name="Term" EntityType="Self.Term" />
@@ -844,10 +837,6 @@
           </AssociationSet>
           <EntitySet Name="Vipdetail" EntityType="HeOModel.Vipdetail" />
           <EntitySet Name="News" EntityType="HeOModel.News" />
-          <AssociationSet Name="FK_Newlang_News" Association="HeOModel.FK_Newlang_News">
-            <End Role="News" EntitySet="News" />
-            <End Role="Newslang" EntitySet="Newslang" />
-          </AssociationSet>
           <EntitySet Name="Feedbackdetail" EntityType="HeOModel.Feedbackdetail" />
           <AssociationSet Name="FK_Feedbackdetail_Feedbackproduct1" Association="HeOModel.FK_Feedbackdetail_Feedbackproduct1">
             <End Role="Feedbackproduct" EntitySet="Feedbackproduct" />
@@ -889,6 +878,11 @@
           <AssociationSet Name="FK_Viprecord_Members" Association="HeOModel.FK_Viprecord_Members">
             <End Role="Members" EntitySet="Members" />
             <End Role="Viprecord" EntitySet="Viprecord" />
+          </AssociationSet>
+          <EntitySet Name="Newslang" EntityType="HeOModel.Newslang" />
+          <AssociationSet Name="FK_Newlang_News" Association="HeOModel.FK_Newlang_News">
+            <End Role="News" EntitySet="News" />
+            <End Role="Newslang" EntitySet="Newslang" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="Memberauthorization">
@@ -945,20 +939,6 @@
           <Property Name="Updatedate" Type="DateTime" Precision="3" />
           <NavigationProperty Name="Newslang" Relationship="HeOModel.FK_Newlang_News" FromRole="News" ToRole="Newslang" />
         </EntityType>
-        <Association Name="FK_Newlang_News">
-          <End Type="HeOModel.News" Role="News" Multiplicity="0..1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="HeOModel.Newslang" Role="Newslang" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="News">
-              <PropertyRef Name="Newsid" />
-            </Principal>
-            <Dependent Role="Newslang">
-              <PropertyRef Name="Newsid" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="Feedbackdetail">
           <Key>
             <PropertyRef Name="Setid" />
@@ -1153,7 +1133,7 @@
           </Key>
           <Property Name="Viprecordid" Type="Guid" Nullable="false" />
           <Property Name="Memberid" Type="Guid" />
-          <Property Name="Depositnumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Depositnumber" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="Payway" Type="Byte" Nullable="false" />
           <Property Name="Status" Type="Byte" Nullable="false" />
           <Property Name="Money" Type="Int32" />
@@ -1166,6 +1146,10 @@
           <Property Name="Createdate" Type="DateTime" Precision="3" />
           <Property Name="Updatedate" Type="DateTime" Precision="3" />
           <NavigationProperty Name="Members" Relationship="HeOModel.FK_Viprecord_Members" FromRole="Viprecord" ToRole="Members" />
+          <Property Name="Tradenumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Paymentnumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Bankcode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Virtualaccount" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <Association Name="FK_Viprecord_Members">
           <End Type="HeOModel.Members" Role="Members" Multiplicity="0..1" />
@@ -1176,6 +1160,30 @@
             </Principal>
             <Dependent Role="Viprecord">
               <PropertyRef Name="Memberid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Newslang">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Newsid" Type="Guid" />
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Title" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Langid" Type="Int32" />
+          <NavigationProperty Name="News" Relationship="HeOModel.FK_Newlang_News" FromRole="Newslang" ToRole="News" />
+        </EntityType>
+        <Association Name="FK_Newlang_News">
+          <End Type="HeOModel.News" Role="News" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="HeOModel.Newslang" Role="Newslang" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="News">
+              <PropertyRef Name="Newsid" />
+            </Principal>
+            <Dependent Role="Newslang">
+              <PropertyRef Name="Newsid" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1268,16 +1276,6 @@
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Levelid" ColumnName="Levelid" />
                 <ScalarProperty Name="Cooldowntime" ColumnName="Cooldowntime" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Newslang">
-            <EntityTypeMapping TypeName="HeOModel.Newslang">
-              <MappingFragment StoreEntitySet="Newslang">
-                <ScalarProperty Name="Newsid" ColumnName="Newsid" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="Title" ColumnName="Title" />
-                <ScalarProperty Name="Langid" ColumnName="Langid" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1445,6 +1443,10 @@
           <EntitySetMapping Name="Viprecord">
             <EntityTypeMapping TypeName="HeOModel.Viprecord">
               <MappingFragment StoreEntitySet="Viprecord">
+                <ScalarProperty Name="Virtualaccount" ColumnName="Virtualaccount" />
+                <ScalarProperty Name="Bankcode" ColumnName="Bankcode" />
+                <ScalarProperty Name="Paymentnumber" ColumnName="Paymentnumber" />
+                <ScalarProperty Name="Tradenumber" ColumnName="Tradenumber" />
                 <ScalarProperty Name="Updatedate" ColumnName="Updatedate" />
                 <ScalarProperty Name="Createdate" ColumnName="Createdate" />
                 <ScalarProperty Name="Enddate" ColumnName="Enddate" />
@@ -1459,6 +1461,16 @@
                 <ScalarProperty Name="Depositnumber" ColumnName="Depositnumber" />
                 <ScalarProperty Name="Memberid" ColumnName="Memberid" />
                 <ScalarProperty Name="Viprecordid" ColumnName="Viprecordid" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Newslang">
+            <EntityTypeMapping TypeName="HeOModel.Newslang">
+              <MappingFragment StoreEntitySet="Newslang">
+                <ScalarProperty Name="Langid" ColumnName="Langid" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Newsid" ColumnName="Newsid" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

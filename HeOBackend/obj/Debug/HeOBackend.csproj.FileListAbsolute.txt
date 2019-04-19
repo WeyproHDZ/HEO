@@ -137,3 +137,4 @@ D:\web\HeO\HeOBackend\bin\zh-Hant\EntityFramework.SqlServer.resources.dll
 D:\web\HeO\HeOBackend\bin\HtmlAgilityPack.dll
 D:\web\HeO\HeOBackend\bin\HtmlAgilityPack.pdb
 D:\web\HeO\HeOBackend\bin\HtmlAgilityPack.xml
+D:\web\HeO\HeOBackend\bin\zh-Hant\System.Web.Optimization.resources.dll

@@ -28,6 +28,10 @@ namespace HeO.Models
         public System.DateTime Enddate { get; set; }
         public Nullable<System.DateTime> Createdate { get; set; }
         public Nullable<System.DateTime> Updatedate { get; set; }
+        public string Tradenumber { get; set; }
+        public string Paymentnumber { get; set; }
+        public string Bankcode { get; set; }
+        public string Virtualaccount { get; set; }
     
         public virtual Members Members { get; set; }
     }

@@ -1,0 +1,89 @@
+﻿@{
+    var data = ViewBag.Order as IPagedList<Order>;
+    int x = 0;
+}
+@model Members
+<!-- MAIN CONTENT -->
+<div id="content">
+
+    <!-- widget grid -->
+    <section id="widget-grid" class="">
+        <!-- row -->
+        <div class="row">
+            <!-- NEW WIDGET START -->
+            <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+                <div class="well padding-10">
+
+                    <!-- widget content -->
+                    <div class="widget-body">
+                        @using (Html.BeginForm("Order", "OrderMs", new { p = ViewBag.pageNumber }, FormMethod.Post, new { @id = "form" }))
+                        {
+                            <div class="widget-body-toolbar">
+
+                                <div class="row">
+
+                                    <div class="form-inline">
+                                        <div class="col-sm-10">
+                                            <input type="text" name="ordernumber" id="ordernumber" class="form-control" />
+                                            <button class="btn btn-info btn-labeled" type="submit"> <span class="btn-label"><i class="fa fa-search"></i></span>查詢</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="table-responsive">
+
+                                <table class="table table-hover table-bordered table-striped smart-form">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">訂單編號</th>
+                                            <th class="text-center">服務</th>
+                                            <th width="10%" class="text-center">成本</th>
+                                            <th width="15%" class="text-center">查看使用列表</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (Order entity in data)
+                                        {
+                                            <tr>
+                                                <td class="text-center">@entity.Ordernumber</td>
+                                                <td class="text-center">@entity.Service</td>
+                                                @foreach (Feedbackproduct product in ViewBag.feedbackproduct)
+                                                {
+                                                    if (entity.Service.Contains(product.Feedbackproductname) && (entity.Orderfaceooklist.Where(a => a.Members.Isreal == true))!= null)
+                                                    {
+                                                        <td class="text-center">@(entity.Orderfaceooklist.Where(a => a.Members.Isreal == true).Count() * product.Feedbackdetail.FirstOrDefault(a => a.Levelid.Equals(Guid.Parse("d775ee96-b523-4194-8f84-120056f3108c"))).Money) </td>
+                                                    }
+
+                                                }
+                                                <td class="text-center"><a href="@Url.Action("ViewOrderfacebooklist", "OrderMs", new { Orderid = entity.Orderid, p = ViewBag.pageNumber })" class="btn btn-info btn-xs"><i class="fa fa-edit"></i></a></td>                    
+                                            </tr>
+                                            x++;
+                                        }
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        }
+                    </div>
+                    <!-- end widget content -->
+
+                    <div class="text-center">
+                        @Html.PagedListPager(list: data, generatePageUrl: page => Url.Action("Order", new { p = page }))
+                    </div>
+
+                </div>
+
+            </article>
+            <!-- WIDGET END -->
+
+        </div>
+        <!-- end row -->
+
+    </section>
+    <!-- end widget grid -->
+
+</div>
+<!-- END MAIN CONTENT -->
+<!-- Modal -->

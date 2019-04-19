@@ -15,13 +15,6 @@ D:\web\HeO\HeO.Service\bin\HeO.Service.pdb
 D:\web\HeO\HeO.Service\bin\EntityFramework.dll
 D:\web\HeO\HeO.Service\bin\EntityFramework.SqlServer.dll
 D:\web\HeO\HeO.Service\bin\HeO.Models.dll
-D:\web\HeO\HeO.Service\bin\Microsoft.AI.Agent.Intercept.dll
-D:\web\HeO\HeO.Service\bin\Microsoft.AI.DependencyCollector.dll
-D:\web\HeO\HeO.Service\bin\Microsoft.AI.PerfCounterCollector.dll
-D:\web\HeO\HeO.Service\bin\Microsoft.AI.ServerTelemetryChannel.dll
-D:\web\HeO\HeO.Service\bin\Microsoft.AI.Web.dll
-D:\web\HeO\HeO.Service\bin\Microsoft.AI.WindowsServer.dll
-D:\web\HeO\HeO.Service\bin\Microsoft.ApplicationInsights.dll
 D:\web\HeO\HeO.Service\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
 D:\web\HeO\HeO.Service\bin\Microsoft.Web.Infrastructure.dll
 D:\web\HeO\HeO.Service\bin\System.Web.Helpers.dll
@@ -33,11 +26,6 @@ D:\web\HeO\HeO.Service\bin\System.Web.Webpages.Razor.dll
 D:\web\HeO\HeO.Service\bin\HeO.Models.pdb
 D:\web\HeO\HeO.Service\bin\EntityFramework.xml
 D:\web\HeO\HeO.Service\bin\EntityFramework.SqlServer.xml
-D:\web\HeO\HeO.Service\bin\Microsoft.AI.DependencyCollector.xml
-D:\web\HeO\HeO.Service\bin\Microsoft.AI.ServerTelemetryChannel.xml
-D:\web\HeO\HeO.Service\bin\Microsoft.AI.Web.xml
-D:\web\HeO\HeO.Service\bin\Microsoft.AI.WindowsServer.xml
-D:\web\HeO\HeO.Service\bin\Microsoft.ApplicationInsights.xml
 D:\web\HeO\HeO.Service\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
 D:\web\HeO\HeO.Service\bin\System.Web.Razor.xml
 D:\web\HeO\HeO.Service\bin\System.Web.Webpages.xml

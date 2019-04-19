@@ -1,0 +1,169 @@
+﻿@{
+    var data = ViewBag.Feedbackrecord as IPagedList<Feedbackrecord>;
+    int x = 0;
+    Guid[] member = new Guid[ViewBag.count];
+    int key = 0;
+    int spend_total=0;
+    string status;
+}
+@model Feedbackrecord
+<!-- MAIN CONTENT -->
+<div id="content">
+
+    <!-- widget grid -->
+    <section id="widget-grid" class="">
+        <!-- row -->
+        <div class="row">
+            <!-- NEW WIDGET START -->
+            <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+                <div class="well padding-10">
+
+                    <!-- widget content -->
+                    <div class="widget-body">
+                        @using (Html.BeginForm("Feedbackrecord", "FeedbackMs", new { p = ViewBag.pageNumber }, FormMethod.Get, new { @id = "form" }))
+                        {
+                        <div class="widget-body-toolbar">
+
+                            <div class="row">
+
+                                <div class="form-inline">
+                                    <div class="col-sm-10">
+                                        @Html.DropDownListFor(model => model.Memberid , null, "--請選擇--", new Dictionary<string, object>() { { "class", "form-control" } })
+                                        <button class="btn btn-info btn-labeled" type="submit"> <span class="btn-label"><i class="fa fa-search"></i></span>查詢</button>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <a class="btn btn-success btn-labeled" href="@Url.Action("AddFeedbackrecord", "FeedbackMs")"> <span class="btn-label"><i class="fa fa-plus"></i></span>新增回饋金紀錄</a>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                        <div class="table-responsive">
+
+                            <table class="table table-hover table-bordered table-striped smart-form">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">Facebook帳號</th>
+                                        <th width="10%" class="text-center">提出金額</th>
+                                        <th class="text-center">內容</th>
+                                        <th width="10%" class="text-center">剩餘金額</th>
+                                        <th class="text-center">備註</th>
+                                        <th width="10%" class="text-center">狀態</th>
+                                        <th width="10%" class="text-center">編輯</th>
+                                        <th width="10%" class="text-center">刪除</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (Feedbackrecord entity in data)
+                                    {
+                                        switch (entity.Status)
+                                        {
+                                            case 0:
+                                                status = "等待中";
+                                                break;
+                                            case 1:
+                                                status = "完成";
+                                                break;
+                                            case 2:
+                                                status = "失敗";
+                                                break;
+                                            default:
+                                                status = "ERROR!!";
+                                                break;
+                                        }
+
+                                        foreach (RecordTotal total in ViewBag.total)
+                                        {
+                                            if (total.Memberid == entity.Memberid)
+                                            {
+                                                if (Array.IndexOf(member, entity.Memberid) != -1)
+                                                {
+                                                    spend_total -= entity.Money;
+
+                                                    spend_total = total.Total - entity.Money;
+                                                }
+                                            }
+                                        }
+
+                                        <tr>
+                                            <td class="text-center">@entity.Members.Account</td>
+                                            <td class="text-center">@entity.Money</td>
+                                            @* 0:轉入hdz 1:轉出現金 *@
+                                            @if (entity.Ishdz == 0)
+                                            {
+                                                <td class="text-center">HDZ會員帳戶 : @entity.Hdzaccount<br>轉入金額 : @entity.Money</td>
+                                            }
+                                            else
+                                            {
+                                                <td class="text-center">銀行帳戶 : @entity.Bankaccount<br>轉出金額 : @entity.Cash</td>
+                                            }
+                                            <td class="text-center">@(entity.Members.Feedbackmoney + ((Array.IndexOf(member, entity.Memberid) == -1) ? 0 : spend_total))</td>
+                                            <td class="text-center">@entity.Remark</td>
+                                            <td class="text-center">@status</td>
+                                            <td class="text-center"><a href="@Url.Action("EditFeedbackrecord", "FeedbackMs", new { Feedbackrecordid = entity.Feedbackid, p = ViewBag.pageNumber })" class="btn btn-info btn-xs"><i class="fa fa-edit"></i></a></td>
+                                            <td class="text-center"><a href="#" class="btn btn-danger btn-xs del" data-href="@Url.Action("DeleteFeedbackrecord", "FeedbackMs", new { Feedbackrecordid = entity.Feedbackid, p = ViewBag.pageNumber })" data-toggle="modal" data-target="#confirm-delete"><i class="fa fa-trash-o"></i></a></td>
+                                        </tr>
+
+                                        if (Array.IndexOf(member, entity.Memberid) == -1)
+                                        {
+                                            member[key] = entity.Memberid;
+                                            key++;
+                                        }
+                                        x++;
+                                    }
+                                </tbody>
+                            </table>
+
+                        </div>
+                        }
+                    </div>
+                    <!-- end widget content -->
+
+                    <div class="text-center">
+                        @Html.PagedListPager(list: data, generatePageUrl: page => Url.Action("Feedbackrecord", new { p = page }))
+                    </div>
+
+                </div>
+
+            </article>
+            <!-- WIDGET END -->
+
+        </div>
+        <!-- end row -->
+
+    </section>
+    <!-- end widget grid -->
+
+</div>
+<!-- END MAIN CONTENT -->
+<!-- Modal -->
+<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">確認</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    確定要刪除嗎？
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    取消
+                </button>
+                <a href="#" class="btn btn-primary btn-ok">
+                    確定
+                </a>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+@section scripts {
+
+}

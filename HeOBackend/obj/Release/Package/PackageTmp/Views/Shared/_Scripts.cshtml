@@ -1,0 +1,130 @@
+﻿<!-- Link to Google CDN's jQuery + jQueryUI; fall back to local -->
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script> if (!window.jQuery) { document.write('<script src="/scripts/libs/jquery-2.1.1.min.js"><\/script>'); } </script>
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+<script> if (!window.jQuery.ui) { document.write('<script src="/scripts/libs/jquery-ui-1.10.3.min.js"><\/script>'); } </script>
+<!-- IMPORTANT: SmartAdmin Core -->
+@Scripts.Render("~/scripts/smartadmin")
+@if ((bool)Session["IsLogin"])
+{
+    <!-- PACE LOADER - turn this on if you want ajax loading to show (caution: uses lots of memory on iDevices)-->
+    <script data-pace-options='{ "restartOnRequestAfter": true }' src="~/scripts/plugin/pace/pace.min.js"></script>
+    <!-- Demo purpose only! -->
+    @*<script src="/scripts/demo.min.js"></script>*@
+}
+<!-- Voice command : plugin -->
+@*<script src="~/scripts/speech/voicecommand.min.js"></script>*@
+<!-- SmartChat UI : plugin -->
+@Scripts.Render("~/scripts/smart-chat")
+<!-- DataTables : plugin -->
+@Scripts.Render("~/scripts/datatables")
+<!-- jQGrid : plugin -->
+@Scripts.Render("~/scripts/jq-grid")
+<!-- Forms : plugin -->
+@Scripts.Render("~/scripts/forms")
+<!-- Flot Chart Plugin: Flot Engine, Flot Resizer, Flot Tooltip, Morris, Sparkline, EasyPie -->
+@Scripts.Render("~/scripts/charts")
+<!-- Vector Maps Plugin: Vectormap engine, Vectormap language -->
+@Scripts.Render("~/scripts/vector-map")
+<!-- Full Calendar -->
+@Scripts.Render("~/scripts/full-calendar")
+<!-- DO NOT REMOVE : GLOBAL FUNCTIONS! -->
+<script>
+    function clean_html(editor, type, value) {
+        if (value.indexOf("<" + type + ">") >= 0) {
+            if (type == "b") {
+                marca = /<b(?:.*?)>(?:.*?)<\/b>/g;
+                replaceIniTag = "<strong>";
+                replaceEndTag = "</strong>";
+            } else {
+                marca = /<i(?:.*?)>(?:.*?)<\/i>/g;
+                replaceIniTag = "<em>";
+                replaceEndTag = "</em>";
+            }
+            var matches = value.match(marca),
+                len = matches.length,
+                i;
+            for (i = 0; i < len; i++) {
+                str = $(matches[i]).text();
+                str = replaceIniTag + str + replaceEndTag;
+                value = value.replace(matches[i], str);
+            }
+            $(editor).summernote('code', value);
+        }
+    }
+
+    $(document).ready(function () {
+        pageSetUp();
+        drawBreadCrumb();
+
+        $("#form").bootstrapValidator({
+            excluded: ""
+        });
+
+        $('#confirm-delete').on('show.bs.modal', function (e) {
+            $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+        });
+
+        $("#dtfrom").datepicker({
+            dateFormat: "yy-mm-dd",
+            onClose: function (selectedDate) {
+                $("#dtto").datepicker("option", "minDate", selectedDate);
+            }
+
+        });
+
+        $("#dtto").datepicker({
+            dateFormat: "yy-mm-dd",
+            onClose: function (selectedDate) {
+                $("#dtfrom").datepicker("option", "maxDate", selectedDate);
+            }
+        });
+
+        $('.datetimepicker').datetimepicker({
+            format: "YYYY-MM-DD HH:mm"
+        });
+
+        $("#checkall").click(function () {
+            $("input:checkbox").not(this).prop("checked", this.checked);
+        });
+
+        $(".summernote").summernote({
+            height: 500,
+            lang: 'zh-TW',
+            popover: {
+                image: [
+                    ['custom', ['imageAttributes']],
+                    ['imagesize', ['imageSize100', 'imageSize50', 'imageSize25']],
+                    ['float', ['floatLeft', 'floatRight', 'floatNone']],
+                    ['remove', ['removeMedia']]
+                ],
+            },
+            imageAttributes: {
+                icon: '<i class="note-icon-pencil"/>',
+                removeEmpty: false, // true = remove attributes | false = leave empty if present
+                disableUpload: false // true = don't display Upload Options | Display Upload Options
+            },
+            toolbar: [
+                ['para', ['style']],
+                ['style', ['bold']],
+                ['insert', ['picture', 'video', 'link']],
+                ['misc', ['codeview']]
+            ],
+            callbacks: {
+                onPaste: function (e) {
+                    var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+                    e.preventDefault();
+                    document.execCommand('insertText', false, bufferText);
+                },
+                onChange: function (contents, $editable) {
+                    clean_html(this, "b", contents);
+                    //clean_html(this, "i", contents);
+                }
+            }
+        });
+    });
+</script>
+@if (@Model is HelperResult)
+{
+    @Model
+}
