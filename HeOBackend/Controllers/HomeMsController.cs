@@ -50,7 +50,7 @@ namespace HeOBackend.Controllers
             news.Uuid = Guid.NewGuid();
             news.Createdate = DateTime.Now;
             news.Updatedate = DateTime.Now;
-            news.Date = date.ToShortDateString();
+            news.Date = date.ToString("yyyy/MM/dd");
             newsService.Create(news);
             newsService.SaveChanges();
 

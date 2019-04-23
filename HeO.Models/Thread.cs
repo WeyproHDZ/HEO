@@ -12,17 +12,10 @@ namespace HeO.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Orderfaceooklist
+    public partial class Thread
     {
         public int Id { get; set; }
-        public Nullable<System.Guid> Orderid { get; set; }
-        public Nullable<System.Guid> Memberid { get; set; }
-        public Nullable<System.Guid> Feedbackproductid { get; set; }
-        public string Facebookaccount { get; set; }
+        public string Logs { get; set; }
         public Nullable<System.DateTime> Createdate { get; set; }
-        public Nullable<System.DateTime> Updatedate { get; set; }
-    
-        public virtual Members Members { get; set; }
-        public virtual Order Order { get; set; }
     }
 }

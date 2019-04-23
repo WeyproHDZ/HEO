@@ -19,19 +19,19 @@ namespace HeO.Models
         public string Depositnumber { get; set; }
         public byte Payway { get; set; }
         public byte Status { get; set; }
-        public Nullable<int> Money { get; set; }
+        public int Money { get; set; }
         public Nullable<int> Day { get; set; }
         public string Paymenttype { get; set; }
-        public Nullable<System.DateTime> Paymentdate { get; set; }
-        public Nullable<System.DateTime> Buydate { get; set; }
-        public Nullable<System.DateTime> Startdate { get; set; }
-        public System.DateTime Enddate { get; set; }
-        public Nullable<System.DateTime> Createdate { get; set; }
-        public Nullable<System.DateTime> Updatedate { get; set; }
         public string Tradenumber { get; set; }
         public string Paymentnumber { get; set; }
         public string Bankcode { get; set; }
         public string Virtualaccount { get; set; }
+        public Nullable<System.DateTime> Buydate { get; set; }
+        public Nullable<System.DateTime> Duedate { get; set; }
+        public Nullable<System.DateTime> Startdate { get; set; }
+        public System.DateTime Enddate { get; set; }
+        public Nullable<System.DateTime> Createdate { get; set; }
+        public Nullable<System.DateTime> Updatedate { get; set; }
     
         public virtual Members Members { get; set; }
     }

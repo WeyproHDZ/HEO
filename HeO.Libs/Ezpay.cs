@@ -21,11 +21,11 @@ namespace HeO.Libs
         static string HashIv = "yVfGbqv0QKKq5wkW";
         static string Verison = "1.0";
         static string new_data;
-        public static void set_paramer(Viprecord viprecord, string CustomerURL , string NotifyURL , int TimeStamp)
-        {            
-            if(viprecord != null)
+        public static void set_paramer(Viprecord viprecord, string CustomerURL, string NotifyURL, int TimeStamp)
+        {
+            if (viprecord != null)
             {
-                int Payway = viprecord.Payway;                
+                int Payway = viprecord.Payway;
                 string Depositnumber = viprecord.Depositnumber;
                 string Amt = viprecord.Money.ToString();
                 string ItemDesc = "HeO";
@@ -48,12 +48,12 @@ namespace HeO.Libs
                 new_data = "MerchantID=" + MerchantID + "&TimeStamp=" + TimeStamp + "&Version=" + Verison + "&MerchantOrderNo=" + Depositnumber + "&Amt=" + Amt + "&ItemDesc=" + ItemDesc + "&CustomerURL=" + CustomerURL + "&NotifyURL=" + NotifyURL + type;
             }
         }
-        
+
         public static string excute()
         {
 
             string TradeInfo = EncryptAES256(new_data);
-            string TradeSha = getHashSha256("HashKey=quqMrp9Ijce4Mf0Kv29it8jIbFZGUYQS&" + TradeInfo+ "&HashIV=yVfGbqv0QKKq5wkW");
+            string TradeSha = getHashSha256("HashKey=quqMrp9Ijce4Mf0Kv29it8jIbFZGUYQS&" + TradeInfo + "&HashIV=yVfGbqv0QKKq5wkW");
 
             //string TradeSha = getHashSha256("HashKey=" + HashKey + TradeInfo + "HashIV=" + HashIv);
             //string TradeSha = getHashSha256();
@@ -63,10 +63,10 @@ namespace HeO.Libs
             "<input type ='hidden' class = 'button-alt' name = 'Version' value='" + Verison + "'/>" +
             "<input type ='hidden' class = 'button-alt' name = 'TradeInfo' value='" + TradeInfo + "'/>" +
             "<input type ='hidden' class = 'button-alt' name = 'TradeSha' value='" + TradeSha + "'/>" +
-            "</form>"+
+            "</form>" +
             "<script type='text/javascript'>document.getElementById('ezpay').submit();</script>";
 
-            return form;     
+            return form;
         }
         public static string getHashSha256(string text)
         {
@@ -145,7 +145,7 @@ namespace HeO.Libs
         }
         private static byte[] HexStringToByteArray(string hexString)
         {
-         int hexStringLength = hexString.Length;
+            int hexStringLength = hexString.Length;
             byte[] b = new byte[hexStringLength / 2];
             for (int i = 0; i < hexStringLength; i += 2)
             {

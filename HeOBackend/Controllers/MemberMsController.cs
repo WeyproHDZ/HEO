@@ -395,7 +395,8 @@ namespace HeOBackend.Controllers
                     Members Member = membersService.GetByID(viprecord.Memberid);
                     Memberlevel Memberlevel = memberlevelService.Get().Where(a => a.Levelname == "VIP").FirstOrDefault();
                     Member.Levelid = Memberlevel.Levelid;
-                    membersService.SpecificUpdate(Member, new string[] { "Levelid" });
+                    Member.Feedbackmoney+= viprecord.Money;
+                    membersService.SpecificUpdate(Member, new string[] { "Levelid" , "Feedbackmoney" });
                     membersService.SaveChanges();                   
                 }
                 viprecordService.Create(viprecord);
@@ -451,7 +452,8 @@ namespace HeOBackend.Controllers
                 Members Member = membersService.GetByID(viprecord.Memberid);
                 Memberlevel Memberlevel = memberlevelService.Get().Where(a => a.Levelname == "VIP").FirstOrDefault();
                 Member.Levelid = Memberlevel.Levelid;
-                membersService.SpecificUpdate(Member, new string[] { "Levelid" });
+                Member.Feedbackmoney += viprecord.Money;
+                membersService.SpecificUpdate(Member, new string[] { "Levelid", "Feedbackmoney" });
                 membersService.SaveChanges();
             }
             return RedirectToAction("Viprecord");

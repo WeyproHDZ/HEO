@@ -71,18 +71,14 @@ namespace HeO.Controllers
                         {
                             Session["IsLogin"] = true;
                             Session["Memberid"] = old_member.Memberid;
-                            //old_member.Lastdate = DateTime.Now.ToShortDateString();
-                            //membersService.SpecificUpdate(old_member, new string[] { "Lastdate" });
-                            //membersService.SaveChanges();
+                            Session["Lastdate"] = DateTime.Now.ToShortDateString();
                             return RedirectToAction("Certified");
                         }
                         else
                         {
                             Session["IsLogin"] = true;
                             Session["Memberid"] = old_member.Memberid;
-                            //old_member.Lastdate = DateTime.Now.ToShortDateString();
-                            //membersService.SpecificUpdate(old_member, new string[] { "Lastdate" });
-                            //membersService.SaveChanges();
+                            Session["Lastdate"] = DateTime.Now.ToShortDateString();
                             return RedirectToAction("Order", "OrderMs");
                         }
                     }
@@ -90,9 +86,7 @@ namespace HeO.Controllers
                     {
                         Session["IsLogin"] = true;
                         Session["Memberid"] = old_member.Memberid;
-                        //old_member.Lastdate = DateTime.Now.ToShortDateString();
-                        //membersService.SpecificUpdate(old_member, new string[] { "Lastdate" });
-                        //membersService.SaveChanges();
+                        Session["Lastdate"] = DateTime.Now.ToShortDateString();
                         return RedirectToAction("Deposit", "DepositMs");
                     }
                 }
@@ -123,7 +117,15 @@ namespace HeO.Controllers
         [CheckSession]
         public ActionResult Certified()
         {
-            Members member = membersService.GetByID(Session["Memberid"]);
+            /*** 更新會員最近登入時間 ***/
+            if(Session["Lastdate"] != null)
+            {
+                Members Member = membersService.GetByID(Session["Memberid"]);
+                Member.Lastdate = Session["Lastdate"].ToString();
+                membersService.SpecificUpdate(Member, new string[] { "Lastdate" });
+                membersService.SaveChanges();
+                Session["Lastdate"] = null;
+            }
             return View();
         }
         [CheckSession]

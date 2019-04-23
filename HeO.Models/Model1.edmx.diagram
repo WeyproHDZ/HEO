@@ -26,25 +26,26 @@
         <EntityTypeShape EntityType="HeOModel.Memberauthorization" Width="1.5" PointX="0.5" PointY="14" />
         <EntityTypeShape EntityType="HeOModel.sysdiagrams" Width="1.5" PointX="0.75" PointY="3.75" />
         <AssociationConnector Association="HeOModel.FK_Memberauthorization_Feedbackproduct" />
-        <EntityTypeShape EntityType="HeOModel.Vipdetail" Width="1.5" PointX="13.375" PointY="0.75" />
         <EntityTypeShape EntityType="HeOModel.News" Width="1.5" PointX="13" PointY="5.5" />
         <EntityTypeShape EntityType="HeOModel.Feedbackdetail" Width="1.5" PointX="6" PointY="6.25" />
         <AssociationConnector Association="HeOModel.FK_Feedbackdetail_Feedbackproduct1" />
         <AssociationConnector Association="HeOModel.FK_Feedbackset_Memberlevel" />
         <EntityTypeShape EntityType="HeOModel.Feedbackrecord" Width="1.5" PointX="5.25" PointY="11.125" />
-        <EntityTypeShape EntityType="HeOModel.Order" Width="1.5" PointX="5.25" PointY="21.25" />
         <EntityTypeShape EntityType="HeOModel.Orderfaceooklist" Width="1.5" PointX="8.375" PointY="12.5" />
-        <AssociationConnector Association="HeOModel.FK_Orderfaceooklist_Order" />
         <EntityTypeShape EntityType="HeOModel.Members" Width="1.5" PointX="3" PointY="10.625" />
         <AssociationConnector Association="HeOModel.FK_Feedbackrecord_Members" />
         <AssociationConnector Association="HeOModel.FK_Memberauthorization_Members" />
         <AssociationConnector Association="HeOModel.FK_Members_Memberlevel" />
-        <AssociationConnector Association="HeOModel.FK_Order_Members" />
         <AssociationConnector Association="HeOModel.FK_Orderfaceooklist_Members" />
-        <EntityTypeShape EntityType="HeOModel.Viprecord" Width="1.5" PointX="5.25" PointY="15.875" />
-        <AssociationConnector Association="HeOModel.FK_Viprecord_Members" />
         <EntityTypeShape EntityType="HeOModel.Newslang" Width="1.5" PointX="15.25" PointY="5.625" />
         <AssociationConnector Association="HeOModel.FK_Newlang_News" />
+        <EntityTypeShape EntityType="HeOModel.Vipdetail" Width="1.5" PointX="5.375" PointY="0.75" />
+        <EntityTypeShape EntityType="HeOModel.Viprecord" Width="1.5" PointX="5.25" PointY="15.5" />
+        <AssociationConnector Association="HeOModel.FK_Viprecord_Members" />
+        <EntityTypeShape EntityType="HeOModel.Order" Width="1.5" PointX="5.25" PointY="21.125" />
+        <AssociationConnector Association="HeOModel.FK_Order_Members" />
+        <AssociationConnector Association="HeOModel.FK_Orderfaceooklist_Order" />
+        <EntityTypeShape EntityType="HeOModel.Thread" Width="1.5" PointX="13.375" PointY="0.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

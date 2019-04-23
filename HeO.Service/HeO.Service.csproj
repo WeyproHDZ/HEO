@@ -149,6 +149,7 @@
     <Compile Include="SettingService.cs" />
     <Compile Include="TermlangService.cs" />
     <Compile Include="TermService.cs" />
+    <Compile Include="ThreadService.cs" />
     <Compile Include="VipdetailService.cs" />
     <Compile Include="ViprecordService.cs" />
   </ItemGroup>

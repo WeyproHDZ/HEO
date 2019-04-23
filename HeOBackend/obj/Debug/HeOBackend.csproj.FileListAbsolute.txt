@@ -78,14 +78,6 @@ D:\web\HeO\HeOBackend\bin\HeOBackend.dll.config
 D:\web\HeO\HeOBackend\bin\HeOBackend.dll
 D:\web\HeO\HeOBackend\bin\HeOBackend.pdb
 D:\web\HeO\HeOBackend\bin\Antlr3.Runtime.dll
-D:\web\HeO\HeOBackend\bin\Microsoft.AI.Agent.Intercept.dll
-D:\web\HeO\HeOBackend\bin\Microsoft.AI.DependencyCollector.dll
-D:\web\HeO\HeOBackend\bin\Microsoft.AI.PerfCounterCollector.dll
-D:\web\HeO\HeOBackend\bin\Microsoft.AI.ServerTelemetryChannel.dll
-D:\web\HeO\HeOBackend\bin\Microsoft.AI.Web.dll
-D:\web\HeO\HeOBackend\bin\Microsoft.AI.WindowsServer.dll
-D:\web\HeO\HeOBackend\bin\Microsoft.ApplicationInsights.dll
-D:\web\HeO\HeOBackend\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
 D:\web\HeO\HeOBackend\bin\Microsoft.Web.Infrastructure.dll
 D:\web\HeO\HeOBackend\bin\Newtonsoft.Json.dll
 D:\web\HeO\HeOBackend\bin\PagedList.dll
@@ -99,12 +91,6 @@ D:\web\HeO\HeOBackend\bin\System.Web.Webpages.dll
 D:\web\HeO\HeOBackend\bin\System.Web.Webpages.Razor.dll
 D:\web\HeO\HeOBackend\bin\WebGrease.dll
 D:\web\HeO\HeOBackend\bin\Antlr3.Runtime.pdb
-D:\web\HeO\HeOBackend\bin\Microsoft.AI.DependencyCollector.xml
-D:\web\HeO\HeOBackend\bin\Microsoft.AI.ServerTelemetryChannel.xml
-D:\web\HeO\HeOBackend\bin\Microsoft.AI.Web.xml
-D:\web\HeO\HeOBackend\bin\Microsoft.AI.WindowsServer.xml
-D:\web\HeO\HeOBackend\bin\Microsoft.ApplicationInsights.xml
-D:\web\HeO\HeOBackend\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
 D:\web\HeO\HeOBackend\bin\Newtonsoft.Json.xml
 D:\web\HeO\HeOBackend\bin\PagedList.xml
 D:\web\HeO\HeOBackend\bin\PagedList.Mvc.xml
@@ -138,3 +124,5 @@ D:\web\HeO\HeOBackend\bin\HtmlAgilityPack.dll
 D:\web\HeO\HeOBackend\bin\HtmlAgilityPack.pdb
 D:\web\HeO\HeOBackend\bin\HtmlAgilityPack.xml
 D:\web\HeO\HeOBackend\bin\zh-Hant\System.Web.Optimization.resources.dll
+D:\web\HeO\HeOBackend\bin\HeO.Libs.dll
+D:\web\HeO\HeOBackend\bin\HeO.Libs.pdb

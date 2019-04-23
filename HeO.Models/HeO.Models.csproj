@@ -184,6 +184,9 @@
     <Compile Include="Termlang.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Thread.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="Vipdetail.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>

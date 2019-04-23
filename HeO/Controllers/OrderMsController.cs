@@ -28,6 +28,15 @@ namespace HeO.Controllers
         [CheckSession]
         public ActionResult Order()
         {
+            /*** 更新會員最近登入時間 ***/
+            if (Session["Lastdate"] != null)
+            {
+                Members Member = membersService.GetByID(Session["Memberid"]);
+                Member.Lastdate = Session["Lastdate"].ToString();
+                membersService.SpecificUpdate(Member, new string[] { "Lastdate" });
+                membersService.SaveChanges();
+                Session["Lastdate"] = null;
+            }
             Setting Setting = settingService.Get().FirstOrDefault();
             ViewBag.Max = Setting.Max;
             ViewBag.Min = Setting.Min;
@@ -49,13 +58,14 @@ namespace HeO.Controllers
                     order.Createdate = DateTime.Now;
                     order.Updatedate = DateTime.Now;
                     order.Memberid = Memberid;
-                    order.Ordernumber = "heoorder" + DateTime.Now.ToString("yyyyMMddss");
+                    order.Ordernumber = "heoorder" + DateTime.Now.ToString("yyyyMMddHHmmssfff");
                     order.Service = "讚" + order.Count;
                     orderService.Create(order);
                     orderService.SaveChanges();
                 }
                 return RedirectToAction("OrderResult");
-            }else
+            }
+            else
             {
                 DateTime date = old_order.FirstOrDefault().Createdate.AddSeconds(Convert.ToDouble(memberlevelcooldown.Cooldowntime));
 
@@ -67,7 +77,7 @@ namespace HeO.Controllers
                         order.Createdate = DateTime.Now;
                         order.Updatedate = DateTime.Now;
                         order.Memberid = Memberid;
-                        order.Ordernumber = "heo" + DateTime.Now.ToString("yyyyMMddss");
+                        order.Ordernumber = "heoorder" + DateTime.Now.ToString("yyyyMMddHHmmssfff");
                         order.Service = "讚" + order.Count;
                         orderService.Create(order);
                         orderService.SaveChanges();

@@ -150,17 +150,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Vipdetail">
-      <EntityTypeMapping TypeName="HeOModel.Vipdetail">
-        <MappingFragment StoreEntitySet="Vipdetail">
-          <ScalarProperty Name="Updatedate" ColumnName="Updatedate" />
-          <ScalarProperty Name="Createdate" ColumnName="Createdate" />
-          <ScalarProperty Name="Money" ColumnName="Money" />
-          <ScalarProperty Name="Day" ColumnName="Day" />
-          <ScalarProperty Name="Vipdetailid" ColumnName="Vipdetailid" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="News">
       <EntityTypeMapping TypeName="HeOModel.News">
         <MappingFragment StoreEntitySet="News">
@@ -201,22 +190,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Order">
-      <EntityTypeMapping TypeName="HeOModel.Order">
-        <MappingFragment StoreEntitySet="Order">
-          <ScalarProperty Name="Createdate" ColumnName="Createdate" />
-          <ScalarProperty Name="Updatedate" ColumnName="Updatedate" />
-          <ScalarProperty Name="Cost" ColumnName="Cost" />
-          <ScalarProperty Name="Count" ColumnName="Count" />
-          <ScalarProperty Name="Service" ColumnName="Service" />
-          <ScalarProperty Name="Url" ColumnName="Url" />
-          <ScalarProperty Name="HDZoredernumber" ColumnName="HDZoredernumber" />
-          <ScalarProperty Name="Memberid" ColumnName="Memberid" />
-          <ScalarProperty Name="Ordernumber" ColumnName="Ordernumber" />
-          <ScalarProperty Name="Orderid" ColumnName="Orderid" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="Orderfaceooklist">
       <EntityTypeMapping TypeName="HeOModel.Orderfaceooklist">
         <MappingFragment StoreEntitySet="Orderfaceooklist">
@@ -248,19 +221,40 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="Newslang">
+      <EntityTypeMapping TypeName="HeOModel.Newslang">
+        <MappingFragment StoreEntitySet="Newslang">
+          <ScalarProperty Name="Langid" ColumnName="Langid" />
+          <ScalarProperty Name="Title" ColumnName="Title" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Newsid" ColumnName="Newsid" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Vipdetail">
+      <EntityTypeMapping TypeName="HeOModel.Vipdetail">
+        <MappingFragment StoreEntitySet="Vipdetail">
+          <ScalarProperty Name="Updatedate" ColumnName="Updatedate" />
+          <ScalarProperty Name="Createdate" ColumnName="Createdate" />
+          <ScalarProperty Name="Money" ColumnName="Money" />
+          <ScalarProperty Name="Day" ColumnName="Day" />
+          <ScalarProperty Name="Vipdetailid" ColumnName="Vipdetailid" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
     <EntitySetMapping Name="Viprecord">
       <EntityTypeMapping TypeName="HeOModel.Viprecord">
         <MappingFragment StoreEntitySet="Viprecord">
-          <ScalarProperty Name="Virtualaccount" ColumnName="Virtualaccount" />
-          <ScalarProperty Name="Bankcode" ColumnName="Bankcode" />
-          <ScalarProperty Name="Paymentnumber" ColumnName="Paymentnumber" />
-          <ScalarProperty Name="Tradenumber" ColumnName="Tradenumber" />
           <ScalarProperty Name="Updatedate" ColumnName="Updatedate" />
           <ScalarProperty Name="Createdate" ColumnName="Createdate" />
           <ScalarProperty Name="Enddate" ColumnName="Enddate" />
           <ScalarProperty Name="Startdate" ColumnName="Startdate" />
+          <ScalarProperty Name="Duedate" ColumnName="Duedate" />
           <ScalarProperty Name="Buydate" ColumnName="Buydate" />
-          <ScalarProperty Name="Paymentdate" ColumnName="Paymentdate" />
+          <ScalarProperty Name="Virtualaccount" ColumnName="Virtualaccount" />
+          <ScalarProperty Name="Bankcode" ColumnName="Bankcode" />
+          <ScalarProperty Name="Paymentnumber" ColumnName="Paymentnumber" />
+          <ScalarProperty Name="Tradenumber" ColumnName="Tradenumber" />
           <ScalarProperty Name="Paymenttype" ColumnName="Paymenttype" />
           <ScalarProperty Name="Day" ColumnName="Day" />
           <ScalarProperty Name="Money" ColumnName="Money" />
@@ -272,13 +266,29 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Newslang">
-      <EntityTypeMapping TypeName="HeOModel.Newslang">
-        <MappingFragment StoreEntitySet="Newslang">
-          <ScalarProperty Name="Langid" ColumnName="Langid" />
-          <ScalarProperty Name="Title" ColumnName="Title" />
+    <EntitySetMapping Name="Order">
+      <EntityTypeMapping TypeName="HeOModel.Order">
+        <MappingFragment StoreEntitySet="Order">
+          <ScalarProperty Name="Createdate" ColumnName="Createdate" />
+          <ScalarProperty Name="Updatedate" ColumnName="Updatedate" />
+          <ScalarProperty Name="OrderStatus" ColumnName="OrderStatus" />
+          <ScalarProperty Name="Cost" ColumnName="Cost" />
+          <ScalarProperty Name="Count" ColumnName="Count" />
+          <ScalarProperty Name="Service" ColumnName="Service" />
+          <ScalarProperty Name="Url" ColumnName="Url" />
+          <ScalarProperty Name="HDZoredernumber" ColumnName="HDZoredernumber" />
+          <ScalarProperty Name="Memberid" ColumnName="Memberid" />
+          <ScalarProperty Name="Ordernumber" ColumnName="Ordernumber" />
+          <ScalarProperty Name="Orderid" ColumnName="Orderid" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Thread">
+      <EntityTypeMapping TypeName="HeOModel.Thread">
+        <MappingFragment StoreEntitySet="Thread">
+          <ScalarProperty Name="Createdate" ColumnName="Createdate" />
+          <ScalarProperty Name="Logs" ColumnName="Logs" />
           <ScalarProperty Name="Id" ColumnName="Id" />
-          <ScalarProperty Name="Newsid" ColumnName="Newsid" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

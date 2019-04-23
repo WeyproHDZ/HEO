@@ -16,7 +16,7 @@ namespace HeO.Models
     {
         public System.Guid Vipdetailid { get; set; }
         public Nullable<int> Day { get; set; }
-        public Nullable<int> Money { get; set; }
+        public int Money { get; set; }
         public Nullable<System.DateTime> Createdate { get; set; }
         public Nullable<System.DateTime> Updatedate { get; set; }
     }
