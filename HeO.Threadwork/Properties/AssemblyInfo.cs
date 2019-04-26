@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // 組件的一般資訊是由下列的屬性集控制。
 // 變更這些屬性的值即可修改組件的相關
 // 資訊。
-[assembly: AssemblyTitle("HeOThreadwork")]
+[assembly: AssemblyTitle("HeO.Threadwork")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("HeOThreadwork")]
+[assembly: AssemblyProduct("HeO.Threadwork")]
 [assembly: AssemblyCopyright("Copyright ©  2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // 下列 GUID 為專案公開 (Expose) 至 COM 時所要使用的 typelib ID
-[assembly: Guid("cd727fc9-8187-47de-a755-88622c43c37c")]
+[assembly: Guid("b402e223-805a-463f-ae22-4e21225fdc67")]
 
 // 組件的版本資訊由下列四個值所組成: 
 //

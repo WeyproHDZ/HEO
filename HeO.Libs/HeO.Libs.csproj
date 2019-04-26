@@ -60,6 +60,7 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AllBankCode.cs" />
     <Compile Include="Ezpay.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Threadwork.cs" />

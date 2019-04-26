@@ -253,7 +253,6 @@
       <End Role="Feedbackproduct" EntitySet="Feedbackproduct" />
       <End Role="Memberauthorization" EntitySet="Memberauthorization" />
     </AssociationSet>
-    <EntitySet Name="Vipdetail" EntityType="HeOModel.Vipdetail" />
     <EntitySet Name="News" EntityType="HeOModel.News" />
     <EntitySet Name="Feedbackdetail" EntityType="HeOModel.Feedbackdetail" />
     <AssociationSet Name="FK_Feedbackdetail_Feedbackproduct1" Association="HeOModel.FK_Feedbackdetail_Feedbackproduct1">
@@ -265,12 +264,7 @@
       <End Role="Feedbackdetail" EntitySet="Feedbackdetail" />
     </AssociationSet>
     <EntitySet Name="Feedbackrecord" EntityType="HeOModel.Feedbackrecord" />
-    <EntitySet Name="Order" EntityType="HeOModel.Order" />
     <EntitySet Name="Orderfaceooklist" EntityType="HeOModel.Orderfaceooklist" />
-    <AssociationSet Name="FK_Orderfaceooklist_Order" Association="HeOModel.FK_Orderfaceooklist_Order">
-      <End Role="Order" EntitySet="Order" />
-      <End Role="Orderfaceooklist" EntitySet="Orderfaceooklist" />
-    </AssociationSet>
     <EntitySet Name="Members" EntityType="HeOModel.Members" />
     <AssociationSet Name="FK_Feedbackrecord_Members" Association="HeOModel.FK_Feedbackrecord_Members">
       <End Role="Members" EntitySet="Members" />
@@ -284,24 +278,31 @@
       <End Role="Memberlevel" EntitySet="Memberlevel" />
       <End Role="Members" EntitySet="Members" />
     </AssociationSet>
-    <AssociationSet Name="FK_Order_Members" Association="HeOModel.FK_Order_Members">
-      <End Role="Members" EntitySet="Members" />
-      <End Role="Order" EntitySet="Order" />
-    </AssociationSet>
     <AssociationSet Name="FK_Orderfaceooklist_Members" Association="HeOModel.FK_Orderfaceooklist_Members">
       <End Role="Members" EntitySet="Members" />
       <End Role="Orderfaceooklist" EntitySet="Orderfaceooklist" />
-    </AssociationSet>
-    <EntitySet Name="Viprecord" EntityType="HeOModel.Viprecord" />
-    <AssociationSet Name="FK_Viprecord_Members" Association="HeOModel.FK_Viprecord_Members">
-      <End Role="Members" EntitySet="Members" />
-      <End Role="Viprecord" EntitySet="Viprecord" />
     </AssociationSet>
     <EntitySet Name="Newslang" EntityType="HeOModel.Newslang" />
     <AssociationSet Name="FK_Newlang_News" Association="HeOModel.FK_Newlang_News">
       <End Role="News" EntitySet="News" />
       <End Role="Newslang" EntitySet="Newslang" />
     </AssociationSet>
+    <EntitySet Name="Vipdetail" EntityType="HeOModel.Vipdetail" />
+    <EntitySet Name="Viprecord" EntityType="HeOModel.Viprecord" />
+    <AssociationSet Name="FK_Viprecord_Members" Association="HeOModel.FK_Viprecord_Members">
+      <End Role="Members" EntitySet="Members" />
+      <End Role="Viprecord" EntitySet="Viprecord" />
+    </AssociationSet>
+    <EntitySet Name="Order" EntityType="HeOModel.Order" />
+    <AssociationSet Name="FK_Order_Members" Association="HeOModel.FK_Order_Members">
+      <End Role="Members" EntitySet="Members" />
+      <End Role="Order" EntitySet="Order" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Orderfaceooklist_Order" Association="HeOModel.FK_Orderfaceooklist_Order">
+      <End Role="Order" EntitySet="Order" />
+      <End Role="Orderfaceooklist" EntitySet="Orderfaceooklist" />
+    </AssociationSet>
+    <EntitySet Name="Thread" EntityType="HeOModel.Thread" />
   </EntityContainer>
   <EntityType Name="Memberauthorization">
     <Key>
@@ -336,16 +337,6 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <EntityType Name="Vipdetail">
-    <Key>
-      <PropertyRef Name="Vipdetailid" />
-    </Key>
-    <Property Name="Vipdetailid" Type="Guid" Nullable="false" />
-    <Property Name="Day" Type="Int32" />
-    <Property Name="Money" Type="Int32" />
-    <Property Name="Createdate" Type="DateTime" Precision="3" />
-    <Property Name="Updatedate" Type="DateTime" Precision="3" />
-  </EntityType>
   <EntityType Name="News">
     <Key>
       <PropertyRef Name="Newsid" />
@@ -413,23 +404,6 @@
     <Property Name="Updatedate" Type="DateTime" Nullable="false" Precision="3" />
     <NavigationProperty Name="Members" Relationship="HeOModel.FK_Feedbackrecord_Members" FromRole="Feedbackrecord" ToRole="Members" />
   </EntityType>
-  <EntityType Name="Order">
-    <Key>
-      <PropertyRef Name="Orderid" />
-    </Key>
-    <Property Name="Orderid" Type="Guid" Nullable="false" />
-    <Property Name="Ordernumber" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-    <Property Name="Memberid" Type="Guid" />
-    <Property Name="HDZoredernumber" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-    <Property Name="Url" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-    <Property Name="Service" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-    <Property Name="Count" Type="Int32" />
-    <Property Name="Cost" Type="Double" />
-    <Property Name="Updatedate" Type="DateTime" Precision="3" />
-    <Property Name="Createdate" Type="DateTime" Nullable="false" Precision="3" />
-    <NavigationProperty Name="Orderfaceooklist" Relationship="HeOModel.FK_Orderfaceooklist_Order" FromRole="Order" ToRole="Orderfaceooklist" />
-    <NavigationProperty Name="Members" Relationship="HeOModel.FK_Order_Members" FromRole="Order" ToRole="Members" />
-  </EntityType>
   <EntityType Name="Orderfaceooklist">
     <Key>
       <PropertyRef Name="Id" />
@@ -441,23 +415,9 @@
     <Property Name="Facebookaccount" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
     <Property Name="Createdate" Type="DateTime" Precision="3" />
     <Property Name="Updatedate" Type="DateTime" Precision="3" />
-    <NavigationProperty Name="Order" Relationship="HeOModel.FK_Orderfaceooklist_Order" FromRole="Orderfaceooklist" ToRole="Order" />
     <NavigationProperty Name="Members" Relationship="HeOModel.FK_Orderfaceooklist_Members" FromRole="Orderfaceooklist" ToRole="Members" />
+    <NavigationProperty Name="Order" Relationship="HeOModel.FK_Orderfaceooklist_Order" FromRole="Orderfaceooklist" ToRole="Order" />
   </EntityType>
-  <Association Name="FK_Orderfaceooklist_Order">
-    <End Type="HeOModel.Order" Role="Order" Multiplicity="0..1">
-      <OnDelete Action="Cascade" />
-    </End>
-    <End Type="HeOModel.Orderfaceooklist" Role="Orderfaceooklist" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Order">
-        <PropertyRef Name="Orderid" />
-      </Principal>
-      <Dependent Role="Orderfaceooklist">
-        <PropertyRef Name="Orderid" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
   <EntityType Name="Members">
     <Key>
       <PropertyRef Name="Memberid" />
@@ -477,9 +437,9 @@
     <NavigationProperty Name="Feedbackrecord" Relationship="HeOModel.FK_Feedbackrecord_Members" FromRole="Members" ToRole="Feedbackrecord" />
     <NavigationProperty Name="Memberauthorization" Relationship="HeOModel.FK_Memberauthorization_Members" FromRole="Members" ToRole="Memberauthorization" />
     <NavigationProperty Name="Memberlevel" Relationship="HeOModel.FK_Members_Memberlevel" FromRole="Members" ToRole="Memberlevel" />
-    <NavigationProperty Name="Order" Relationship="HeOModel.FK_Order_Members" FromRole="Members" ToRole="Order" />
     <NavigationProperty Name="Orderfaceooklist" Relationship="HeOModel.FK_Orderfaceooklist_Members" FromRole="Members" ToRole="Orderfaceooklist" />
     <NavigationProperty Name="Viprecord" Relationship="HeOModel.FK_Viprecord_Members" FromRole="Members" ToRole="Viprecord" />
+    <NavigationProperty Name="Order" Relationship="HeOModel.FK_Order_Members" FromRole="Members" ToRole="Order" />
   </EntityType>
   <Association Name="FK_Feedbackrecord_Members">
     <End Type="HeOModel.Members" Role="Members" Multiplicity="1">
@@ -521,18 +481,6 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK_Order_Members">
-    <End Type="HeOModel.Members" Role="Members" Multiplicity="0..1" />
-    <End Type="HeOModel.Order" Role="Order" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Members">
-        <PropertyRef Name="Memberid" />
-      </Principal>
-      <Dependent Role="Order">
-        <PropertyRef Name="Memberid" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
   <Association Name="FK_Orderfaceooklist_Members">
     <End Type="HeOModel.Members" Role="Members" Multiplicity="0..1" />
     <End Type="HeOModel.Orderfaceooklist" Role="Orderfaceooklist" Multiplicity="*" />
@@ -541,42 +489,6 @@
         <PropertyRef Name="Memberid" />
       </Principal>
       <Dependent Role="Orderfaceooklist">
-        <PropertyRef Name="Memberid" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <EntityType Name="Viprecord">
-    <Key>
-      <PropertyRef Name="Viprecordid" />
-    </Key>
-    <Property Name="Viprecordid" Type="Guid" Nullable="false" />
-    <Property Name="Memberid" Type="Guid" />
-    <Property Name="Depositnumber" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-    <Property Name="Payway" Type="Byte" Nullable="false" />
-    <Property Name="Status" Type="Byte" Nullable="false" />
-    <Property Name="Money" Type="Int32" />
-    <Property Name="Day" Type="Int32" />
-    <Property Name="Paymenttype" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-    <Property Name="Paymentdate" Type="DateTime" Precision="3" />
-    <Property Name="Buydate" Type="DateTime" Precision="3" />
-    <Property Name="Startdate" Type="DateTime" Precision="3" />
-    <Property Name="Enddate" Type="DateTime" Nullable="false" Precision="3" />
-    <Property Name="Createdate" Type="DateTime" Precision="3" />
-    <Property Name="Updatedate" Type="DateTime" Precision="3" />
-    <NavigationProperty Name="Members" Relationship="HeOModel.FK_Viprecord_Members" FromRole="Viprecord" ToRole="Members" />
-    <Property Name="Tradenumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-    <Property Name="Paymentnumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-    <Property Name="Bankcode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-    <Property Name="Virtualaccount" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-  </EntityType>
-  <Association Name="FK_Viprecord_Members">
-    <End Type="HeOModel.Members" Role="Members" Multiplicity="0..1" />
-    <End Type="HeOModel.Viprecord" Role="Viprecord" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Members">
-        <PropertyRef Name="Memberid" />
-      </Principal>
-      <Dependent Role="Viprecord">
         <PropertyRef Name="Memberid" />
       </Dependent>
     </ReferentialConstraint>
@@ -605,4 +517,102 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <EntityType Name="Vipdetail">
+    <Key>
+      <PropertyRef Name="Vipdetailid" />
+    </Key>
+    <Property Name="Vipdetailid" Type="Guid" Nullable="false" />
+    <Property Name="Day" Type="Int32" />
+    <Property Name="Money" Type="Int32" Nullable="false" />
+    <Property Name="Createdate" Type="DateTime" Precision="3" />
+    <Property Name="Updatedate" Type="DateTime" Precision="3" />
+  </EntityType>
+  <EntityType Name="Viprecord">
+    <Key>
+      <PropertyRef Name="Viprecordid" />
+    </Key>
+    <Property Name="Viprecordid" Type="Guid" Nullable="false" />
+    <Property Name="Memberid" Type="Guid" />
+    <Property Name="Depositnumber" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="Payway" Type="Byte" Nullable="false" />
+    <Property Name="Status" Type="Byte" Nullable="false" />
+    <Property Name="Money" Type="Int32" Nullable="false" />
+    <Property Name="Day" Type="Int32" />
+    <Property Name="Paymenttype" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Tradenumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Paymentnumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Bankcode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Virtualaccount" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Buydate" Type="DateTime" Precision="3" />
+    <Property Name="Duedate" Type="DateTime" Precision="3" />
+    <Property Name="Startdate" Type="DateTime" Precision="3" />
+    <Property Name="Enddate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="Createdate" Type="DateTime" Precision="3" />
+    <Property Name="Updatedate" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="Members" Relationship="HeOModel.FK_Viprecord_Members" FromRole="Viprecord" ToRole="Members" />
+  </EntityType>
+  <Association Name="FK_Viprecord_Members">
+    <End Type="HeOModel.Members" Role="Members" Multiplicity="0..1" />
+    <End Type="HeOModel.Viprecord" Role="Viprecord" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Members">
+        <PropertyRef Name="Memberid" />
+      </Principal>
+      <Dependent Role="Viprecord">
+        <PropertyRef Name="Memberid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="Order">
+    <Key>
+      <PropertyRef Name="Orderid" />
+    </Key>
+    <Property Name="Orderid" Type="Guid" Nullable="false" />
+    <Property Name="Ordernumber" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="Memberid" Type="Guid" />
+    <Property Name="HDZoredernumber" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="Url" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="Service" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="Count" Type="Int32" />
+    <Property Name="Cost" Type="Double" />
+    <Property Name="OrderStatus" Type="Int32" Nullable="false" />
+    <Property Name="Updatedate" Type="DateTime" Precision="3" />
+    <Property Name="Createdate" Type="DateTime" Nullable="false" Precision="3" />
+    <NavigationProperty Name="Members" Relationship="HeOModel.FK_Order_Members" FromRole="Order" ToRole="Members" />
+    <NavigationProperty Name="Orderfaceooklist" Relationship="HeOModel.FK_Orderfaceooklist_Order" FromRole="Order" ToRole="Orderfaceooklist" />
+  </EntityType>
+  <Association Name="FK_Order_Members">
+    <End Type="HeOModel.Members" Role="Members" Multiplicity="0..1" />
+    <End Type="HeOModel.Order" Role="Order" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Members">
+        <PropertyRef Name="Memberid" />
+      </Principal>
+      <Dependent Role="Order">
+        <PropertyRef Name="Memberid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Orderfaceooklist_Order">
+    <End Type="HeOModel.Order" Role="Order" Multiplicity="0..1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Type="HeOModel.Orderfaceooklist" Role="Orderfaceooklist" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Order">
+        <PropertyRef Name="Orderid" />
+      </Principal>
+      <Dependent Role="Orderfaceooklist">
+        <PropertyRef Name="Orderid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="Thread">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Logs" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Createdate" Type="DateTime" Precision="3" />
+  </EntityType>
 </Schema>

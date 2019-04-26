@@ -162,6 +162,7 @@
     <Property Name="Service" Type="nvarchar" MaxLength="255" />
     <Property Name="Count" Type="int" />
     <Property Name="Cost" Type="float" />
+    <Property Name="OrderStatus" Type="int" Nullable="false" />
     <Property Name="Updatedate" Type="datetime" />
     <Property Name="Createdate" Type="datetime" Nullable="false" />
   </EntityType>
@@ -225,13 +226,21 @@
     <Property Name="Title" Type="nvarchar" MaxLength="100" />
     <Property Name="Contents" Type="text" />
   </EntityType>
+  <EntityType Name="Thread">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Logs" Type="ntext" />
+    <Property Name="Createdate" Type="datetime" />
+  </EntityType>
   <EntityType Name="Vipdetail">
     <Key>
       <PropertyRef Name="Vipdetailid" />
     </Key>
     <Property Name="Vipdetailid" Type="uniqueidentifier" Nullable="false" />
     <Property Name="Day" Type="int" />
-    <Property Name="Money" Type="int" />
+    <Property Name="Money" Type="int" Nullable="false" />
     <Property Name="Createdate" Type="datetime" />
     <Property Name="Updatedate" Type="datetime" />
   </EntityType>
@@ -244,15 +253,15 @@
     <Property Name="Depositnumber" Type="nvarchar" MaxLength="255" />
     <Property Name="Payway" Type="tinyint" Nullable="false" />
     <Property Name="Status" Type="tinyint" Nullable="false" />
-    <Property Name="Money" Type="int" />
+    <Property Name="Money" Type="int" Nullable="false" />
     <Property Name="Day" Type="int" />
     <Property Name="Paymenttype" Type="nvarchar" MaxLength="50" />
     <Property Name="Tradenumber" Type="nvarchar" MaxLength="50" />
     <Property Name="Paymentnumber" Type="nvarchar" MaxLength="50" />
     <Property Name="Bankcode" Type="nvarchar" MaxLength="50" />
     <Property Name="Virtualaccount" Type="nvarchar" MaxLength="50" />
-    <Property Name="Paymentdate" Type="datetime" />
     <Property Name="Buydate" Type="datetime" />
+    <Property Name="Duedate" Type="datetime" />
     <Property Name="Startdate" Type="datetime" />
     <Property Name="Enddate" Type="datetime" Nullable="false" />
     <Property Name="Createdate" Type="datetime" />
@@ -502,6 +511,7 @@
     <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Term" EntityType="Self.Term" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Termlang" EntityType="Self.Termlang" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Thread" EntityType="Self.Thread" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Vipdetail" EntityType="Self.Vipdetail" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Viprecord" EntityType="Self.Viprecord" Schema="dbo" store:Type="Tables" />
     <AssociationSet Name="FK_Adminlims_Admins" Association="Self.FK_Adminlims_Admins">

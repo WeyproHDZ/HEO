@@ -43,6 +43,7 @@
                                         <th class="text-center">Facebook帳號</th>
                                         <th width="15%" class="text-center">天數</th>
                                         <th width="15%" class="text-center">費用</th>
+                                        <th width="20%" class="text-center">繳費狀態</th>
                                         <th width="10%" class="text-center">編輯</th>
                                         <th width="10%" class="text-center">刪除</th>
                                     </tr>
@@ -54,6 +55,21 @@
                                             <td class="text-center">@entity.Members.Account</td>
                                             <td class="text-center">@entity.Day</td>
                                             <td class="text-center">@entity.Money</td>
+                                            @switch (entity.Status)
+                                            {
+                                                case 0:
+                                                    <td class="text-center">尚未付款</td>
+                                                    break;
+                                                case 1:
+                                                    <td class="text-center">待確認付款</td>
+                                                    break;
+                                                case 2:
+                                                    <td class="text-center">完成付款</td>
+                                                    break;
+                                                default:
+                                                    <td class="text-center">資料有誤</td>
+                                                    break;
+                                            }
                                             <td class="text-center"><a href="@Url.Action("EditViprecord", "MemberMs", new { Viprecordid = entity.Viprecordid, p = ViewBag.pageNumber })" class="btn btn-info btn-xs"><i class="fa fa-edit"></i></a></td>
                                             <td class="text-center"><a href="#" class="btn btn-danger btn-xs del" data-href="@Url.Action("DeleteViprecord", "MemberMs", new { Viprecordid = entity.Viprecordid, p = ViewBag.pageNumber })" data-toggle="modal" data-target="#confirm-delete"><i class="fa fa-trash-o"></i></a></td>
                                         </tr>

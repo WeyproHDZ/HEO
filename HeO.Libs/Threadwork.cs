@@ -13,25 +13,15 @@ namespace HeO.Libs
 {
     public class Threadwork
     {
-        public static string[] set_thread(IEnumerable<Order> order)
+        public static string set_thread(Order order)
         {       
-            Task[] task = new Task[(order.Count())];
-            string[] response = new string[(order.Count() + 1)];
-            int i = 0;
-            foreach (Order orderList in order)
-            {
-                task[i] = Task.Factory.StartNew(() =>
-                {                    
-                    response[i] = "訂單名稱 : " + orderList.Ordernumber + "  訂單服務 : " + orderList.Service + "  需求數量 : " + orderList.Count;
-                    i++;
-                });
-                System.Threading.Thread.Sleep(3000);
-            }
-
-            Task.Factory.ContinueWhenAll(task, copletedTasks =>
-            {
-                response[i] = "排程完成";
+            Task[] task = new Task[1];
+            string response = "";           
+            task[0] = Task.Factory.StartNew(() =>
+            {                    
+                response = "訂單名稱 : " + order.Ordernumber + "  訂單服務 : " + order.Service + "  需求數量 : " + order.Count;
             });
+            System.Threading.Thread.Sleep(3000);
             return response;
         }
 

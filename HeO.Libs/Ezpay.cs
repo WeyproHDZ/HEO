@@ -16,9 +16,9 @@ namespace HeO.Libs
     public class Ezpay
     {
         static string transmit_url = "https://cpayment.ezpay.com.tw/MPG/mpg_gateway";
-        static string MerchantID = "PG300000004533";
-        static string HashKey = "quqMrp9Ijce4Mf0Kv29it8jIbFZGUYQS";
-        static string HashIv = "yVfGbqv0QKKq5wkW";
+        static string MerchantID = "PG300000005081";
+        static string HashKey = "pmctdxMGFRlIILS9sPPnyxsWmT6WE8nh";
+        static string HashIv = "MV8SYIBkjbjnaNnU";
         static string Verison = "1.0";
         static string new_data;
         public static void set_paramer(Viprecord viprecord, string CustomerURL, string NotifyURL, int TimeStamp)
@@ -45,7 +45,7 @@ namespace HeO.Libs
                         type = "Error";
                         break;
                 }
-                new_data = "MerchantID=" + MerchantID + "&TimeStamp=" + TimeStamp + "&Version=" + Verison + "&MerchantOrderNo=" + Depositnumber + "&Amt=" + Amt + "&ItemDesc=" + ItemDesc + "&CustomerURL=" + CustomerURL + "&NotifyURL=" + NotifyURL + type;
+                new_data = "MerchantID=" + MerchantID + "&TimeStamp=" + TimeStamp +"&Version=" + Verison + "&MerchantOrderNo=" + Depositnumber + "&Amt=" + Amt + "&ItemDesc=" + ItemDesc + "&CustomerURL=" + CustomerURL + "&NotifyURL=" + NotifyURL + type;
             }
         }
 
@@ -53,10 +53,7 @@ namespace HeO.Libs
         {
 
             string TradeInfo = EncryptAES256(new_data);
-            string TradeSha = getHashSha256("HashKey=quqMrp9Ijce4Mf0Kv29it8jIbFZGUYQS&" + TradeInfo + "&HashIV=yVfGbqv0QKKq5wkW");
-
-            //string TradeSha = getHashSha256("HashKey=" + HashKey + TradeInfo + "HashIV=" + HashIv);
-            //string TradeSha = getHashSha256();
+            string TradeSha = getHashSha256("HashKey=" + HashKey + "&" + TradeInfo + "&HashIV=" + HashIv);
             string form =
             "<form id='ezpay' name='ezpay' action='" + transmit_url + "' method='post' >" +
             "<input type ='hidden' class = 'button-alt' name = 'MerchantID' value='" + MerchantID + "'/>" +
@@ -85,33 +82,30 @@ namespace HeO.Libs
 
         public static string EncryptAES256(string source)//加密
         {
-            string sSecretKey = HashKey;
-            string iv = HashIv;
             byte[] sourceBytes = AddPKCS7Padding(Encoding.UTF8.GetBytes(source),
            32);
             var aes = new RijndaelManaged();
-            aes.Key = Encoding.UTF8.GetBytes(sSecretKey);
-            aes.IV = Encoding.UTF8.GetBytes(iv);
+            aes.Key = Encoding.UTF8.GetBytes(HashKey);
+            aes.IV = Encoding.UTF8.GetBytes(HashIv);
             aes.Mode = CipherMode.CBC;
             aes.Padding = PaddingMode.None;
             ICryptoTransform transform = aes.CreateEncryptor();
             return ByteArrayToHex(transform.TransformFinalBlock(sourceBytes, 0,
            sourceBytes.Length)).ToLower();
         }
+
         public static string DecryptAES256(string encryptData)//解密
         {
-            string sSecretKey = HashKey;
-            string iv = HashIv;
-            var encryptBytes = HexStringToByteArray(encryptData.ToUpper());
-            var aes = new RijndaelManaged();
-            aes.Key = Encoding.UTF8.GetBytes(sSecretKey);
-            aes.IV = Encoding.UTF8.GetBytes(iv);
-            aes.Mode = CipherMode.CBC;
-            aes.Padding = PaddingMode.None;
-            ICryptoTransform transform = aes.CreateDecryptor();
-            return
-           Encoding.UTF8.GetString(RemovePKCS7Padding(transform.TransformFinalBlock
-           (encryptBytes, 0, encryptBytes.Length)));
+             var encryptBytes = HexStringToByteArray(encryptData.ToUpper());
+             var aes = new RijndaelManaged();
+             aes.Key = Encoding.UTF8.GetBytes(HashKey);
+             aes.IV = Encoding.UTF8.GetBytes(HashIv);
+             aes.Mode = CipherMode.CBC;
+             aes.Padding = PaddingMode.None;
+             ICryptoTransform transform = aes.CreateDecryptor();
+             return
+            Encoding.UTF8.GetString(RemovePKCS7Padding(transform.TransformFinalBlock
+            (encryptBytes, 0, encryptBytes.Length)));
         }
         private static byte[] AddPKCS7Padding(byte[] data, int iBlockSize)
         {
