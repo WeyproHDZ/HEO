@@ -80,7 +80,7 @@
           <Property Name="Langid" Type="int" />
           <Property Name="Guideid" Type="uniqueidentifier" />
           <Property Name="Title" Type="nvarchar" MaxLength="100" />
-          <Property Name="Contents" Type="text" />
+          <Property Name="Contents" Type="ntext" />
         </EntityType>
         <EntityType Name="Lims">
           <Key>
@@ -229,7 +229,7 @@
           <Property Name="Termid" Type="uniqueidentifier" />
           <Property Name="Langid" Type="int" />
           <Property Name="Title" Type="nvarchar" MaxLength="100" />
-          <Property Name="Contents" Type="text" />
+          <Property Name="Contents" Type="ntext" />
         </EntityType>
         <EntityType Name="Thread">
           <Key>
@@ -431,7 +431,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Order_Members">
-          <End Role="Members" Type="Self.Members" Multiplicity="0..1" />
+          <End Role="Members" Type="Self.Members" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="Order" Type="Self.Order" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Members">
@@ -483,7 +485,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Viprecord_Members">
-          <End Role="Members" Type="Self.Members" Multiplicity="0..1" />
+          <End Role="Members" Type="Self.Members" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="Viprecord" Type="Self.Viprecord" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Members">
@@ -636,18 +640,7 @@
           <Property Name="Uuid" Type="Guid" />
           <Property Name="Createdate" Type="DateTime" Precision="3" />
           <Property Name="Updatedate" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="Guidelang" Relationship="Self.FK_Guidelang_Guide" FromRole="Guide" ToRole="Guidelang" />
-        </EntityType>
-        <EntityType Name="Guidelang">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Langid" Type="Int32" />
-          <Property Name="Guideid" Type="Guid" />
-          <Property Name="Title" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="Contents" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="Guide" Relationship="Self.FK_Guidelang_Guide" FromRole="Guidelang" ToRole="Guide" />
+          <NavigationProperty Name="Guidelang" Relationship="HeOModel.FK_Guidelang_Guide" FromRole="Guide" ToRole="Guidelang" />
         </EntityType>
         <EntityType Name="Lims">
           <Key>
@@ -711,18 +704,7 @@
           <Property Name="Orders" Type="Int32" Nullable="false" />
           <Property Name="Createdate" Type="DateTime" Precision="3" />
           <Property Name="Updatedate" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="Termlang" Relationship="Self.FK_Termlang_Term" FromRole="Term" ToRole="Termlang" />
-        </EntityType>
-        <EntityType Name="Termlang">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Termid" Type="Guid" />
-          <Property Name="Langid" Type="Int32" />
-          <Property Name="Title" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="Contents" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="Term" Relationship="Self.FK_Termlang_Term" FromRole="Termlang" ToRole="Term" />
+          <NavigationProperty Name="Termlang" Relationship="HeOModel.FK_Termlang_Term" FromRole="Term" ToRole="Termlang" />
         </EntityType>
         <Association Name="FK_Adminlims_Admins">
           <End Role="Admins" Type="Self.Admins" Multiplicity="1" />
@@ -745,20 +727,6 @@
             </Principal>
             <Dependent Role="AdminLims">
               <PropertyRef Name="LimID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Guidelang_Guide">
-          <End Role="Guide" Type="Self.Guide" Multiplicity="0..1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="Guidelang" Type="Self.Guidelang" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Guide">
-              <PropertyRef Name="Guideid" />
-            </Principal>
-            <Dependent Role="Guidelang">
-              <PropertyRef Name="Guideid" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -788,33 +756,17 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Termlang_Term">
-          <End Role="Term" Type="Self.Term" Multiplicity="0..1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="Termlang" Type="Self.Termlang" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Term">
-              <PropertyRef Name="Termid" />
-            </Principal>
-            <Dependent Role="Termlang">
-              <PropertyRef Name="Termid" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityContainer Name="HeOEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="AdminLims" EntityType="Self.AdminLims" />
           <EntitySet Name="Admins" EntityType="Self.Admins" />
           <EntitySet Name="Feedbackproduct" EntityType="Self.Feedbackproduct" />
           <EntitySet Name="Guide" EntityType="Self.Guide" />
-          <EntitySet Name="Guidelang" EntityType="Self.Guidelang" />
           <EntitySet Name="Lims" EntityType="Self.Lims" />
           <EntitySet Name="Memberlevel" EntityType="Self.Memberlevel" />
           <EntitySet Name="Memberlevelcooldown" EntityType="Self.Memberlevelcooldown" />
           <EntitySet Name="Returnstatus" EntityType="Self.Returnstatus" />
           <EntitySet Name="Setting" EntityType="Self.Setting" />
           <EntitySet Name="Term" EntityType="Self.Term" />
-          <EntitySet Name="Termlang" EntityType="Self.Termlang" />
           <AssociationSet Name="FK_Adminlims_Admins" Association="Self.FK_Adminlims_Admins">
             <End Role="Admins" EntitySet="Admins" />
             <End Role="AdminLims" EntitySet="AdminLims" />
@@ -823,10 +775,6 @@
             <End Role="Lims" EntitySet="Lims" />
             <End Role="AdminLims" EntitySet="AdminLims" />
           </AssociationSet>
-          <AssociationSet Name="FK_Guidelang_Guide" Association="Self.FK_Guidelang_Guide">
-            <End Role="Guide" EntitySet="Guide" />
-            <End Role="Guidelang" EntitySet="Guidelang" />
-          </AssociationSet>
           <AssociationSet Name="FK_Lims_Lims1" Association="Self.FK_Lims_Lims1">
             <End Role="Lims" EntitySet="Lims" />
             <End Role="Lims1" EntitySet="Lims" />
@@ -834,10 +782,6 @@
           <AssociationSet Name="FK_Memberlevelcooldown_Memberlevel" Association="Self.FK_Memberlevelcooldown_Memberlevel">
             <End Role="Memberlevel" EntitySet="Memberlevel" />
             <End Role="Memberlevelcooldown" EntitySet="Memberlevelcooldown" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Termlang_Term" Association="Self.FK_Termlang_Term">
-            <End Role="Term" EntitySet="Term" />
-            <End Role="Termlang" EntitySet="Termlang" />
           </AssociationSet>
           <EntitySet Name="Memberauthorization" EntityType="HeOModel.Memberauthorization" />
           <EntitySet Name="sysdiagrams" EntityType="HeOModel.sysdiagrams" />
@@ -895,6 +839,16 @@
             <End Role="Orderfaceooklist" EntitySet="Orderfaceooklist" />
           </AssociationSet>
           <EntitySet Name="Thread" EntityType="HeOModel.Thread" />
+          <EntitySet Name="Guidelang" EntityType="HeOModel.Guidelang" />
+          <EntitySet Name="Termlang" EntityType="HeOModel.Termlang" />
+          <AssociationSet Name="FK_Guidelang_Guide" Association="HeOModel.FK_Guidelang_Guide">
+            <End Role="Guide" EntitySet="Guide" />
+            <End Role="Guidelang" EntitySet="Guidelang" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Termlang_Term" Association="HeOModel.FK_Termlang_Term">
+            <End Role="Term" EntitySet="Term" />
+            <End Role="Termlang" EntitySet="Termlang" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="Memberauthorization">
           <Key>
@@ -1207,6 +1161,56 @@
           <Property Name="Logs" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Createdate" Type="DateTime" Precision="3" />
         </EntityType>
+        <EntityType Name="Guidelang">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Langid" Type="Int32" />
+          <Property Name="Guideid" Type="Guid" />
+          <Property Name="Title" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Contents" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Guide" Relationship="HeOModel.FK_Guidelang_Guide" FromRole="Guidelang" ToRole="Guide" />
+        </EntityType>
+        <EntityType Name="Termlang">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Termid" Type="Guid" />
+          <Property Name="Langid" Type="Int32" />
+          <Property Name="Title" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Contents" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Term" Relationship="HeOModel.FK_Termlang_Term" FromRole="Termlang" ToRole="Term" />
+        </EntityType>
+        <Association Name="FK_Guidelang_Guide">
+          <End Type="HeOModel.Guide" Role="Guide" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="HeOModel.Guidelang" Role="Guidelang" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Guide">
+              <PropertyRef Name="Guideid" />
+            </Principal>
+            <Dependent Role="Guidelang">
+              <PropertyRef Name="Guideid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Termlang_Term">
+          <End Type="HeOModel.Term" Role="Term" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="HeOModel.Termlang" Role="Termlang" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Term">
+              <PropertyRef Name="Termid" />
+            </Principal>
+            <Dependent Role="Termlang">
+              <PropertyRef Name="Termid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1254,17 +1258,6 @@
                 <ScalarProperty Name="Uuid" ColumnName="Uuid" />
                 <ScalarProperty Name="Createdate" ColumnName="Createdate" />
                 <ScalarProperty Name="Updatedate" ColumnName="Updatedate" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Guidelang">
-            <EntityTypeMapping TypeName="HeOModel.Guidelang">
-              <MappingFragment StoreEntitySet="Guidelang">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="Langid" ColumnName="Langid" />
-                <ScalarProperty Name="Guideid" ColumnName="Guideid" />
-                <ScalarProperty Name="Title" ColumnName="Title" />
-                <ScalarProperty Name="Contents" ColumnName="Contents" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1327,17 +1320,6 @@
                 <ScalarProperty Name="Orders" ColumnName="Orders" />
                 <ScalarProperty Name="Createdate" ColumnName="Createdate" />
                 <ScalarProperty Name="Updatedate" ColumnName="Updatedate" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Termlang">
-            <EntityTypeMapping TypeName="HeOModel.Termlang">
-              <MappingFragment StoreEntitySet="Termlang">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="Termid" ColumnName="Termid" />
-                <ScalarProperty Name="Langid" ColumnName="Langid" />
-                <ScalarProperty Name="Title" ColumnName="Title" />
-                <ScalarProperty Name="Contents" ColumnName="Contents" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1500,6 +1482,28 @@
               <MappingFragment StoreEntitySet="Thread">
                 <ScalarProperty Name="Createdate" ColumnName="Createdate" />
                 <ScalarProperty Name="Logs" ColumnName="Logs" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Guidelang">
+            <EntityTypeMapping TypeName="HeOModel.Guidelang">
+              <MappingFragment StoreEntitySet="Guidelang">
+                <ScalarProperty Name="Contents" ColumnName="Contents" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="Guideid" ColumnName="Guideid" />
+                <ScalarProperty Name="Langid" ColumnName="Langid" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Termlang">
+            <EntityTypeMapping TypeName="HeOModel.Termlang">
+              <MappingFragment StoreEntitySet="Termlang">
+                <ScalarProperty Name="Contents" ColumnName="Contents" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="Langid" ColumnName="Langid" />
+                <ScalarProperty Name="Termid" ColumnName="Termid" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

@@ -75,7 +75,7 @@
     <Property Name="Langid" Type="int" />
     <Property Name="Guideid" Type="uniqueidentifier" />
     <Property Name="Title" Type="nvarchar" MaxLength="100" />
-    <Property Name="Contents" Type="text" />
+    <Property Name="Contents" Type="ntext" />
   </EntityType>
   <EntityType Name="Lims">
     <Key>
@@ -224,7 +224,7 @@
     <Property Name="Termid" Type="uniqueidentifier" />
     <Property Name="Langid" Type="int" />
     <Property Name="Title" Type="nvarchar" MaxLength="100" />
-    <Property Name="Contents" Type="text" />
+    <Property Name="Contents" Type="ntext" />
   </EntityType>
   <EntityType Name="Thread">
     <Key>
@@ -426,7 +426,9 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_Order_Members">
-    <End Role="Members" Type="Self.Members" Multiplicity="0..1" />
+    <End Role="Members" Type="Self.Members" Multiplicity="0..1">
+      <OnDelete Action="Cascade" />
+    </End>
     <End Role="Order" Type="Self.Order" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="Members">
@@ -478,7 +480,9 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_Viprecord_Members">
-    <End Role="Members" Type="Self.Members" Multiplicity="0..1" />
+    <End Role="Members" Type="Self.Members" Multiplicity="0..1">
+      <OnDelete Action="Cascade" />
+    </End>
     <End Role="Viprecord" Type="Self.Viprecord" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="Members">

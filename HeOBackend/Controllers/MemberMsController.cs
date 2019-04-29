@@ -501,11 +501,18 @@ namespace HeOBackend.Controllers
         [HttpPost]
         public ActionResult EditReallist(Guid memberid , Members members , int status)
         {
+            Memberlevel memberlevel = memberlevelService.Get().Where(a => a.Levelname == "真人").FirstOrDefault();
             membersService.SpecificUpdate(members, new string[] { "Facebooklink" });
             members.Facebookstatus = status;
             if(status == 2)
             {
                 members.Isreal = true;
+                members.Levelid = memberlevel.Levelid;
+                membersService.SpecificUpdate(members, new string[] { "Levelid" , "Isreal", "Facebookstatus" });
+            }
+            else
+            {
+                membersService.SpecificUpdate(members, new string[] { "Isreal", "Facebookstatus" });
             }
             membersService.SaveChanges();
             return RedirectToAction("Reallist");

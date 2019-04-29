@@ -45,17 +45,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Guidelang">
-      <EntityTypeMapping TypeName="HeOModel.Guidelang">
-        <MappingFragment StoreEntitySet="Guidelang">
-          <ScalarProperty Name="Id" ColumnName="Id" />
-          <ScalarProperty Name="Langid" ColumnName="Langid" />
-          <ScalarProperty Name="Guideid" ColumnName="Guideid" />
-          <ScalarProperty Name="Title" ColumnName="Title" />
-          <ScalarProperty Name="Contents" ColumnName="Contents" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="Lims">
       <EntityTypeMapping TypeName="HeOModel.Lims">
         <MappingFragment StoreEntitySet="Lims">
@@ -115,17 +104,6 @@
           <ScalarProperty Name="Orders" ColumnName="Orders" />
           <ScalarProperty Name="Createdate" ColumnName="Createdate" />
           <ScalarProperty Name="Updatedate" ColumnName="Updatedate" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="Termlang">
-      <EntityTypeMapping TypeName="HeOModel.Termlang">
-        <MappingFragment StoreEntitySet="Termlang">
-          <ScalarProperty Name="Id" ColumnName="Id" />
-          <ScalarProperty Name="Termid" ColumnName="Termid" />
-          <ScalarProperty Name="Langid" ColumnName="Langid" />
-          <ScalarProperty Name="Title" ColumnName="Title" />
-          <ScalarProperty Name="Contents" ColumnName="Contents" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -288,6 +266,28 @@
         <MappingFragment StoreEntitySet="Thread">
           <ScalarProperty Name="Createdate" ColumnName="Createdate" />
           <ScalarProperty Name="Logs" ColumnName="Logs" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Guidelang">
+      <EntityTypeMapping TypeName="HeOModel.Guidelang">
+        <MappingFragment StoreEntitySet="Guidelang">
+          <ScalarProperty Name="Contents" ColumnName="Contents" />
+          <ScalarProperty Name="Title" ColumnName="Title" />
+          <ScalarProperty Name="Guideid" ColumnName="Guideid" />
+          <ScalarProperty Name="Langid" ColumnName="Langid" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Termlang">
+      <EntityTypeMapping TypeName="HeOModel.Termlang">
+        <MappingFragment StoreEntitySet="Termlang">
+          <ScalarProperty Name="Contents" ColumnName="Contents" />
+          <ScalarProperty Name="Title" ColumnName="Title" />
+          <ScalarProperty Name="Langid" ColumnName="Langid" />
+          <ScalarProperty Name="Termid" ColumnName="Termid" />
           <ScalarProperty Name="Id" ColumnName="Id" />
         </MappingFragment>
       </EntityTypeMapping>

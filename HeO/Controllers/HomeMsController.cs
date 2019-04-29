@@ -20,6 +20,8 @@ namespace HeO.Controllers
         private MembersService membersService;
         private MemberlevelService memberlevelService;
         private MemberlevelcooldownService memberlevelcooldownService;
+        private FeedbackproductService feedbackproductService;
+        private MemberauthorizationService memberauthorizationService;
         public HomeMsController()
         {
             newsService = new NewsService();
@@ -27,6 +29,8 @@ namespace HeO.Controllers
             membersService = new MembersService();
             memberlevelService = new MemberlevelService();
             memberlevelcooldownService = new MemberlevelcooldownService();
+            feedbackproductService = new FeedbackproductService();
+            memberauthorizationService = new MemberauthorizationService();
         }
         // GET: HomeMs
         /*** 首頁 ***/
@@ -59,7 +63,7 @@ namespace HeO.Controllers
         {
             IEnumerable<Members> old_members = membersService.Get();
             IEnumerable<Memberlevelcooldown> memberlevelcooldown = memberlevelcooldownService.Get().OrderByDescending(o => o.Cooldowntime);  // 會員層級冷卻時間由長到短
-            
+            IEnumerable<Feedbackproduct> feedbackproduct = feedbackproductService.Get();
             var Level = memberlevelcooldown.FirstOrDefault().Levelid;  // 撈第一筆資料的id
             foreach(Members old_member in old_members)
             {
@@ -98,13 +102,32 @@ namespace HeO.Controllers
                 members.Createdate = DateTime.Now;
                 members.Updatedate = DateTime.Now;
                 members.Lastdate = DateTime.Now.ToShortDateString();
-                members.Facebooklink = members.Account;
+                members.Facebooklink = "https://www.facebook.com/profile.php?id=100000512794437";
+                foreach (Feedbackproduct feedbackproductlist in feedbackproduct)
+                {
+                    Memberauthorization memberauthorization = new Memberauthorization();
+                    memberauthorization.Id = Guid.NewGuid();
+                    memberauthorization.Memberid = members.Memberid;
+                    memberauthorization.Feedbackproductid = feedbackproductlist.Feedbackproductid;
+                    memberauthorization.Checked = false;
+                    members.Memberauthorization.Add(memberauthorization);
+
+                    //memberauthorizationService.Create(memberauthorization);
+                }
                 membersService.Create(members);
                 membersService.SaveChanges();
             }
+
             Session["IsLogin"] = true;
             Session["Memberid"] = members.Memberid;
-            return RedirectToAction("Certified");
+            if (Session["href"] == null)
+            {
+                return RedirectToAction("Certified");
+            }
+            else
+            {
+                return RedirectToAction("Deposit", "DepositMs");
+            }
         }
 
         [CheckSession]
@@ -130,11 +153,15 @@ namespace HeO.Controllers
         }
         [CheckSession]
         [HttpPost]
-        public ActionResult Certified(Members member)
+        public ActionResult Certified(int Facebookstatus)
         {
-            membersService.SpecificUpdate(member, new string[] { "Facebookstatus" });
-            membersService.SaveChanges();
-
+            Members member = membersService.GetByID(Session["Memberid"]);
+            if(Facebookstatus != 0)
+            {
+                member.Facebookstatus = Facebookstatus;
+                membersService.SpecificUpdate(member, new string[] { "Facebookstatus" });
+                membersService.SaveChanges();
+            }
             return RedirectToAction("Order", "OrderMs");
         }
     }

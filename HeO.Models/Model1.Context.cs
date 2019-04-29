@@ -29,14 +29,12 @@ namespace HeO.Models
         public virtual DbSet<Admins> Admins { get; set; }
         public virtual DbSet<Feedbackproduct> Feedbackproduct { get; set; }
         public virtual DbSet<Guide> Guide { get; set; }
-        public virtual DbSet<Guidelang> Guidelang { get; set; }
         public virtual DbSet<Lims> Lims { get; set; }
         public virtual DbSet<Memberlevel> Memberlevel { get; set; }
         public virtual DbSet<Memberlevelcooldown> Memberlevelcooldown { get; set; }
         public virtual DbSet<Returnstatus> Returnstatus { get; set; }
         public virtual DbSet<Setting> Setting { get; set; }
         public virtual DbSet<Term> Term { get; set; }
-        public virtual DbSet<Termlang> Termlang { get; set; }
         public virtual DbSet<Memberauthorization> Memberauthorization { get; set; }
         public virtual DbSet<sysdiagrams> sysdiagrams { get; set; }
         public virtual DbSet<News> News { get; set; }
@@ -49,5 +47,7 @@ namespace HeO.Models
         public virtual DbSet<Viprecord> Viprecord { get; set; }
         public virtual DbSet<Order> Order { get; set; }
         public virtual DbSet<Thread> Thread { get; set; }
+        public virtual DbSet<Guidelang> Guidelang { get; set; }
+        public virtual DbSet<Termlang> Termlang { get; set; }
     }
 }

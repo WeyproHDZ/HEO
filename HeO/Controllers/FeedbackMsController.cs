@@ -49,7 +49,7 @@ namespace HeO.Controllers
                 }
             }
 
-            ViewBag.Date = member.Createdate.ToShortDateString().ToString();
+            ViewBag.Date = member.Createdate.ToString("yyyy/MM/dd");
             ViewBag.Feedbackproduct = feedbackproductService.Get().OrderBy(o => o.Createdate);
             ViewBag.FeedbackCount = Product;
             return View();

@@ -69,8 +69,8 @@ namespace HeO.Controllers
                 viprecordService.SaveChanges();          
             }
             
-            string CustomerURL = "http://a2acc7e9.ngrok.io/DepositMs/DepositSuccess";
-            string NotifyURL = "http://a2acc7e9.ngrok.io/DepositMs/DepositReceive";
+            string CustomerURL = "http://heofrontend.4webdemo.com/DepositMs/DepositSuccess";
+            string NotifyURL = "http://heofrontend.4webdemo.com/DepositMs/DepositReceive";
 
             int TimeStamp =  (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;      // 總秒數
             Ezpay.set_paramer(viprecord, CustomerURL, NotifyURL, TimeStamp);
