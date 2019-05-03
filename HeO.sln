@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HeO.Libs", "HeO.Libs\HeO.Li
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HeO.Threadwork", "HeO.Threadwork\HeO.Threadwork.csproj", "{B402E223-805A-463F-AE22-4E21225FDC67}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HeO.CheckFacebook", "HeO.CheckFacebook\HeO.CheckFacebook.csproj", "{1A25E9DC-D847-43CE-B0E8-55FE8B3A382B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{B402E223-805A-463F-AE22-4E21225FDC67}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B402E223-805A-463F-AE22-4E21225FDC67}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B402E223-805A-463F-AE22-4E21225FDC67}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A25E9DC-D847-43CE-B0E8-55FE8B3A382B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A25E9DC-D847-43CE-B0E8-55FE8B3A382B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A25E9DC-D847-43CE-B0E8-55FE8B3A382B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A25E9DC-D847-43CE-B0E8-55FE8B3A382B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

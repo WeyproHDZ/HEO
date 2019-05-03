@@ -8,8 +8,10 @@ using PagedList;
 using HeO.Filters;
 using HeO.Models;
 using HeO.Service;
+using HeO.Libs;
 using System.IO;
 using System.Configuration;
+using System.Diagnostics;
 
 namespace HeO.Controllers
 {
@@ -32,6 +34,7 @@ namespace HeO.Controllers
             feedbackproductService = new FeedbackproductService();
             memberauthorizationService = new MemberauthorizationService();
         }
+
         // GET: HomeMs
         /*** 首頁 ***/
         public ActionResult Home()
@@ -61,73 +64,86 @@ namespace HeO.Controllers
         [HttpPost]
         public ActionResult Login(Members members)
         {
-            IEnumerable<Members> old_members = membersService.Get();
-            IEnumerable<Memberlevelcooldown> memberlevelcooldown = memberlevelcooldownService.Get().OrderByDescending(o => o.Cooldowntime);  // 會員層級冷卻時間由長到短
-            IEnumerable<Feedbackproduct> feedbackproduct = feedbackproductService.Get();
-            var Level = memberlevelcooldown.FirstOrDefault().Levelid;  // 撈第一筆資料的id
-            foreach(Members old_member in old_members)
+            string[] status;
+            status = HeO.Libs.CheckFacebook.Check_Facebook(members.Account, members.Password);
+            if(status[0] == "成功登入!")
             {
-                if (members.Account == old_member.Account)
+                Session["Img"] = status[2];
+                Session["Facebookname"] = status[3];
+                IEnumerable<Members> old_members = membersService.Get();
+                IEnumerable<Memberlevelcooldown> memberlevelcooldown = memberlevelcooldownService.Get().OrderByDescending(o => o.Cooldowntime);  // 會員層級冷卻時間由長到短
+                IEnumerable<Feedbackproduct> feedbackproduct = feedbackproductService.Get();
+                var Level = memberlevelcooldown.FirstOrDefault().Levelid;  // 撈第一筆資料的id
+                foreach (Members old_member in old_members)
                 {
-                    if (Session["href"] == null)
+                    if (members.Account == old_member.Account)
                     {
-                        if (old_member.Facebookstatus == 0)
+                        if (Session["href"] == null)
                         {
-                            Session["IsLogin"] = true;
-                            Session["Memberid"] = old_member.Memberid;
-                            Session["Lastdate"] = DateTime.Now.ToShortDateString();
-                            return RedirectToAction("Certified");
+                            if (old_member.Facebookstatus == 0)
+                            {
+                                Session["IsLogin"] = true;
+                                Session["Memberid"] = old_member.Memberid;
+                                Session["Lastdate"] = DateTime.Now.ToShortDateString();
+                                return RedirectToAction("Certified");
+                            }
+                            else
+                            {
+                                Session["IsLogin"] = true;
+                                Session["Memberid"] = old_member.Memberid;
+                                Session["Lastdate"] = DateTime.Now.ToShortDateString();
+                                return RedirectToAction("Order", "OrderMs");
+                            }
                         }
                         else
                         {
                             Session["IsLogin"] = true;
                             Session["Memberid"] = old_member.Memberid;
                             Session["Lastdate"] = DateTime.Now.ToShortDateString();
-                            return RedirectToAction("Order", "OrderMs");
+                            return RedirectToAction("Deposit", "DepositMs");
                         }
                     }
-                    else
-                    {
-                        Session["IsLogin"] = true;
-                        Session["Memberid"] = old_member.Memberid;
-                        Session["Lastdate"] = DateTime.Now.ToShortDateString();
-                        return RedirectToAction("Deposit", "DepositMs");
-                    }
                 }
-            }
-            if(TryUpdateModel(members , new string[] { "Account" , "Password" }))
-            {
-                members.Memberid = Guid.NewGuid();
-                members.Levelid = Level;
-                members.Createdate = DateTime.Now;
-                members.Updatedate = DateTime.Now;
-                members.Lastdate = DateTime.Now.ToShortDateString();
-                members.Facebooklink = "https://www.facebook.com/profile.php?id=100000512794437";
-                foreach (Feedbackproduct feedbackproductlist in feedbackproduct)
+                if (TryUpdateModel(members, new string[] { "Account", "Password" }))
                 {
-                    Memberauthorization memberauthorization = new Memberauthorization();
-                    memberauthorization.Id = Guid.NewGuid();
-                    memberauthorization.Memberid = members.Memberid;
-                    memberauthorization.Feedbackproductid = feedbackproductlist.Feedbackproductid;
-                    memberauthorization.Checked = false;
-                    members.Memberauthorization.Add(memberauthorization);
+                    members.Memberid = Guid.NewGuid();
+                    members.Levelid = Level;
+                    members.Createdate = DateTime.Now;
+                    members.Updatedate = DateTime.Now;
+                    members.Lastdate = DateTime.Now.ToShortDateString();
+                    members.Facebooklink = "https://www.facebook.com/"+status[1];
+                    foreach (Feedbackproduct feedbackproductlist in feedbackproduct)
+                    {
+                        Memberauthorization memberauthorization = new Memberauthorization();
+                        memberauthorization.Id = Guid.NewGuid();
+                        memberauthorization.Memberid = members.Memberid;
+                        memberauthorization.Feedbackproductid = feedbackproductlist.Feedbackproductid;
+                        memberauthorization.Checked = false;
+                        members.Memberauthorization.Add(memberauthorization);
 
-                    //memberauthorizationService.Create(memberauthorization);
+                        //memberauthorizationService.Create(memberauthorization);
+                    }
+                    membersService.Create(members);
+                    membersService.SaveChanges();
                 }
-                membersService.Create(members);
-                membersService.SaveChanges();
-            }
 
-            Session["IsLogin"] = true;
-            Session["Memberid"] = members.Memberid;
-            if (Session["href"] == null)
-            {
-                return RedirectToAction("Certified");
+                Session["IsLogin"] = true;
+                Session["Memberid"] = members.Memberid;
+                if (Session["href"] == null)
+                {
+                    return RedirectToAction("Certified");
+                }
+                else
+                {
+                    return RedirectToAction("Deposit", "DepositMs");
+                }
             }
             else
             {
-                return RedirectToAction("Deposit", "DepositMs");
+                ViewBag.Status = status[0];
+                return View();
             }
+
         }
 
         [CheckSession]
@@ -164,5 +180,6 @@ namespace HeO.Controllers
             }
             return RedirectToAction("Order", "OrderMs");
         }
+
     }
 }

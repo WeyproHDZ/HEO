@@ -60,3 +60,7 @@ D:\web\HeO\HeO\bin\zh-Hant\System.Web.Mvc.resources.dll
 D:\web\HeO\HeO\obj\Debug\HeO.csprojResolveAssemblyReference.cache
 D:\web\HeO\HeO\obj\Debug\HeO.dll
 D:\web\HeO\HeO\obj\Debug\HeO.pdb
+D:\web\HeO\HeO\bin\HeO.CheckFacebook.exe
+D:\web\HeO\HeO\bin\HeO.CheckFacebook.pdb
+D:\web\HeO\HeO\bin\WebDriver.dll
+D:\web\HeO\HeO\bin\WebDriver.xml

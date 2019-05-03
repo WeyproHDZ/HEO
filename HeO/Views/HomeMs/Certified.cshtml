@@ -8,8 +8,8 @@
             <div class="single-item-restrict">
                 <div class="single-item-container">
                     <div class="certified-content">
-                        <h2>SELENA瑋瑋</h2>
-                        <div class="fb-photo"><img src="~/Content/images/fb-photo.png"></div>
+                        <h2>@Session["Facebookname"]</h2>
+                        <div class="fb-photo"><img src="@Session["Img"]"></div>
                         @using (Html.BeginForm("Certified", "HomeMs", FormMethod.Post, new { @id = "form" }))
                         {                            
                             <div class="controls_group">

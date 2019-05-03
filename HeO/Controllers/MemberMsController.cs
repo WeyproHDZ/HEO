@@ -34,7 +34,6 @@ namespace HeO.Controllers
 
             ViewBag.Feedbackproduct = Feedbackproduct;
             ViewBag.Facebookstatus = member.Facebookstatus;
-            ViewBag.Account = member.Account;
             return View();
         }
         [HttpPost]

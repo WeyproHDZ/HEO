@@ -8,6 +8,7 @@ using PagedList;
 using HeO.Filters;
 using HeO.Models;
 using HeO.Service;
+using HeO.Libs;
 using System.IO;
 using System.Configuration;
 
@@ -64,5 +65,6 @@ namespace HeO.Controllers
             Vipdetail vipdetail = vipdetailService.Get().Where(o => o.Money == Money).FirstOrDefault();
             return this.Json(vipdetail);
         }
+
     }
 }

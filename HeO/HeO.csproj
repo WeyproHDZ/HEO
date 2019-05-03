@@ -249,6 +249,10 @@
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\HeO.CheckFacebook\HeO.CheckFacebook.csproj">
+      <Project>{1a25e9dc-d847-43ce-b0e8-55fe8b3a382b}</Project>
+      <Name>HeO.CheckFacebook</Name>
+    </ProjectReference>
     <ProjectReference Include="..\HeO.Libs\HeO.Libs.csproj">
       <Project>{dc85f2de-55c6-42a2-9593-155b663a8d9a}</Project>
       <Name>HeO.Libs</Name>
@@ -261,6 +265,9 @@
       <Project>{75f1cd16-973b-4bda-b9bc-13007c658491}</Project>
       <Name>HeO.Service</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

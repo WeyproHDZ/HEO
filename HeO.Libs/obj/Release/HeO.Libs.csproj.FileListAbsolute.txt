@@ -22,3 +22,5 @@ D:\web\HeO\HeO.Libs\bin\zh-Hant\EntityFramework.resources.dll
 D:\web\HeO\HeO.Libs\obj\Release\HeO.Libs.csprojResolveAssemblyReference.cache
 D:\web\HeO\HeO.Libs\obj\Release\HeO.Libs.dll
 D:\web\HeO\HeO.Libs\obj\Release\HeO.Libs.pdb
+D:\web\HeO\HeO.Libs\bin\WebDriver.dll
+D:\web\HeO\HeO.Libs\bin\WebDriver.xml

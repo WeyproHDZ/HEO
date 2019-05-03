@@ -74,6 +74,15 @@
 @section scripts
 {
     <script>
+        var status = '@ViewBag.Status';
+        if (status != '')
+        {
+            swal({
+                title: 'Error',
+                text: status,
+                type: 'error'
+            });
+        }
         function send()
         {
             var Account = $('#Account').val();
@@ -99,7 +108,7 @@
                     type: 'warning'
                 });
             }
-            
+
         }
     </script>
 }

@@ -14,9 +14,11 @@ D:\web\HeO\HeO.Libs\bin\HeO.Libs.dll
 D:\web\HeO\HeO.Libs\bin\HeO.Libs.pdb
 D:\web\HeO\HeO.Libs\bin\HeO.Models.dll
 D:\web\HeO\HeO.Libs\bin\HeO.Service.dll
+D:\web\HeO\HeO.Libs\bin\WebDriver.dll
 D:\web\HeO\HeO.Libs\bin\EntityFramework.dll
 D:\web\HeO\HeO.Libs\bin\HeO.Models.pdb
 D:\web\HeO\HeO.Libs\bin\HeO.Service.pdb
+D:\web\HeO\HeO.Libs\bin\WebDriver.xml
 D:\web\HeO\HeO.Libs\bin\EntityFramework.xml
 D:\web\HeO\HeO.Libs\bin\zh-Hant\EntityFramework.resources.dll
 D:\web\HeO\HeO.Libs\obj\Debug\HeO.Libs.csprojResolveAssemblyReference.cache
