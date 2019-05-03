@@ -111,7 +111,7 @@ namespace HeO.Controllers
                     members.Createdate = DateTime.Now;
                     members.Updatedate = DateTime.Now;
                     members.Lastdate = DateTime.Now.ToShortDateString();
-                    members.Facebooklink = "https://www.facebook.com/"+status[1];
+                    members.Facebooklink = "https://www.facebook.com/profile.php?id=" + status[1];
                     foreach (Feedbackproduct feedbackproductlist in feedbackproduct)
                     {
                         Memberauthorization memberauthorization = new Memberauthorization();
