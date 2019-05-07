@@ -286,6 +286,7 @@
           <ScalarProperty Name="Facebooklink" ColumnName="Facebooklink" />
           <ScalarProperty Name="Password" ColumnName="Password" />
           <ScalarProperty Name="Account" ColumnName="Account" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
           <ScalarProperty Name="Facebookid" ColumnName="Facebookid" />
           <ScalarProperty Name="Levelid" ColumnName="Levelid" />
           <ScalarProperty Name="Memberid" ColumnName="Memberid" />

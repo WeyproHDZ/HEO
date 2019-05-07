@@ -29,6 +29,9 @@ namespace HeO.Controllers
         public ActionResult Order()
         {
             Setting Setting = settingService.Get().FirstOrDefault();
+            int now_members = membersService.Get().Where(c => c.Isreal == true).Where(x => x.Lastdate <= DateTime.Now).OrderBy(a => a.Lastdate).Count();
+            ViewBag.Now_members = now_members;
+            ViewBag.MemberNumber = membersService.Get().Count();
             ViewBag.Max = Setting.Max;
             ViewBag.Min = Setting.Min;
             return View();

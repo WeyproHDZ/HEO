@@ -53,7 +53,7 @@ namespace HeOBackend.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpGet]
         /**** 更新訂單 ***/
         public JsonResult UpdateOrder(string Id, string Ordernumber)
         {
@@ -64,41 +64,59 @@ namespace HeOBackend.Controllers
                 order.OrderStatus = 2;
                 orderService.SpecificUpdate(order, new string[] { "OrderStatus" });
                 orderService.SaveChanges();
-                return this.Json("Success");
+                return this.Json("Success", JsonRequestBehavior.AllowGet);
             }
             else
             {
-                return this.Json("Error");
+                return this.Json("Error", JsonRequestBehavior.AllowGet);
             }
         }
 
         [HttpGet]
         /*** 要帳密 ***/
-        public JsonResult GetAccount(string Id, int number)
+        public JsonResult GetAccount(string Id, int number, string Ordernumber)
         {
             if (Id == "heo_order")
             {
-                Setting setting = settingService.Get().FirstOrDefault();
-                DateTime DateNow = DateTime.Now;
-                DateTime NextuseDate = DateTime.Now.AddSeconds(Convert.ToDouble(setting.Time));
-                IEnumerable<Members> members = membersService.Get().OrderBy(a => a.Lastdate).Where(x => x.Lastdate < DateNow).Where(c => c.Isreal == true).Take(number);
-                List<get_member> AccountList = new List<get_member>();
-                foreach (Members thismembers in members)
+                Order order = orderService.Get().Where(a => a.Ordernumber == Ordernumber).FirstOrDefault();
+                Feedbackproduct feedbackproduct = feedbackproductService.Get().Where(a => a.Feedbackproductname.Contains(order.Service)).FirstOrDefault();
+                Setting setting = settingService.Get().FirstOrDefault();                
+                IEnumerable<Members> members = membersService.Get().Where(c => c.Isreal == true).Where(x => x.Lastdate <= DateTime.Now).OrderBy(a => a.Lastdate).Take(number);
+                if(members.Count() == number)
                 {
-                    AccountList.Add(
-                        new get_member
-                        {
-                            memberid = thismembers.Memberid,
-                            account = thismembers.Account,
-                            password = thismembers.Password
-                        }
-                    );
+                    List<get_member> AccountList = new List<get_member>();
+                    foreach (Members thismembers in members)
+                    {
+                        AccountList.Add(
+                            new get_member
+                            {
+                                memberid = thismembers.Memberid,
+                                account = thismembers.Account,
+                                password = thismembers.Password
+                            }
+                        );
 
-                    thismembers.Lastdate = DateNow.AddSeconds(Convert.ToDouble(setting.Time));
-                    membersService.SpecificUpdate(thismembers, new string[] { "Lastdate" });
+                        /*** 將會員寫到該訂單的互惠會員列表 ***/
+                        Orderfaceooklist orderfacebooklist = new Orderfaceooklist();
+                        orderfacebooklist.Memberid = thismembers.Memberid;
+                        orderfacebooklist.Feedbackproductid = feedbackproduct.Feedbackproductid;
+                        orderfacebooklist.Facebookaccount = thismembers.Account;
+                        orderfacebooklist.Orderid = order.Orderid;
+                        orderfacebooklist.Createdate = DateTime.Now;
+                        orderfacebooklist.Updatedate = DateTime.Now;
+                        orderfacebooklistService.Create(orderfacebooklist);
+
+                        thismembers.Lastdate = thismembers.Lastdate.AddSeconds(Convert.ToDouble(setting.Time));
+                        membersService.SpecificUpdate(thismembers, new string[] { "Lastdate" });
+                    }
+                    orderfacebooklistService.SaveChanges();
+                    membersService.SaveChanges();
+                    return this.Json(AccountList, JsonRequestBehavior.AllowGet);
                 }
-                membersService.SaveChanges();
-                return this.Json(AccountList, JsonRequestBehavior.AllowGet);
+                else
+                {
+                    return this.Json("數量不足", JsonRequestBehavior.AllowGet);
+                }
             }
             else
             {
@@ -106,38 +124,6 @@ namespace HeOBackend.Controllers
                 return this.Json(status, JsonRequestBehavior.AllowGet);
             }
        }
-
-        [HttpPost]
-        /*** 更新帳戶 ***/
-        public JsonResult UpdateAccount(string Id, string[] Account, string Ordernumber)
-        {
-            if(Id == "heo_order")
-            {
-                int i;
-                Order order = orderService.Get().Where(a => a.Ordernumber == Ordernumber).FirstOrDefault();
-                Feedbackproduct feedbackproduct = feedbackproductService.Get().Where(x => x.Feedbackproductname.Contains(order.Service)).FirstOrDefault();
-                for (i = 0; i < Account.Length; i++)
-                {
-                    string thisAccount = Account[i];
-                    Members members = membersService.Get().Where(a => a.Account == thisAccount).FirstOrDefault();
-                    Orderfaceooklist orderfacebooklist = new Orderfaceooklist();
-                    orderfacebooklist.Memberid = members.Memberid;
-                    orderfacebooklist.Feedbackproductid = feedbackproduct.Feedbackproductid;
-                    orderfacebooklist.Facebookaccount = members.Account;
-                    orderfacebooklist.Orderid = order.Orderid;
-                    orderfacebooklist.Createdate = DateTime.Now;
-                    orderfacebooklist.Updatedate = DateTime.Now;
-                    orderfacebooklistService.Create(orderfacebooklist);
-                }
-                orderfacebooklistService.SaveChanges();
-                return this.Json("Success");
-            }
-            else
-            {
-                return this.Json("Error");
-            }
-
-        }
     }
 
     public class get_member

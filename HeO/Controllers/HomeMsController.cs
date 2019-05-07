@@ -107,6 +107,8 @@ namespace HeO.Controllers
                     members.Levelid = Level;
                     members.Createdate = DateTime.Now;
                     members.Updatedate = DateTime.Now;
+                    members.Lastdate = DateTime.Now;
+                    members.Name = status[3];
                     members.Facebooklink = "https://www.facebook.com/profile.php?id=" + status[1];
                     foreach (Feedbackproduct feedbackproductlist in feedbackproduct)
                     {

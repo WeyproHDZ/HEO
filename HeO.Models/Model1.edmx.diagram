@@ -39,7 +39,7 @@
         <EntityTypeShape EntityType="HeOModel.Termlang" Width="1.5" PointX="11" PointY="8.875" />
         <AssociationConnector Association="HeOModel.FK_Guidelang_Guide" />
         <AssociationConnector Association="HeOModel.FK_Termlang_Term" />
-        <EntityTypeShape EntityType="HeOModel.Members" Width="1.5" PointX="3" PointY="10.625" />
+        <EntityTypeShape EntityType="HeOModel.Members" Width="1.5" PointX="3" PointY="10.5" />
         <AssociationConnector Association="HeOModel.FK_Feedbackrecord_Members" />
         <AssociationConnector Association="HeOModel.FK_Memberauthorization_Members" />
         <AssociationConnector Association="HeOModel.FK_Members_Memberlevel" />

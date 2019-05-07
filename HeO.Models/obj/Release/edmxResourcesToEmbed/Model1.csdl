@@ -523,13 +523,14 @@
     <Property Name="Memberid" Type="Guid" Nullable="false" />
     <Property Name="Levelid" Type="Guid" />
     <Property Name="Facebookid" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
     <Property Name="Account" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
     <Property Name="Password" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
     <Property Name="Facebooklink" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
     <Property Name="Facebookstatus" Type="Int32" Nullable="false" />
     <Property Name="Feedbackmoney" Type="Int32" Nullable="false" />
     <Property Name="Isreal" Type="Boolean" Nullable="false" />
-    <Property Name="Lastdate" Type="DateTime" Precision="3" />
+    <Property Name="Lastdate" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="Createdate" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="Updatedate" Type="DateTime" Precision="3" />
     <NavigationProperty Name="Feedbackrecord" Relationship="HeOModel.FK_Feedbackrecord_Members" FromRole="Members" ToRole="Feedbackrecord" />

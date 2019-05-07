@@ -1,5 +1,4 @@
 D:\web\HeO\HeO.CheckFacebook\bin\Release\HeO.CheckFacebook.exe.config
-D:\web\HeO\HeO.CheckFacebook\bin\Release\py\Check_fb.py
 D:\web\HeO\HeO.CheckFacebook\bin\Release\HeO.CheckFacebook.exe
 D:\web\HeO\HeO.CheckFacebook\bin\Release\HeO.CheckFacebook.pdb
 D:\web\HeO\HeO.CheckFacebook\bin\Release\IronPython.dll

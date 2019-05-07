@@ -60,7 +60,6 @@ D:\web\HeO\HeO\bin\zh-Hant\System.Web.Mvc.resources.dll
 D:\web\HeO\HeO\obj\Release\HeO.csprojResolveAssemblyReference.cache
 D:\web\HeO\HeO\obj\Release\HeO.dll
 D:\web\HeO\HeO\obj\Release\HeO.pdb
-D:\web\HeO\HeO\bin\py\Check_fb.py
 D:\web\HeO\HeO\bin\HeO.CheckFacebook.exe
 D:\web\HeO\HeO\bin\WebDriver.dll
 D:\web\HeO\HeO\bin\HeO.CheckFacebook.pdb

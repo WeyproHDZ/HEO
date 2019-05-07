@@ -176,11 +176,12 @@ namespace HeOBackend.Controllers
         [HttpPost]
         public ActionResult AddMembers(Members members)
         {
-            if(TryUpdateModel(members , new string[] { "Account" , "Password" , "Facebookstauts" , "Facebooklink" , "Feedbackmoney" }) && ModelState.IsValid)
+            if(TryUpdateModel(members , new string[] { "Account" , "Password" , "Facebookstauts" , "Facebooklink" , "Feedbackmoney" , "Name"}) && ModelState.IsValid)
             {
                 members.Memberid = Guid.NewGuid();
                 members.Createdate = DateTime.Now;
                 members.Updatedate = DateTime.Now;
+                members.Lastdate = DateTime.Now;
                 members.Isreal = members.Isreal;
                 members.Levelid = members.Levelid;
                 membersService.Create(members);
@@ -222,7 +223,7 @@ namespace HeOBackend.Controllers
         public ActionResult EditMembers(Guid Memberid, int p, ICollection<Memberauthorization> Memberauthorization)
         {
             Members member = membersService.GetByID(Memberid);
-            if (TryUpdateModel(member, new string[] { "Account", "Levelid" , "Feedbackmoney"  }) && ModelState.IsValid)
+            if (TryUpdateModel(member, new string[] { "Account", "Levelid" , "Feedbackmoney" , "Name"}) && ModelState.IsValid)
             {
                 //更新權限新資料
                 foreach (Memberauthorization new_auth in Memberauthorization)
