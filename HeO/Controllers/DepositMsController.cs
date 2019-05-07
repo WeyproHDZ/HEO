@@ -35,15 +35,6 @@ namespace HeO.Controllers
         [CheckSession]
         public ActionResult Deposit()
         {
-            /*** 更新會員最近登入時間 ***/
-            if(Session["Lastdate"] != null)
-            {
-                Members Member = membersService.GetByID(Session["Memberid"]);
-                Member.Lastdate = Session["Lastdate"].ToString();
-                membersService.SpecificUpdate(Member, new string[] { "Lastdate" });
-                membersService.SaveChanges();
-                Session["Lastdate"] = null;
-            }
             Session["href"] = null;
             ViewBag.Vipdetail = vipdetailService.Get().OrderBy(o => o.Day);
             return View();
@@ -97,7 +88,7 @@ namespace HeO.Controllers
         public ActionResult DepositSuccess(string TradeInfo)
         {
             string Receive = Ezpay.DecryptAES256(TradeInfo);
-            var EzpayRecive = JsonConvert.DeserializeObject<dynamic>(Receive); // 將Expay回傳的json格式轉成物件 
+            var EzpayRecive = JsonConvert.DeserializeObject<dynamic>(Receive); // 將Ezpay回傳的json格式轉成物件
             if(EzpayRecive.Result.PaymentType == "CVS")
             {
                 string DepositNumber = EzpayRecive.Result.MerchantOrderNo;         // 取得儲值編號

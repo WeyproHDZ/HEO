@@ -28,15 +28,6 @@ namespace HeO.Controllers
         [CheckSession]
         public ActionResult Order()
         {
-            /*** 更新會員最近登入時間 ***/
-            if (Session["Lastdate"] != null)
-            {
-                Members Member = membersService.GetByID(Session["Memberid"]);
-                Member.Lastdate = Session["Lastdate"].ToString();
-                membersService.SpecificUpdate(Member, new string[] { "Lastdate" });
-                membersService.SaveChanges();
-                Session["Lastdate"] = null;
-            }
             Setting Setting = settingService.Get().FirstOrDefault();
             ViewBag.Max = Setting.Max;
             ViewBag.Min = Setting.Min;
@@ -59,7 +50,7 @@ namespace HeO.Controllers
                     order.Updatedate = DateTime.Now;
                     order.Memberid = Memberid;
                     order.Ordernumber = "heoorder" + DateTime.Now.ToString("yyyyMMddHHmmssfff");
-                    order.Service = "讚" + order.Count;
+                    order.Service = "讚";
                     orderService.Create(order);
                     orderService.SaveChanges();
                 }
@@ -78,7 +69,7 @@ namespace HeO.Controllers
                         order.Updatedate = DateTime.Now;
                         order.Memberid = Memberid;
                         order.Ordernumber = "heoorder" + DateTime.Now.ToString("yyyyMMddHHmmssfff");
-                        order.Service = "讚" + order.Count;
+                        order.Service = "讚";
                         orderService.Create(order);
                         orderService.SaveChanges();
                     }

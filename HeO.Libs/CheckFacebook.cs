@@ -63,7 +63,8 @@ namespace HeO.Libs
                     status[0] = "成功登入!";
                     var id_url = driver.FindElement(By.ClassName("profilePicThumb"));
                     var id = id_url.GetAttribute("href").Split('=');
-                    var img = driver.FindElement(By.ClassName("silhouette")).GetAttribute("src");
+                    
+                    var img = driver.FindElement(By.ClassName("_11kf")).GetAttribute("src");
                     var name = driver.Title.Split(')');
                     status[1] = id.Last();
                     status[2] = img;

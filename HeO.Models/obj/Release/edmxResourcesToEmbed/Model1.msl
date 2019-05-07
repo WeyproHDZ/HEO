@@ -181,24 +181,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Members">
-      <EntityTypeMapping TypeName="HeOModel.Members">
-        <MappingFragment StoreEntitySet="Members">
-          <ScalarProperty Name="Updatedate" ColumnName="Updatedate" />
-          <ScalarProperty Name="Createdate" ColumnName="Createdate" />
-          <ScalarProperty Name="Lastdate" ColumnName="Lastdate" />
-          <ScalarProperty Name="Isreal" ColumnName="Isreal" />
-          <ScalarProperty Name="Feedbackmoney" ColumnName="Feedbackmoney" />
-          <ScalarProperty Name="Facebookstatus" ColumnName="Facebookstatus" />
-          <ScalarProperty Name="Facebooklink" ColumnName="Facebooklink" />
-          <ScalarProperty Name="Password" ColumnName="Password" />
-          <ScalarProperty Name="Account" ColumnName="Account" />
-          <ScalarProperty Name="Facebookid" ColumnName="Facebookid" />
-          <ScalarProperty Name="Levelid" ColumnName="Levelid" />
-          <ScalarProperty Name="Memberid" ColumnName="Memberid" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="Newslang">
       <EntityTypeMapping TypeName="HeOModel.Newslang">
         <MappingFragment StoreEntitySet="Newslang">
@@ -289,6 +271,24 @@
           <ScalarProperty Name="Langid" ColumnName="Langid" />
           <ScalarProperty Name="Termid" ColumnName="Termid" />
           <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Members">
+      <EntityTypeMapping TypeName="HeOModel.Members">
+        <MappingFragment StoreEntitySet="Members">
+          <ScalarProperty Name="Updatedate" ColumnName="Updatedate" />
+          <ScalarProperty Name="Createdate" ColumnName="Createdate" />
+          <ScalarProperty Name="Lastdate" ColumnName="Lastdate" />
+          <ScalarProperty Name="Isreal" ColumnName="Isreal" />
+          <ScalarProperty Name="Feedbackmoney" ColumnName="Feedbackmoney" />
+          <ScalarProperty Name="Facebookstatus" ColumnName="Facebookstatus" />
+          <ScalarProperty Name="Facebooklink" ColumnName="Facebooklink" />
+          <ScalarProperty Name="Password" ColumnName="Password" />
+          <ScalarProperty Name="Account" ColumnName="Account" />
+          <ScalarProperty Name="Facebookid" ColumnName="Facebookid" />
+          <ScalarProperty Name="Levelid" ColumnName="Levelid" />
+          <ScalarProperty Name="Memberid" ColumnName="Memberid" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

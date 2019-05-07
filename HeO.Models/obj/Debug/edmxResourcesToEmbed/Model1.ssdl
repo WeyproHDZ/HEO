@@ -127,7 +127,7 @@
     <Property Name="Facebookstatus" Type="int" Nullable="false" />
     <Property Name="Feedbackmoney" Type="int" Nullable="false" />
     <Property Name="Isreal" Type="bit" Nullable="false" />
-    <Property Name="Lastdate" Type="nvarchar" MaxLength="50" />
+    <Property Name="Lastdate" Type="datetime" />
     <Property Name="Createdate" Type="datetime" Nullable="false" />
     <Property Name="Updatedate" Type="datetime" />
   </EntityType>

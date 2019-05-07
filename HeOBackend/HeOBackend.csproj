@@ -838,6 +838,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\ApiController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\FeedbackMsController.cs" />
     <Compile Include="Controllers\HomeMsController.cs" />
@@ -929,6 +930,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\img\realestate\thumbs\" />
+    <Folder Include="Views\Api\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\HeO.Libs\HeO.Libs.csproj">
@@ -943,6 +945,9 @@
       <Project>{75f1cd16-973b-4bda-b9bc-13007c658491}</Project>
       <Name>HeO.Service</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

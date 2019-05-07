@@ -183,7 +183,6 @@ namespace HeOBackend.Controllers
                 members.Updatedate = DateTime.Now;
                 members.Isreal = members.Isreal;
                 members.Levelid = members.Levelid;
-                members.Lastdate = DateTime.Now.ToShortDateString();
                 membersService.Create(members);
                 foreach (Memberauthorization memberauthorization in members.Memberauthorization)
                 {

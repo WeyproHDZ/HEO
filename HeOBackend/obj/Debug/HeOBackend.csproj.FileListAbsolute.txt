@@ -126,3 +126,5 @@ D:\web\HeO\HeOBackend\bin\HtmlAgilityPack.xml
 D:\web\HeO\HeOBackend\bin\zh-Hant\System.Web.Optimization.resources.dll
 D:\web\HeO\HeOBackend\bin\HeO.Libs.dll
 D:\web\HeO\HeOBackend\bin\HeO.Libs.pdb
+D:\web\HeO\HeOBackend\bin\WebDriver.dll
+D:\web\HeO\HeOBackend\bin\WebDriver.xml
