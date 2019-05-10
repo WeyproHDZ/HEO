@@ -21,13 +21,12 @@ namespace HeO.Filters
 
                 RouteValueDictionary redirectTargetDictionary = new RouteValueDictionary();
                 redirectTargetDictionary.Add("action", "Login");
-                redirectTargetDictionary.Add("controller", "HomeMs");              
+                redirectTargetDictionary.Add("controller", "HomeMs");
 
 
                 context.Result = new RedirectToRouteResult(redirectTargetDictionary);
                 return;
             }
-
             base.OnActionExecuting(context);
         }
     }

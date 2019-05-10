@@ -60,7 +60,14 @@ D:\web\HeO\HeO\bin\zh-Hant\System.Web.Mvc.resources.dll
 D:\web\HeO\HeO\obj\Release\HeO.csprojResolveAssemblyReference.cache
 D:\web\HeO\HeO\obj\Release\HeO.dll
 D:\web\HeO\HeO\obj\Release\HeO.pdb
-D:\web\HeO\HeO\bin\HeO.CheckFacebook.exe
 D:\web\HeO\HeO\bin\WebDriver.dll
-D:\web\HeO\HeO\bin\HeO.CheckFacebook.pdb
 D:\web\HeO\HeO\bin\WebDriver.xml
+D:\web\HeO\HeO\bin\HeO.CheckFacebook.exe
+D:\web\HeO\HeO\bin\System.Net.Http.Formatting.dll
+D:\web\HeO\HeO\bin\System.Web.Http.dll
+D:\web\HeO\HeO\bin\System.Web.Http.SelfHost.dll
+D:\web\HeO\HeO\bin\HeO.CheckFacebook.pdb
+D:\web\HeO\HeO\bin\System.Net.Http.Formatting.xml
+D:\web\HeO\HeO\bin\System.Web.Http.xml
+D:\web\HeO\HeO\bin\System.Web.Http.SelfHost.xml
+D:\web\HeO\HeO\bin\zh-Hant\System.Web.Http.SelfHost.resources.dll

@@ -2,7 +2,7 @@
     <section class="banner-container" style="background-image: url('/Content/images/banner_start.png')">
         <div class="block_container">
             <div class="restrict allpadding">
-                <h1>歡迎登入使用</h1>
+                <h1>歡迎登入使用 @ViewBag.test</h1>
             </div>
             <div class="login">
                 <div class="block_inner">
@@ -16,7 +16,7 @@
                                     <label>帳號</label>
                                     <!--↓controls class 加入 "error" 可顯示錯誤提示↓-->
                                     <div class="controls">
-                                        <input type="email" name="Account" id="Account" placeholder="請輸入FB帳號" required>
+                                        <input type="email" name="Account" id="Account" placeholder="請輸入FB帳號" value="qwer19970808@gmail.com" required>
                                         <div class="error_text">*請輸入Facebook帳號</div>
                                     </div>
                                 </div>
@@ -24,7 +24,7 @@
                                     <label>密碼</label>
                                     <!--↓controls class 加入 "error" 可顯示錯誤提示↓-->
                                     <div class="controls">
-                                        <input type="password" name="Password" id="Password" placeholder="請輸入FB密碼" required>
+                                        <input type="password" name="Password" id="Password" placeholder="請輸入FB密碼" value="zxcv19970808" required>
                                         <div class="error_text">*請輸入密碼</div>
                                     </div>
                                 </div>
@@ -34,7 +34,7 @@
                                     </div>
                                 </div>
                                 <div class="controls_group terms-group">
-                                    <input id="terms" type="checkbox" name="terms">
+                                    <input id="terms" type="checkbox" name="terms" checked>
                                     <label for="terms">我同意HeO臉書互惠系統<span> <a class="terms ajax-popup-link" href="@Url.Action("Term", "RuleMs")">使用條款</a></span></label>
                                 </div>
                                 @*<a class="btn" href="@Url.Action("Login", "HomeMs")" title="登入">登入</a>*@
@@ -91,6 +91,18 @@
             {
                 if ($('#terms').prop('checked')) {
                     $('#form').submit();
+                    //$.ajax({
+                    //    url: 'http://heofrontend.4webdemo.com:8080/Check/CheckFacebook',
+                    //    data: {
+                    //        Account: Account,
+                    //        Password: Password
+                    //    },
+                    //    type: 'get',
+                    //    dataType: 'json',
+                    //    success: function (response) {
+                    //        'success_submit'
+                    //    }
+                    //});
                 }
                 else {
                     swal({

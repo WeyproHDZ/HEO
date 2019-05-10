@@ -15,6 +15,7 @@ namespace HeOBackend.Controllers
         private SettingService settingService;
         private OrderfacebooklistService orderfacebooklistService;
         private FeedbackproductService feedbackproductService;
+        private ServicelogService servicelogService;
         public ApiController()
         {
             orderService = new OrderService();
@@ -22,6 +23,7 @@ namespace HeOBackend.Controllers
             settingService = new SettingService();
             orderfacebooklistService = new OrderfacebooklistService();
             feedbackproductService = new FeedbackproductService();
+            servicelogService = new ServicelogService();
         }
 
         [HttpGet]
@@ -30,21 +32,27 @@ namespace HeOBackend.Controllers
         {
             if (Id == "heo_order")
             {
-                Order order = orderService.Get().OrderBy(o => o.Createdate).FirstOrDefault();
-                // 將訂單狀態改為進行中
-                order.OrderStatus = 1;
-                order.Service = order.Service;
-                orderService.SpecificUpdate(order, new string[] { "OrderStatus" });
-                orderService.SaveChanges();
-                /*** 傳送訂單 ***/
-                string[] OrderArray = new string[5];
-                OrderArray[0] = order.Ordernumber;
-                OrderArray[1] = order.Count.ToString();
-                OrderArray[2] = order.Url;
-                OrderArray[3] = order.Service;
-                OrderArray[4] = order.OrderStatus.ToString();
+                Order order = orderService.Get().OrderBy(o => o.Createdate).Where(a => a.OrderStatus == 0).FirstOrDefault();
+                if(order != null)
+                {
+                    // 將訂單狀態改為進行中
+                    order.OrderStatus = 1;
+                    order.Service = order.Service;
+                    orderService.SpecificUpdate(order, new string[] { "OrderStatus" });
+                    orderService.SaveChanges();
+                    /*** 傳送訂單 ***/
+                    string[] OrderArray = new string[4];
+                    OrderArray[0] = order.Ordernumber;
+                    OrderArray[1] = order.Count.ToString();
+                    OrderArray[2] = order.Url;
+                    OrderArray[3] = order.Service;
 
-                return this.Json(OrderArray, JsonRequestBehavior.AllowGet);
+                    return this.Json(OrderArray, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    return this.Json("目前沒有訂單", JsonRequestBehavior.AllowGet);
+                }
             }
             else
             {
@@ -55,9 +63,9 @@ namespace HeOBackend.Controllers
 
         [HttpGet]
         /**** 更新訂單 ***/
-        public JsonResult UpdateOrder(string Id, string Ordernumber)
+        public JsonResult UpdateOrder(string Id, string Ordernumber, string status = "failed")
         {
-            if(Ordernumber != null && Id == "heo_order")
+            if(Ordernumber != null && Id == "heo_order" && status == "success")
             {
                 Order order = orderService.Get().Where(a => a.Ordernumber == Ordernumber).FirstOrDefault();
                 // 將訂單狀態改為完成中
@@ -81,9 +89,9 @@ namespace HeOBackend.Controllers
                 Order order = orderService.Get().Where(a => a.Ordernumber == Ordernumber).FirstOrDefault();
                 Feedbackproduct feedbackproduct = feedbackproductService.Get().Where(a => a.Feedbackproductname.Contains(order.Service)).FirstOrDefault();
                 Setting setting = settingService.Get().FirstOrDefault();                
-                IEnumerable<Members> members = membersService.Get().Where(c => c.Isreal == true).Where(x => x.Lastdate <= DateTime.Now).OrderBy(a => a.Lastdate).Take(number);
-                if(members.Count() == number)
-                {
+                IEnumerable<Members> members = membersService.Get().Where(c => c.Isreal == true).OrderBy(a => a.Lastdate).Take(number);
+                //if(members.Count() == number)
+                //{
                     List<get_member> AccountList = new List<get_member>();
                     foreach (Members thismembers in members)
                     {
@@ -112,20 +120,38 @@ namespace HeOBackend.Controllers
                     orderfacebooklistService.SaveChanges();
                     membersService.SaveChanges();
                     return this.Json(AccountList, JsonRequestBehavior.AllowGet);
-                }
-                else
-                {
-                    return this.Json("數量不足", JsonRequestBehavior.AllowGet);
-                }
+                //}
+                //else
+                //{
+                //    return this.Json("數量不足", JsonRequestBehavior.AllowGet);
+                //}
             }
             else
             {
-                string status = "error";
+                string status = "Error";
                 return this.Json(status, JsonRequestBehavior.AllowGet);
             }
        }
-    }
 
+        /*** 寫入Log **/
+        [HttpGet]
+        public JsonResult Service_log(string Id, string text, string time)
+        {
+            if(Id == "heo_order")
+            {
+                Servicelog servicelog = new Servicelog();
+                servicelog.Logs = text;
+                servicelog.Createdate = time;
+                servicelogService.Create(servicelog);
+                servicelogService.SaveChanges();
+                return this.Json("Success", JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return this.Json("Error", JsonRequestBehavior.AllowGet);
+            }
+        }
+    }
     public class get_member
     {
         public Guid memberid { get; set; }

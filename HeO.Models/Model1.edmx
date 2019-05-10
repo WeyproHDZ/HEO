@@ -191,6 +191,14 @@
           <Property Name="Id" Type="int" Nullable="false" />
           <Property Name="Text" Type="text" />
         </EntityType>
+        <EntityType Name="Servicelog">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Logs" Type="ntext" />
+          <Property Name="Createdate" Type="nvarchar" MaxLength="100" />
+        </EntityType>
         <EntityType Name="Setting">
           <Key>
             <PropertyRef Name="Id" />
@@ -517,6 +525,7 @@
           <EntitySet Name="Order" EntityType="Self.Order" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Orderfaceooklist" EntityType="Self.Orderfaceooklist" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Returnstatus" EntityType="Self.Returnstatus" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Servicelog" EntityType="Self.Servicelog" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Setting" EntityType="Self.Setting" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Term" EntityType="Self.Term" Schema="dbo" store:Type="Tables" />
@@ -850,6 +859,7 @@
             <End Role="Members" EntitySet="Members" />
             <End Role="Viprecord" EntitySet="Viprecord" />
           </AssociationSet>
+          <EntitySet Name="Servicelog" EntityType="HeOModel.Servicelog" />
           </EntityContainer>
         <EntityType Name="Memberauthorization">
           <Key>
@@ -1217,6 +1227,14 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="Servicelog">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Logs" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Createdate" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1512,6 +1530,15 @@
                 <ScalarProperty Name="Facebookid" ColumnName="Facebookid" />
                 <ScalarProperty Name="Levelid" ColumnName="Levelid" />
                 <ScalarProperty Name="Memberid" ColumnName="Memberid" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Servicelog">
+            <EntityTypeMapping TypeName="HeOModel.Servicelog">
+              <MappingFragment StoreEntitySet="Servicelog">
+                <ScalarProperty Name="Createdate" ColumnName="Createdate" />
+                <ScalarProperty Name="Logs" ColumnName="Logs" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

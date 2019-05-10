@@ -49,5 +49,6 @@ namespace HeO.Models
         public virtual DbSet<Guidelang> Guidelang { get; set; }
         public virtual DbSet<Termlang> Termlang { get; set; }
         public virtual DbSet<Members> Members { get; set; }
+        public virtual DbSet<Servicelog> Servicelog { get; set; }
     }
 }

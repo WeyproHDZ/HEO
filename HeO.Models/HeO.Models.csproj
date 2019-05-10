@@ -172,6 +172,9 @@
     <Compile Include="Returnstatus.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Servicelog.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="Setting.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
