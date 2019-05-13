@@ -102,6 +102,7 @@
       <PropertyRef Name="Levelid" />
     </Key>
     <Property Name="Levelid" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Isenable" Type="tinyint" Nullable="false" />
     <Property Name="Levelname" Type="nvarchar" MaxLength="100" />
     <Property Name="Createdate" Type="datetime" />
     <Property Name="Updatetime" Type="datetime" />

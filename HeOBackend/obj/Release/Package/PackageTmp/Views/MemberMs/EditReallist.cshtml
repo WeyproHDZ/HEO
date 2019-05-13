@@ -51,14 +51,13 @@
                                         <fieldset>
                                             <div class="form-group">
                                                 <label class="col-lg-2 control-label" for="title">Facebook連結</label>
-                                                <section class="col-lg-3">
-                                                    @Html.TextBoxFor(model => model.Facebooklink, new Dictionary<string, object>() { { "class", "form-control" } })
-                                                    @Html.ValidationMessageFor(model => model.Facebooklink)
+                                                <section class="col-lg-5">
+                                                    @Html.LabelFor(model => model.Facebooklink, Model.Facebooklink, new Dictionary<string, object>() { { "class", "form-control" } })                                                    
                                                 </section>
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-lg-2 control-label" for="title">審核狀態</label>
-                                                <section class="col-lg-3">
+                                                <section class="col-lg-2">
                                                     <select class="form-control" id="status" name="status">
                                                         <option value="1" @(Model.Facebookstatus == 1 ? "selected" : "")>審核中</option>
                                                         <option value="2" @(Model.Facebookstatus == 2 ? "selected" : "")>通過</option>

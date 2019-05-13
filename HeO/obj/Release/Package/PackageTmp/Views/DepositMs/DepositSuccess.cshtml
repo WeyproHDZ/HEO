@@ -1,4 +1,4 @@
-﻿<<main id="main">
+﻿<main id="main">
     <section class="banner-container member-success" style="background-image: url('/Content/images/bg_success.png')">
         <div class="block_container">
             <div class="success-content">
@@ -24,6 +24,23 @@
                                     <td><big>@ViewBag.CodeNo</big><br />(請記下來至7-11 / 全家 / 萊爾富 / OK 做繳費)</td>
                                 </tr>
                                 <!--↑使用超商付款時顯示↑-->
+                                <tr>
+                                    <td>實際付款金額</td>
+                                    <td>
+                                        NT$&nbsp;
+                                        <big>@(ViewBag.Amt)</big>&nbsp;元<br>(包含系統手續費)
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>繳費期限</td>
+                                    <td>@ViewBag.DueDate</td>
+                                </tr>
+                                <tr>
+                                    <td>VIP天數</td>
+                                    <td>
+                                        <big>@ViewBag.Day</big> 天
+                                    </td>
+                                </tr>
                             }
                             else if (ViewBag.Payway == 1)
                             {
@@ -31,7 +48,7 @@
                                     <tr>
                                         <td>銀行代碼</td>
                                         <td>
-                                            <big>@ViewBag.Banknumber</big>&nbsp;@ViewBag.BankName
+                                            <big>@ViewBag.BankCode</big>&nbsp;@ViewBag.EscrowBank
                                         </td>
                                     </tr>
                                     <tr>
@@ -41,24 +58,57 @@
                                         </td>
                                     </tr>
                                 <!--↑使用銀行付款時顯示↑-->
-                            }                           
-                            <tr>
-                                <td>實際付款金額</td>
-                                <td>
-                                    NT$&nbsp;
-                                    <big>@(ViewBag.Amt)</big>&nbsp;元<br>(包含系統手續費)
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>繳費期限</td>
-                                <td>@ViewBag.DueDate</td>
-                            </tr>
-                            <tr>
-                                <td>VIP天數</td>
-                                <td>
-                                    <big>@ViewBag.Day</big> 天
-                                </td>
-                            </tr>
+                                <tr>
+                                    <td>實際付款金額</td>
+                                    <td>
+                                        NT$&nbsp;
+                                        <big>@(ViewBag.Amt)</big>&nbsp;元<br>(包含系統手續費)
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>繳費期限</td>
+                                    <td>@ViewBag.DueDate</td>
+                                </tr>
+                                <tr>
+                                    <td>VIP天數</td>
+                                    <td>
+                                        <big>@ViewBag.Day</big> 天
+                                    </td>
+                                </tr>
+                            }
+                            else if (ViewBag.Payway == 2)
+                            {
+                                <tr>
+                                    <td>付款方式</td>
+                                    <td>
+                                        <big>信用卡</big>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>付款狀態</td>
+                                    <td>
+                                        <big>@ViewBag.Status</big><br>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>實際付款金額</td>
+                                    <td>
+                                        NT$&nbsp;
+                                        <big>@(ViewBag.Amt)</big>&nbsp;元<br>(包含系統手續費)
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>繳費日期</td>
+                                    <td>@ViewBag.OrderDate</td>
+                                </tr>
+                                <tr>
+                                    <td>VIP天數</td>
+                                    <td>
+                                        <big>@ViewBag.Day</big> 天
+                                    </td>
+                                </tr>
+                            }
+
                         </tbody>
                     </table>
                 </div>

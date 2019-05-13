@@ -63,5 +63,3 @@ D:\web\HeO\HeOBackend\obj\Release\HeOBackend.dll
 D:\web\HeO\HeOBackend\obj\Release\HeOBackend.pdb
 D:\web\HeO\HeOBackend\bin\HeO.Libs.dll
 D:\web\HeO\HeOBackend\bin\HeO.Libs.pdb
-D:\web\HeO\HeOBackend\bin\WebDriver.dll
-D:\web\HeO\HeOBackend\bin\WebDriver.xml

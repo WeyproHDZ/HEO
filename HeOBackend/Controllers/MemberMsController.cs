@@ -167,9 +167,7 @@ namespace HeOBackend.Controllers
             IEnumerable<Feedbackproduct> feedbackproduct = feedbackproductService.Get();
             ViewBag.feedbackproduct = feedbackproduct;
             /**** 等級選單 *****/
-            IEnumerable<Memberlevel> memberlevel = memberlevelService.Get();
-            SelectList memberlevelselectList = new SelectList(memberlevel, "Levelid", "Levelname");
-            ViewBag.memberlevelList = memberlevelselectList;
+            LevelDropDownList();
             return View();
         }
         [CheckSession(IsAuth = true)]
@@ -367,7 +365,7 @@ namespace HeOBackend.Controllers
                 viprecord.Updatedate = DateTime.Now;
                 viprecord.Day = vipdetail.Day;
                 viprecord.Money = vipdetail.Money;
-                viprecord.Depositnumber = "heodeposit" + DateTime.Now.ToString("yyyyMMddHHmmssfff");
+                viprecord.Depositnumber = DateTime.Now.ToString("yyyyMMddHHmmssfff");
                 double day = Convert.ToDouble(viprecord.Day);
                 /** 假設沒有舊資料，就直接新增進去 **/
                 if(old_record != null)
@@ -501,13 +499,11 @@ namespace HeOBackend.Controllers
         [HttpPost]
         public ActionResult EditReallist(Guid memberid , Members members , int status)
         {
-            Memberlevel memberlevel = memberlevelService.Get().Where(a => a.Levelname == "真人").FirstOrDefault();
             membersService.SpecificUpdate(members, new string[] { "Facebooklink" });
             members.Facebookstatus = status;
             if(status == 2)
             {
                 members.Isreal = true;
-                members.Levelid = memberlevel.Levelid;
                 membersService.SpecificUpdate(members, new string[] { "Levelid" , "Isreal", "Facebookstatus" });
             }
             else
@@ -521,7 +517,7 @@ namespace HeOBackend.Controllers
         #region -- LevelDropDownList ViewBag --
         private void LevelDropDownList(Object selectLevel = null)
         {
-            var querys = memberlevelService.Get();
+            var querys = memberlevelService.Get().Where(a => a.Isenable == 1);
 
             ViewBag.Levelid = new SelectList(querys, "Levelid", "Levelname", selectLevel);
         }

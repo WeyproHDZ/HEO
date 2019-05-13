@@ -57,16 +57,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Memberlevel">
-      <EntityTypeMapping TypeName="HeOModel.Memberlevel">
-        <MappingFragment StoreEntitySet="Memberlevel">
-          <ScalarProperty Name="Levelid" ColumnName="Levelid" />
-          <ScalarProperty Name="Levelname" ColumnName="Levelname" />
-          <ScalarProperty Name="Createdate" ColumnName="Createdate" />
-          <ScalarProperty Name="Updatetime" ColumnName="Updatetime" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="Memberlevelcooldown">
       <EntityTypeMapping TypeName="HeOModel.Memberlevelcooldown">
         <MappingFragment StoreEntitySet="Memberlevelcooldown">
@@ -299,6 +289,17 @@
           <ScalarProperty Name="Createdate" ColumnName="Createdate" />
           <ScalarProperty Name="Logs" ColumnName="Logs" />
           <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Memberlevel">
+      <EntityTypeMapping TypeName="HeOModel.Memberlevel">
+        <MappingFragment StoreEntitySet="Memberlevel">
+          <ScalarProperty Name="Updatetime" ColumnName="Updatetime" />
+          <ScalarProperty Name="Createdate" ColumnName="Createdate" />
+          <ScalarProperty Name="Levelname" ColumnName="Levelname" />
+          <ScalarProperty Name="Isenable" ColumnName="Isenable" />
+          <ScalarProperty Name="Levelid" ColumnName="Levelid" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

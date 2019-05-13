@@ -13,13 +13,13 @@
             @if (Session["IsLogin"] != null && (bool)Session["IsLogin"])
             {
                 <ul class="fb-login">
-                    @if (ViewBag.Date == null)
+                    @if (ViewBag.Day == null)
                     {
                         <li><a href="@Url.Action("Member", "MemberMs")" title="會員中心">會員中心</a><a href="@Url.Action("Deposit" , "DepositMs")" title="VIP">購買Vip</a></li>
                     }
                     else
                     {
-                        <li><a href="@Url.Action("Member", "MemberMs")" title="會員中心">會員中心</a><a href="@Url.Action("Deposit" , "DepositMs")" title="VIP">VIP-@ViewBag.Date 天</a></li>
+                        <li><a href="@Url.Action("Member", "MemberMs")" title="會員中心">會員中心</a><a href="@Url.Action("Deposit" , "DepositMs")" title="VIP">VIP-@ViewBag.Day 天</a></li>
                     }
                     <li><a href="https://www.hdzbulk.com/index.php/tw" target="_blank">HDz行銷平台</a></li>
                     <li><a class="logout" href="@Url.Action("Logout", "HomeMs")">登出</a></li>

@@ -49,7 +49,7 @@ namespace HeO.Controllers
                 }
             }
 
-            ViewBag.Date = member.Createdate.ToString("yyyy/MM/dd");
+            ViewBag.HeODate = member.Createdate.ToString("yyyy/MM/dd");                 // 加入HeO的時間
             ViewBag.Feedbackproduct = feedbackproductService.Get().OrderBy(o => o.Createdate);
             ViewBag.FeedbackCount = Product;
             return View();

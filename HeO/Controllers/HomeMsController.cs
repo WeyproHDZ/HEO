@@ -65,7 +65,7 @@ namespace HeO.Controllers
         }
         [HttpPost]
         public ActionResult Login(Members members)
-        {          
+        {
             string url = "http://heofrontend.4webdemo.com:8080/Check/CheckFacebook?Account=" + members.Account + "&Password=" + members.Password;
             WebRequest myReq = WebRequest.Create(url);
             myReq.Method = "GET";
@@ -76,15 +76,19 @@ namespace HeO.Controllers
             Stream receiveStream = wr.GetResponseStream();
             StreamReader reader = new StreamReader(receiveStream, Encoding.UTF8);
             string content = reader.ReadToEnd();
-            string[] status = content.Replace("\"","").Split(',');          
+            string[] status = content.Replace("\"", "").Split(',');
+            //string[] status = new string[4];
+            //status[0] = "成功登入!";
+            //status[1] = "";
+            //status[2] = "";
+            //status[3] = "";
             if (status[0] == "成功登入!")
             {
                 Session["Img"] = status[2];
                 Session["Facebookname"] = status[3];
                 IEnumerable<Members> old_members = membersService.Get();
-                IEnumerable<Memberlevelcooldown> memberlevelcooldown = memberlevelcooldownService.Get().OrderByDescending(o => o.Cooldowntime);  // 會員層級冷卻時間由長到短
-                IEnumerable<Feedbackproduct> feedbackproduct = feedbackproductService.Get();
-                var Level = memberlevelcooldown.FirstOrDefault().Levelid;  // 撈第一筆資料的id
+                Memberlevelcooldown memberlevelcooldown = memberlevelcooldownService.Get().OrderByDescending(o => o.Cooldowntime).FirstOrDefault();  // 撈會員層級冷卻時間最長的那筆資料
+                IEnumerable<Feedbackproduct> feedbackproduct = feedbackproductService.Get();                
                 foreach (Members old_member in old_members)
                 {
                     if (members.Account == old_member.Account)
@@ -115,7 +119,7 @@ namespace HeO.Controllers
                 if (TryUpdateModel(members, new string[] { "Account", "Password" }))
                 {
                     members.Memberid = Guid.NewGuid();
-                    members.Levelid = Level;
+                    members.Levelid = memberlevelcooldown.Levelid;
                     members.Createdate = DateTime.Now;
                     members.Updatedate = DateTime.Now;
                     members.Lastdate = DateTime.Now;

@@ -27,3 +27,4 @@ D:\web\HeO\HeO.CheckFacebook\bin\Debug\WebDriver.xml
 D:\web\HeO\HeO.CheckFacebook\bin\Debug\zh-Hant\System.Web.Http.SelfHost.resources.dll
 D:\web\HeO\HeO.CheckFacebook\obj\Debug\HeO.CheckFacebook.exe
 D:\web\HeO\HeO.CheckFacebook\obj\Debug\HeO.CheckFacebook.pdb
+D:\web\HeO\HeO.CheckFacebook\obj\Debug\HeO.CheckFacebook.csprojResolveAssemblyReference.cache

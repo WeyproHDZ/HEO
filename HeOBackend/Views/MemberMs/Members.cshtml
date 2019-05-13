@@ -46,6 +46,7 @@
                                     <tr>
                                         <th width="15%" class="text-center">層級</th>
                                         <th class="text-center">Facebook帳號</th>
+                                        <th width="10%" class="text-center">是否真人帳號</th>
                                         <th width="10%" class="text-center">VIP購買紀錄</th>
                                         <th width="10%" class="text-center">回饋金申請紀錄</th>
                                         <th width="10%" class="text-center">編輯</th>
@@ -58,6 +59,7 @@
                                         <tr>
                                             <td class="text-center">@entity.Memberlevel.Levelname</td>
                                             <td class="text-center">@entity.Account</td>
+                                            <td class="text-center">@entity.Isreal</td>
                                             <td class="text-center"><a href="@Url.Action("Viprecord", "MemberMs", new { Memberid = entity.Memberid })" class="btn btn-info btn-xs"><i class="fa fa-paper-plane-o"></i></a></td>
                                             <td class="text-center"><a href="@Url.Action("Feedbackrecord", "FeedbackMs", new { Memberid = entity.Memberid })" class="btn btn-info btn-xs"><i class="fa fa-book"></i></a></td>
                                             <td class="text-center"><a href="@Url.Action("EditMembers", "MemberMs", new { Memberid = entity.Memberid, p = ViewBag.pageNumber })" class="btn btn-info btn-xs"><i class="fa fa-edit"></i></a></td>

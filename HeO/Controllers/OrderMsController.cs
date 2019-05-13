@@ -17,11 +17,15 @@ namespace HeO.Controllers
     {
         private OrderService orderService;
         private MembersService membersService;
+        private MemberlevelService memberlevelService;
         private SettingService settingService;
+
+        public int? Cooldowntime;
         public OrderMsController()
         {
             orderService = new OrderService();
             membersService = new MembersService();
+            memberlevelService = new MemberlevelService();
             settingService = new SettingService();
         }
         // GET: OrderMs
@@ -42,7 +46,24 @@ namespace HeO.Controllers
         {
             Members member = membersService.GetByID(Session["Memberid"]);
             Guid Memberid = Guid.Parse(Session["Memberid"].ToString());
-            Memberlevelcooldown memberlevelcooldown = member.Memberlevel.Memberlevelcooldown.FirstOrDefault();
+            int? MemberCooldown = member.Memberlevel.Memberlevelcooldown.FirstOrDefault().Cooldowntime;           // 該會員的冷卻時間(一般/VIP)
+            if(member.Isreal == true)
+            {
+                Guid Realid = memberlevelService.Get().Where(a => a.Levelname == "真人").FirstOrDefault().Levelid;        // 取得真人ID
+                int? RealCooldowntime = member.Memberlevel.Memberlevelcooldown.FirstOrDefault(a => a.Levelid == Realid).Cooldowntime;       // 取得真人的冷卻時間
+                if(MemberCooldown > RealCooldowntime)
+                {
+                    Cooldowntime = RealCooldowntime;
+                }
+                else
+                {
+                    Cooldowntime = MemberCooldown;
+                }
+            }
+            else
+            {
+                Cooldowntime = MemberCooldown;
+            }
             IEnumerable<Order> old_order = orderService.Get().Where(a => a.Memberid == Memberid).OrderByDescending(o => o.Createdate);
             if(old_order.ToList().Count() == 0)
             {
@@ -61,7 +82,7 @@ namespace HeO.Controllers
             }
             else
             {
-                DateTime date = old_order.FirstOrDefault().Createdate.AddSeconds(Convert.ToDouble(memberlevelcooldown.Cooldowntime));
+                DateTime date = old_order.FirstOrDefault().Createdate.AddSeconds(Convert.ToDouble(Cooldowntime));
 
                 if (DateTime.Now > date)
                 {

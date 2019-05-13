@@ -107,6 +107,7 @@
             <PropertyRef Name="Levelid" />
           </Key>
           <Property Name="Levelid" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Isenable" Type="tinyint" Nullable="false" />
           <Property Name="Levelname" Type="nvarchar" MaxLength="100" />
           <Property Name="Createdate" Type="datetime" />
           <Property Name="Updatetime" Type="datetime" />
@@ -666,18 +667,6 @@
           <NavigationProperty Name="Lims1" Relationship="Self.FK_Lims_Lims1" FromRole="Lims" ToRole="Lims1" />
           <NavigationProperty Name="Lims2" Relationship="Self.FK_Lims_Lims1" FromRole="Lims1" ToRole="Lims" />
         </EntityType>
-        <EntityType Name="Memberlevel">
-          <Key>
-            <PropertyRef Name="Levelid" />
-          </Key>
-          <Property Name="Levelid" Type="Guid" Nullable="false" />
-          <Property Name="Levelname" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="Createdate" Type="DateTime" Precision="3" />
-          <Property Name="Updatetime" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="Memberlevelcooldown" Relationship="Self.FK_Memberlevelcooldown_Memberlevel" FromRole="Memberlevel" ToRole="Memberlevelcooldown" />
-          <NavigationProperty Name="Feedbackdetail" Relationship="HeOModel.FK_Feedbackset_Memberlevel" FromRole="Memberlevel" ToRole="Feedbackdetail" />
-          <NavigationProperty Name="Members" Relationship="HeOModel.FK_Members_Memberlevel" FromRole="Memberlevel" ToRole="Members" />
-        </EntityType>
         <EntityType Name="Memberlevelcooldown">
           <Key>
             <PropertyRef Name="Id" />
@@ -685,7 +674,7 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Levelid" Type="Guid" />
           <Property Name="Cooldowntime" Type="Int32" />
-          <NavigationProperty Name="Memberlevel" Relationship="Self.FK_Memberlevelcooldown_Memberlevel" FromRole="Memberlevelcooldown" ToRole="Memberlevel" />
+          <NavigationProperty Name="Memberlevel" Relationship="HeOModel.FK_Memberlevelcooldown_Memberlevel" FromRole="Memberlevelcooldown" ToRole="Memberlevel" />
         </EntityType>
         <EntityType Name="Returnstatus">
           <Key>
@@ -752,27 +741,12 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Memberlevelcooldown_Memberlevel">
-          <End Role="Memberlevel" Type="Self.Memberlevel" Multiplicity="0..1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="Memberlevelcooldown" Type="Self.Memberlevelcooldown" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Memberlevel">
-              <PropertyRef Name="Levelid" />
-            </Principal>
-            <Dependent Role="Memberlevelcooldown">
-              <PropertyRef Name="Levelid" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityContainer Name="HeOEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="AdminLims" EntityType="Self.AdminLims" />
           <EntitySet Name="Admins" EntityType="Self.Admins" />
           <EntitySet Name="Feedbackproduct" EntityType="Self.Feedbackproduct" />
           <EntitySet Name="Guide" EntityType="Self.Guide" />
           <EntitySet Name="Lims" EntityType="Self.Lims" />
-          <EntitySet Name="Memberlevel" EntityType="Self.Memberlevel" />
           <EntitySet Name="Memberlevelcooldown" EntityType="Self.Memberlevelcooldown" />
           <EntitySet Name="Returnstatus" EntityType="Self.Returnstatus" />
           <EntitySet Name="Setting" EntityType="Self.Setting" />
@@ -789,10 +763,6 @@
             <End Role="Lims" EntitySet="Lims" />
             <End Role="Lims1" EntitySet="Lims" />
           </AssociationSet>
-          <AssociationSet Name="FK_Memberlevelcooldown_Memberlevel" Association="Self.FK_Memberlevelcooldown_Memberlevel">
-            <End Role="Memberlevel" EntitySet="Memberlevel" />
-            <End Role="Memberlevelcooldown" EntitySet="Memberlevelcooldown" />
-          </AssociationSet>
           <EntitySet Name="Memberauthorization" EntityType="HeOModel.Memberauthorization" />
           <EntitySet Name="sysdiagrams" EntityType="HeOModel.sysdiagrams" />
           <AssociationSet Name="FK_Memberauthorization_Feedbackproduct" Association="HeOModel.FK_Memberauthorization_Feedbackproduct">
@@ -803,10 +773,6 @@
           <EntitySet Name="Feedbackdetail" EntityType="HeOModel.Feedbackdetail" />
           <AssociationSet Name="FK_Feedbackdetail_Feedbackproduct1" Association="HeOModel.FK_Feedbackdetail_Feedbackproduct1">
             <End Role="Feedbackproduct" EntitySet="Feedbackproduct" />
-            <End Role="Feedbackdetail" EntitySet="Feedbackdetail" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Feedbackset_Memberlevel" Association="HeOModel.FK_Feedbackset_Memberlevel">
-            <End Role="Memberlevel" EntitySet="Memberlevel" />
             <End Role="Feedbackdetail" EntitySet="Feedbackdetail" />
           </AssociationSet>
           <EntitySet Name="Feedbackrecord" EntityType="HeOModel.Feedbackrecord" />
@@ -843,10 +809,6 @@
             <End Role="Members" EntitySet="Members" />
             <End Role="Memberauthorization" EntitySet="Memberauthorization" />
           </AssociationSet>
-          <AssociationSet Name="FK_Members_Memberlevel" Association="HeOModel.FK_Members_Memberlevel">
-            <End Role="Memberlevel" EntitySet="Memberlevel" />
-            <End Role="Members" EntitySet="Members" />
-          </AssociationSet>
           <AssociationSet Name="FK_Order_Members" Association="HeOModel.FK_Order_Members">
             <End Role="Members" EntitySet="Members" />
             <End Role="Order" EntitySet="Order" />
@@ -860,6 +822,19 @@
             <End Role="Viprecord" EntitySet="Viprecord" />
           </AssociationSet>
           <EntitySet Name="Servicelog" EntityType="HeOModel.Servicelog" />
+          <EntitySet Name="Memberlevel" EntityType="HeOModel.Memberlevel" />
+          <AssociationSet Name="FK_Feedbackset_Memberlevel" Association="HeOModel.FK_Feedbackset_Memberlevel">
+            <End Role="Memberlevel" EntitySet="Memberlevel" />
+            <End Role="Feedbackdetail" EntitySet="Feedbackdetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Memberlevelcooldown_Memberlevel" Association="HeOModel.FK_Memberlevelcooldown_Memberlevel">
+            <End Role="Memberlevel" EntitySet="Memberlevel" />
+            <End Role="Memberlevelcooldown" EntitySet="Memberlevelcooldown" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Members_Memberlevel" Association="HeOModel.FK_Members_Memberlevel">
+            <End Role="Memberlevel" EntitySet="Memberlevel" />
+            <End Role="Members" EntitySet="Members" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="Memberauthorization">
           <Key>
@@ -927,18 +902,6 @@
             </Principal>
             <Dependent Role="Feedbackdetail">
               <PropertyRef Name="Feedbackproductid" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Feedbackset_Memberlevel">
-          <End Type="HeOModel.Memberlevel" Role="Memberlevel" Multiplicity="0..1" />
-          <End Type="HeOModel.Feedbackdetail" Role="Feedbackdetail" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Memberlevel">
-              <PropertyRef Name="Levelid" />
-            </Principal>
-            <Dependent Role="Feedbackdetail">
-              <PropertyRef Name="Levelid" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1142,10 +1105,10 @@
           <Property Name="Updatedate" Type="DateTime" Precision="3" />
           <NavigationProperty Name="Feedbackrecord" Relationship="HeOModel.FK_Feedbackrecord_Members" FromRole="Members" ToRole="Feedbackrecord" />
           <NavigationProperty Name="Memberauthorization" Relationship="HeOModel.FK_Memberauthorization_Members" FromRole="Members" ToRole="Memberauthorization" />
-          <NavigationProperty Name="Memberlevel" Relationship="HeOModel.FK_Members_Memberlevel" FromRole="Members" ToRole="Memberlevel" />
           <NavigationProperty Name="Order" Relationship="HeOModel.FK_Order_Members" FromRole="Members" ToRole="Order" />
           <NavigationProperty Name="Orderfaceooklist" Relationship="HeOModel.FK_Orderfaceooklist_Members" FromRole="Members" ToRole="Orderfaceooklist" />
           <NavigationProperty Name="Viprecord" Relationship="HeOModel.FK_Viprecord_Members" FromRole="Members" ToRole="Viprecord" />
+          <NavigationProperty Name="Memberlevel" Relationship="HeOModel.FK_Members_Memberlevel" FromRole="Members" ToRole="Memberlevel" />
         </EntityType>
         <Association Name="FK_Feedbackrecord_Members">
           <End Type="HeOModel.Members" Role="Members" Multiplicity="1">
@@ -1172,18 +1135,6 @@
             </Principal>
             <Dependent Role="Memberauthorization">
               <PropertyRef Name="Memberid" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Members_Memberlevel">
-          <End Type="HeOModel.Memberlevel" Role="Memberlevel" Multiplicity="0..1" />
-          <End Type="HeOModel.Members" Role="Members" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Memberlevel">
-              <PropertyRef Name="Levelid" />
-            </Principal>
-            <Dependent Role="Members">
-              <PropertyRef Name="Levelid" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1235,6 +1186,57 @@
           <Property Name="Logs" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Createdate" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
         </EntityType>
+        <EntityType Name="Memberlevel">
+          <Key>
+            <PropertyRef Name="Levelid" />
+          </Key>
+          <Property Name="Levelid" Type="Guid" Nullable="false" />
+          <Property Name="Isenable" Type="Byte" Nullable="false" />
+          <Property Name="Levelname" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Createdate" Type="DateTime" Precision="3" />
+          <Property Name="Updatetime" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Feedbackdetail" Relationship="HeOModel.FK_Feedbackset_Memberlevel" FromRole="Memberlevel" ToRole="Feedbackdetail" />
+          <NavigationProperty Name="Memberlevelcooldown" Relationship="HeOModel.FK_Memberlevelcooldown_Memberlevel" FromRole="Memberlevel" ToRole="Memberlevelcooldown" />
+          <NavigationProperty Name="Members" Relationship="HeOModel.FK_Members_Memberlevel" FromRole="Memberlevel" ToRole="Members" />
+        </EntityType>
+        <Association Name="FK_Feedbackset_Memberlevel">
+          <End Type="HeOModel.Memberlevel" Role="Memberlevel" Multiplicity="0..1" />
+          <End Type="HeOModel.Feedbackdetail" Role="Feedbackdetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Memberlevel">
+              <PropertyRef Name="Levelid" />
+            </Principal>
+            <Dependent Role="Feedbackdetail">
+              <PropertyRef Name="Levelid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Memberlevelcooldown_Memberlevel">
+          <End Type="HeOModel.Memberlevel" Role="Memberlevel" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="HeOModel.Memberlevelcooldown" Role="Memberlevelcooldown" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Memberlevel">
+              <PropertyRef Name="Levelid" />
+            </Principal>
+            <Dependent Role="Memberlevelcooldown">
+              <PropertyRef Name="Levelid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Members_Memberlevel">
+          <End Type="HeOModel.Memberlevel" Role="Memberlevel" Multiplicity="0..1" />
+          <End Type="HeOModel.Members" Role="Members" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Memberlevel">
+              <PropertyRef Name="Levelid" />
+            </Principal>
+            <Dependent Role="Members">
+              <PropertyRef Name="Levelid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1294,16 +1296,6 @@
                 <ScalarProperty Name="Icon" ColumnName="Icon" />
                 <ScalarProperty Name="Sort" ColumnName="Sort" />
                 <ScalarProperty Name="ParentID" ColumnName="ParentID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Memberlevel">
-            <EntityTypeMapping TypeName="HeOModel.Memberlevel">
-              <MappingFragment StoreEntitySet="Memberlevel">
-                <ScalarProperty Name="Levelid" ColumnName="Levelid" />
-                <ScalarProperty Name="Levelname" ColumnName="Levelname" />
-                <ScalarProperty Name="Createdate" ColumnName="Createdate" />
-                <ScalarProperty Name="Updatetime" ColumnName="Updatetime" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1539,6 +1531,17 @@
                 <ScalarProperty Name="Createdate" ColumnName="Createdate" />
                 <ScalarProperty Name="Logs" ColumnName="Logs" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Memberlevel">
+            <EntityTypeMapping TypeName="HeOModel.Memberlevel">
+              <MappingFragment StoreEntitySet="Memberlevel">
+                <ScalarProperty Name="Updatetime" ColumnName="Updatetime" />
+                <ScalarProperty Name="Createdate" ColumnName="Createdate" />
+                <ScalarProperty Name="Levelname" ColumnName="Levelname" />
+                <ScalarProperty Name="Isenable" ColumnName="Isenable" />
+                <ScalarProperty Name="Levelid" ColumnName="Levelid" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

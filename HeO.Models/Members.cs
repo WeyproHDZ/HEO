@@ -42,12 +42,12 @@ namespace HeO.Models
         public virtual ICollection<Feedbackrecord> Feedbackrecord { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Memberauthorization> Memberauthorization { get; set; }
-        public virtual Memberlevel Memberlevel { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Order> Order { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Orderfaceooklist> Orderfaceooklist { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Viprecord> Viprecord { get; set; }
+        public virtual Memberlevel Memberlevel { get; set; }
     }
 }

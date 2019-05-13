@@ -17,20 +17,21 @@ namespace HeO.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Memberlevel()
         {
-            this.Memberlevelcooldown = new HashSet<Memberlevelcooldown>();
             this.Feedbackdetail = new HashSet<Feedbackdetail>();
+            this.Memberlevelcooldown = new HashSet<Memberlevelcooldown>();
             this.Members = new HashSet<Members>();
         }
     
         public System.Guid Levelid { get; set; }
+        public byte Isenable { get; set; }
         public string Levelname { get; set; }
         public Nullable<System.DateTime> Createdate { get; set; }
         public Nullable<System.DateTime> Updatetime { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Memberlevelcooldown> Memberlevelcooldown { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Feedbackdetail> Feedbackdetail { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Memberlevelcooldown> Memberlevelcooldown { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Members> Members { get; set; }
     }

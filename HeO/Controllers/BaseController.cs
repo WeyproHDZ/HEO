@@ -34,18 +34,14 @@ namespace HeO.Controllers
             if(Session["Memberid"] != null)           
             {
                 Guid Memberid = Guid.Parse((Session["Memberid"]).ToString());
-                Viprecord old_data = viprecordService.Get().Where(a => a.Memberid == Memberid).Where(x => x.Status == 2).OrderByDescending(o => o.Createdate).FirstOrDefault();
+                Viprecord old_data = viprecordService.Get().Where(a => a.Memberid == Memberid).Where(x => x.Status == 2).OrderByDescending(o => o.Enddate).FirstOrDefault();
                 /*** 判斷該會員剩餘VIP天數 ***/
                 if(old_data != null)
                 {
-                    Double Date = (old_data.Enddate - DateTime.Now).TotalDays;
-                    if(Date < 0)
+                    Double Day = (old_data.Enddate - DateTime.Now).TotalDays;
+                    if(Day > 0)
                     {
-                        ViewBag.Date = 0;
-                    }
-                    else
-                    {
-                        ViewBag.Date = Convert.ToInt16(Math.Ceiling(Date));
+                        ViewBag.Date = Convert.ToInt16(Math.Ceiling(Day));
                     }
                 }
 
