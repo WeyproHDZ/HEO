@@ -16,12 +16,14 @@ namespace HeO.Controllers
     public class MemberMsController : BaseController
     {
         private MembersService membersService;
+        private MemberlevelService memberlevelService;
         private FeedbackproductService feedbackproductService;
         private ViprecordService viprecordService;
 
         public MemberMsController()
         {
             membersService = new MembersService();
+            memberlevelService = new MemberlevelService();
             feedbackproductService = new FeedbackproductService();
             viprecordService = new ViprecordService();
         }
@@ -31,7 +33,14 @@ namespace HeO.Controllers
         {
             IEnumerable<Feedbackproduct> Feedbackproduct = feedbackproductService.Get();
             Members member = membersService.GetByID(Session["Memberid"]);
-
+            if(member.Isreal == true)
+            {
+                ViewBag.Levelid = memberlevelService.Get().Where(a => a.Levelname == "真人").FirstOrDefault().Levelid;
+            }
+            else
+            {
+                ViewBag.Levelid = memberlevelService.Get().Where(a => a.Levelname == "一般").FirstOrDefault().Levelid;
+            }
             ViewBag.Feedbackproduct = Feedbackproduct;
             ViewBag.Facebookstatus = member.Facebookstatus;
             return View();

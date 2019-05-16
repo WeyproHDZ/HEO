@@ -55,7 +55,6 @@
                                             <div class="form-group">
                                                 <label class="col-lg-2 control-label" for="title">層級</label>
                                                 <section class="col-lg-3">
-                                                    @*@Html.DropDownList("Levelid", (SelectList)ViewBag.memberlevelList, new Dictionary<string, object>() { { "class", "form-control" } })*@
                                                     @Html.DropDownListFor(model => model.Levelid, null, "--請選擇--", new Dictionary<string, object>() { { "class", "form-control" } })
                                                 </section>
                                             </div>

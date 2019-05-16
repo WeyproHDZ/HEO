@@ -17,9 +17,9 @@
                             <div class="transfer-number caculate">
                                 <p>授權 @FeedbackproductList.Feedbackproductname 使用次數<span class="font-purple">@ViewBag.FeedbackCount[i]</span></p>
                                 <p class="padding">x</p>
-                                <p>獎勵金 @FeedbackproductList.Feedbackdetail.FirstOrDefault().Money $</p>
+                                <p>獎勵金 @FeedbackproductList.Feedbackdetail.FirstOrDefault(a => a.Levelid == ViewBag.Levelid).Money $</p>
                                 <p class="padding">=</p>
-                                <p>總累積獎勵金<span class="font-purple">@(ViewBag.FeedbackCount[i] * FeedbackproductList.Feedbackdetail.FirstOrDefault().Money) $</span></p>
+                                <p>總累積獎勵金<span class="font-purple">@(ViewBag.FeedbackCount[i] * FeedbackproductList.Feedbackdetail.FirstOrDefault(a => a.Levelid == ViewBag.Levelid).Money) $</span></p>
                             </div>
                         </div>
                         i++;

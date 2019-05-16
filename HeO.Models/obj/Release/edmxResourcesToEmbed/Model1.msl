@@ -216,23 +216,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Order">
-      <EntityTypeMapping TypeName="HeOModel.Order">
-        <MappingFragment StoreEntitySet="Order">
-          <ScalarProperty Name="Createdate" ColumnName="Createdate" />
-          <ScalarProperty Name="Updatedate" ColumnName="Updatedate" />
-          <ScalarProperty Name="OrderStatus" ColumnName="OrderStatus" />
-          <ScalarProperty Name="Cost" ColumnName="Cost" />
-          <ScalarProperty Name="Count" ColumnName="Count" />
-          <ScalarProperty Name="Service" ColumnName="Service" />
-          <ScalarProperty Name="Url" ColumnName="Url" />
-          <ScalarProperty Name="HDZoredernumber" ColumnName="HDZoredernumber" />
-          <ScalarProperty Name="Memberid" ColumnName="Memberid" />
-          <ScalarProperty Name="Ordernumber" ColumnName="Ordernumber" />
-          <ScalarProperty Name="Orderid" ColumnName="Orderid" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="Thread">
       <EntityTypeMapping TypeName="HeOModel.Thread">
         <MappingFragment StoreEntitySet="Thread">
@@ -300,6 +283,25 @@
           <ScalarProperty Name="Levelname" ColumnName="Levelname" />
           <ScalarProperty Name="Isenable" ColumnName="Isenable" />
           <ScalarProperty Name="Levelid" ColumnName="Levelid" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Order">
+      <EntityTypeMapping TypeName="HeOModel.Order">
+        <MappingFragment StoreEntitySet="Order">
+          <ScalarProperty Name="Createdate" ColumnName="Createdate" />
+          <ScalarProperty Name="Updatedate" ColumnName="Updatedate" />
+          <ScalarProperty Name="OrderStatus" ColumnName="OrderStatus" />
+          <ScalarProperty Name="Cost" ColumnName="Cost" />
+          <ScalarProperty Name="Remains" ColumnName="Remains" />
+          <ScalarProperty Name="Count" ColumnName="Count" />
+          <ScalarProperty Name="Service" ColumnName="Service" />
+          <ScalarProperty Name="Isreal" ColumnName="Isreal" />
+          <ScalarProperty Name="Url" ColumnName="Url" />
+          <ScalarProperty Name="HDZoredernumber" ColumnName="HDZoredernumber" />
+          <ScalarProperty Name="Memberid" ColumnName="Memberid" />
+          <ScalarProperty Name="Ordernumber" ColumnName="Ordernumber" />
+          <ScalarProperty Name="Orderid" ColumnName="Orderid" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

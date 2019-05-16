@@ -43,12 +43,12 @@ namespace HeO.Models
         public virtual DbSet<Newslang> Newslang { get; set; }
         public virtual DbSet<Vipdetail> Vipdetail { get; set; }
         public virtual DbSet<Viprecord> Viprecord { get; set; }
-        public virtual DbSet<Order> Order { get; set; }
         public virtual DbSet<Thread> Thread { get; set; }
         public virtual DbSet<Guidelang> Guidelang { get; set; }
         public virtual DbSet<Termlang> Termlang { get; set; }
         public virtual DbSet<Members> Members { get; set; }
         public virtual DbSet<Servicelog> Servicelog { get; set; }
         public virtual DbSet<Memberlevel> Memberlevel { get; set; }
+        public virtual DbSet<Order> Order { get; set; }
     }
 }

@@ -7,10 +7,38 @@
                     <div class="transfer-account">
                         <input class="transfer" type="text" name="transfer" id="transfer" placeholder="請填寫您的HDz帳號">
                     </div>
-                    <div class="transfer-submit"><a class="btn ajax-popup-link" id="hdz_account" href="@Url.Action("Feedbackconfirm", "FeedbackMs")" title="轉出">轉出</a></div>
+                    <div class="transfer-submit"><a class="btn btn ajax-popup-link" id="hdz_account" title="轉出">轉出</a></div>
                 </div>
                 <div class="btn-wrap"><a class="btn cancel" href="@Url.Action("Member", "MemberMs")">查看紀錄</a><a class="btn" href="https://www.hdzbulk.com/index.php/tw" target="_blank">前往HDz</a></div>
             </div>
         </div>
     </section>
 </main>
+@section scripts
+{
+    <script>
+        $("#hdz_account").click(function() {
+            if ($('#transfer').val().length != 0 && $('#transfer').val() != 0) {
+                var hdz_account = $('#transfer').val();
+                $.ajax({
+                    url: "@Url.Action("AjaxFeedbackconfirm", "Ajax")",
+                    data: { hdz_account: hdz_account },
+                    dataType: "json",
+                    type: 'POST'
+                });
+                $('#hdz_account').attr("href", "@Url.Action("Feedbackconfirm", "FeedbackMs")");
+            }
+            else {
+                swal({
+                    title: 'Error',
+                    text: '請填入HDz帳號',
+                    type: 'warning'
+                }).then((result) => {
+                    window.location.href="@Url.Action("Feedbacktransfer", "FeedbackMs")";
+                })
+                $('.mfp-wrap').style('display', 'none');
+                $('.mfp-bg').style('display', 'none');
+            }
+        });
+    </script>
+}

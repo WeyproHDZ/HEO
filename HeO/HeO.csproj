@@ -256,6 +256,7 @@
     <Content Include="Views\DepositMs\DepositForm.cshtml" />
     <Content Include="Views\MemberMs\Membervip.cshtml" />
     <Content Include="Views\DepositMs\DepositSuccess.cshtml" />
+    <Content Include="Views\DepositMs\DepositReceive.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

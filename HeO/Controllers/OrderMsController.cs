@@ -10,6 +10,7 @@ using HeO.Models;
 using HeO.Service;
 using System.IO;
 using System.Configuration;
+using System.Data.Entity;
 
 namespace HeO.Controllers
 {
@@ -32,12 +33,23 @@ namespace HeO.Controllers
         [CheckSession]
         public ActionResult Order()
         {
+            Guid product = Guid.Parse("dfd6d691-b6f6-496c-bd44-4d9022fcf3b6");
             Setting Setting = settingService.Get().FirstOrDefault();
-            int now_members = membersService.Get().Where(c => c.Isreal == true).Where(x => x.Lastdate <= DateTime.Now).OrderBy(a => a.Lastdate).Count();
+            Guid VipLevelid = memberlevelService.Get().Where(a => a.Levelname == "VIP").FirstOrDefault().Levelid;       // VIP層級的ID          
+            
+            int now_members = membersService.Get().Where(c => c.Levelid != VipLevelid).Where(x => DbFunctions.CreateDateTime(x.Lastdate.Year, x.Lastdate.Month, x.Lastdate.Day, x.Lastdate.Hour, x.Lastdate.Minute, x.Lastdate.Second) < DbFunctions.CreateDateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second)).OrderBy(a => a.Lastdate).Count();     // 目前人數(扣掉會員層級為VIP)
             ViewBag.Now_members = now_members;
             ViewBag.MemberNumber = membersService.Get().Count();
-            ViewBag.Max = Setting.Max;
-            ViewBag.Min = Setting.Min;
+            if (now_members < Setting.Max)
+            {
+                ViewBag.Max = now_members;
+                ViewBag.Min = 1;
+            }
+            else
+            {
+                ViewBag.Max = Setting.Max;
+                ViewBag.Min = Setting.Min;
+            }
             return View();
         }
         [CheckSession]
@@ -73,6 +85,7 @@ namespace HeO.Controllers
                     order.Createdate = DateTime.Now;
                     order.Updatedate = DateTime.Now;
                     order.Memberid = Memberid;
+                    order.Remains = order.Count;
                     order.Ordernumber = "heoorder" + DateTime.Now.ToString("yyyyMMddHHmmssfff");
                     order.Service = "讚";
                     orderService.Create(order);
@@ -92,6 +105,7 @@ namespace HeO.Controllers
                         order.Createdate = DateTime.Now;
                         order.Updatedate = DateTime.Now;
                         order.Memberid = Memberid;
+                        order.Remains = order.Count;
                         order.Ordernumber = "heoorder" + DateTime.Now.ToString("yyyyMMddHHmmssfff");
                         order.Service = "讚";
                         orderService.Create(order);

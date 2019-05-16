@@ -25,15 +25,17 @@ namespace HeO.Models
         public Nullable<System.Guid> Memberid { get; set; }
         public string HDZoredernumber { get; set; }
         public string Url { get; set; }
+        public bool Isreal { get; set; }
         public string Service { get; set; }
         public Nullable<int> Count { get; set; }
+        public Nullable<int> Remains { get; set; }
         public Nullable<double> Cost { get; set; }
         public int OrderStatus { get; set; }
         public Nullable<System.DateTime> Updatedate { get; set; }
         public System.DateTime Createdate { get; set; }
     
+        public virtual Members Members { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Orderfaceooklist> Orderfaceooklist { get; set; }
-        public virtual Members Members { get; set; }
     }
 }

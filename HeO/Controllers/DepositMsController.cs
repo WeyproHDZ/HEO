@@ -80,9 +80,10 @@ namespace HeO.Controllers
 
         [HttpPost]
         [CheckSession]
-        public string DepositReceive(string Number)
+        public ActionResult DepositReceive(string TradeInfo)
         {
-            return Number;
+            ViewBag.TradeInfo = TradeInfo;
+            return View();
         }
 
         [HttpPost]

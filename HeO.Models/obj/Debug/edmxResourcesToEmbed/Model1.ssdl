@@ -161,8 +161,10 @@
     <Property Name="Memberid" Type="uniqueidentifier" />
     <Property Name="HDZoredernumber" Type="nvarchar" MaxLength="255" />
     <Property Name="Url" Type="nvarchar" MaxLength="500" />
+    <Property Name="Isreal" Type="tinyint" Nullable="false" />
     <Property Name="Service" Type="nvarchar" MaxLength="255" />
     <Property Name="Count" Type="int" />
+    <Property Name="Remains" Type="int" />
     <Property Name="Cost" Type="float" />
     <Property Name="OrderStatus" Type="int" Nullable="false" />
     <Property Name="Updatedate" Type="datetime" />

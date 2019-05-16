@@ -66,22 +66,22 @@ namespace HeO.Controllers
         [HttpPost]
         public ActionResult Login(Members members)
         {
-            string url = "http://heofrontend.4webdemo.com:8080/Check/CheckFacebook?Account=" + members.Account + "&Password=" + members.Password;
-            WebRequest myReq = WebRequest.Create(url);
-            myReq.Method = "GET";
-            myReq.ContentType = "application/json; charset=UTF-8";
-            UTF8Encoding enc = new UTF8Encoding();
-            myReq.Headers.Remove("auth-token");
-            WebResponse wr = myReq.GetResponse();
-            Stream receiveStream = wr.GetResponseStream();
-            StreamReader reader = new StreamReader(receiveStream, Encoding.UTF8);
-            string content = reader.ReadToEnd();
-            string[] status = content.Replace("\"", "").Split(',');
-            //string[] status = new string[4];
-            //status[0] = "成功登入!";
-            //status[1] = "";
-            //status[2] = "";
-            //status[3] = "";
+            //string url = "http://heofrontend.4webdemo.com:8080/Check/CheckFacebook?Account=" + members.Account + "&Password=" + members.Password;
+            //WebRequest myReq = WebRequest.Create(url);
+            //myReq.Method = "GET";
+            //myReq.ContentType = "application/json; charset=UTF-8";
+            //UTF8Encoding enc = new UTF8Encoding();
+            //myReq.Headers.Remove("auth-token");
+            //WebResponse wr = myReq.GetResponse();
+            //Stream receiveStream = wr.GetResponseStream();
+            //StreamReader reader = new StreamReader(receiveStream, Encoding.UTF8);
+            //string content = reader.ReadToEnd();
+            //string[] status = content.Replace("\"", "").Split(',');
+            string[] status = new string[4];
+            status[0] = "成功登入!";
+            status[1] = "";
+            status[2] = "";
+            status[3] = "";
             if (status[0] == "成功登入!")
             {
                 Session["Img"] = status[2];

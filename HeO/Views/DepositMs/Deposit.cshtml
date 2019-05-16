@@ -33,7 +33,7 @@
                             {
                                 <div class="item">
                                     <label>
-                                        <input type="radio" name="Money" value="@VipdetailList.Money" onclick="send('@VipdetailList.Money');">@VipdetailList.Money 元( @VipdetailList.Day 天)
+                                        <input type="radio" name="Money" value="@VipdetailList.Money" onclick="send('@VipdetailList.Money');" required>@VipdetailList.Money 元( @VipdetailList.Day 天)
                                     </label>
                                 </div>
                             }
@@ -46,19 +46,19 @@
                         <div class="content">
                             <div class="payment_method">
                                 <div class="item">
-                                    <input id="payment1" type="radio" name="Payway" value="0">
+                                    <input id="payment1" type="radio" name="Payway" value="0" required>
                                     <div class="text">
                                         <label for="payment1">超商代碼繳費(7-11、全家、萊爾富、OK)</label>
                                     </div>
                                 </div>
                                 <div class="item">
-                                    <input id="payment2" type="radio" name="Payway" value="1">
+                                    <input id="payment2" type="radio" name="Payway" value="1" required>
                                     <div class="text">
                                         <label for="payment2">轉帳付款</label>
                                     </div>
                                 </div>
                                 <div class="item">
-                                    <input id="payment3" type="radio" name="Payway" value="2">
+                                    <input id="payment3" type="radio" name="Payway" value="2" required>
                                     <div class="text">
                                         <label for="payment3">信用卡</label>
                                     </div>

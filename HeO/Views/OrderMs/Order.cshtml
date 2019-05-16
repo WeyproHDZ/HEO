@@ -23,7 +23,7 @@
                                 <input type="text" id="amount" placeholder="@ViewBag.Min - @ViewBag.Max" name="Count">
                                 <div class="error">*請輸入純數字。</div>
                             </div>
-                            <button class="btn" type="submit" title="下一步">下一步</button>
+                            <button class="btn" type="button" onclick="send();" title="下一步">下一步</button>
                         }                       
                     </div>
                 </div>
@@ -46,3 +46,27 @@
         </div>
     </section>
 </main>
+
+@section scripts
+{
+    <script>
+        function send() {
+            var input = $("#amount").val();
+            var Max = @ViewBag.Max;
+            var Min = @ViewBag.Min;
+            if(input > Max || input < Min)
+            {
+                swal({
+                    title:'Error',
+                    text: '請輸入正確數量',
+                    type: 'error'
+                });
+            }
+            else
+            {
+                $('#form').submit();  
+            }
+        }
+        
+    </script>
+}

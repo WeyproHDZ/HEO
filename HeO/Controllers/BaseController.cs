@@ -17,10 +17,13 @@ namespace HeO.Controllers
         protected string websitetitle = ConfigurationManager.AppSettings["websitetitle"];
 
         private ViprecordService viprecordService;
-
+        private MembersService membersService;
+        private MemberlevelService memberlevelService;
         public BaseController()
         {
             viprecordService = new ViprecordService();
+            membersService = new MembersService();
+            memberlevelService = new MemberlevelService();
         }
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
@@ -34,14 +37,30 @@ namespace HeO.Controllers
             if(Session["Memberid"] != null)           
             {
                 Guid Memberid = Guid.Parse((Session["Memberid"]).ToString());
-                Viprecord old_data = viprecordService.Get().Where(a => a.Memberid == Memberid).Where(x => x.Status == 2).OrderByDescending(o => o.Enddate).FirstOrDefault();
+                Memberlevel memberlevel = memberlevelService.Get().Where(a => a.Levelname == "一般").FirstOrDefault();    // 一般會員的詳細資料
+                Members member = membersService.GetByID(Memberid);                                                        // 該會員的詳細資料
+                Viprecord viprecord = viprecordService.Get().Where(a => a.Memberid == Memberid).Where(x => x.Status == 2).OrderByDescending(o => o.Enddate).FirstOrDefault();
                 /*** 判斷該會員剩餘VIP天數 ***/
-                if(old_data != null)
+                if(viprecord != null)
                 {
-                    Double Day = (old_data.Enddate - DateTime.Now).TotalDays;
+                    
+
+                    Double Day = (viprecord.Enddate - DateTime.Now).TotalDays;
                     if(Day > 0)
                     {
-                        ViewBag.Date = Convert.ToInt16(Math.Ceiling(Day));
+                        ViewBag.Remainday = Convert.ToInt16(Math.Ceiling(Day));
+                    }
+                    else
+                    {
+                        ViewBag.Remainday = 0;
+                    }
+                }else
+                {
+                    if (member.Levelid != memberlevel.Levelid)
+                    {
+                        member.Levelid = member.Levelid;
+                        membersService.SpecificUpdate(member, new string[] { "Levelid" });
+                        membersService.SaveChanges();
                     }
                 }
 

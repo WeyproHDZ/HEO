@@ -18,6 +18,7 @@ namespace HeO.Controllers
         private FeedbackproductService feedbackproductService;
         private FeedbackrecordService feedbackrecordService;
         private MembersService membersService;
+        private MemberlevelService memberlevelService;
         private OrderfacebooklistService orderfacebooklistService;
 
         public FeedbackMsController()
@@ -25,13 +26,13 @@ namespace HeO.Controllers
             feedbackproductService = new FeedbackproductService();
             feedbackrecordService = new FeedbackrecordService();
             membersService = new MembersService();
+            memberlevelService = new MemberlevelService();
             orderfacebooklistService = new OrderfacebooklistService();
         }
 
         [CheckSession]
         public ActionResult Feedbackcount()
-        {
-            
+        {            
             int i = 0;
             Guid Memberid = Guid.Parse(Session["Memberid"].ToString());
             Members member = membersService.GetByID(Session["Memberid"]);
@@ -48,7 +49,14 @@ namespace HeO.Controllers
                     Product[i] = orderfacebooklistService.Get().Where(a => a.Memberid == Memberid).Where(x => x.Feedbackproductid == Feedbackproduct.Feedbackproductid).Count();
                 }
             }
-
+            if (member.Isreal == true)
+            {
+                ViewBag.Levelid = memberlevelService.Get().Where(a => a.Levelname == "真人").FirstOrDefault().Levelid;
+            }
+            else
+            {
+                ViewBag.Levelid = memberlevelService.Get().Where(a => a.Levelname == "一般").FirstOrDefault().Levelid;
+            }
             ViewBag.HeODate = member.Createdate.ToString("yyyy/MM/dd");                 // 加入HeO的時間
             ViewBag.Feedbackproduct = feedbackproductService.Get().OrderBy(o => o.Createdate);
             ViewBag.FeedbackCount = Product;

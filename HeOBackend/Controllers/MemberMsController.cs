@@ -38,7 +38,7 @@ namespace HeOBackend.Controllers
         [CheckSession(IsAuth = true)]
         public ActionResult Memberlevel(int p = 1)
         {
-            var data = memberlevelService.Get().OrderBy(o => o.Createdate);
+            var data = memberlevelService.Get().OrderByDescending(a => a.Memberlevelcooldown.FirstOrDefault().Cooldowntime);
             ViewBag.pageNumber = p;
             ViewBag.Memberlevel = data.ToPagedList(pageNumber: p, pageSize: 20);
 

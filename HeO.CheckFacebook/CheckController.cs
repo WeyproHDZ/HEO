@@ -13,6 +13,7 @@ namespace HeO.CheckFacebook
         [HttpGet]
         public string CheckFacebook(string Account, string Password)
         {
+
             string[] status = new string[4];
             status[1] = "";
             status[2] = "";
@@ -50,23 +51,36 @@ namespace HeO.CheckFacebook
             else
             {
                 driver.Navigate().GoToUrl("https://www.facebook.com/profile.php");
-                if (driver.Title.IndexOf("找不到網頁") != -1)
+                try
                 {
-                    status[0] = "此帳號尚有其他防護，請解除後再登入!";
-                    driver.Quit();
-                }
-                else
-                {
-                    status[0] = "成功登入!";
-                    var id_url = driver.FindElement(By.ClassName("profilePicThumb"));
-                    var id = id_url.GetAttribute("href").Split('=');
+                    if (driver.Title.IndexOf("找不到網頁") != -1)
+                    {
+                        status[0] = "此帳號尚有其他防護，請解除後再登入!";
+                        driver.Quit();
+                    }
+                    else
+                    {
+                        status[0] = "成功登入!";
+                        var id_url = driver.FindElement(By.ClassName("profilePicThumb"));
+                        var id = id_url.GetAttribute("href").Split('=');
 
-                    var img = driver.FindElement(By.ClassName("_11kf")).GetAttribute("src");
-                    var name = driver.Title.Split(')');
-                    status[1] = id.Last();
-                    status[2] = img;
-                    status[3] = name.Last();
+                        var img = driver.FindElement(By.ClassName("_11kf")).GetAttribute("src");
+                        var name = driver.Title.Split(')');
+                        status[1] = id.Last();
+                        status[2] = img;
+                        status[3] = name.Last();
+                        driver.Quit();
+                    }
+                }
+                catch
+                {
+                    status[0] = "請再輸入一次!";
+                    status[1] = "";
+                    status[2] = "";
+                    status[3] = "";
+                    var error = status[0] + "," + status[1] + "," + status[2] + "," + status[3];
                     driver.Quit();
+                    return error;
                 }
             }
             var response = status[0] + "," + status[1] + "," + status[2] + "," + status[3];

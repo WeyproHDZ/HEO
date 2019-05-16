@@ -15,10 +15,10 @@
                         {
                             <div class="transfer-number">
                                 <p>我要轉出</p>
-                                <input class="transfer" type="text" name="Money">
+                                <input class="transfer" type="text" name="Money" id="Money">
                                 <p>獎勵金至HDz</p>
                             </div>
-                            <div class="transfer-submit"><button class="btn" type="submit" title="轉出">轉出</button></div>
+                            <div class="transfer-submit"><button class="btn" type="button" onclick="send()" title="轉出">轉出</button></div>
                         }
                     </div>
                 </div>
@@ -93,3 +93,29 @@
         </div>
     </section>
 </main>
+
+@section scripts
+{
+    <script>
+        function send() {
+            var Membermoney = @ViewBag.Membermoney;
+            if ($('#Money').val().length != 0) {
+                if($('#Money').val() > Membermoney){
+                    swal({
+                        title: 'Error',
+                        text: '您目前的回饋金為'+Membermoney,
+                        type: 'warning'
+                    });
+                }else{
+                    $('#form').submit();
+                }                
+            } else {
+                swal({
+                    title: 'Error',
+                    text: '請輸入數字',
+                    type: 'warning'
+                });
+            }
+        }
+    </script>
+}

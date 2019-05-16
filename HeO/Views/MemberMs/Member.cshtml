@@ -69,7 +69,7 @@
                                         <div class="circle"> </div>
                                     </div>
                                 </div>
-                               <div class="switch-title">我願意開放-@FeedbackproductList.Feedbackproductname<span>( 1個 @FeedbackproductList.Feedbackproductname = @FeedbackproductList.Feedbackdetail.FirstOrDefault().Money $ )</span></div>                         
+                               <div class="switch-title">我願意開放-@FeedbackproductList.Feedbackproductname<span>( 1個 @FeedbackproductList.Feedbackproductname = @FeedbackproductList.Feedbackdetail.FirstOrDefault(a => a.Levelid == ViewBag.Levelid).Money $ )</span></div>                         
                             </div>
                         }
                     </div>
