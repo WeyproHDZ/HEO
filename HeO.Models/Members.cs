@@ -19,11 +19,12 @@ namespace HeO.Models
         {
             this.Feedbackrecord = new HashSet<Feedbackrecord>();
             this.Memberauthorization = new HashSet<Memberauthorization>();
+            this.Order = new HashSet<Order>();
             this.Orderfaceooklist = new HashSet<Orderfaceooklist>();
             this.Viprecord = new HashSet<Viprecord>();
-            this.Order = new HashSet<Order>();
         }
     
+        public bool Isenable { get; set; }
         public System.Guid Memberid { get; set; }
         public Nullable<System.Guid> Levelid { get; set; }
         public string Facebookid { get; set; }
@@ -32,9 +33,9 @@ namespace HeO.Models
         public string Password { get; set; }
         public string Facebooklink { get; set; }
         public int Facebookstatus { get; set; }
-        public int Feedbackmoney { get; set; }
+        public double Feedbackmoney { get; set; }
         public bool Isreal { get; set; }
-        public System.DateTime Lastdate { get; set; }
+        public int Lastdate { get; set; }
         public System.DateTime Createdate { get; set; }
         public Nullable<System.DateTime> Updatedate { get; set; }
     
@@ -42,12 +43,12 @@ namespace HeO.Models
         public virtual ICollection<Feedbackrecord> Feedbackrecord { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Memberauthorization> Memberauthorization { get; set; }
+        public virtual Memberlevel Memberlevel { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Order> Order { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Orderfaceooklist> Orderfaceooklist { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Viprecord> Viprecord { get; set; }
-        public virtual Memberlevel Memberlevel { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Order> Order { get; set; }
     }
 }

@@ -13,7 +13,7 @@
             @if (Session["IsLogin"] != null && (bool)Session["IsLogin"])
             {
                 <ul class="fb-login">
-                    @if (ViewBag.Remainday == null)
+                    @if (ViewBag.Remainday == null || ViewBag.Remainday == 0)
                     {
                         <li><a href="@Url.Action("Member", "MemberMs")" title="會員中心">會員中心</a><a href="@Url.Action("Deposit" , "DepositMs")" title="VIP">購買Vip</a></li>
                     }

@@ -128,7 +128,7 @@ namespace HeOBackend.Controllers
             /**** Account 、 Levelid有值 *****/
             if(account != "" && Levelid != null)
             {
-                var data = membersService.Get().Where(x => x.Account.Contains(account)).Where(a => a.Levelid == Levelid).OrderBy(o => o.Createdate);
+                var data = membersService.Get().Where(x => x.Account.Contains(account)).Where(x => x.Isenable == true).Where(a => a.Levelid == Levelid).OrderBy(o => o.Createdate);
                 ViewBag.pageNumber = p;
                 ViewBag.Members = data.ToPagedList(pageNumber: p, pageSize: 20);
                 ViewBag.Account = account;
@@ -179,7 +179,7 @@ namespace HeOBackend.Controllers
                 members.Memberid = Guid.NewGuid();
                 members.Createdate = DateTime.Now;
                 members.Updatedate = DateTime.Now;
-                members.Lastdate = DateTime.Now;
+                members.Lastdate = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds;      // 總秒數
                 members.Isreal = members.Isreal;
                 members.Levelid = members.Levelid;
                 membersService.Create(members);
@@ -199,7 +199,8 @@ namespace HeOBackend.Controllers
         public ActionResult DeleteMembers(Guid Memberid)
         {
             Members members = membersService.GetByID(Memberid);
-            membersService.Delete(members);
+            members.Isenable = false;
+            membersService.SpecificUpdate(members, new string[] { "Isenable" });
             membersService.SaveChanges();
             return RedirectToAction("Members");
         }
@@ -218,7 +219,7 @@ namespace HeOBackend.Controllers
         }
         [CheckSession(IsAuth = true)]
         [HttpPost]
-        public ActionResult EditMembers(Guid Memberid, int p, ICollection<Memberauthorization> Memberauthorization)
+        public ActionResult EditMembers(Guid Memberid, Guid Levelid , int p, ICollection<Memberauthorization> Memberauthorization)
         {
             Members member = membersService.GetByID(Memberid);
             if (TryUpdateModel(member, new string[] { "Account", "Levelid" , "Feedbackmoney" , "Name"}) && ModelState.IsValid)
@@ -238,8 +239,7 @@ namespace HeOBackend.Controllers
                         member.Memberauthorization.Add(new_auth);
                     }
                 }
-                member.Updatedate = DateTime.Now;
-
+                member.Updatedate = DateTime.Now;                
                 membersService.Update(member);
                 membersService.SaveChanges();
             }

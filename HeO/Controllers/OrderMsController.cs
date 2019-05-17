@@ -33,17 +33,17 @@ namespace HeO.Controllers
         [CheckSession]
         public ActionResult Order()
         {
-            Guid product = Guid.Parse("dfd6d691-b6f6-496c-bd44-4d9022fcf3b6");
+            int Now = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds;
             Setting Setting = settingService.Get().FirstOrDefault();
-            Guid VipLevelid = memberlevelService.Get().Where(a => a.Levelname == "VIP").FirstOrDefault().Levelid;       // VIP層級的ID          
-            
-            int now_members = membersService.Get().Where(c => c.Levelid != VipLevelid).Where(x => DbFunctions.CreateDateTime(x.Lastdate.Year, x.Lastdate.Month, x.Lastdate.Day, x.Lastdate.Hour, x.Lastdate.Minute, x.Lastdate.Second) < DbFunctions.CreateDateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second)).OrderBy(a => a.Lastdate).Count();     // 目前人數(扣掉會員層級為VIP)
+            Guid VipLevelid = memberlevelService.Get().Where(a => a.Levelname == "VIP").FirstOrDefault().Levelid;       // VIP層級的ID                                 
+            int now_members = membersService.Get().Where(a => a.Levelid != VipLevelid).Where(x => x.Lastdate <= Now).OrderBy(a => a.Lastdate).Count();     // 目前人數(扣掉會員層級為VIP)
+            //int now_members = membersService.Get().Where(a => a.Levelid != VipLevelid).Where(x => DbFunctions.CreateDateTime(x.Lastdate.Year, x.Lastdate.Month, x.Lastdate.Day, x.Lastdate.Hour, x.Lastdate.Minute, x.Lastdate.Second) <= DbFunctions.CreateDateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second)).OrderBy(a => a.Lastdate).Count();     // 目前人數(扣掉會員層級為VIP)
             ViewBag.Now_members = now_members;
             ViewBag.MemberNumber = membersService.Get().Count();
             if (now_members < Setting.Max)
             {
                 ViewBag.Max = now_members;
-                ViewBag.Min = 1;
+                ViewBag.Min = 0;
             }
             else
             {

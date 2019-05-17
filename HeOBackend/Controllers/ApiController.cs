@@ -110,13 +110,13 @@ namespace HeOBackend.Controllers
         {
             if (Id == "heo_order")
             {
+                int Now = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds;                                                                          // 目前時間的總秒數
                 Setting setting = settingService.Get().FirstOrDefault();
                 Order order = orderService.Get().Where(a => a.Ordernumber == Ordernumber).FirstOrDefault();                                                     // 撈此訂單的詳細資料
                 IEnumerable<Order> old_order = orderService.Get().Where(a => a.Url == order.Url);
                 Feedbackproduct feedbackproduct = feedbackproductService.Get().Where(a => a.Feedbackproductname.Contains(order.Service)).FirstOrDefault();      // 撈此訂單所需之產品的詳細資料
                 IEnumerable<Orderfaceooklist> orderfacebooklist = orderfacebooklistService.Get().Where(a => a.Orderid == order.Orderid);                        // 撈該訂單的互惠會員列表
-                int i = 0;
-                List<IEnumerable<Orderfaceooklist>> old_orderfacebooklist = new List<IEnumerable<Orderfaceooklist>>();
+                //List<IEnumerable<Orderfaceooklist>> old_orderfacebooklist = new List<IEnumerable<Orderfaceooklist>>();
                 //if (old_order != null)
                 //{
                 //    foreach(Order order_value in old_order)
@@ -127,9 +127,9 @@ namespace HeOBackend.Controllers
                 //}
                 Guid VipLevelid = memberlevelService.Get().Where(a => a.Levelname == "VIP").FirstOrDefault().Levelid;                                           // VIP層級的ID
                 if(order.Ordernumber.Contains("heo"))
-                {
+                {                    
                     /*** HEO內部下的訂單 ***/
-                    IEnumerable<Members> members = membersService.Get().Where(c => c.Levelid != VipLevelid).Where(x => DbFunctions.CreateDateTime(x.Lastdate.Year, x.Lastdate.Month, x.Lastdate.Day, x.Lastdate.Hour, x.Lastdate.Minute, x.Lastdate.Second) < DbFunctions.CreateDateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second)).Where(s => s.Memberauthorization.Where(q => q.Feedbackproductid == feedbackproduct.Feedbackproductid).FirstOrDefault().Checked == true).OrderBy(a => a.Lastdate).Take(number);       // 撈層級非VIP的帳號詳細資料
+                    IEnumerable<Members> members = membersService.Get().Where(c => c.Levelid != VipLevelid).Where(x => x.Lastdate <= Now).OrderBy(a => a.Lastdate).OrderBy(a => a.Lastdate).Take(number);       // 撈層級非VIP的帳號詳細資料
                     if (members.Count() == number)
                     {
                         List<get_member> AccountList = new List<get_member>();
@@ -154,7 +154,7 @@ namespace HeOBackend.Controllers
                                     }
                                 );
                                 /*** 將此會員更新下次互惠時間 ****/
-                                thismembers.Lastdate = thismembers.Lastdate.AddSeconds(Convert.ToDouble(setting.Time));
+                                thismembers.Lastdate += (int)setting.Time;
                                 membersService.SpecificUpdate(thismembers, new string[] { "Lastdate" });
 
                             }
@@ -169,12 +169,12 @@ namespace HeOBackend.Controllers
                     }
                 }
                 else
-                {
+                {         
                     /*** HDZ餵來的訂單 ***/                    
                     if(order.Isreal == true)
                     {
                         /*** 此筆訂單需要真人帳號 ****/
-                        IEnumerable<Members> members = membersService.Get().Where(c => c.Isreal == true).Where(x => DbFunctions.CreateDateTime(x.Lastdate.Year, x.Lastdate.Month, x.Lastdate.Day, x.Lastdate.Hour, x.Lastdate.Minute, x.Lastdate.Second) < DbFunctions.CreateDateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second)).OrderBy(a => a.Lastdate).Take(number);
+                        IEnumerable<Members> members = membersService.Get().Where(c => c.Isreal == true).Where(x => x.Lastdate <= Now).Where(s => s.Memberauthorization.Where(q => q.Feedbackproductid == feedbackproduct.Feedbackproductid).FirstOrDefault().Checked == true).OrderBy(a => a.Lastdate).Take(number);
                         if (members.Count() == number)
                         {
                             List<get_member> AccountList = new List<get_member>();
@@ -198,9 +198,14 @@ namespace HeOBackend.Controllers
                                                 password = thismembers.Password
                                             }
                                         );
+                                    /*** 將此會員更新下次互惠時間 ****/
+                                    thismembers.Lastdate += (int)setting.Time;                             
+                                    membersService.SpecificUpdate(thismembers, new string[] { "Lastdate" });
+                                    
                                 }
                                 used_accoount = false;
                             }
+                            membersService.SaveChanges();
                             return this.Json(AccountList, JsonRequestBehavior.AllowGet);
                         }
                         else
@@ -210,7 +215,7 @@ namespace HeOBackend.Controllers
                     }
                     else
                     {                        
-                        IEnumerable<Members> members = membersService.Get().Where(x => DbFunctions.CreateDateTime(x.Lastdate.Year, x.Lastdate.Month, x.Lastdate.Day, x.Lastdate.Hour, x.Lastdate.Minute, x.Lastdate.Second) < DbFunctions.CreateDateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second)).OrderBy(a => a.Lastdate).Take(number);
+                        IEnumerable<Members> members = membersService.Get().Where(x => x.Lastdate <= Now).OrderBy(a => a.Lastdate).Where(s => s.Memberauthorization.Where(q => q.Feedbackproductid == feedbackproduct.Feedbackproductid).FirstOrDefault().Checked == true).Take(number);
                         if (members.Count() == number)
                         {
                             List<get_member> AccountList = new List<get_member>();
@@ -234,9 +239,13 @@ namespace HeOBackend.Controllers
                                                 password = thismembers.Password
                                             }
                                         );
+                                    /*** 將此會員更新下次互惠時間 ****/
+                                    thismembers.Lastdate += (int)setting.Time;
+                                    membersService.SpecificUpdate(thismembers, new string[] { "Lastdate" });                                    
                                 }
                                 used_accoount = false;
                             }
+                            membersService.SaveChanges();
                             return this.Json(AccountList, JsonRequestBehavior.AllowGet);
                         }
                         else
@@ -257,25 +266,45 @@ namespace HeOBackend.Controllers
         /*** 更新會員互惠列表 ***/
         public JsonResult UpdateAccount(string Id, string Ordernumber, string Memberid)
         {
-            Guid thismemberid = Guid.Parse(Memberid);       // string to Guid
-            Order order = orderService.Get().Where(a => a.Ordernumber == Ordernumber).FirstOrDefault();         // 該訂單的詳細資料
-            Members member = membersService.GetByID(thismemberid);                                              // 該會員的詳細資料
+            Order order = orderService.Get().Where(a => a.Ordernumber == Ordernumber).FirstOrDefault();                 // 該訂單的詳細資料
+            Members member = membersService.GetByID(Guid.Parse(Memberid));                                              // 該會員的詳細資料
             Feedbackproduct feedbackproduct = feedbackproductService.Get().Where(a => a.Feedbackproductname.Contains(order.Service)).FirstOrDefault();          // 該訂單之產品資料
             Guid RealLevelid = memberlevelService.Get().Where(a => a.Levelname == "真人").FirstOrDefault().Levelid;                       // 真人ID
 
             /*** 改訂單剩餘人數 ***/
             order.Remains -= 1;
-            orderService.SpecificUpdate(order, new string[] { "Remains" });
-            orderService.SaveChanges();
+
             
             if (order.Ordernumber.Contains("heo"))
             {
                 /*** HEO內部下單 ***/
+                orderService.SpecificUpdate(order, new string[] { "Remains" });
+                orderService.SaveChanges();
                 return this.Json("Success");
             }
             else
             {
                 /**** HDZ餵來的訂單 ****/
+                /*** 更新訂單成本及撥回饋金給該會員 ****/
+                if(member.Isreal == true)
+                {
+                    order.Cost += 1.0 * Convert.ToDouble(feedbackproduct.Feedbackdetail.FirstOrDefault(a => a.Memberlevel.Levelname == "真人").Money);
+                    member.Feedbackmoney += order.Cost;
+                    membersService.SaveChanges();
+                }
+                else
+                {
+                    if(member.Memberlevel.Levelname == "VIP")
+                    {
+                        order.Cost += 1.0 * Convert.ToDouble(feedbackproduct.Feedbackdetail.FirstOrDefault(a => a.Memberlevel.Levelname == "VIP").Money);
+                    }
+                    else if(member.Memberlevel.Levelname == "一般")
+                    {
+                        order.Cost += 1.0 * Convert.ToDouble(feedbackproduct.Feedbackdetail.FirstOrDefault(a => a.Memberlevel.Levelname == "一般").Money);
+                    }
+                }
+                orderService.SpecificUpdate(order, new string[] { "Cost" });
+                orderService.SaveChanges();
                 /*** 將會員寫到該訂單的互惠會員列表 ***/
                 Orderfaceooklist orderfacebooklist = new Orderfaceooklist();
                 orderfacebooklist.Memberid = member.Memberid;
@@ -318,7 +347,6 @@ namespace HeOBackend.Controllers
         public JsonResult GetHdzOrder(string[] heo_array)
         {
             IEnumerable<Feedbackproduct> feedbackproduct = feedbackproductService.Get();
-            //return this.Json(heo_array[0]);
             if (heo_array[0] == "hdz_order")
             {
 
@@ -346,6 +374,38 @@ namespace HeOBackend.Controllers
             else
             {
                 return this.Json(heo_array);
+            }
+        }
+
+        [HttpGet]
+        public JsonResult Now_members(string Id)
+        {
+            int Now = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds;      // 目前時間的總秒數
+            //int members = membersService.Get().Where(x => x.Lastdate <= Now).Count();
+            IEnumerable<Members> members = membersService.Get().Where(x => x.Lastdate <= Now);
+            IEnumerable<Memberlevel> memberlevel = memberlevelService.Get();
+            int[] members_count = new int[3];
+            string[] members_levelname = new string[3];
+            int i = 0;
+            if (Id == "heo_members")
+            {
+                foreach (Memberlevel memberlevellist in memberlevel)
+                {
+                    members_levelname[i] = memberlevellist.Levelname;
+                    foreach (Members memberlist in members)
+                    {
+                        if (memberlevellist.Levelid == memberlist.Levelid)
+                        {
+                            members_count[i]++;
+                        }
+                    }
+                    i++;
+                }
+                return this.Json(members_levelname[0] + members_count[0] + "," + members_levelname[1] + members_count[1] + "," + members_levelname[2] + members_count[2], JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return this.Json("Error", JsonRequestBehavior.AllowGet);
             }
         }
 

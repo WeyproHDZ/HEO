@@ -133,6 +133,7 @@
     <Compile Include="FeedbackrecordService.cs" />
     <Compile Include="GuidelangService.cs" />
     <Compile Include="GuideService.cs" />
+    <Compile Include="Interface\IMembersService.cs" />
     <Compile Include="MemberauthorizationService.cs" />
     <Compile Include="MemberlevelcooldownService.cs" />
     <Compile Include="MemberlevelService.cs" />

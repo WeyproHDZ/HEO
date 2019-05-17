@@ -49,7 +49,7 @@
     <Property Name="Hdzaccount" Type="nvarchar" MaxLength="50" />
     <Property Name="Total" Type="int" Nullable="false" />
     <Property Name="Money" Type="int" Nullable="false" />
-    <Property Name="Remains" Type="int" Nullable="false" />
+    <Property Name="Remains" Type="float" Nullable="false" />
     <Property Name="Cash" Type="int" Nullable="false" />
     <Property Name="Bankaccount" Type="nvarchar" MaxLength="50" />
     <Property Name="Remark" Type="nvarchar" MaxLength="100" />
@@ -119,6 +119,7 @@
     <Key>
       <PropertyRef Name="Memberid" />
     </Key>
+    <Property Name="Isenable" Type="bit" Nullable="false" />
     <Property Name="Memberid" Type="uniqueidentifier" Nullable="false" />
     <Property Name="Levelid" Type="uniqueidentifier" />
     <Property Name="Facebookid" Type="nvarchar" MaxLength="50" />
@@ -127,9 +128,9 @@
     <Property Name="Password" Type="nvarchar" MaxLength="100" />
     <Property Name="Facebooklink" Type="nvarchar" MaxLength="500" />
     <Property Name="Facebookstatus" Type="int" Nullable="false" />
-    <Property Name="Feedbackmoney" Type="int" Nullable="false" />
+    <Property Name="Feedbackmoney" Type="float" Nullable="false" />
     <Property Name="Isreal" Type="bit" Nullable="false" />
-    <Property Name="Lastdate" Type="datetime" Nullable="false" />
+    <Property Name="Lastdate" Type="int" Nullable="false" />
     <Property Name="Createdate" Type="datetime" Nullable="false" />
     <Property Name="Updatedate" Type="datetime" />
   </EntityType>
@@ -165,7 +166,7 @@
     <Property Name="Service" Type="nvarchar" MaxLength="255" />
     <Property Name="Count" Type="int" />
     <Property Name="Remains" Type="int" />
-    <Property Name="Cost" Type="float" />
+    <Property Name="Cost" Type="float" Nullable="false" />
     <Property Name="OrderStatus" Type="int" Nullable="false" />
     <Property Name="Updatedate" Type="datetime" />
     <Property Name="Createdate" Type="datetime" Nullable="false" />

@@ -320,7 +320,7 @@ namespace HeOBackend.Controllers
         public ActionResult EditFeedbackrecord(Guid Feedbackid , Feedbackrecord feedbackrecord)
         {
             Members member = membersService.GetByID(feedbackrecord.Memberid);
-            int old_total = member.Feedbackrecord.FirstOrDefault(a => a.Feedbackid == Feedbackid).Money + member.Feedbackrecord.FirstOrDefault(a => a.Feedbackid == Feedbackid).Remains;
+            double old_total = member.Feedbackrecord.FirstOrDefault(a => a.Feedbackid == Feedbackid).Money + member.Feedbackrecord.FirstOrDefault(a => a.Feedbackid == Feedbackid).Remains;
 
             if (feedbackrecord.Ishdz == 0)
             {

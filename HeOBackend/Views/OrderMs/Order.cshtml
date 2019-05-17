@@ -72,13 +72,7 @@
                                                         <td class="text-center">資料有誤</td>
                                                         break;
                                                 }
-                                                @foreach (Feedbackproduct product in ViewBag.feedbackproduct)
-                                                {
-                                                    if (entity.Service.Contains(product.Feedbackproductname) && (entity.Orderfaceooklist.Where(a => a.Members.Isreal == true))!= null)
-                                                    {
-                                                        <td class="text-center">@(entity.Orderfaceooklist.Where(a => a.Members.Isreal == true).Count() * product.Feedbackdetail.FirstOrDefault(a => a.Levelid.Equals(Guid.Parse("d775ee96-b523-4194-8f84-120056f3108c"))).Money) </td>
-                                                    }
-                                                }
+                                                <td class="text-center">@entity.Cost </td>                                                
                                                 <td class="text-center"><a href="@Url.Action("ViewOrderfacebooklist", "OrderMs", new { Orderid = entity.Orderid, p = ViewBag.pageNumber })" class="btn btn-info btn-xs"><i class="fa fa-edit"></i></a></td>                    
                                             </tr>
                                             x++;

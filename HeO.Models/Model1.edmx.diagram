@@ -23,7 +23,6 @@
         <EntityTypeShape EntityType="HeOModel.News" Width="1.5" PointX="13" PointY="5.5" />
         <EntityTypeShape EntityType="HeOModel.Feedbackdetail" Width="1.5" PointX="6" PointY="6.25" />
         <AssociationConnector Association="HeOModel.FK_Feedbackdetail_Feedbackproduct1" />
-        <EntityTypeShape EntityType="HeOModel.Feedbackrecord" Width="1.5" PointX="5.25" PointY="11" />
         <EntityTypeShape EntityType="HeOModel.Orderfaceooklist" Width="1.5" PointX="8.375" PointY="12.5" />
         <EntityTypeShape EntityType="HeOModel.Newslang" Width="1.5" PointX="15.25" PointY="5.625" />
         <AssociationConnector Association="HeOModel.FK_Newlang_News" />
@@ -34,19 +33,20 @@
         <EntityTypeShape EntityType="HeOModel.Termlang" Width="1.5" PointX="11" PointY="8.875" />
         <AssociationConnector Association="HeOModel.FK_Guidelang_Guide" />
         <AssociationConnector Association="HeOModel.FK_Termlang_Term" />
-        <EntityTypeShape EntityType="HeOModel.Members" Width="1.5" PointX="3" PointY="10.5" />
-        <AssociationConnector Association="HeOModel.FK_Feedbackrecord_Members" />
-        <AssociationConnector Association="HeOModel.FK_Memberauthorization_Members" />
-        <AssociationConnector Association="HeOModel.FK_Orderfaceooklist_Members" />
-        <AssociationConnector Association="HeOModel.FK_Viprecord_Members" />
         <EntityTypeShape EntityType="HeOModel.Servicelog" Width="1.5" PointX="13.375" PointY="8.75" />
         <EntityTypeShape EntityType="HeOModel.Memberlevel" Width="1.5" PointX="0.75" PointY="9.375" />
         <AssociationConnector Association="HeOModel.FK_Feedbackset_Memberlevel" />
         <AssociationConnector Association="HeOModel.FK_Memberlevelcooldown_Memberlevel" />
-        <AssociationConnector Association="HeOModel.FK_Members_Memberlevel" />
-        <EntityTypeShape EntityType="HeOModel.Order" Width="1.5" PointX="5.25" PointY="20.875" />
-        <AssociationConnector Association="HeOModel.FK_Order_Members" />
+        <EntityTypeShape EntityType="HeOModel.Order" Width="1.5" PointX="5.25" PointY="21.75" />
         <AssociationConnector Association="HeOModel.FK_Orderfaceooklist_Order" />
+        <EntityTypeShape EntityType="HeOModel.Feedbackrecord" Width="1.5" PointX="5.25" PointY="10.875" />
+        <EntityTypeShape EntityType="HeOModel.Members" Width="1.5" PointX="3" PointY="10.25" />
+        <AssociationConnector Association="HeOModel.FK_Feedbackrecord_Members" />
+        <AssociationConnector Association="HeOModel.FK_Memberauthorization_Members" />
+        <AssociationConnector Association="HeOModel.FK_Members_Memberlevel" />
+        <AssociationConnector Association="HeOModel.FK_Order_Members" />
+        <AssociationConnector Association="HeOModel.FK_Orderfaceooklist_Members" />
+        <AssociationConnector Association="HeOModel.FK_Viprecord_Members" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

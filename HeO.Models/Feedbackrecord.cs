@@ -20,7 +20,7 @@ namespace HeO.Models
         public string Hdzaccount { get; set; }
         public int Total { get; set; }
         public int Money { get; set; }
-        public int Remains { get; set; }
+        public double Remains { get; set; }
         public int Cash { get; set; }
         public string Bankaccount { get; set; }
         public string Remark { get; set; }

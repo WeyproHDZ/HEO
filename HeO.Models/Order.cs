@@ -29,13 +29,13 @@ namespace HeO.Models
         public string Service { get; set; }
         public Nullable<int> Count { get; set; }
         public Nullable<int> Remains { get; set; }
-        public Nullable<double> Cost { get; set; }
+        public double Cost { get; set; }
         public int OrderStatus { get; set; }
         public Nullable<System.DateTime> Updatedate { get; set; }
         public System.DateTime Createdate { get; set; }
     
-        public virtual Members Members { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Orderfaceooklist> Orderfaceooklist { get; set; }
+        public virtual Members Members { get; set; }
     }
 }

@@ -22,7 +22,7 @@ namespace HeO.Models
         public Nullable<System.DateTime> Createdate { get; set; }
         public Nullable<System.DateTime> Updatedate { get; set; }
     
-        public virtual Members Members { get; set; }
         public virtual Order Order { get; set; }
+        public virtual Members Members { get; set; }
     }
 }

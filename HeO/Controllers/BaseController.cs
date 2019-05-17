@@ -37,7 +37,7 @@ namespace HeO.Controllers
             if(Session["Memberid"] != null)           
             {
                 Guid Memberid = Guid.Parse((Session["Memberid"]).ToString());
-                Memberlevel memberlevel = memberlevelService.Get().Where(a => a.Levelname == "一般").FirstOrDefault();    // 一般會員的詳細資料
+                Guid Normalid = memberlevelService.Get().Where(a => a.Levelname == "一般").FirstOrDefault().Levelid;      // 一般會員的ID
                 Members member = membersService.GetByID(Memberid);                                                        // 該會員的詳細資料
                 Viprecord viprecord = viprecordService.Get().Where(a => a.Memberid == Memberid).Where(x => x.Status == 2).OrderByDescending(o => o.Enddate).FirstOrDefault();
                 /*** 判斷該會員剩餘VIP天數 ***/
@@ -53,14 +53,12 @@ namespace HeO.Controllers
                     else
                     {
                         ViewBag.Remainday = 0;
-                    }
-                }else
-                {
-                    if (member.Levelid != memberlevel.Levelid)
-                    {
-                        member.Levelid = member.Levelid;
-                        membersService.SpecificUpdate(member, new string[] { "Levelid" });
-                        membersService.SaveChanges();
+                        if(member.Levelid != Normalid)
+                        {
+                            member.Levelid = Normalid;
+                            membersService.SpecificUpdate(member, new string[] { "Levelid" });
+                            membersService.SaveChanges();
+                        }
                     }
                 }
 
