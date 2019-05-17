@@ -289,6 +289,7 @@
     <EntitySetMapping Name="Members">
       <EntityTypeMapping TypeName="HeOModel.Members">
         <MappingFragment StoreEntitySet="Members">
+          <ScalarProperty Name="Isenable" ColumnName="Isenable" />
           <ScalarProperty Name="Updatedate" ColumnName="Updatedate" />
           <ScalarProperty Name="Createdate" ColumnName="Createdate" />
           <ScalarProperty Name="Lastdate" ColumnName="Lastdate" />
@@ -302,7 +303,6 @@
           <ScalarProperty Name="Facebookid" ColumnName="Facebookid" />
           <ScalarProperty Name="Levelid" ColumnName="Levelid" />
           <ScalarProperty Name="Memberid" ColumnName="Memberid" />
-          <ScalarProperty Name="Isenable" ColumnName="Isenable" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

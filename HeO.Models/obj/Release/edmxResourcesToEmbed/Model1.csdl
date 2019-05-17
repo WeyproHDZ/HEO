@@ -532,7 +532,6 @@
     <Key>
       <PropertyRef Name="Memberid" />
     </Key>
-    <Property Name="Isenable" Type="Boolean" Nullable="false" />
     <Property Name="Memberid" Type="Guid" Nullable="false" />
     <Property Name="Levelid" Type="Guid" />
     <Property Name="Facebookid" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
@@ -546,6 +545,7 @@
     <Property Name="Lastdate" Type="Int32" Nullable="false" />
     <Property Name="Createdate" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="Updatedate" Type="DateTime" Precision="3" />
+    <Property Name="Isenable" Type="Int32" Nullable="false" />
     <NavigationProperty Name="Feedbackrecord" Relationship="HeOModel.FK_Feedbackrecord_Members" FromRole="Members" ToRole="Feedbackrecord" />
     <NavigationProperty Name="Memberauthorization" Relationship="HeOModel.FK_Memberauthorization_Members" FromRole="Members" ToRole="Memberauthorization" />
     <NavigationProperty Name="Memberlevel" Relationship="HeOModel.FK_Members_Memberlevel" FromRole="Members" ToRole="Memberlevel" />

@@ -24,7 +24,6 @@ namespace HeO.Models
             this.Viprecord = new HashSet<Viprecord>();
         }
     
-        public bool Isenable { get; set; }
         public System.Guid Memberid { get; set; }
         public Nullable<System.Guid> Levelid { get; set; }
         public string Facebookid { get; set; }
@@ -38,6 +37,7 @@ namespace HeO.Models
         public int Lastdate { get; set; }
         public System.DateTime Createdate { get; set; }
         public Nullable<System.DateTime> Updatedate { get; set; }
+        public int Isenable { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Feedbackrecord> Feedbackrecord { get; set; }

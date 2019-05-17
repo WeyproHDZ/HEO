@@ -124,7 +124,6 @@
           <Key>
             <PropertyRef Name="Memberid" />
           </Key>
-          <Property Name="Isenable" Type="bit" Nullable="false" />
           <Property Name="Memberid" Type="uniqueidentifier" Nullable="false" />
           <Property Name="Levelid" Type="uniqueidentifier" />
           <Property Name="Facebookid" Type="nvarchar" MaxLength="50" />
@@ -138,6 +137,7 @@
           <Property Name="Lastdate" Type="int" Nullable="false" />
           <Property Name="Createdate" Type="datetime" Nullable="false" />
           <Property Name="Updatedate" Type="datetime" />
+          <Property Name="Isenable" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="News">
           <Key>
@@ -1142,7 +1142,6 @@
           <Key>
             <PropertyRef Name="Memberid" />
           </Key>
-          <Property Name="Isenable" Type="Boolean" Nullable="false" />
           <Property Name="Memberid" Type="Guid" Nullable="false" />
           <Property Name="Levelid" Type="Guid" />
           <Property Name="Facebookid" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
@@ -1156,6 +1155,7 @@
           <Property Name="Lastdate" Type="Int32" Nullable="false" />
           <Property Name="Createdate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Updatedate" Type="DateTime" Precision="3" />
+          <Property Name="Isenable" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Feedbackrecord" Relationship="HeOModel.FK_Feedbackrecord_Members" FromRole="Members" ToRole="Feedbackrecord" />
           <NavigationProperty Name="Memberauthorization" Relationship="HeOModel.FK_Memberauthorization_Members" FromRole="Members" ToRole="Memberauthorization" />
           <NavigationProperty Name="Memberlevel" Relationship="HeOModel.FK_Members_Memberlevel" FromRole="Members" ToRole="Memberlevel" />
@@ -1537,6 +1537,7 @@
           <EntitySetMapping Name="Members">
             <EntityTypeMapping TypeName="HeOModel.Members">
               <MappingFragment StoreEntitySet="Members">
+                <ScalarProperty Name="Isenable" ColumnName="Isenable" />
                 <ScalarProperty Name="Updatedate" ColumnName="Updatedate" />
                 <ScalarProperty Name="Createdate" ColumnName="Createdate" />
                 <ScalarProperty Name="Lastdate" ColumnName="Lastdate" />
@@ -1550,7 +1551,6 @@
                 <ScalarProperty Name="Facebookid" ColumnName="Facebookid" />
                 <ScalarProperty Name="Levelid" ColumnName="Levelid" />
                 <ScalarProperty Name="Memberid" ColumnName="Memberid" />
-                <ScalarProperty Name="Isenable" ColumnName="Isenable" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

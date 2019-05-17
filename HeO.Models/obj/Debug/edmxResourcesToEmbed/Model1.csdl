@@ -168,7 +168,6 @@
       <End Role="Feedbackproduct" EntitySet="Feedbackproduct" />
       <End Role="Feedbackdetail" EntitySet="Feedbackdetail" />
     </AssociationSet>
-    <EntitySet Name="Feedbackrecord" EntityType="HeOModel.Feedbackrecord" />
     <EntitySet Name="Orderfaceooklist" EntityType="HeOModel.Orderfaceooklist" />
     <EntitySet Name="Newslang" EntityType="HeOModel.Newslang" />
     <AssociationSet Name="FK_Newlang_News" Association="HeOModel.FK_Newlang_News">
@@ -203,6 +202,7 @@
       <End Role="Order" EntitySet="Order" />
       <End Role="Orderfaceooklist" EntitySet="Orderfaceooklist" />
     </AssociationSet>
+    <EntitySet Name="Feedbackrecord" EntityType="HeOModel.Feedbackrecord" />
     <EntitySet Name="Members" EntityType="HeOModel.Members" />
     <AssociationSet Name="FK_Feedbackrecord_Members" Association="HeOModel.FK_Feedbackrecord_Members">
       <End Role="Members" EntitySet="Members" />
@@ -298,25 +298,6 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <EntityType Name="Feedbackrecord">
-    <Key>
-      <PropertyRef Name="Feedbackid" />
-    </Key>
-    <Property Name="Feedbackid" Type="Guid" Nullable="false" />
-    <Property Name="Memberid" Type="Guid" Nullable="false" />
-    <Property Name="Ishdz" Type="Byte" Nullable="false" />
-    <Property Name="Hdzaccount" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-    <Property Name="Total" Type="Int32" Nullable="false" />
-    <Property Name="Money" Type="Int32" Nullable="false" />
-    <Property Name="Remains" Type="Int32" Nullable="false" />
-    <Property Name="Cash" Type="Int32" Nullable="false" />
-    <Property Name="Bankaccount" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-    <Property Name="Remark" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-    <Property Name="Status" Type="Int32" Nullable="false" />
-    <Property Name="Createdate" Type="DateTime" Precision="3" />
-    <Property Name="Updatedate" Type="DateTime" Nullable="false" Precision="3" />
-    <NavigationProperty Name="Members" Relationship="HeOModel.FK_Feedbackrecord_Members" FromRole="Feedbackrecord" ToRole="Members" />
-  </EntityType>
   <EntityType Name="Orderfaceooklist">
     <Key>
       <PropertyRef Name="Id" />
@@ -507,7 +488,7 @@
     <Property Name="Service" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
     <Property Name="Count" Type="Int32" />
     <Property Name="Remains" Type="Int32" />
-    <Property Name="Cost" Type="Double" />
+    <Property Name="Cost" Type="Double" Nullable="false" />
     <Property Name="OrderStatus" Type="Int32" Nullable="false" />
     <Property Name="Updatedate" Type="DateTime" Precision="3" />
     <Property Name="Createdate" Type="DateTime" Nullable="false" Precision="3" />
@@ -528,6 +509,25 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <EntityType Name="Feedbackrecord">
+    <Key>
+      <PropertyRef Name="Feedbackid" />
+    </Key>
+    <Property Name="Feedbackid" Type="Guid" Nullable="false" />
+    <Property Name="Memberid" Type="Guid" Nullable="false" />
+    <Property Name="Ishdz" Type="Byte" Nullable="false" />
+    <Property Name="Hdzaccount" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Total" Type="Int32" Nullable="false" />
+    <Property Name="Money" Type="Int32" Nullable="false" />
+    <Property Name="Remains" Type="Double" Nullable="false" />
+    <Property Name="Cash" Type="Int32" Nullable="false" />
+    <Property Name="Bankaccount" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Remark" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="Status" Type="Int32" Nullable="false" />
+    <Property Name="Createdate" Type="DateTime" Precision="3" />
+    <Property Name="Updatedate" Type="DateTime" Nullable="false" Precision="3" />
+    <NavigationProperty Name="Members" Relationship="HeOModel.FK_Feedbackrecord_Members" FromRole="Feedbackrecord" ToRole="Members" />
+  </EntityType>
   <EntityType Name="Members">
     <Key>
       <PropertyRef Name="Memberid" />
@@ -540,11 +540,12 @@
     <Property Name="Password" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
     <Property Name="Facebooklink" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
     <Property Name="Facebookstatus" Type="Int32" Nullable="false" />
-    <Property Name="Feedbackmoney" Type="Int32" Nullable="false" />
+    <Property Name="Feedbackmoney" Type="Double" Nullable="false" />
     <Property Name="Isreal" Type="Boolean" Nullable="false" />
     <Property Name="Lastdate" Type="Int32" Nullable="false" />
     <Property Name="Createdate" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="Updatedate" Type="DateTime" Precision="3" />
+    <Property Name="Isenable" Type="Int32" Nullable="false" />
     <NavigationProperty Name="Feedbackrecord" Relationship="HeOModel.FK_Feedbackrecord_Members" FromRole="Members" ToRole="Feedbackrecord" />
     <NavigationProperty Name="Memberauthorization" Relationship="HeOModel.FK_Memberauthorization_Members" FromRole="Members" ToRole="Memberauthorization" />
     <NavigationProperty Name="Memberlevel" Relationship="HeOModel.FK_Members_Memberlevel" FromRole="Members" ToRole="Memberlevel" />

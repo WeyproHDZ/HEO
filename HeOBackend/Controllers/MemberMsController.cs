@@ -128,7 +128,7 @@ namespace HeOBackend.Controllers
             /**** Account 、 Levelid有值 *****/
             if(account != "" && Levelid != null)
             {
-                var data = membersService.Get().Where(x => x.Account.Contains(account)).Where(x => x.Isenable == true).Where(a => a.Levelid == Levelid).OrderBy(o => o.Createdate);
+                var data = membersService.Get().Where(x => x.Account.Contains(account)).Where(a => a.Levelid == Levelid).OrderBy(o => o.Createdate);
                 ViewBag.pageNumber = p;
                 ViewBag.Members = data.ToPagedList(pageNumber: p, pageSize: 20);
                 ViewBag.Account = account;
@@ -174,12 +174,13 @@ namespace HeOBackend.Controllers
         [HttpPost]
         public ActionResult AddMembers(Members members)
         {
-            if(TryUpdateModel(members , new string[] { "Account" , "Password" , "Facebookstauts" , "Facebooklink" , "Feedbackmoney" , "Name"}) && ModelState.IsValid)
+            if(TryUpdateModel(members , new string[] { "Account" , "Password" , "Facebookstauts" , "Facebooklink" , "Feedbackmoney" , "Name" , "Isenable"}) && ModelState.IsValid)
             {
                 members.Memberid = Guid.NewGuid();
                 members.Createdate = DateTime.Now;
                 members.Updatedate = DateTime.Now;
                 members.Lastdate = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds;      // 總秒數
+                members.Isenable = 1;
                 members.Isreal = members.Isreal;
                 members.Levelid = members.Levelid;
                 membersService.Create(members);
@@ -199,7 +200,7 @@ namespace HeOBackend.Controllers
         public ActionResult DeleteMembers(Guid Memberid)
         {
             Members members = membersService.GetByID(Memberid);
-            members.Isenable = false;
+            members.Isenable = 0;
             membersService.SpecificUpdate(members, new string[] { "Isenable" });
             membersService.SaveChanges();
             return RedirectToAction("Members");

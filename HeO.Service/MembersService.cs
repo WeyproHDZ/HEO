@@ -125,7 +125,7 @@ namespace HeO.Service
         }
         public IEnumerable<Members> Get()
         {
-            return this.repository.Get().Where(a => a.Isenable == true);
+            return this.repository.Get().Where(a => a.Isenable == 1);
         }
 
         public void SaveChanges()

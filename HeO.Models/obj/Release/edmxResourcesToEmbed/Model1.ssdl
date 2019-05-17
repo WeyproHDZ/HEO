@@ -119,7 +119,6 @@
     <Key>
       <PropertyRef Name="Memberid" />
     </Key>
-    <Property Name="Isenable" Type="bit" Nullable="false" />
     <Property Name="Memberid" Type="uniqueidentifier" Nullable="false" />
     <Property Name="Levelid" Type="uniqueidentifier" />
     <Property Name="Facebookid" Type="nvarchar" MaxLength="50" />
@@ -133,6 +132,7 @@
     <Property Name="Lastdate" Type="int" Nullable="false" />
     <Property Name="Createdate" Type="datetime" Nullable="false" />
     <Property Name="Updatedate" Type="datetime" />
+    <Property Name="Isenable" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="News">
     <Key>
