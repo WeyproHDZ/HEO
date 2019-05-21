@@ -27,6 +27,7 @@ namespace HeO.Models
         public System.Guid Memberid { get; set; }
         public Nullable<System.Guid> Levelid { get; set; }
         public string Facebookid { get; set; }
+        public string Useragent { get; set; }
         public string Name { get; set; }
         public string Account { get; set; }
         public string Password { get; set; }

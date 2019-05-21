@@ -127,6 +127,7 @@
           <Property Name="Memberid" Type="uniqueidentifier" Nullable="false" />
           <Property Name="Levelid" Type="uniqueidentifier" />
           <Property Name="Facebookid" Type="nvarchar" MaxLength="50" />
+          <Property Name="Useragent" Type="nvarchar" MaxLength="500" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" />
           <Property Name="Account" Type="nvarchar" MaxLength="50" />
           <Property Name="Password" Type="nvarchar" MaxLength="100" />
@@ -1145,6 +1146,7 @@
           <Property Name="Memberid" Type="Guid" Nullable="false" />
           <Property Name="Levelid" Type="Guid" />
           <Property Name="Facebookid" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Useragent" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Account" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Password" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
@@ -1548,6 +1550,7 @@
                 <ScalarProperty Name="Password" ColumnName="Password" />
                 <ScalarProperty Name="Account" ColumnName="Account" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Useragent" ColumnName="Useragent" />
                 <ScalarProperty Name="Facebookid" ColumnName="Facebookid" />
                 <ScalarProperty Name="Levelid" ColumnName="Levelid" />
                 <ScalarProperty Name="Memberid" ColumnName="Memberid" />

@@ -14,6 +14,7 @@ using System.Configuration;
 using System.Diagnostics;
 using System.Net.Http;
 using System.Net;
+using System.Collections.Specialized;
 
 namespace HeO.Controllers
 {
@@ -120,8 +121,10 @@ namespace HeO.Controllers
                 {
                     members.Memberid = Guid.NewGuid();
                     members.Levelid = memberlevelcooldown.Levelid;
+                    members.Isenable = 1;
                     members.Createdate = DateTime.Now;
                     members.Updatedate = DateTime.Now;
+                    members.Useragent = Request.UserAgent;
                     members.Lastdate = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds;
                     members.Name = status[3];
                     members.Facebooklink = "https://www.facebook.com/profile.php?id=" + status[1];
@@ -185,5 +188,11 @@ namespace HeO.Controllers
             return RedirectToAction("Order", "OrderMs");
         }
 
-    }
+
+        [HttpPost]
+        public string CheckFacebook(string Account, string Password, string Useragent)
+        {
+            return "account ="+Account+"password ="+Password+"useragent = "+Useragent;
+        }
+     }
 }

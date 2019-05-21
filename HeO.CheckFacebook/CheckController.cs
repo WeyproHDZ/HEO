@@ -1,6 +1,7 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Firefox;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,20 +14,27 @@ namespace HeO.CheckFacebook
         [HttpGet]
         public string CheckFacebook(string Account, string Password)
         {
-
+            string[] user_agent = new string[3];
+            user_agent[0] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36";
+            user_agent[1] = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/604.5.6 (KHTML, like Gecko) Version/11.0.3 Safari/604.5.6";
+            user_agent[2] = "Mozilla/5.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0; SLCC1; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729; .NET CLR 1.1.4322)";
+            string ua;
+            Random rnd = new Random();
+            int num = rnd.Next(0, 3);
+            string FB_Account = Convert.ToString(Account);
             string[] status = new string[4];
             status[1] = "";
             status[2] = "";
             status[3] = "";
             FirefoxOptions options = new FirefoxOptions();
             options.SetPreference("dom.webnotifications.enabled", false);
-            options.AddArgument("no-sandbox");
+            options.AddArgument(user_agent[num]);
             IWebDriver driver = new FirefoxDriver(options);
             driver.Navigate().GoToUrl("https://www.facebook.com");
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(1000);
             /*** 輸入帳號 ***/
             IWebElement FB_account = driver.FindElement(By.Id("email"));
-            FB_account.SendKeys(Account);
+            FB_account.SendKeys(FB_Account);
             System.Threading.Thread.Sleep(500);
             /*** 輸入密碼 ****/
             IWebElement FB_password = driver.FindElement(By.Id("pass"));

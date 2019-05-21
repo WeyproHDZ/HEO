@@ -113,18 +113,26 @@ namespace HeOBackend.Controllers
                 int Now = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds;                                                                          // 目前時間的總秒數
                 Setting setting = settingService.Get().FirstOrDefault();
                 Order order = orderService.Get().Where(a => a.Ordernumber == Ordernumber).FirstOrDefault();                                                     // 撈此訂單的詳細資料
-                IEnumerable<Order> old_order = orderService.Get().Where(a => a.Url == order.Url);
+                IEnumerable<Order> old_order = orderService.Get().Where(a => a.Url == order.Url).ToList();                
+                int old_order_count = old_order.Count();
                 Feedbackproduct feedbackproduct = feedbackproductService.Get().Where(a => a.Feedbackproductname.Contains(order.Service)).FirstOrDefault();      // 撈此訂單所需之產品的詳細資料
                 IEnumerable<Orderfaceooklist> orderfacebooklist = orderfacebooklistService.Get().Where(a => a.Orderid == order.Orderid);                        // 撈該訂單的互惠會員列表
+                //int count = 0;
+                //int loop;
+                //for(loop = 0; loop < old_order_count; loop++)
+                //{
+                    
+                //}
                 //List<IEnumerable<Orderfaceooklist>> old_orderfacebooklist = new List<IEnumerable<Orderfaceooklist>>();
                 //if (old_order != null)
                 //{
-                //    foreach(Order order_value in old_order)
+                //    foreach (Order order_value in old_order)
                 //    {
 
-                //        old_orderfacebooklist.Add(IEnumerable <Orderfaceooklist> temp = orderfacebooklistService.Get().Where(b => b.Orderid == order_value.Orderid);)
+                //        old_orderfacebooklist.Add(orderfacebooklistService.Get().Where(b => b.Orderid == order_value.Orderid));
                 //    }
                 //}
+                //return this.Json(old_orderfacebooklist, JsonRequestBehavior.AllowGet);
                 Guid VipLevelid = memberlevelService.Get().Where(a => a.Levelname == "VIP").FirstOrDefault().Levelid;                                           // VIP層級的ID
                 if(order.Ordernumber.Contains("heo"))
                 {                    

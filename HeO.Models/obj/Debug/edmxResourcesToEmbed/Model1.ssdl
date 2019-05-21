@@ -122,6 +122,7 @@
     <Property Name="Memberid" Type="uniqueidentifier" Nullable="false" />
     <Property Name="Levelid" Type="uniqueidentifier" />
     <Property Name="Facebookid" Type="nvarchar" MaxLength="50" />
+    <Property Name="Useragent" Type="nvarchar" MaxLength="500" />
     <Property Name="Name" Type="nvarchar" MaxLength="50" />
     <Property Name="Account" Type="nvarchar" MaxLength="50" />
     <Property Name="Password" Type="nvarchar" MaxLength="100" />
