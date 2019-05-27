@@ -40,6 +40,7 @@
         <EntityTypeShape EntityType="HeOModel.Order" Width="1.5" PointX="5.25" PointY="21.75" />
         <AssociationConnector Association="HeOModel.FK_Orderfaceooklist_Order" />
         <EntityTypeShape EntityType="HeOModel.Feedbackrecord" Width="1.5" PointX="5.25" PointY="10.875" />
+        <EntityTypeShape EntityType="HeOModel.Useragent" Width="1.5" PointX="15.375" PointY="0.75" />
         <EntityTypeShape EntityType="HeOModel.Members" Width="1.5" PointX="3" PointY="10.125" />
         <AssociationConnector Association="HeOModel.FK_Feedbackrecord_Members" />
         <AssociationConnector Association="HeOModel.FK_Memberauthorization_Members" />

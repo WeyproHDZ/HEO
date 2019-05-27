@@ -498,7 +498,7 @@ namespace HeOBackend.Controllers
         }
         [CheckSession(IsAuth = true)]
         [HttpPost]
-        public ActionResult EditReallist(Guid memberid , Members members , int status)
+        public ActionResult EditReallist(Guid memberid , Members members , int status, Guid Levelid)
         {
             membersService.SpecificUpdate(members, new string[] { "Facebooklink" });
             members.Facebookstatus = status;

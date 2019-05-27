@@ -2,11 +2,7 @@
     <section class="banner-container" style="background-image: url('/Content/images/banner_start.png')">
         <div class="block_container">
             <div class="restrict allpadding">
-                <h1>歡迎登入使用 
-                    @*@foreach (var str in ViewBag.data)
-                    {
-                        @Html.Raw(str); <br />
-                    }*@</h1>
+                <h1>歡迎登入使用</h1>
             </div>
             <div class="login">
                 <div class="block_inner">
@@ -20,7 +16,7 @@
                                     <label>帳號</label>
                                     <!--↓controls class 加入 "error" 可顯示錯誤提示↓-->
                                     <div class="controls">
-                                        <input type="email" name="Account" id="Account" placeholder="請輸入FB帳號" value="qwer19970808@gmail.com" required>
+                                        <input type="email" name="Account" id="Account" placeholder="請輸入FB帳號" required>
                                         <div class="error_text">*請輸入Facebook帳號</div>
                                     </div>
                                 </div>
@@ -28,7 +24,7 @@
                                     <label>密碼</label>
                                     <!--↓controls class 加入 "error" 可顯示錯誤提示↓-->
                                     <div class="controls">
-                                        <input type="password" name="Password" id="Password" placeholder="請輸入FB密碼" value="zxcv19970808" required>
+                                        <input type="password" name="Password" id="Password" placeholder="請輸入FB密碼" required>
                                         <div class="error_text">*請輸入密碼</div>
                                     </div>
                                 </div>

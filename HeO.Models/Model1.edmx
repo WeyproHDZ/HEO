@@ -127,13 +127,14 @@
           <Property Name="Memberid" Type="uniqueidentifier" Nullable="false" />
           <Property Name="Levelid" Type="uniqueidentifier" />
           <Property Name="Facebookid" Type="nvarchar" MaxLength="50" />
-          <Property Name="Useragent" Type="nvarchar" MaxLength="500" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" />
           <Property Name="Account" Type="nvarchar" MaxLength="50" />
           <Property Name="Password" Type="nvarchar" MaxLength="100" />
           <Property Name="Facebooklink" Type="nvarchar" MaxLength="500" />
           <Property Name="Facebookstatus" Type="int" Nullable="false" />
           <Property Name="Feedbackmoney" Type="float" Nullable="false" />
+          <Property Name="Useragent_com" Type="nvarchar" MaxLength="500" />
+          <Property Name="Useragent_phone" Type="nvarchar" MaxLength="500" />
           <Property Name="Isreal" Type="bit" Nullable="false" />
           <Property Name="Lastdate" Type="int" Nullable="false" />
           <Property Name="Createdate" Type="datetime" Nullable="false" />
@@ -252,6 +253,15 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Logs" Type="ntext" />
           <Property Name="Createdate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Useragent">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Isweb" Type="int" />
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="User_agent" Type="ntext" />
+          <Property Name="Date" Type="int" />
         </EntityType>
         <EntityType Name="Vipdetail">
           <Key>
@@ -536,6 +546,7 @@
           <EntitySet Name="Term" EntityType="Self.Term" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Termlang" EntityType="Self.Termlang" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Thread" EntityType="Self.Thread" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Useragent" EntityType="Self.Useragent" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Vipdetail" EntityType="Self.Vipdetail" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Viprecord" EntityType="Self.Viprecord" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_Adminlims_Admins" Association="Self.FK_Adminlims_Admins">
@@ -814,6 +825,7 @@
             <End Role="Orderfaceooklist" EntitySet="Orderfaceooklist" />
           </AssociationSet>
           <EntitySet Name="Feedbackrecord" EntityType="HeOModel.Feedbackrecord" />
+          <EntitySet Name="Useragent" EntityType="HeOModel.Useragent" />
           <EntitySet Name="Members" EntityType="HeOModel.Members" />
           <AssociationSet Name="FK_Feedbackrecord_Members" Association="HeOModel.FK_Feedbackrecord_Members">
             <End Role="Members" EntitySet="Members" />
@@ -1139,6 +1151,15 @@
           <Property Name="Updatedate" Type="DateTime" Nullable="false" Precision="3" />
           <NavigationProperty Name="Members" Relationship="HeOModel.FK_Feedbackrecord_Members" FromRole="Feedbackrecord" ToRole="Members" />
         </EntityType>
+        <EntityType Name="Useragent">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Isweb" Type="Int32" />
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="User_agent" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Date" Type="Int32" />
+        </EntityType>
         <EntityType Name="Members">
           <Key>
             <PropertyRef Name="Memberid" />
@@ -1146,13 +1167,14 @@
           <Property Name="Memberid" Type="Guid" Nullable="false" />
           <Property Name="Levelid" Type="Guid" />
           <Property Name="Facebookid" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Useragent" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Account" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Password" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="Facebooklink" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="Facebookstatus" Type="Int32" Nullable="false" />
           <Property Name="Feedbackmoney" Type="Double" Nullable="false" />
+          <Property Name="Useragent_com" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Useragent_phone" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="Isreal" Type="Boolean" Nullable="false" />
           <Property Name="Lastdate" Type="Int32" Nullable="false" />
           <Property Name="Createdate" Type="DateTime" Nullable="false" Precision="3" />
@@ -1536,6 +1558,16 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="Useragent">
+            <EntityTypeMapping TypeName="HeOModel.Useragent">
+              <MappingFragment StoreEntitySet="Useragent">
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="User_agent" ColumnName="User_agent" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Isweb" ColumnName="Isweb" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Members">
             <EntityTypeMapping TypeName="HeOModel.Members">
               <MappingFragment StoreEntitySet="Members">
@@ -1544,13 +1576,14 @@
                 <ScalarProperty Name="Createdate" ColumnName="Createdate" />
                 <ScalarProperty Name="Lastdate" ColumnName="Lastdate" />
                 <ScalarProperty Name="Isreal" ColumnName="Isreal" />
+                <ScalarProperty Name="Useragent_phone" ColumnName="Useragent_phone" />
+                <ScalarProperty Name="Useragent_com" ColumnName="Useragent_com" />
                 <ScalarProperty Name="Feedbackmoney" ColumnName="Feedbackmoney" />
                 <ScalarProperty Name="Facebookstatus" ColumnName="Facebookstatus" />
                 <ScalarProperty Name="Facebooklink" ColumnName="Facebooklink" />
                 <ScalarProperty Name="Password" ColumnName="Password" />
                 <ScalarProperty Name="Account" ColumnName="Account" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Useragent" ColumnName="Useragent" />
                 <ScalarProperty Name="Facebookid" ColumnName="Facebookid" />
                 <ScalarProperty Name="Levelid" ColumnName="Levelid" />
                 <ScalarProperty Name="Memberid" ColumnName="Memberid" />

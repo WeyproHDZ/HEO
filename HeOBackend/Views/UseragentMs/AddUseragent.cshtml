@@ -1,4 +1,4 @@
-﻿@model Members
+﻿@model Useragent
 <div id="content">
 
     <!-- widget grid -->
@@ -14,9 +14,9 @@
                 <div class="jarviswidget" id="wid-id-4" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false" data-widget-collapsed="false" data-widget-sortable="false">
                     <header>
                         <span class="widget-icon"> <i class="fa fa-pencil-square-o"></i> </span>
-                        <h2>編輯真人列表</h2>
+                        <h2>新增</h2>
                         <ul class="nav nav-tabs pull-right in">
-                            <li><a data-toggle="tab" href="#hb1">基本資料</a></li>
+                            <li><a data-toggle="tab" href="#hb1">基本資料</a></li>                           
                         </ul>
                     </header>
 
@@ -32,7 +32,7 @@
                         <!-- widget content -->
                         <div class="widget-body">
 
-                            <form id="form" method="post" class="form-horizontal" enctype="multipart/form-data" action="@Url.Action("EditReallist", "MemberMs")"
+                            <form id="form" method="post" class="form-horizontal" enctype="multipart/form-data" action="@Url.Action("AddUseragent", "UseragentMs")"
                                   data-bv-message="This value is not valid"
                                   data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
                                   data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
@@ -45,25 +45,21 @@
                                         @Html.ValidationSummary(true)
                                     </div>
                                 }
-                                @Html.HiddenFor(model => model.Memberid)
-                                @Html.HiddenFor(model => model.Levelid)
                                 <div id="content" class="tab-content">
                                     <div class="tab-pane" id="hb1">
                                         <fieldset>
                                             <div class="form-group">
-                                                <label class="col-lg-2 control-label" for="title">Facebook連結</label>
-                                                <section class="col-lg-5">
-                                                    @Html.LabelFor(model => model.Facebooklink, Model.Facebooklink, new Dictionary<string, object>() { { "class", "form-control" } })                                                    
+                                                <label class="col-lg-2 control-label" for="title">版本</label>
+                                                <section class="col-lg-3">
+                                                    <input type="radio" name="Isweb" value="0" />網頁版<br />
+                                                    <input type="radio" name="Isweb" value="1" />手機版<br />
                                                 </section>
                                             </div>
                                             <div class="form-group">
-                                                <label class="col-lg-2 control-label" for="title">審核狀態</label>
-                                                <section class="col-lg-2">
-                                                    <select class="form-control" id="status" name="status">
-                                                        <option value="1" @(Model.Facebookstatus == 1 ? "selected" : "")>審核中</option>
-                                                        <option value="2" @(Model.Facebookstatus == 2 ? "selected" : "")>通過</option>
-                                                        <option value="3" @(Model.Facebookstatus == 3 ? "selected" : "")>未通過</option>
-                                                    </select>
+                                                <label class="col-lg-2 control-label" for="title">Useragent</label>
+                                                <section class="col-lg-3">
+                                                    @Html.TextBoxFor(model => model.User_agent, new Dictionary<string, object>() { { "class", "form-control" } })
+                                                    @Html.ValidationMessageFor(model => model.User_agent)
                                                 </section>
                                             </div>
                                         </fieldset>
@@ -72,7 +68,7 @@
                                 <div class="form-actions">
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <a class="btn btn-default" href="@Url.Action("Reallist", "MemberMs")">
+                                            <a class="btn btn-default" href="@Url.Action("Useragent", "UseragentMs")">
                                                 取消
                                             </a>
                                             <button class="btn btn-primary" type="submit">
@@ -108,4 +104,4 @@
         $('ul.nav-tabs li').eq(hash.substr(1)).addClass('active');
         $('.tab-pane').eq(hash.substr(1)).addClass('active');
     </script>
-}
+} 

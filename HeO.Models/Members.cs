@@ -27,13 +27,14 @@ namespace HeO.Models
         public System.Guid Memberid { get; set; }
         public Nullable<System.Guid> Levelid { get; set; }
         public string Facebookid { get; set; }
-        public string Useragent { get; set; }
         public string Name { get; set; }
         public string Account { get; set; }
         public string Password { get; set; }
         public string Facebooklink { get; set; }
         public int Facebookstatus { get; set; }
         public double Feedbackmoney { get; set; }
+        public string Useragent_com { get; set; }
+        public string Useragent_phone { get; set; }
         public bool Isreal { get; set; }
         public int Lastdate { get; set; }
         public System.DateTime Createdate { get; set; }

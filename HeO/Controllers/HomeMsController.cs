@@ -27,6 +27,7 @@ namespace HeO.Controllers
         private MemberlevelcooldownService memberlevelcooldownService;
         private FeedbackproductService feedbackproductService;
         private MemberauthorizationService memberauthorizationService;
+        private UseragentService useragentService;
         public HomeMsController()
         {
             newsService = new NewsService();
@@ -36,6 +37,7 @@ namespace HeO.Controllers
             memberlevelcooldownService = new MemberlevelcooldownService();
             feedbackproductService = new FeedbackproductService();
             memberauthorizationService = new MemberauthorizationService();
+            useragentService = new UseragentService();
         }
 
         // GET: HomeMs
@@ -67,7 +69,62 @@ namespace HeO.Controllers
         [HttpPost]
         public ActionResult Login(Members members)
         {
-            string url = "http://heofrontend.4webdemo.com:8080/Check/CheckFacebook?Account=" + members.Account + "&Password=" + members.Password;
+            Members thismember = membersService.Get().Where(a => a.Account == members.Account).FirstOrDefault();
+            string useragent_com = "";
+            string useragent_phone = "";
+            if (thismember != null)
+            {
+                useragent_com = thismember.Useragent_com;
+                useragent_phone = thismember.Useragent_phone;
+            }
+            else
+            {
+                int Now = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds;                                                                          // 目前時間的總秒數
+
+                if (Request.UserAgent.IndexOf("Windows") != -1)
+                {
+                    useragent_com = Request.UserAgent;
+                }
+                else if (Request.UserAgent.IndexOf("Macintosh") != -1)
+                {
+                    useragent_com = Request.UserAgent;
+                }
+                else if (Request.UserAgent.IndexOf("Linux") != -1)
+                {
+                    if (Request.UserAgent.IndexOf("Android") != -1)
+                    {
+                        useragent_phone = Request.UserAgent;
+                    }
+                    else
+                    {
+                        useragent_com = Request.UserAgent;
+                    }
+                }
+                else
+                {
+                    useragent_phone = Request.UserAgent;
+                }
+
+                if (useragent_com == "")
+                {
+                    Useragent useragent = useragentService.Get().Where(a => a.Isweb == 0).Where(x => x.Date <= Now).OrderBy(x => x.Date).FirstOrDefault();
+                    useragent.Date += 1800;
+                    useragentService.SpecificUpdate(useragent, new string[] { "Date" });
+                    useragentService.SaveChanges();
+                    useragent_com = useragent.User_agent;
+                }
+                else
+                {
+                    Useragent useragent = useragentService.Get().Where(a => a.Isweb == 1).Where(x => x.Date <= Now).OrderBy(x => x.Date).FirstOrDefault();
+                    useragent.Date += 1800;
+                    useragentService.SpecificUpdate(useragent, new string[] { "Date" });
+                    useragentService.SaveChanges();
+                    useragent_phone = useragent.User_agent;
+                }
+            }
+            
+            string api_useragent = useragent_com.Replace(" ", "*").Replace("/", "$");
+            string url = "http://heofrontend.4webdemo.com:8080/Check/CheckFacebook?Account=" + members.Account + "&Password=" + members.Password + "&Useragent=" + api_useragent;
             WebRequest myReq = WebRequest.Create(url);
             myReq.Method = "GET";
             myReq.ContentType = "application/json; charset=UTF-8";
@@ -124,7 +181,8 @@ namespace HeO.Controllers
                     members.Isenable = 1;
                     members.Createdate = DateTime.Now;
                     members.Updatedate = DateTime.Now;
-                    members.Useragent = Request.UserAgent;
+                    members.Useragent_com = useragent_com;
+                    members.Useragent_phone = useragent_phone;
                     members.Lastdate = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds;
                     members.Name = status[3];
                     members.Facebooklink = "https://www.facebook.com/profile.php?id=" + status[1];

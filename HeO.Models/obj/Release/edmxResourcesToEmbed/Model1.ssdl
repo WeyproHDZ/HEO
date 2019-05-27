@@ -122,13 +122,14 @@
     <Property Name="Memberid" Type="uniqueidentifier" Nullable="false" />
     <Property Name="Levelid" Type="uniqueidentifier" />
     <Property Name="Facebookid" Type="nvarchar" MaxLength="50" />
-    <Property Name="Useragent" Type="nvarchar" MaxLength="500" />
     <Property Name="Name" Type="nvarchar" MaxLength="50" />
     <Property Name="Account" Type="nvarchar" MaxLength="50" />
     <Property Name="Password" Type="nvarchar" MaxLength="100" />
     <Property Name="Facebooklink" Type="nvarchar" MaxLength="500" />
     <Property Name="Facebookstatus" Type="int" Nullable="false" />
     <Property Name="Feedbackmoney" Type="float" Nullable="false" />
+    <Property Name="Useragent_com" Type="nvarchar" MaxLength="500" />
+    <Property Name="Useragent_phone" Type="nvarchar" MaxLength="500" />
     <Property Name="Isreal" Type="bit" Nullable="false" />
     <Property Name="Lastdate" Type="int" Nullable="false" />
     <Property Name="Createdate" Type="datetime" Nullable="false" />
@@ -247,6 +248,15 @@
     <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="Logs" Type="ntext" />
     <Property Name="Createdate" Type="datetime" />
+  </EntityType>
+  <EntityType Name="Useragent">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Isweb" Type="int" />
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="User_agent" Type="ntext" />
+    <Property Name="Date" Type="int" />
   </EntityType>
   <EntityType Name="Vipdetail">
     <Key>
@@ -531,6 +541,7 @@
     <EntitySet Name="Term" EntityType="Self.Term" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Termlang" EntityType="Self.Termlang" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Thread" EntityType="Self.Thread" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Useragent" EntityType="Self.Useragent" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Vipdetail" EntityType="Self.Vipdetail" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Viprecord" EntityType="Self.Viprecord" Schema="dbo" store:Type="Tables" />
     <AssociationSet Name="FK_Adminlims_Admins" Association="Self.FK_Adminlims_Admins">

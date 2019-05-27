@@ -100,15 +100,24 @@
         function send() {
             var Membermoney = @ViewBag.Membermoney;
             if ($('#Money').val().length != 0) {
-                if($('#Money').val() > Membermoney){
+                if($('#Money').val() <= 0) {
                     swal({
                         title: 'Error',
-                        text: '您目前的回饋金為'+Membermoney,
+                        text: '請輸入大於0的數字',
                         type: 'warning'
                     });
-                }else{
-                    $('#form').submit();
-                }                
+                }
+                else{
+                    if($('#Money').val() >= Membermoney){
+                        swal({
+                            title: 'Error',
+                            text: '您目前的回饋金為'+Membermoney,
+                            type: 'warning'
+                        });
+                    }else{
+                        $('#form').submit();
+                    }
+                }
             } else {
                 swal({
                     title: 'Error',

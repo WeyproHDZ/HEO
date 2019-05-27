@@ -158,7 +158,8 @@ namespace HeOBackend.Controllers
                                     {
                                         memberid = thismembers.Memberid,
                                         account = thismembers.Account,
-                                        password = thismembers.Password
+                                        password = thismembers.Password,
+                                        useragent_phone = thismembers.Useragent_phone
                                     }
                                 );
                                 /*** 將此會員更新下次互惠時間 ****/
@@ -423,5 +424,6 @@ namespace HeOBackend.Controllers
         public Guid memberid { get; set; }
         public string account { get; set; }
         public string password { get; set; }
+        public string useragent_phone { get; set; }
     }
 }

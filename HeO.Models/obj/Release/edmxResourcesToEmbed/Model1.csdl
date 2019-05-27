@@ -203,6 +203,7 @@
       <End Role="Orderfaceooklist" EntitySet="Orderfaceooklist" />
     </AssociationSet>
     <EntitySet Name="Feedbackrecord" EntityType="HeOModel.Feedbackrecord" />
+    <EntitySet Name="Useragent" EntityType="HeOModel.Useragent" />
     <EntitySet Name="Members" EntityType="HeOModel.Members" />
     <AssociationSet Name="FK_Feedbackrecord_Members" Association="HeOModel.FK_Feedbackrecord_Members">
       <End Role="Members" EntitySet="Members" />
@@ -528,6 +529,15 @@
     <Property Name="Updatedate" Type="DateTime" Nullable="false" Precision="3" />
     <NavigationProperty Name="Members" Relationship="HeOModel.FK_Feedbackrecord_Members" FromRole="Feedbackrecord" ToRole="Members" />
   </EntityType>
+  <EntityType Name="Useragent">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Isweb" Type="Int32" />
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="User_agent" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Date" Type="Int32" />
+  </EntityType>
   <EntityType Name="Members">
     <Key>
       <PropertyRef Name="Memberid" />
@@ -535,13 +545,14 @@
     <Property Name="Memberid" Type="Guid" Nullable="false" />
     <Property Name="Levelid" Type="Guid" />
     <Property Name="Facebookid" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-    <Property Name="Useragent" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
     <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
     <Property Name="Account" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
     <Property Name="Password" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
     <Property Name="Facebooklink" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
     <Property Name="Facebookstatus" Type="Int32" Nullable="false" />
     <Property Name="Feedbackmoney" Type="Double" Nullable="false" />
+    <Property Name="Useragent_com" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="Useragent_phone" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
     <Property Name="Isreal" Type="Boolean" Nullable="false" />
     <Property Name="Lastdate" Type="Int32" Nullable="false" />
     <Property Name="Createdate" Type="DateTime" Nullable="false" Precision="3" />
