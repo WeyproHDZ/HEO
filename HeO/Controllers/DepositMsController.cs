@@ -66,14 +66,14 @@ namespace HeO.Controllers
             string NotifyURL = "http://heofrontend.4webdemo.com/DepositMs/DepositReceive";
 
             int TimeStamp =  (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;      // 總秒數
-            Ezpay.set_paramer(viprecord, CustomerURL, NotifyURL, TimeStamp);
+            Newebpay.set_paramer(viprecord, CustomerURL, NotifyURL, TimeStamp);
             return RedirectToAction("DepositForm");
         }
 
         [CheckSession]        
         public ActionResult DepositForm()
         {
-            string form = Ezpay.excute();
+            string form = Newebpay.excute();
             ViewBag.Form = form;
             return View();
         }
@@ -90,90 +90,94 @@ namespace HeO.Controllers
         [CheckSession]
         public ActionResult DepositSuccess(string TradeInfo)
         {
-            string Receive = Ezpay.DecryptAES256(TradeInfo);
-            var EzpayRecive = JsonConvert.DeserializeObject<dynamic>(Receive); // 將Ezpay回傳的json格式轉成物件
-            if(EzpayRecive.Result.PaymentType == "CVS")
+            string Receive = Newebpay.DecryptAES256(TradeInfo);
+            var NewebpayRecive = JsonConvert.DeserializeObject<dynamic>(Receive); // 將Newebpay回傳的json格式轉成物件
+            if(NewebpayRecive.Result.PaymentType == "CVS")
             {
-                string DepositNumber = EzpayRecive.Result.MerchantOrderNo;         // 取得儲值編號
+                string DepositNumber = NewebpayRecive.Result.MerchantOrderNo;         // 取得儲值編號
                 Viprecord viprecord = viprecordService.Get().Where(a => a.Depositnumber == DepositNumber).FirstOrDefault();
                 ViewBag.Payway = viprecord.Payway;                                 // 付款方式
-                ViewBag.Amt =  EzpayRecive.Result.Amt;                             // 付款金額
+                ViewBag.Amt =  NewebpayRecive.Result.Amt;                             // 付款金額
                 ViewBag.Day = viprecord.Day;                                       // 購買天數
-                ViewBag.CodeNo = EzpayRecive.Result.CodeNo;                        // 超商編號
+                ViewBag.CodeNo = NewebpayRecive.Result.CodeNo;                        // 超商編號
                 ViewBag.DueDate = DateTime.Now.AddDays(7).ToString("yyyy/MM/dd HH:mm:ss");  // 付款期限
 
 
-                /*** 將EZPAY編號、付款方式、超商編號、繳費期限寫入資料庫 ***/
-                viprecord.Tradenumber = EzpayRecive.Result.TradeNo;
-                viprecord.Paymenttype = EzpayRecive.Result.PaymentType;
-                viprecord.Paymentnumber = EzpayRecive.Result.CodeNo;
+                /*** 將Newebpay編號、付款方式、超商編號、繳費期限寫入資料庫 ***/
+                viprecord.Tradenumber = NewebpayRecive.Result.TradeNo;
+                viprecord.Paymenttype = NewebpayRecive.Result.PaymentType;
+                viprecord.Paymentnumber = NewebpayRecive.Result.CodeNo;
                 viprecord.Duedate = DateTime.Now.AddDays(7);
                 viprecordService.SpecificUpdate(viprecord, new string[] { "Tradenumber", "Paymenttype", "Paymentnumber", "Duedate" });
                 viprecordService.SaveChanges();
             }
-            else if(EzpayRecive.Result.PaymentType == "VACC")
+            else if(NewebpayRecive.Result.PaymentType == "VACC")
             {
-                string DepositNumber = EzpayRecive.Result.MerchantOrderNo;          // 取得儲值編號
+                string DepositNumber = NewebpayRecive.Result.MerchantOrderNo;          // 取得儲值編號
                 Viprecord viprecord = viprecordService.Get().Where(a => a.Depositnumber == DepositNumber).FirstOrDefault();
                 ViewBag.Payway = viprecord.Payway;                                                          // 付款方式
-                ViewBag.Amt = EzpayRecive.Result.Amt;                                                       // 付款金額
+                ViewBag.Amt = NewebpayRecive.Result.Amt;                                                       // 付款金額
                 ViewBag.Day = viprecord.Day;                                                                // 購買天數
-                ViewBag.CodeNo = EzpayRecive.Result.CodeNo;                                                 // 金融繳費代碼
-                ViewBag.EscrowBank = EzpayRecive.Result.EscrowBank;                                         // 銀行英文代碼
-                ViewBag.BankCode = EzpayRecive.Result.BankCode;                                             // 銀行數字代碼
+                ViewBag.CodeNo = NewebpayRecive.Result.CodeNo;                                                 // 金融繳費代碼
+                ViewBag.EscrowBank = NewebpayRecive.Result.EscrowBank;                                         // 銀行英文代碼
+                ViewBag.BankCode = NewebpayRecive.Result.BankCode;                                             // 銀行數字代碼
                 ViewBag.DueDate = DateTime.Now.AddDays(7).ToString("yyyy/MM/dd HH:mm:ss");                  //繳費期限
 
-                /*** 將EZPAY編號、付款方式、金融機構代碼、金融繳費代碼、繳費期限寫入資料庫 ****/
-                viprecord.Tradenumber = EzpayRecive.Result.TradNo;
-                viprecord.Paymenttype = EzpayRecive.Result.PaymentType;
-                viprecord.Bankcode = EzpayRecive.Result.Bankcode;
-                viprecord.Paymentnumber = EzpayRecive.Result.CodeNo;
+                /*** 將Newebpay編號、付款方式、金融機構代碼、金融繳費代碼、繳費期限寫入資料庫 ****/
+                viprecord.Tradenumber = NewebpayRecive.Result.TradNo;
+                viprecord.Paymenttype = NewebpayRecive.Result.PaymentType;
+                viprecord.Bankcode = NewebpayRecive.Result.Bankcode;
+                viprecord.Paymentnumber = NewebpayRecive.Result.CodeNo;
                 viprecord.Duedate = DateTime.Now.AddDays(7);
                 viprecordService.SpecificUpdate(viprecord, new string[] { "Tradenumber", "Paymenttype", "Bankcode", "Paymentnumber", "Duedate" });
                 viprecordService.SaveChanges();
             }
-            else if(EzpayRecive.Result.PaymentType == "CREDIT")
+            else if(NewebpayRecive.Result.PaymentType == "CREDIT")
             {
-                string DepositNumber = EzpayRecive.Result.MerchantOrderNo;          // 取得儲值編號
+                string DepositNumber = NewebpayRecive.Result.MerchantOrderNo;          // 取得儲值編號
                 Viprecord viprecord = viprecordService.Get().Where(a => a.Depositnumber == DepositNumber).FirstOrDefault();
                 ViewBag.Payway = viprecord.Payway;                                                          // 付款方式
-                ViewBag.Status = EzpayRecive.Message;                                                       // 付款狀態
-                ViewBag.Amt = EzpayRecive.Result.Amt;                                                       // 付款金額
+                ViewBag.Status = NewebpayRecive.Message;                                                    // 付款狀態
+                ViewBag.Amt = NewebpayRecive.Result.Amt;                                                    // 付款金額
                 ViewBag.Day = viprecord.Day;                                                                // 購買天數
-                ViewBag.OrderDate = EzpayRecive.Result.PayTime;                                             // 付款日期
-                /*** 將付款方式、EZPAY交易編號、開始時間、截止時間 ***/
-                Guid Memberid = Guid.Parse((Session["Memberid"]).ToString());
-                Viprecord old_data = viprecordService.Get().Where(a => a.Memberid == Memberid).OrderByDescending(x => x.Enddate).FirstOrDefault();
-                viprecord.Tradenumber = EzpayRecive.Result.TradNo;
-                viprecord.Paymenttype = EzpayRecive.Result.PaymentType;
-                viprecord.Status = 2;
-                if (old_data != null)
+                ViewBag.OrderDate = NewebpayRecive.Result.PayTime;                                          // 付款日期
+                /*** 判斷是否授權成功 ***/
+                if(NewebpayRecive.Result.Message == "授權成功")
                 {
-                    if(old_data.Enddate < DateTime.Now)
+                    /*** 將付款方式、Newebpay交易編號、開始時間、截止時間 ***/
+                    Guid Memberid = Guid.Parse((Session["Memberid"]).ToString());
+                    Viprecord old_data = viprecordService.Get().Where(a => a.Memberid == Memberid).OrderByDescending(x => x.Enddate).FirstOrDefault();
+                    viprecord.Tradenumber = NewebpayRecive.Result.TradNo;
+                    viprecord.Paymenttype = NewebpayRecive.Result.PaymentType;
+                    viprecord.Status = 2;
+                    if (old_data != null)
+                    {
+                        if (old_data.Enddate < DateTime.Now)
+                        {
+                            viprecord.Startdate = DateTime.Now;
+                            viprecord.Enddate = DateTime.Now.AddDays(Convert.ToDouble(viprecord.Day));
+                        }
+                        else
+                        {
+                            viprecord.Startdate = old_data.Enddate;
+                            viprecord.Enddate = old_data.Enddate.AddDays(Convert.ToDouble(viprecord.Day));
+                        }
+                    }
+                    else
                     {
                         viprecord.Startdate = DateTime.Now;
                         viprecord.Enddate = DateTime.Now.AddDays(Convert.ToDouble(viprecord.Day));
                     }
-                    else
-                    {
-                        viprecord.Startdate = old_data.Enddate;
-                        viprecord.Enddate = old_data.Enddate.AddDays(Convert.ToDouble(viprecord.Day));
-                    }
-                }
-                else
-                {
-                    viprecord.Startdate = DateTime.Now;
-                    viprecord.Enddate = DateTime.Now.AddDays(Convert.ToDouble(viprecord.Day));
-                }
-                viprecordService.SpecificUpdate(viprecord, new string[] { "Tradenumber", "Paymenttype", "Startdate", "Enddate", "Status" });
-                viprecordService.SaveChanges();
+                    viprecordService.SpecificUpdate(viprecord, new string[] { "Tradenumber", "Paymenttype", "Startdate", "Enddate", "Status" });
+                    viprecordService.SaveChanges();
 
-                /*** 更新會員層級狀態 ***/
-                Members member = membersService.GetByID(Memberid);
-                Memberlevel memberlevel = memberlevelService.Get().Where(a => a.Levelname == "VIP").FirstOrDefault();
-                member.Levelid = memberlevel.Levelid;
-                membersService.SpecificUpdate(member, new string[] { "Levelid" });
-                membersService.SaveChanges();
+                    /*** 更新會員層級狀態 ***/
+                    Members member = membersService.GetByID(Memberid);
+                    Memberlevel memberlevel = memberlevelService.Get().Where(a => a.Levelname == "VIP").FirstOrDefault();
+                    member.Levelid = memberlevel.Levelid;
+                    membersService.SpecificUpdate(member, new string[] { "Levelid" });
+                    membersService.SaveChanges();
+                }
             }
             return View();
         }

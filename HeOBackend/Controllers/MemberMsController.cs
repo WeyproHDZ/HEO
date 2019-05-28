@@ -220,7 +220,7 @@ namespace HeOBackend.Controllers
         }
         [CheckSession(IsAuth = true)]
         [HttpPost]
-        public ActionResult EditMembers(Guid Memberid, Guid Levelid , int p, ICollection<Memberauthorization> Memberauthorization)
+        public ActionResult EditMembers(Guid Memberid , int p, ICollection<Memberauthorization> Memberauthorization)
         {
             Members member = membersService.GetByID(Memberid);
             if (TryUpdateModel(member, new string[] { "Account", "Levelid" , "Feedbackmoney" , "Name"}) && ModelState.IsValid)
