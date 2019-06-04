@@ -39,12 +39,32 @@ namespace HeOBackend.Controllers
 
         [CheckSession(IsAuth = true)]
         [HttpGet]
-        public ActionResult ViewOrderfacebooklist(Guid Orderid , int p = 1)
+        public ActionResult ViewOrderfacebooklist(Guid Orderid , int p)
         {
             IEnumerable<Orderfaceooklist> orderfacebooklist = orderfacebooklistService.Get().Where(a => a.Orderid == Orderid).OrderBy(o => o.Createdate);
             ViewBag.pageNumber = p;
+            ViewBag.Orderid = Orderid;
             ViewBag.orderfacebooklist = orderfacebooklist.ToPagedList(pageNumber: p, pageSize: 20);
             return View();
+        }
+
+        [CheckSession(IsAuth = true)]
+        [HttpGet]
+        public ActionResult EditOrder(Guid Orderid, int p)
+        {
+            ViewBag.pageNumber = p;
+            Order order = orderService.GetByID(Orderid);
+            return View(order);
+        }
+        [CheckSession(IsAuth = true)]
+        [HttpPost]
+        public ActionResult EditOrder(Guid Orderid, string Orderstatus)
+        {
+            Order order = orderService.GetByID(Orderid);
+            order.OrderStatus = Convert.ToInt32(Orderstatus);
+            orderService.Update(order);
+            orderService.SaveChanges();
+            return RedirectToAction("Order");
         }
     }
 }

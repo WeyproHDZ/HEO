@@ -32,14 +32,28 @@ namespace HeO.CheckFacebook
             status[3] = "";
             string api_useragent = Useragent.Replace("$", "/").Replace("*", " ");
             FirefoxProfile profile = new FirefoxProfile();
-            profile.SetPreference("general.useragent.override", api_useragent);
+            ///*** 設定proxy ***/
+            //profile.SetPreference("network.proxy.type", 1);
+            //profile.SetPreference("network.proxy.socks", "122.146.68.17");
+            //profile.SetPreference("network.proxy.socks_port", 8080);
+            //profile.SetPreference("general.useragent.override", api_useragent);
             FirefoxOptions options = new FirefoxOptions();
+            options.AddArgument("--incognito");
             options.Profile = profile;
             options.SetPreference("dom.webnotifications.enabled", false);
             IWebDriver driver = new FirefoxDriver(options);
-            //driver.Navigate().GoToUrl("https://www.whatsmyua.info/");
+            //driver.Navigate().GoToUrl("https://www.whatismyip.com.tw/");
             driver.Navigate().GoToUrl("https://www.facebook.com/");
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(1000);
+
+            //IEnumerable<Cookie> cookies = driver.Manage().Cookies.AllCookies.ToList();
+            //status[0] = "";
+            //status[1] = "";
+            //status[2] = "";
+            //status[3] = "";
+            //var error = status[0] + "," + status[1] + "," + status[2] + "," + status[3] + "," + cookies;
+            //driver.Quit();
+            //return error;
             /*** 輸入帳號 ***/
             IWebElement FB_account = driver.FindElement(By.Id("email"));
             FB_account.SendKeys(FB_Account);

@@ -31,7 +31,6 @@ namespace HeO.Models
         public virtual DbSet<Guide> Guide { get; set; }
         public virtual DbSet<Lims> Lims { get; set; }
         public virtual DbSet<Memberlevelcooldown> Memberlevelcooldown { get; set; }
-        public virtual DbSet<Returnstatus> Returnstatus { get; set; }
         public virtual DbSet<Setting> Setting { get; set; }
         public virtual DbSet<Term> Term { get; set; }
         public virtual DbSet<Memberauthorization> Memberauthorization { get; set; }
@@ -51,5 +50,6 @@ namespace HeO.Models
         public virtual DbSet<Feedbackrecord> Feedbackrecord { get; set; }
         public virtual DbSet<Useragent> Useragent { get; set; }
         public virtual DbSet<Members> Members { get; set; }
+        public virtual DbSet<Returnstatus> Returnstatus { get; set; }
     }
 }

@@ -99,7 +99,8 @@
     <script>
         function send() {
             var Membermoney = @ViewBag.Membermoney;
-            if ($('#Money').val().length != 0) {
+            var check = ($('#Money').val()).match(/^[0-9]*$/);
+            if ($('#Money').val().length != 0 && (check != null)) {
                 if($('#Money').val() <= 0) {
                     swal({
                         title: 'Error',

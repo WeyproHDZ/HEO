@@ -14,7 +14,6 @@
             <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 
                 <div class="well padding-10">
-                    @Html.HiddenFor(model => model.Orderid)
                     <!-- widget content -->
                     <div class="widget-body">
                         <div class="widget-body-toolbar">
@@ -53,7 +52,7 @@
                     <!-- end widget content -->
 
                     <div class="text-center">
-                        @Html.PagedListPager(list: data, generatePageUrl: page => Url.Action("ViewOrderfacebooklist", new { p = page }))
+                        @Html.PagedListPager(list: data, generatePageUrl: page => Url.Action("ViewOrderfacebooklist", new {Orderid = ViewBag.Orderid, p = page }))
                     </div>
 
                 </div>

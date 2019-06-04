@@ -33,6 +33,7 @@ namespace HeO.Controllers
         [CheckSession]
         public ActionResult Order()
         {
+            var id = Session["Memberid"];
             int Now = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds;
             Setting Setting = settingService.Get().FirstOrDefault();
             Guid VipLevelid = memberlevelService.Get().Where(a => a.Levelname == "VIP").FirstOrDefault().Levelid;       // VIP層級的ID                                 
@@ -43,7 +44,7 @@ namespace HeO.Controllers
             if (now_members < Setting.Max)
             {
                 ViewBag.Max = now_members;
-                ViewBag.Min = 0;
+                ViewBag.Min = 1;
             }
             else
             {
@@ -59,7 +60,8 @@ namespace HeO.Controllers
             Members member = membersService.GetByID(Session["Memberid"]);
             Guid Memberid = Guid.Parse(Session["Memberid"].ToString());
             int? MemberCooldown = member.Memberlevel.Memberlevelcooldown.FirstOrDefault().Cooldowntime;           // 該會員的冷卻時間(一般/VIP)
-            if(member.Isreal == true)
+
+            if (member.Isreal == true)
             {
                 Guid Realid = memberlevelService.Get().Where(a => a.Levelname == "真人").FirstOrDefault().Levelid;        // 取得真人ID
                 int? RealCooldowntime = member.Memberlevel.Memberlevelcooldown.FirstOrDefault(a => a.Levelid == Realid).Cooldowntime;       // 取得真人的冷卻時間
@@ -76,6 +78,8 @@ namespace HeO.Controllers
             {
                 Cooldowntime = MemberCooldown;
             }
+            //ViewBag.Max = MemberCooldown;
+            //return View();
             IEnumerable<Order> old_order = orderService.Get().Where(a => a.Memberid == Memberid).OrderByDescending(o => o.Createdate);
             if(old_order.ToList().Count() == 0)
             {

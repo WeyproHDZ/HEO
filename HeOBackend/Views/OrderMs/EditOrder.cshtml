@@ -1,5 +1,5 @@
-﻿@model Setting
-
+﻿@model Order
+@{int i = 0; }
 <div id="content">
 
     <!-- widget grid -->
@@ -15,10 +15,9 @@
                 <div class="jarviswidget" id="wid-id-4" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false" data-widget-collapsed="false" data-widget-sortable="false">
                     <header>
                         <span class="widget-icon"> <i class="fa fa-pencil-square-o"></i> </span>
-                        <h2>系統設定</h2>
+                        <h2>編輯訂單</h2>
                         <ul class="nav nav-tabs pull-right in">
-                            <li><a data-toggle="tab" href="#hb1">互惠限值設定</a></li>
-                            <li><a data-toggle="tab" href="#hb2">社群間隔時間設定</a></li>
+                            <li><a data-toggle="tab" href="#hb1">基本資料</a></li>
                         </ul>
                     </header>
 
@@ -34,7 +33,7 @@
                         <!-- widget content -->
                         <div class="widget-body">
 
-                            <form id="form" method="post" class="form-horizontal" enctype="multipart/form-data" action="@Url.Action("EditReciprocity", "HomeMs",new { settingid = ViewBag.settingid })"
+                            <form id="form" method="post" class="form-horizontal" enctype="multipart/form-data" action="@Url.Action("EditOrder", "OrderMs", new { p = ViewBag.pageNumber })"
                                   data-bv-message="This value is not valid"
                                   data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
                                   data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
@@ -49,35 +48,17 @@
                                 }
                                 <div id="content" class="tab-content">
                                     <div class="tab-pane" id="hb1">
-                                        @Html.HiddenFor(model => model.Id)
+                                        @Html.HiddenFor(model => model.Orderid)
                                         <fieldset>
                                             <div class="form-group">
-                                                <label class="col-lg-2 control-label" for="title">最大值</label>
+                                                <label class="col-lg-2 control-label" for="title">訂單狀態</label>                                               
                                                 <section class="col-lg-3">
-                                                    @Html.TextBoxFor(model => model.Max, new Dictionary<string, object>() { { "class", "form-control" }, { "id" , "max" } })
-                                                    @Html.ValidationMessageFor(model => model.Max)
-                                                </section>
-                                            </div>
-                                        </fieldset>
-
-                                        <fieldset>
-                                            <div class="form-group">
-                                                <label class="col-lg-2 control-label" for="title">最小值</label>
-                                                <section class="col-lg-3">
-                                                    @Html.TextBoxFor(model => model.Min, new Dictionary<string, object>() { { "class", "form-control" }, { "id", "min" } })
-                                                    @Html.ValidationMessageFor(model => model.Min)
-                                                </section>
-                                            </div>
-                                        </fieldset>
-                                    </div>
-                                    <div class="tab-pane" id="hb2">
-                                        @Html.HiddenFor(model => model.Id)
-                                        <fieldset>
-                                            <div class="form-group">
-                                                <label class="col-lg-2 control-label" for="title">間隔時間(秒)</label>
-                                                <section class="col-lg-3">
-                                                    @Html.TextBoxFor(model => model.Time, new Dictionary<string, object>() { { "class", "form-control" } , { "id" , "time" } })
-                                                    @Html.ValidationMessageFor(model => model.Time)
+                                                    <select class="form-control" id="Orderstatus" name="Orderstatus">
+                                                        <option value="0" @(Model.OrderStatus == 0 ? "checked" : "")>等待中</option>
+                                                        <option value="1" @(Model.OrderStatus == 1 ? "checked" : "")>運行中</option>
+                                                        <option value="2" @(Model.OrderStatus == 2 ? "checked" : "")>已完成</option>
+                                                        <option value="3" @(Model.OrderStatus == 3 ? "checked" : "")>失敗</option>
+                                                    </select>
                                                 </section>
                                             </div>
                                         </fieldset>
@@ -86,6 +67,9 @@
                                 <div class="form-actions">
                                     <div class="row">
                                         <div class="col-md-12">
+                                            <a class="btn btn-default" href="@Url.Action("Order", "OrderMs")">
+                                                取消
+                                            </a>
                                             <button class="btn btn-primary" type="submit">
                                                 <i class="fa fa-save"></i>
                                                 確認

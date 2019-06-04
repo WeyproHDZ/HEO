@@ -32,7 +32,7 @@
                                         @foreach (Viprecord viprecordList in Viprecord)
                                         {
                                             <tr>
-                                                <td class="align_left">2019/03/10</td>
+                                                <td class="align_left">@Convert.ToDateTime(viprecordList.Buydate).ToString("yyyy/MM/dd")</td>
                                                 <td class="align_left">@viprecordList.Enddate.ToString("yyyy/MM/dd")</td>
                                                 <td>@viprecordList.Money</td>
                                                 <td>@viprecordList.Day</td>

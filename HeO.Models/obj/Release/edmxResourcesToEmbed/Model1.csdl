@@ -69,13 +69,6 @@
     <Property Name="Cooldowntime" Type="Int32" />
     <NavigationProperty Name="Memberlevel" Relationship="HeOModel.FK_Memberlevelcooldown_Memberlevel" FromRole="Memberlevelcooldown" ToRole="Memberlevel" />
   </EntityType>
-  <EntityType Name="Returnstatus">
-    <Key>
-      <PropertyRef Name="Id" />
-    </Key>
-    <Property Name="Id" Type="Int32" Nullable="false" />
-    <Property Name="Text" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-  </EntityType>
   <EntityType Name="Setting">
     <Key>
       <PropertyRef Name="Id" />
@@ -141,7 +134,6 @@
     <EntitySet Name="Guide" EntityType="Self.Guide" />
     <EntitySet Name="Lims" EntityType="Self.Lims" />
     <EntitySet Name="Memberlevelcooldown" EntityType="Self.Memberlevelcooldown" />
-    <EntitySet Name="Returnstatus" EntityType="Self.Returnstatus" />
     <EntitySet Name="Setting" EntityType="Self.Setting" />
     <EntitySet Name="Term" EntityType="Self.Term" />
     <AssociationSet Name="FK_Adminlims_Admins" Association="Self.FK_Adminlims_Admins">
@@ -229,6 +221,7 @@
       <End Role="Members" EntitySet="Members" />
       <End Role="Viprecord" EntitySet="Viprecord" />
     </AssociationSet>
+    <EntitySet Name="Returnstatus" EntityType="HeOModel.Returnstatus" />
   </EntityContainer>
   <EntityType Name="Memberauthorization">
     <Key>
@@ -645,4 +638,12 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <EntityType Name="Returnstatus">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Text" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Createdate" Type="DateTime" Precision="3" />
+  </EntityType>
 </Schema>

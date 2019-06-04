@@ -189,8 +189,9 @@
     <Key>
       <PropertyRef Name="Id" />
     </Key>
-    <Property Name="Id" Type="int" Nullable="false" />
-    <Property Name="Text" Type="text" />
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Text" Type="ntext" />
+    <Property Name="Createdate" Type="datetime" />
   </EntityType>
   <EntityType Name="Servicelog">
     <Key>

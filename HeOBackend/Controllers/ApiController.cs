@@ -113,26 +113,28 @@ namespace HeOBackend.Controllers
                 int Now = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds;                                                                          // 目前時間的總秒數
                 Setting setting = settingService.Get().FirstOrDefault();
                 Order order = orderService.Get().Where(a => a.Ordernumber == Ordernumber).FirstOrDefault();                                                     // 撈此訂單的詳細資料
-                IEnumerable<Order> old_order = orderService.Get().Where(a => a.Url == order.Url).ToList();                
-                int old_order_count = old_order.Count();
                 Feedbackproduct feedbackproduct = feedbackproductService.Get().Where(a => a.Feedbackproductname.Contains(order.Service)).FirstOrDefault();      // 撈此訂單所需之產品的詳細資料
-                IEnumerable<Orderfaceooklist> orderfacebooklist = orderfacebooklistService.Get().Where(a => a.Orderid == order.Orderid);                        // 撈該訂單的互惠會員列表
-                //int count = 0;
-                //int loop;
-                //for(loop = 0; loop < old_order_count; loop++)
-                //{
-                    
-                //}
-                //List<IEnumerable<Orderfaceooklist>> old_orderfacebooklist = new List<IEnumerable<Orderfaceooklist>>();
-                //if (old_order != null)
-                //{
-                //    foreach (Order order_value in old_order)
-                //    {
 
-                //        old_orderfacebooklist.Add(orderfacebooklistService.Get().Where(b => b.Orderid == order_value.Orderid));
-                //    }
-                //}
-                //return this.Json(old_orderfacebooklist, JsonRequestBehavior.AllowGet);
+                IEnumerable<Order> old_order = orderService.Get().Where(x => x.Ordernumber != order.Ordernumber).Where(a => a.Url == order.Url);                // 撈所有訂單裡網址為此訂單的資料
+                List<get_old_member> MemberList = new List<get_old_member>();
+                                
+                if (old_order.Count() > 0)
+                {                    
+                    foreach (Order thisold_order in old_order)
+                    {
+                        IEnumerable<Orderfaceooklist> oldorderfacebooklist = orderfacebooklistService.Get().Where(a => a.Orderid == thisold_order.Orderid);
+                        foreach (Orderfaceooklist thisoldorderfaceooklist in oldorderfacebooklist)
+                        {
+                            MemberList.Add(
+                                new get_old_member
+                                {
+                                    account = thisoldorderfaceooklist.Facebookaccount
+                                }
+                            );
+                        }
+                    }
+                }
+
                 Guid VipLevelid = memberlevelService.Get().Where(a => a.Levelname == "VIP").FirstOrDefault().Levelid;                                           // VIP層級的ID
                 if(order.Ordernumber.Contains("heo"))
                 {                    
@@ -143,14 +145,19 @@ namespace HeOBackend.Controllers
                         List<get_member> AccountList = new List<get_member>();
                         bool used_accoount = false;
                         foreach (Members thismembers in members)
-                        {                            
-                            foreach (Orderfaceooklist thisorderfacebooklist in orderfacebooklist)
+                        {
+                            int loop;
+                            if(MemberList.Count() > 0)
                             {
-                                if ((thismembers.Account.Equals(thisorderfacebooklist.Facebookaccount)))
+                                for(loop = 0;loop < MemberList.Count(); loop++)
                                 {
-                                    used_accoount = true;
+                                    if ((thismembers.Account.Equals(MemberList[loop].account)))
+                                    {
+                                        used_accoount = true;
+                                    }
                                 }
-                            }
+                            }                       
+
                             if (!used_accoount)
                             {
                                 AccountList.Add(
@@ -169,6 +176,12 @@ namespace HeOBackend.Controllers
                             }
                             used_accoount = false;
                         }
+                        /*** 可用人數小於該訂單所需人數 ***/
+                        if(AccountList.Count < number)
+                        {
+                            return this.Json("數量不足", JsonRequestBehavior.AllowGet);
+                        }
+                        /*** 可用人數大於等於該訂單所需人數 ***/
                         membersService.SaveChanges();
                         return this.Json(AccountList, JsonRequestBehavior.AllowGet);
                     }
@@ -190,30 +203,43 @@ namespace HeOBackend.Controllers
                             bool used_accoount = false;
                             foreach (Members thismembers in members)
                             {
-                                foreach (Orderfaceooklist thisorderfacebooklist in orderfacebooklist)
+                                int loop;
+                                if (MemberList.Count() > 0)
                                 {
-                                    if ((thismembers.Account.Equals(thisorderfacebooklist.Facebookaccount)))
+                                    for (loop = 0; loop < MemberList.Count(); loop++)
                                     {
-                                        used_accoount = true;
+                                        if ((thismembers.Account.Equals(MemberList[loop].account)))
+                                        {
+                                            used_accoount = true;
+                                        }
                                     }
                                 }
+
                                 if (!used_accoount)
                                 {
                                     AccountList.Add(
-                                            new get_member
-                                            {
-                                                memberid = thismembers.Memberid,
-                                                account = thismembers.Account,
-                                                password = thismembers.Password
-                                            }
-                                        );
+                                        new get_member
+                                        {
+                                            memberid = thismembers.Memberid,
+                                            account = thismembers.Account,
+                                            password = thismembers.Password,
+                                            useragent_phone = thismembers.Useragent_phone
+                                        }
+                                    );
                                     /*** 將此會員更新下次互惠時間 ****/
-                                    thismembers.Lastdate += (int)setting.Time;                             
+                                    thismembers.Lastdate += (int)setting.Time;
                                     membersService.SpecificUpdate(thismembers, new string[] { "Lastdate" });
-                                    
+
                                 }
                                 used_accoount = false;
                             }
+
+                            /*** 可用人數小於該訂單所需人數 ***/
+                            if (AccountList.Count < number)
+                            {
+                                return this.Json("數量不足", JsonRequestBehavior.AllowGet);
+                            }
+                            /*** 可用人數大於等於該訂單所需人數 ***/
                             membersService.SaveChanges();
                             return this.Json(AccountList, JsonRequestBehavior.AllowGet);
                         }
@@ -231,29 +257,42 @@ namespace HeOBackend.Controllers
                             bool used_accoount = false;
                             foreach (Members thismembers in members)
                             {
-                                foreach (Orderfaceooklist thisorderfacebooklist in orderfacebooklist)
+                                int loop;
+                                if (MemberList.Count() > 0)
                                 {
-                                    if ((thismembers.Account.Equals(thisorderfacebooklist.Facebookaccount)))
+                                    for (loop = 0; loop < MemberList.Count(); loop++)
                                     {
-                                        used_accoount = true;
+                                        if ((thismembers.Account.Equals(MemberList[loop].account)))
+                                        {
+                                            used_accoount = true;
+                                        }
                                     }
                                 }
+
                                 if (!used_accoount)
                                 {
                                     AccountList.Add(
-                                            new get_member
-                                            {
-                                                memberid = thismembers.Memberid,
-                                                account = thismembers.Account,
-                                                password = thismembers.Password
-                                            }
-                                        );
+                                        new get_member
+                                        {
+                                            memberid = thismembers.Memberid,
+                                            account = thismembers.Account,
+                                            password = thismembers.Password,
+                                            useragent_phone = thismembers.Useragent_phone
+                                        }
+                                    );
                                     /*** 將此會員更新下次互惠時間 ****/
                                     thismembers.Lastdate += (int)setting.Time;
-                                    membersService.SpecificUpdate(thismembers, new string[] { "Lastdate" });                                    
+                                    membersService.SpecificUpdate(thismembers, new string[] { "Lastdate" });
+
                                 }
                                 used_accoount = false;
                             }
+                            /*** 可用人數小於該訂單所需人數 ***/
+                            if (AccountList.Count < number)
+                            {
+                                return this.Json("數量不足", JsonRequestBehavior.AllowGet);
+                            }
+                            /*** 可用人數大於等於該訂單所需人數 ***/
                             membersService.SaveChanges();
                             return this.Json(AccountList, JsonRequestBehavior.AllowGet);
                         }
@@ -283,12 +322,21 @@ namespace HeOBackend.Controllers
             /*** 改訂單剩餘人數 ***/
             order.Remains -= 1;
 
-            
+            orderService.SpecificUpdate(order, new string[] { "Remains" });
+            orderService.SaveChanges();
             if (order.Ordernumber.Contains("heo"))
             {
                 /*** HEO內部下單 ***/
-                orderService.SpecificUpdate(order, new string[] { "Remains" });
-                orderService.SaveChanges();
+                /*** 將會員寫到該訂單的互惠會員列表 ***/
+                Orderfaceooklist orderfacebooklist = new Orderfaceooklist();
+                orderfacebooklist.Memberid = member.Memberid;
+                orderfacebooklist.Feedbackproductid = feedbackproduct.Feedbackproductid;
+                orderfacebooklist.Facebookaccount = member.Account;
+                orderfacebooklist.Orderid = order.Orderid;
+                orderfacebooklist.Createdate = DateTime.Now;
+                orderfacebooklist.Updatedate = DateTime.Now;
+                orderfacebooklistService.Create(orderfacebooklist);
+                orderfacebooklistService.SaveChanges();
                 return this.Json("Success");
             }
             else
@@ -425,5 +473,10 @@ namespace HeOBackend.Controllers
         public string account { get; set; }
         public string password { get; set; }
         public string useragent_phone { get; set; }
+    }
+
+    public class get_old_member
+    {
+        public string account { get; set; }
     }
 }

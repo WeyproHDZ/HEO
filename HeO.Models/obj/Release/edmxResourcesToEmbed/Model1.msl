@@ -66,14 +66,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Returnstatus">
-      <EntityTypeMapping TypeName="HeOModel.Returnstatus">
-        <MappingFragment StoreEntitySet="Returnstatus">
-          <ScalarProperty Name="Id" ColumnName="Id" />
-          <ScalarProperty Name="Text" ColumnName="Text" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="Setting">
       <EntityTypeMapping TypeName="HeOModel.Setting">
         <MappingFragment StoreEntitySet="Setting">
@@ -315,6 +307,15 @@
           <ScalarProperty Name="Facebookid" ColumnName="Facebookid" />
           <ScalarProperty Name="Levelid" ColumnName="Levelid" />
           <ScalarProperty Name="Memberid" ColumnName="Memberid" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Returnstatus">
+      <EntityTypeMapping TypeName="HeOModel.Returnstatus">
+        <MappingFragment StoreEntitySet="Returnstatus">
+          <ScalarProperty Name="Createdate" ColumnName="Createdate" />
+          <ScalarProperty Name="Text" ColumnName="Text" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

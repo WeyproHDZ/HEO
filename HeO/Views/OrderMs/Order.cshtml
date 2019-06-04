@@ -51,14 +51,24 @@
 {
     <script>
         function send() {
+            var url = $("#post").val();
             var input = $("#amount").val();
+            var check = ($('#amount').val()).match(/^[0-9]*$/);
             var Max = @ViewBag.Max;
             var Min = @ViewBag.Min;
-            if(input > Max || input < Min)
+            if((input > Max || input < Min) && (input.length != 0) && (check != null))
             {
                 swal({
                     title:'Error',
                     text: '請輸入正確數量',
+                    type: 'error'
+                });
+            }
+            else if(url.indexOf("facebook") == -1)
+            {
+                swal({
+                    title: 'Error',
+                    text: '請輸入正確網址',
                     type: 'error'
                 });
             }

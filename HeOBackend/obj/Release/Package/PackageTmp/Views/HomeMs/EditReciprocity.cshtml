@@ -54,7 +54,7 @@
                                             <div class="form-group">
                                                 <label class="col-lg-2 control-label" for="title">最大值</label>
                                                 <section class="col-lg-3">
-                                                    @Html.TextBoxFor(model => model.Max, new Dictionary<string, object>() { { "class", "form-control" } })
+                                                    @Html.TextBoxFor(model => model.Max, new Dictionary<string, object>() { { "class", "form-control" }, { "id" , "max" } })
                                                     @Html.ValidationMessageFor(model => model.Max)
                                                 </section>
                                             </div>
@@ -64,7 +64,7 @@
                                             <div class="form-group">
                                                 <label class="col-lg-2 control-label" for="title">最小值</label>
                                                 <section class="col-lg-3">
-                                                    @Html.TextBoxFor(model => model.Min, new Dictionary<string, object>() { { "class", "form-control" } })
+                                                    @Html.TextBoxFor(model => model.Min, new Dictionary<string, object>() { { "class", "form-control" }, { "id", "min" } })
                                                     @Html.ValidationMessageFor(model => model.Min)
                                                 </section>
                                             </div>
@@ -76,7 +76,7 @@
                                             <div class="form-group">
                                                 <label class="col-lg-2 control-label" for="title">間隔時間(秒)</label>
                                                 <section class="col-lg-3">
-                                                    @Html.TextBoxFor(model => model.Time, new Dictionary<string, object>() { { "class", "form-control" } })
+                                                    @Html.TextBoxFor(model => model.Time, new Dictionary<string, object>() { { "class", "form-control" } , { "id" , "time" } })
                                                     @Html.ValidationMessageFor(model => model.Time)
                                                 </section>
                                             </div>
@@ -115,8 +115,8 @@
 </div>
 @section scripts {
     <script>
-            var hash = window.location.hash;
-            $('ul.nav-tabs li').eq(hash.substr(1)).addClass('active');
-            $('.tab-pane').eq(hash.substr(1)).addClass('active');
+        var hash = window.location.hash;
+        $('ul.nav-tabs li').eq(hash.substr(1)).addClass('active');
+        $('.tab-pane').eq(hash.substr(1)).addClass('active');
     </script>
 }

@@ -934,6 +934,7 @@
     <Content Include="Views\UseragentMs\Useragent.cshtml" />
     <Content Include="Views\UseragentMs\AddUseragent.cshtml" />
     <Content Include="Views\UseragentMs\EditUseragent.cshtml" />
+    <Content Include="Views\OrderMs\EditOrder.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

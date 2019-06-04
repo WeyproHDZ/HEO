@@ -122,7 +122,7 @@ namespace HeO.Controllers
                     useragent_phone = useragent.User_agent;
                 }
             }
-            
+
             string api_useragent = useragent_com.Replace(" ", "*").Replace("/", "$");
             string url = "http://heofrontend.4webdemo.com:8080/Check/CheckFacebook?Account=" + members.Account + "&Password=" + members.Password + "&Useragent=" + api_useragent;
             WebRequest myReq = WebRequest.Create(url);
@@ -134,6 +134,8 @@ namespace HeO.Controllers
             Stream receiveStream = wr.GetResponseStream();
             StreamReader reader = new StreamReader(receiveStream, Encoding.UTF8);
             string content = reader.ReadToEnd();
+            //ViewBag.cookies = content;
+            //return View();
             string[] status = content.Replace("\"", "").Split(',');
             //string[] status = new string[4];
             //status[0] = "成功登入!";
