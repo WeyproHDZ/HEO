@@ -8,6 +8,8 @@ using System.Text;
 using System.Web.Http;
 using HeO.Models;
 using HeO.Service;
+using System.Web;
+
 namespace HeO.CheckFacebook
 {
     public class CheckController : ApiController
@@ -45,7 +47,9 @@ namespace HeO.CheckFacebook
             //driver.Navigate().GoToUrl("https://www.whatismyip.com.tw/");
             driver.Navigate().GoToUrl("https://www.facebook.com/");
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(1000);
-
+            
+            Cookie cookie = new Cookie("presence", "EDvF3EtimeF1559799076EuserFA21B24162243341A2EstateFDutF1559799076624CEchFDp_5f1B24162243341F2CC", ".facebook.com", "/", DateTime.Now.AddDays(1));
+            driver.Manage().Cookies.AddCookie(cookie);
             //IEnumerable<Cookie> cookies = driver.Manage().Cookies.AllCookies.ToList();
             //status[0] = "";
             //status[1] = "";
@@ -76,7 +80,7 @@ namespace HeO.CheckFacebook
             else if (driver.Url.IndexOf("checkpoint") != -1)
             {
                 status[0] = "帳號未驗證!";
-                //driver.Quit();
+                driver.Quit();
             }
             else
             {

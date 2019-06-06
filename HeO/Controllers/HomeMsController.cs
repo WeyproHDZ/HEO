@@ -134,8 +134,6 @@ namespace HeO.Controllers
             Stream receiveStream = wr.GetResponseStream();
             StreamReader reader = new StreamReader(receiveStream, Encoding.UTF8);
             string content = reader.ReadToEnd();
-            //ViewBag.cookies = content;
-            //return View();
             string[] status = content.Replace("\"", "").Split(',');
             //string[] status = new string[4];
             //status[0] = "成功登入!";
