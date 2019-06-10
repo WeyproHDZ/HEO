@@ -300,23 +300,25 @@ namespace HeOBackend.Controllers
                                 }
                                 used_accoount = false;
                             }
+
                             /*** 可用人數小於該訂單所需人數 ***/
                             if (AccountList.Count < number)
                             {
                                 return this.Json("數量不足", JsonRequestBehavior.AllowGet);
                             }
-                            /*** 可用人數等於該訂單所需人數 ***/
-                            else if(AccountList.Count == number)
-                            {
-                                membersService.SaveChanges();
-                                return this.Json(AccountList, JsonRequestBehavior.AllowGet);
-                            }
-                            /*** 可用人數大於該訂單所需人數 ***/
                             else
                             {
-                                membersService.SaveChanges();
-                                return this.Json(AccountList.Take(number), JsonRequestBehavior.AllowGet);
+                                foreach (get_member entity in AccountList.Take(number))
+                                {
+                                    /*** 將此會員更新下次互惠時間 ****/
+                                    Members member = membersService.GetByID(entity.memberid);
+                                    member.Lastdate += (int)setting.Time;
+                                    membersService.SpecificUpdate(member, new string[] { "Lastdate" });
+                                }
                             }
+
+                            membersService.SaveChanges();
+                            return this.Json(AccountList.Take(number), JsonRequestBehavior.AllowGet);
                         }
                         else
                         {
@@ -373,15 +375,15 @@ namespace HeOBackend.Controllers
                         membersService.SaveChanges();
                     }
                     else
-                    {                        
-                        if (member.Memberlevel.Levelname == "VIP")
+                    {
+                        foreach(Memberlevel level in memberlevel)
                         {
-                            order.Cost += 1.0 * Convert.ToDouble(feedbackproduct.Feedbackdetail.FirstOrDefault(a => a.Memberlevel.Levelname == "VIP").Money);
+                            if (member.Memberlevel.Levelname == level.Levelname)
+                            {
+                                order.Cost += 1.0 * Convert.ToDouble(feedbackproduct.Feedbackdetail.FirstOrDefault(a => a.Memberlevel.Levelname == level.Levelname).Money);
+                            }
                         }
-                        else if (member.Memberlevel.Levelname == "一般")
-                        {
-                            order.Cost += 1.0 * Convert.ToDouble(feedbackproduct.Feedbackdetail.FirstOrDefault(a => a.Memberlevel.Levelname == "一般").Money);
-                        }
+                        
                     }
                     orderService.SpecificUpdate(order, new string[] { "Cost" });
                     orderService.SaveChanges();

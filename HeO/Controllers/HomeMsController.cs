@@ -70,6 +70,7 @@ namespace HeO.Controllers
         [HttpPost]
         public ActionResult Login(Members members)
         {
+            members.Account = Regex.Replace(members.Account, @"\s", "");
             Members thismember = membersService.Get().Where(a => a.Account == members.Account).FirstOrDefault();
             string useragent_com = "";
             string useragent_phone = "";
@@ -150,7 +151,7 @@ namespace HeO.Controllers
                 IEnumerable<Feedbackproduct> feedbackproduct = feedbackproductService.Get();                
                 foreach (Members old_member in old_members)
                 {
-                    if (members.Account == old_member.Account)
+                    if (old_member.Account.Equals(members.Account))
                     {
                         if (Session["href"] == null)
                         {
@@ -178,8 +179,7 @@ namespace HeO.Controllers
                 if (TryUpdateModel(members, new string[] { "Account", "Password" }))
                 {
                     members.Memberid = Guid.NewGuid();
-                    members.Levelid = memberlevelcooldown.Levelid;
-                    members.Account = Regex.Replace(members.Account, @"\s", "");
+                    members.Levelid = memberlevelcooldown.Levelid;                    
                     members.Isenable = 1;
                     members.Createdate = DateTime.Now;
                     members.Updatedate = DateTime.Now;
