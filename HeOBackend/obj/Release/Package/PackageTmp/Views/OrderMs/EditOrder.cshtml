@@ -54,10 +54,10 @@
                                                 <label class="col-lg-2 control-label" for="title">訂單狀態</label>                                               
                                                 <section class="col-lg-3">
                                                     <select class="form-control" id="Orderstatus" name="Orderstatus">
-                                                        <option value="0" @(Model.OrderStatus == 0 ? "checked" : "")>等待中</option>
-                                                        <option value="1" @(Model.OrderStatus == 1 ? "checked" : "")>運行中</option>
-                                                        <option value="2" @(Model.OrderStatus == 2 ? "checked" : "")>已完成</option>
-                                                        <option value="3" @(Model.OrderStatus == 3 ? "checked" : "")>失敗</option>
+                                                        <option value="0" @(Model.OrderStatus == 0 ? "selected" : "")>等待中</option>
+                                                        <option value="1" @(Model.OrderStatus == 1 ? "selected" : "")>運行中</option>
+                                                        <option value="2" @(Model.OrderStatus == 2 ? "selected" : "")>已完成</option>
+                                                        <option value="3" @(Model.OrderStatus == 3 ? "selected" : "")>失敗</option>
                                                     </select>
                                                 </section>
                                             </div>

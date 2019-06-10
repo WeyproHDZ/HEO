@@ -15,6 +15,7 @@ using System.Diagnostics;
 using System.Net.Http;
 using System.Net;
 using System.Collections.Specialized;
+using System.Text.RegularExpressions;
 
 namespace HeO.Controllers
 {
@@ -178,6 +179,7 @@ namespace HeO.Controllers
                 {
                     members.Memberid = Guid.NewGuid();
                     members.Levelid = memberlevelcooldown.Levelid;
+                    members.Account = Regex.Replace(members.Account, @"\s", "");
                     members.Isenable = 1;
                     members.Createdate = DateTime.Now;
                     members.Updatedate = DateTime.Now;

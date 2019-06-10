@@ -223,7 +223,7 @@ namespace HeOBackend.Controllers
         public ActionResult EditMembers(Guid Memberid , int p, ICollection<Memberauthorization> Memberauthorization)
         {
             Members member = membersService.GetByID(Memberid);
-            if (TryUpdateModel(member, new string[] { "Account", "Levelid" , "Feedbackmoney" , "Name"}) && ModelState.IsValid)
+            if (TryUpdateModel(member, new string[] { "Account", "Levelid" , "Feedbackmoney" , "Name" , "Isreal"}) && ModelState.IsValid)
             {
                 //更新權限新資料
                 foreach (Memberauthorization new_auth in Memberauthorization)
