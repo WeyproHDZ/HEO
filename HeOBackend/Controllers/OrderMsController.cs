@@ -32,6 +32,7 @@ namespace HeOBackend.Controllers
             IEnumerable<Feedbackproduct> feedbackproduct = feedbackproductService.Get();
             var data = orderService.Get().OrderBy(o => o.Createdate);
             ViewBag.pageNumber = p;
+            ViewBag.nextpageNumber = 1;
             ViewBag.Order = data.ToPagedList(pageNumber: p, pageSize: 20);
             ViewBag.feedbackproduct = feedbackproduct;
             return View();
@@ -39,12 +40,13 @@ namespace HeOBackend.Controllers
 
         [CheckSession(IsAuth = true)]
         [HttpGet]
-        public ActionResult ViewOrderfacebooklist(Guid Orderid , int p)
+        public ActionResult ViewOrderfacebooklist(Guid Orderid , int p , int page)
         {
             IEnumerable<Orderfaceooklist> orderfacebooklist = orderfacebooklistService.Get().Where(a => a.Orderid == Orderid).OrderBy(o => o.Createdate);
             ViewBag.pageNumber = p;
+            ViewBag.nextpageNumber = page;
             ViewBag.Orderid = Orderid;
-            ViewBag.orderfacebooklist = orderfacebooklist.ToPagedList(pageNumber: p, pageSize: 20);
+            ViewBag.orderfacebooklist = orderfacebooklist.ToPagedList(pageNumber: page, pageSize: 20);
             return View();
         }
 

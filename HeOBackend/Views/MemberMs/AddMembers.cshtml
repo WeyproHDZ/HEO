@@ -89,7 +89,7 @@
                                             <div class="form-group">
                                                 <label class="col-lg-2 control-label" for="title">回饋金</label>
                                                 <section class="col-lg-3">
-                                                    @Html.TextBoxFor(model => model.Feedbackmoney, new Dictionary<string, object>() { { "class", "form-control" } })
+                                                    @Html.TextBoxFor(model => model.Feedbackmoney, new Dictionary<string, object>() { { "class", "form-control" } , { "Value", 0 } })
                                                     @Html.ValidationMessageFor(model => model.Feedbackmoney)
                                                 </section>
                                             </div>

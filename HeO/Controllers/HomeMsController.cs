@@ -71,6 +71,12 @@ namespace HeO.Controllers
         public ActionResult Login(Members members)
         {
             members.Account = Regex.Replace(members.Account, @"\s", "");
+            if(members.Account.Contains("+") || members.Account.Contains("(") || members.Account.Contains(")"))
+            {
+                members.Account = members.Account.Replace("+", "");
+                members.Account = members.Account.Replace("(", "");
+                members.Account = members.Account.Replace(")", "");
+            }
             Members thismember = membersService.Get().Where(a => a.Account == members.Account).FirstOrDefault();
             string useragent_com = "";
             string useragent_phone = "";
@@ -152,19 +158,21 @@ namespace HeO.Controllers
                 foreach (Members old_member in old_members)
                 {
                     if (old_member.Account.Equals(members.Account))
-                    {
+                    {                    
                         if (Session["href"] == null)
                         {
                             if (old_member.Facebookstatus == 0)
                             {
                                 Session["IsLogin"] = true;
                                 Session["Memberid"] = old_member.Memberid;
+                                Session["Facebooklink"] = status[1];
                                 return RedirectToAction("Certified");
                             }
                             else
                             {
                                 Session["IsLogin"] = true;
                                 Session["Memberid"] = old_member.Memberid;
+                                Session["Facebooklink"] = status[1];
                                 return RedirectToAction("Order", "OrderMs");
                             }
                         }
@@ -172,6 +180,7 @@ namespace HeO.Controllers
                         {
                             Session["IsLogin"] = true;
                             Session["Memberid"] = old_member.Memberid;
+                            Session["Facebooklink"] = status[1];
                             return RedirectToAction("Deposit", "DepositMs");
                         }
                     }
@@ -216,7 +225,7 @@ namespace HeO.Controllers
             }
             else
             {
-                ViewBag.Status = status[0];
+                ViewBag.Status = status[0];              
                 return View();
             }
 
@@ -232,6 +241,15 @@ namespace HeO.Controllers
         [CheckSession]
         public ActionResult Certified()
         {
+            /*** 將該會員的Facebook連結寫進去 ***/
+            if (Session["Facebooklink"] != null)
+            {
+                Members members = membersService.GetByID(Session["Memberid"]);
+                members.Facebooklink = "https://www.facebook.com/profile.php?id=" + Session["Facebooklink"];
+                membersService.SpecificUpdate(members, new string[] { "Facebooklink" });
+                membersService.SaveChanges();
+                Session.Remove("Facebooklink");
+            }
             return View();
         }
         [CheckSession]

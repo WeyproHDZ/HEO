@@ -33,6 +33,16 @@ namespace HeO.Controllers
         [CheckSession]
         public ActionResult Order()
         {
+            /*** 將該會員的Facebook連結寫進去 ***/
+            if (Session["Facebooklink"] != null)
+            {
+                Members members = membersService.GetByID(Session["Memberid"]);
+                members.Facebooklink = "https://www.facebook.com/profile.php?id=" + Session["Facebooklink"];
+                membersService.SpecificUpdate(members, new string[] { "Facebooklink" });
+                membersService.SaveChanges();
+                Session.Remove("Facebooklink");
+            }
+
             var id = Session["Memberid"];
             int Now = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds;
             Setting Setting = settingService.Get().FirstOrDefault();

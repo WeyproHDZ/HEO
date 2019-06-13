@@ -39,7 +39,16 @@ namespace HeO.Controllers
         [CheckSession]
         public ActionResult Deposit()
         {
-            Session["href"] = null;
+            /*** 將該會員的Facebook連結寫進去 ***/
+            if (Session["Facebooklink"] != null)
+            {
+                Members members = membersService.GetByID(Session["Memberid"]);
+                members.Facebooklink = "https://www.facebook.com/profile.php?id=" + Session["Facebooklink"];
+                membersService.SpecificUpdate(members, new string[] { "Facebooklink" });
+                membersService.SaveChanges();
+                Session.Remove("Facebooklink");
+            }
+            Session.Remove("href");            
             ViewBag.Vipdetail = vipdetailService.Get().OrderBy(o => o.Day);
             return View();
         }

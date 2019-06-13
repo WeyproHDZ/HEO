@@ -65,3 +65,14 @@ D:\web\HeO\HeOBackend\bin\HeO.Libs.dll
 D:\web\HeO\HeOBackend\bin\HeO.Libs.pdb
 D:\web\HeO\HeOBackend\bin\System.Net.Http.Formatting.dll
 D:\web\HeO\HeOBackend\bin\System.Net.Http.Formatting.xml
+D:\web\HeO\HeOBackend\bin\ICSharpCode.SharpZipLib.dll
+D:\web\HeO\HeOBackend\bin\LinqToExcel.dll
+D:\web\HeO\HeOBackend\bin\NPOI.dll
+D:\web\HeO\HeOBackend\bin\NPOI.OOXML.dll
+D:\web\HeO\HeOBackend\bin\NPOI.OpenXml4Net.dll
+D:\web\HeO\HeOBackend\bin\NPOI.OpenXmlFormats.dll
+D:\web\HeO\HeOBackend\bin\Remotion.Data.Linq.dll
+D:\web\HeO\HeOBackend\bin\Remotion.dll
+D:\web\HeO\HeOBackend\bin\Remotion.Interfaces.dll
+D:\web\HeO\HeOBackend\bin\ICSharpCode.SharpZipLib.xml
+D:\web\HeO\HeOBackend\bin\LinqToExcel.xml

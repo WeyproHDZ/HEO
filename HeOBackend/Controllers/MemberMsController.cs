@@ -8,6 +8,13 @@ using System.IO;
 using HeOBackend;
 using HeO.Models;
 using HeO.Service;
+using System.Text.RegularExpressions;
+using System.Web.Configuration;
+using System.Data.OleDb;
+using System.Data.SqlClient;
+using NPOI.SS.UserModel;
+using NPOI.XSSF.UserModel;
+using NPOI.HSSF.UserModel;
 
 namespace HeOBackend.Controllers
 {
@@ -21,6 +28,9 @@ namespace HeOBackend.Controllers
         private MembersService membersService;
         private FeedbackproductService feedbackproductService;
         private MemberauthorizationService memberauthorizationService;
+        private UseragentService useragentService;
+
+        private string fileSavedPath = WebConfigurationManager.AppSettings["UploadPath"];
         public MemberMsController()
         {
             db = new HeOEntities();
@@ -31,6 +41,7 @@ namespace HeOBackend.Controllers
             membersService = new MembersService();
             feedbackproductService = new FeedbackproductService();
             memberauthorizationService = new MemberauthorizationService();
+            useragentService = new UseragentService();
         }
         // GET: MemberMs
 
@@ -111,7 +122,7 @@ namespace HeOBackend.Controllers
             return RedirectToAction("Memberlevel");
         }
 
-        /**** 會員 新增/刪除/修改 ****/
+        /**** 會員 新增/刪除/修改/匯入Excel ****/
         [CheckSession(IsAuth = true)]
         public ActionResult Members(int p = 1)
         {
@@ -174,15 +185,34 @@ namespace HeOBackend.Controllers
         [HttpPost]
         public ActionResult AddMembers(Members members)
         {
-            if(TryUpdateModel(members , new string[] { "Account" , "Password" , "Facebookstauts" , "Facebooklink" , "Feedbackmoney" , "Name" , "Isenable"}) && ModelState.IsValid)
+            /*** 給予會員useragent ***/
+            int Now = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds;
+            Useragent useragent_com = useragentService.Get().Where(a => a.Isweb == 0).Where(x => x.Date <= Now).OrderBy(x => x.Date).FirstOrDefault();
+            useragent_com.Date += 1800;
+            useragentService.SpecificUpdate(useragent_com, new string[] { "Date" });
+            Useragent useragent_phone = useragentService.Get().Where(a => a.Isweb == 1).Where(x => x.Date <= Now).OrderBy(x => x.Date).FirstOrDefault();
+            useragent_phone.Date += 1800;
+            useragentService.SpecificUpdate(useragent_phone, new string[] { "Date" });
+            useragentService.SaveChanges();
+            /*** End Useragent ***/
+            if (TryUpdateModel(members , new string[] { "Account" , "Password" , "Facebookstauts" , "Facebooklink" , "Feedbackmoney" , "Name" , "Isenable"}) && ModelState.IsValid)
             {
                 members.Memberid = Guid.NewGuid();
+                members.Account = Regex.Replace(members.Account, @"\s", "");
+                if (members.Account.Contains("+") || members.Account.Contains("(") || members.Account.Contains(")"))
+                {
+                    members.Account = members.Account.Replace("+","");
+                    members.Account = members.Account.Replace("(", "");
+                    members.Account = members.Account.Replace(")", "");
+                }
                 members.Createdate = DateTime.Now;
                 members.Updatedate = DateTime.Now;
                 members.Lastdate = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds;      // 總秒數
                 members.Isenable = 1;
                 members.Isreal = members.Isreal;
                 members.Levelid = members.Levelid;
+                members.Useragent_com = useragent_com.User_agent;
+                members.Useragent_phone = useragent_phone.User_agent;
                 membersService.Create(members);
                 foreach (Memberauthorization memberauthorization in members.Memberauthorization)
                 {
@@ -246,6 +276,62 @@ namespace HeOBackend.Controllers
             }
             
             return RedirectToAction("Members");
+        }
+
+        [HttpPost]
+        public ActionResult UploadMembers(HttpPostedFileBase file)
+        {
+            if(file != null)
+            {
+                var filename = Path.GetFileName(file.FileName);
+                var filetype = Path.GetExtension(file.FileName).ToLower();
+                string newfileName = DateTime.Now.ToString("yyyyMMddHHmmssff") + filetype;
+                var path = Path.Combine(Server.MapPath("~/FileUpload"), newfileName);
+                file.SaveAs(path);
+                importtoSQL(path);
+            }
+            return RedirectToAction("Members");
+        }
+
+        public void importtoSQL(string path)
+        {
+            IWorkbook workBook;
+            using (var fs = new FileStream(path, FileMode.Open, FileAccess.ReadWrite))
+            {
+                workBook = new XSSFWorkbook(fs);                
+            }
+
+            var sheet = workBook.GetSheet("工作表1");
+            for (var i = 1; i < sheet.GetRow(1).LastCellNum; i++)
+            {
+                if (sheet.GetRow(i) != null)
+                {
+                    var member = new Members();
+                    member.Account = sheet.GetRow(i).GetCell(0).ToString();
+                    member.Password = sheet.GetRow(i).GetCell(1).ToString();
+                    member.Name = sheet.GetRow(i).GetCell(2).ToString();
+                    member.Levelid = Guid.Parse("0db21b54-35a7-400b-a8ea-e9c4c2879609");
+                    member.Memberid = Guid.NewGuid();
+                    member.Createdate = DateTime.Now;
+                    member.Updatedate = DateTime.Now;
+                    member.Isenable = 1;
+                    member.Lastdate = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds;
+                    /*** 給予會員useragent ***/
+                    int Now = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds;
+                    Useragent useragent_com = useragentService.Get().Where(a => a.Isweb == 0).Where(x => x.Date <= Now).OrderBy(x => x.Date).FirstOrDefault();
+                    useragent_com.Date += 1800;
+                    useragentService.SpecificUpdate(useragent_com, new string[] { "Date" });
+                    Useragent useragent_phone = useragentService.Get().Where(a => a.Isweb == 1).Where(x => x.Date <= Now).OrderBy(x => x.Date).FirstOrDefault();
+                    useragent_phone.Date += 1800;
+                    useragentService.SpecificUpdate(useragent_phone, new string[] { "Date" });
+                    useragentService.SaveChanges();
+                    /*** End Useragent ***/
+                    member.Useragent_com = useragent_com.User_agent;
+                    member.Useragent_phone = useragent_phone.User_agent;
+                    membersService.Create(member);                  
+                }               
+            }
+            membersService.SaveChanges();
         }
         /**** VIP費用設定 新增/刪除/修改 ****/
         [CheckSession(IsAuth = true)]
@@ -533,4 +619,5 @@ namespace HeOBackend.Controllers
         }
         #endregion
     }
+
 }
