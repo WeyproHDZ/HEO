@@ -40,13 +40,13 @@ namespace HeOBackend.Controllers
 
         [CheckSession(IsAuth = true)]
         [HttpGet]
-        public ActionResult ViewOrderfacebooklist(Guid Orderid , int p , int page)
+        public ActionResult ViewOrderfacebooklist(Guid Orderid , int p , int np)
         {
             IEnumerable<Orderfaceooklist> orderfacebooklist = orderfacebooklistService.Get().Where(a => a.Orderid == Orderid).OrderBy(o => o.Createdate);
             ViewBag.pageNumber = p;
-            ViewBag.nextpageNumber = page;
+            ViewBag.nextpageNumber = np;
             ViewBag.Orderid = Orderid;
-            ViewBag.orderfacebooklist = orderfacebooklist.ToPagedList(pageNumber: page, pageSize: 20);
+            ViewBag.orderfacebooklist = orderfacebooklist.ToPagedList(pageNumber: np, pageSize: 20);
             return View();
         }
 

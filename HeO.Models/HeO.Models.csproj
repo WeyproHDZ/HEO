@@ -133,6 +133,9 @@
     <Compile Include="Memberlevelcooldown.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Memberloginrecord.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="Members.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>

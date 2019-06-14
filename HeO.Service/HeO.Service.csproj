@@ -137,6 +137,7 @@
     <Compile Include="MemberauthorizationService.cs" />
     <Compile Include="MemberlevelcooldownService.cs" />
     <Compile Include="MemberlevelService.cs" />
+    <Compile Include="MemberloginrecordService.cs" />
     <Compile Include="MembersService.cs" />
     <Compile Include="NewslangService.cs" />
     <Compile Include="NewsService.cs" />

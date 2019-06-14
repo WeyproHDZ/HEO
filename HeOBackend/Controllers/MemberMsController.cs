@@ -15,6 +15,8 @@ using System.Data.SqlClient;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 using NPOI.HSSF.UserModel;
+using System.Net;
+using System.Text;
 
 namespace HeOBackend.Controllers
 {
@@ -28,6 +30,7 @@ namespace HeOBackend.Controllers
         private MembersService membersService;
         private FeedbackproductService feedbackproductService;
         private MemberauthorizationService memberauthorizationService;
+        private MemberloginrecordService memberloginrecordService;
         private UseragentService useragentService;
 
         private string fileSavedPath = WebConfigurationManager.AppSettings["UploadPath"];
@@ -41,6 +44,7 @@ namespace HeOBackend.Controllers
             membersService = new MembersService();
             feedbackproductService = new FeedbackproductService();
             memberauthorizationService = new MemberauthorizationService();
+            memberloginrecordService = new MemberloginrecordService();
             useragentService = new UseragentService();
         }
         // GET: MemberMs
@@ -122,13 +126,14 @@ namespace HeOBackend.Controllers
             return RedirectToAction("Memberlevel");
         }
 
-        /**** 會員 新增/刪除/修改/匯入Excel ****/
+        /**** 會員 新增/刪除/修改/匯入Excel/驗證帳號 ****/
         [CheckSession(IsAuth = true)]
         public ActionResult Members(int p = 1)
         {
             var data = membersService.Get().OrderBy(o => o.Createdate);
             ViewBag.pageNumber = p;
             ViewBag.Members = data.ToPagedList(pageNumber: p, pageSize: 20);
+            ViewBag.message = "按下確定後開始驗證帳號，請勿關閉分頁";
             LevelDropDownList();
             return View();
         }
@@ -279,6 +284,7 @@ namespace HeOBackend.Controllers
         }
 
         [HttpPost]
+        [CheckSession(IsAuth =true)]
         public ActionResult UploadMembers(HttpPostedFileBase file)
         {
             if(file != null)
@@ -307,7 +313,13 @@ namespace HeOBackend.Controllers
                 if (sheet.GetRow(i) != null)
                 {
                     var member = new Members();
-                    member.Account = sheet.GetRow(i).GetCell(0).ToString();
+                    member.Account = Regex.Replace(sheet.GetRow(i).GetCell(0).ToString(), @"\s", "");
+                    if (member.Account.Contains("+") || member.Account.Contains("(") || member.Account.Contains(")"))
+                    {
+                        member.Account = member.Account.Replace("+", "");
+                        member.Account = member.Account.Replace("(", "");
+                        member.Account = member.Account.Replace(")", "");
+                    }
                     member.Password = sheet.GetRow(i).GetCell(1).ToString();
                     member.Name = sheet.GetRow(i).GetCell(2).ToString();
                     member.Levelid = Guid.Parse("0db21b54-35a7-400b-a8ea-e9c4c2879609");
@@ -332,6 +344,46 @@ namespace HeOBackend.Controllers
                 }               
             }
             membersService.SaveChanges();
+        }
+
+        [HttpGet]
+        [CheckSession(IsAuth = true)]
+        public ActionResult AuthMembers()
+        {
+            IEnumerable<Members> members = membersService.Get();
+            foreach (Members auth_member in members)
+            {
+                string url = "http://heofrontend.4webdemo.com:8080/Check/CheckFacebook?Account=" + auth_member.Account + "&Password=" + auth_member.Password + "&Useragent=" + auth_member.Useragent_com;
+                WebRequest myReq = WebRequest.Create(url);
+                myReq.Method = "GET";
+                myReq.ContentType = "application/json; charset=UTF-8";
+                UTF8Encoding enc = new UTF8Encoding();
+                myReq.Headers.Remove("auth-token");
+                WebResponse wr = myReq.GetResponse();
+                Stream receiveStream = wr.GetResponseStream();
+                StreamReader reader = new StreamReader(receiveStream, Encoding.UTF8);
+                string content = reader.ReadToEnd();
+                string[] status = content.Replace("\"", "").Split(',');
+                if (status[0] != "成功登入!")
+                {
+                    Memberloginrecord loginrecord = new Memberloginrecord();
+                    loginrecord.Status = false;
+                    loginrecord.Memberid = auth_member.Memberid;
+                    loginrecord.Createdate = DateTime.Now;
+                    memberloginrecordService.Create(loginrecord);
+                }
+                else
+                {
+                    Memberloginrecord loginrecord = new Memberloginrecord();
+                    loginrecord.Status = true;
+                    loginrecord.Memberid = auth_member.Memberid;
+                    loginrecord.Createdate = DateTime.Now;
+                    memberloginrecordService.Create(loginrecord);
+                }
+            }
+            memberloginrecordService.SaveChanges();
+            TempData["message"] = "驗證已完成";
+            return RedirectToAction("Members");
         }
         /**** VIP費用設定 新增/刪除/修改 ****/
         [CheckSession(IsAuth = true)]

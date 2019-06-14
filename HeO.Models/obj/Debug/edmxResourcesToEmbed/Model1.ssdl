@@ -115,10 +115,20 @@
     <Property Name="Levelid" Type="uniqueidentifier" />
     <Property Name="Cooldowntime" Type="int" />
   </EntityType>
+  <EntityType Name="Memberloginrecord">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Memberid" Type="uniqueidentifier" />
+    <Property Name="Status" Type="bit" />
+    <Property Name="Createdate" Type="datetime" />
+  </EntityType>
   <EntityType Name="Members">
     <Key>
       <PropertyRef Name="Memberid" />
     </Key>
+    <Property Name="Isenable" Type="int" Nullable="false" />
     <Property Name="Memberid" Type="uniqueidentifier" Nullable="false" />
     <Property Name="Levelid" Type="uniqueidentifier" />
     <Property Name="Facebookid" Type="nvarchar" MaxLength="50" />
@@ -134,7 +144,6 @@
     <Property Name="Lastdate" Type="int" Nullable="false" />
     <Property Name="Createdate" Type="datetime" Nullable="false" />
     <Property Name="Updatedate" Type="datetime" />
-    <Property Name="Isenable" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="News">
     <Key>
@@ -424,6 +433,18 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK_Memberloginrecord_Members">
+    <End Role="Members" Type="Self.Members" Multiplicity="0..1" />
+    <End Role="Memberloginrecord" Type="Self.Memberloginrecord" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Members">
+        <PropertyRef Name="Memberid" />
+      </Principal>
+      <Dependent Role="Memberloginrecord">
+        <PropertyRef Name="Memberid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK_Members_Memberlevel">
     <End Role="Memberlevel" Type="Self.Memberlevel" Multiplicity="0..1" />
     <End Role="Members" Type="Self.Members" Multiplicity="*" />
@@ -530,6 +551,7 @@
     <EntitySet Name="Memberauthorization" EntityType="Self.Memberauthorization" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Memberlevel" EntityType="Self.Memberlevel" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Memberlevelcooldown" EntityType="Self.Memberlevelcooldown" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Memberloginrecord" EntityType="Self.Memberloginrecord" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Members" EntityType="Self.Members" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="News" EntityType="Self.News" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Newslang" EntityType="Self.Newslang" Schema="dbo" store:Type="Tables" />
@@ -584,6 +606,10 @@
     <AssociationSet Name="FK_Memberlevelcooldown_Memberlevel" Association="Self.FK_Memberlevelcooldown_Memberlevel">
       <End Role="Memberlevel" EntitySet="Memberlevel" />
       <End Role="Memberlevelcooldown" EntitySet="Memberlevelcooldown" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Memberloginrecord_Members" Association="Self.FK_Memberloginrecord_Members">
+      <End Role="Members" EntitySet="Members" />
+      <End Role="Memberloginrecord" EntitySet="Memberloginrecord" />
     </AssociationSet>
     <AssociationSet Name="FK_Members_Memberlevel" Association="Self.FK_Members_Memberlevel">
       <End Role="Memberlevel" EntitySet="Memberlevel" />

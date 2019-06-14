@@ -48,6 +48,8 @@
         <AssociationConnector Association="HeOModel.FK_Orderfaceooklist_Members" />
         <AssociationConnector Association="HeOModel.FK_Viprecord_Members" />
         <EntityTypeShape EntityType="HeOModel.Returnstatus" Width="1.5" PointX="5.5" PointY="8.875" />
+        <EntityTypeShape EntityType="HeOModel.Memberloginrecord" Width="1.5" PointX="5.25" PointY="26.75" />
+        <AssociationConnector Association="HeOModel.FK_Memberloginrecord_Members" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

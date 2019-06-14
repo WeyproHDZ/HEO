@@ -78,6 +78,11 @@ namespace HeO.Controllers
         {
             Guid Memberid = Guid.Parse(Session["Memberid"].ToString());
             Members Member = membersService.GetByID(Memberid);
+            RegexStringValidator myRegexValidator = new RegexStringValidator(@"/^[0 - 9] *$/");
+            if (feedbackrecord.Money > Member.Feedbackmoney || feedbackrecord.Money <= 0 || myRegexValidator.CanValidate(feedbackrecord.Money.GetType()))
+            {
+                return RedirectToAction("Feedbackrecord");
+            }          
             IEnumerable<Feedbackrecord> old_data = feedbackrecordService.Get().Where(a => a.Memberid == Memberid).OrderByDescending(o => o.Createdate);
             int count = old_data.Count();
             if(count == 0)

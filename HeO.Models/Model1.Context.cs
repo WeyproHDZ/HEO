@@ -51,5 +51,6 @@ namespace HeO.Models
         public virtual DbSet<Useragent> Useragent { get; set; }
         public virtual DbSet<Members> Members { get; set; }
         public virtual DbSet<Returnstatus> Returnstatus { get; set; }
+        public virtual DbSet<Memberloginrecord> Memberloginrecord { get; set; }
     }
 }

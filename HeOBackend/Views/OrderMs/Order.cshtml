@@ -74,7 +74,7 @@
                                                         break;
                                                 }
                                                 <td class="text-center">@entity.Cost </td>                                                
-                                                <td class="text-center"><a href="@Url.Action("ViewOrderfacebooklist", "OrderMs", new { Orderid = entity.Orderid, p = ViewBag.pageNumber, page = ViewBag.nextpageNumber })" class="btn btn-info btn-xs"><i class="fa fa-search"></i></a></td>                    
+                                                <td class="text-center"><a href="@Url.Action("ViewOrderfacebooklist", "OrderMs", new { Orderid = entity.Orderid, p = ViewBag.pageNumber, np = ViewBag.nextpageNumber })" class="btn btn-info btn-xs"><i class="fa fa-search"></i></a></td>                    
                                                 <td class="text-center"><a href="@Url.Action("EditOrder", "OrderMs", new { Orderid = entity.Orderid, p = ViewBag.pageNumber })" class="btn btn-info btn-xs"><i class="fa fa-edit"></i></a></td>
                                             </tr>
                                             x++;

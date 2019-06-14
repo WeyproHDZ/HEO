@@ -22,6 +22,7 @@ namespace HeO.Models
             this.Order = new HashSet<Order>();
             this.Orderfaceooklist = new HashSet<Orderfaceooklist>();
             this.Viprecord = new HashSet<Viprecord>();
+            this.Memberloginrecord = new HashSet<Memberloginrecord>();
         }
     
         public System.Guid Memberid { get; set; }
@@ -52,5 +53,7 @@ namespace HeO.Models
         public virtual ICollection<Orderfaceooklist> Orderfaceooklist { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Viprecord> Viprecord { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Memberloginrecord> Memberloginrecord { get; set; }
     }
 }

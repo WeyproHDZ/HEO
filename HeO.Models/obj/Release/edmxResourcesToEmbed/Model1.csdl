@@ -222,6 +222,11 @@
       <End Role="Viprecord" EntitySet="Viprecord" />
     </AssociationSet>
     <EntitySet Name="Returnstatus" EntityType="HeOModel.Returnstatus" />
+    <EntitySet Name="Memberloginrecord" EntityType="HeOModel.Memberloginrecord" />
+    <AssociationSet Name="FK_Memberloginrecord_Members" Association="HeOModel.FK_Memberloginrecord_Members">
+      <End Role="Members" EntitySet="Members" />
+      <End Role="Memberloginrecord" EntitySet="Memberloginrecord" />
+    </AssociationSet>
   </EntityContainer>
   <EntityType Name="Memberauthorization">
     <Key>
@@ -557,6 +562,7 @@
     <NavigationProperty Name="Order" Relationship="HeOModel.FK_Order_Members" FromRole="Members" ToRole="Order" />
     <NavigationProperty Name="Orderfaceooklist" Relationship="HeOModel.FK_Orderfaceooklist_Members" FromRole="Members" ToRole="Orderfaceooklist" />
     <NavigationProperty Name="Viprecord" Relationship="HeOModel.FK_Viprecord_Members" FromRole="Members" ToRole="Viprecord" />
+    <NavigationProperty Name="Memberloginrecord" Relationship="HeOModel.FK_Memberloginrecord_Members" FromRole="Members" ToRole="Memberloginrecord" />
   </EntityType>
   <Association Name="FK_Feedbackrecord_Members">
     <End Type="HeOModel.Members" Role="Members" Multiplicity="1">
@@ -646,4 +652,26 @@
     <Property Name="Text" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
     <Property Name="Createdate" Type="DateTime" Precision="3" />
   </EntityType>
+  <EntityType Name="Memberloginrecord">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Memberid" Type="Guid" />
+    <Property Name="Status" Type="Boolean" />
+    <Property Name="Createdate" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="Members" Relationship="HeOModel.FK_Memberloginrecord_Members" FromRole="Memberloginrecord" ToRole="Members" />
+  </EntityType>
+  <Association Name="FK_Memberloginrecord_Members">
+    <End Type="HeOModel.Members" Role="Members" Multiplicity="0..1" />
+    <End Type="HeOModel.Memberloginrecord" Role="Memberloginrecord" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Members">
+        <PropertyRef Name="Memberid" />
+      </Principal>
+      <Dependent Role="Memberloginrecord">
+        <PropertyRef Name="Memberid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
 </Schema>
