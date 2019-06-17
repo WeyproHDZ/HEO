@@ -66,16 +66,23 @@
                                 <tbody>
                                     @foreach (Members entity in data)
                                     {
+                                        if (entity.Memberloginrecord.Count() == 0 || entity.Memberloginrecord.OrderByDescending(a => a.Createdate).FirstOrDefault().Status == false)
+                                        {
+                                            status = "未驗證";
+                                        }
+                                        else
+                                        {
+                                            status = "已驗證";
+                                        }
                                         <tr>
-                                            @if (entity.Memberloginrecord.Count() == 0 || entity.Memberloginrecord.OrderByDescending(a => a.Createdate).FirstOrDefault().Status == false)
+                                            @if (status == "已驗證")
                                             {
-                                                status = "未驗證";
+                                                <td class="text-center"><img src="~/Content/img/bullet_tick.png" /></td>
                                             }
                                             else
                                             {
-                                                status = "已驗證";
+                                                <td class="text-center"><img src="~/Content/img/bullet_cross.png" /></td>
                                             }
-                                            <td class="text-center">@status</td>
                                             <td class="text-center">@entity.Memberlevel.Levelname</td>
                                             <td class="text-center">@entity.Account</td>
                                             <td class="text-center">@entity.Name</td>

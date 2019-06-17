@@ -17,6 +17,7 @@ namespace HeOBackend.Controllers
         private OrderService orderService;
         private OrderfacebooklistService orderfacebooklistService;
         private FeedbackproductService feedbackproductService;
+        private MemberloginrecordService memberloginrecordService;
 
         public OrderMsController()
         {
@@ -24,6 +25,7 @@ namespace HeOBackend.Controllers
             orderService = new OrderService();
             orderfacebooklistService = new OrderfacebooklistService();
             feedbackproductService = new FeedbackproductService();
+            memberloginrecordService = new MemberloginrecordService();
         }
         // GET: OrderMs
         [CheckSession(IsAuth = true)]

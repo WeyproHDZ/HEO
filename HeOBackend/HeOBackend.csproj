@@ -203,6 +203,8 @@
     <Content Include="Content\img\avatars\sunny-big.png" />
     <Content Include="Content\img\avatars\sunny.png" />
     <Content Include="Content\img\blank.gif" />
+    <Content Include="Content\img\bullet_cross.png" />
+    <Content Include="Content\img\bullet_tick.png" />
     <Content Include="Content\img\clear.png" />
     <Content Include="Content\img\colorblind-friendly\pt1.png" />
     <Content Include="Content\img\colorblind-friendly\pt2.png" />

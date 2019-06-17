@@ -218,6 +218,13 @@ namespace HeOBackend.Controllers
                 members.Levelid = members.Levelid;
                 members.Useragent_com = useragent_com.User_agent;
                 members.Useragent_phone = useragent_phone.User_agent;
+                /**** 將會員寫進會員登入紀錄裡，預設狀態為false ****/
+                Memberloginrecord memberloginrecord = new Memberloginrecord();
+                memberloginrecord.Memberid = members.Memberid;
+                memberloginrecord.Createdate = members.Createdate;
+                memberloginrecord.Status = false;
+                members.Memberloginrecord.Add(memberloginrecord);
+                /**** End Memberloginrecord ****/
                 membersService.Create(members);
                 foreach (Memberauthorization memberauthorization in members.Memberauthorization)
                 {
@@ -312,6 +319,7 @@ namespace HeOBackend.Controllers
             {
                 if (sheet.GetRow(i) != null)
                 {
+                    IEnumerable<Members> old_members = membersService.Get();        // 撈所有會員
                     var member = new Members();
                     member.Account = Regex.Replace(sheet.GetRow(i).GetCell(0).ToString(), @"\s", "");
                     if (member.Account.Contains("+") || member.Account.Contains("(") || member.Account.Contains(")"))
@@ -340,6 +348,13 @@ namespace HeOBackend.Controllers
                     /*** End Useragent ***/
                     member.Useragent_com = useragent_com.User_agent;
                     member.Useragent_phone = useragent_phone.User_agent;
+                    /**** 將會員寫進會員登入紀錄裡，預設狀態為false ****/
+                    Memberloginrecord memberloginrecord = new Memberloginrecord();
+                    memberloginrecord.Memberid = member.Memberid;
+                    memberloginrecord.Createdate = member.Createdate;
+                    memberloginrecord.Status = false;
+                    member.Memberloginrecord.Add(memberloginrecord);
+                    /**** End Memberloginrecord ****/
                     membersService.Create(member);                  
                 }               
             }

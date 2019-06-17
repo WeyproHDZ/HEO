@@ -28,6 +28,7 @@ namespace HeO.Controllers
         private MemberlevelcooldownService memberlevelcooldownService;
         private FeedbackproductService feedbackproductService;
         private MemberauthorizationService memberauthorizationService;
+        private MemberloginrecordService memberloginrecordService;
         private UseragentService useragentService;
         public HomeMsController()
         {
@@ -38,6 +39,7 @@ namespace HeO.Controllers
             memberlevelcooldownService = new MemberlevelcooldownService();
             feedbackproductService = new FeedbackproductService();
             memberauthorizationService = new MemberauthorizationService();
+            memberloginrecordService = new MemberloginrecordService();
             useragentService = new UseragentService();
         }
 
@@ -152,7 +154,7 @@ namespace HeO.Controllers
             {
                 Session["Img"] = status[2];
                 Session["Facebookname"] = status[3];
-                IEnumerable<Members> old_members = membersService.Get();
+                IEnumerable<Members> old_members = membersService.Get().ToList();
                 Memberlevelcooldown memberlevelcooldown = memberlevelcooldownService.Get().OrderByDescending(o => o.Cooldowntime).FirstOrDefault();  // 撈會員層級冷卻時間最長的那筆資料
                 IEnumerable<Feedbackproduct> feedbackproduct = feedbackproductService.Get();                
                 foreach (Members old_member in old_members)
@@ -165,14 +167,40 @@ namespace HeO.Controllers
                             {
                                 Session["IsLogin"] = true;
                                 Session["Memberid"] = old_member.Memberid;
-                                Session["Facebooklink"] = status[1];
+
+                                /**** 將會員成功登入寫進會員登入紀錄裡 ****/
+                                Memberloginrecord memberloginrecord = new Memberloginrecord();
+                                memberloginrecord.Memberid = old_member.Memberid;
+                                memberloginrecord.Createdate = DateTime.Now;
+                                memberloginrecord.Status = true;
+                                memberloginrecordService.Create(memberloginrecord);
+                                memberloginrecordService.SaveChanges();
+                                /**** End Memberloginrecord ****/
+                                /**** 更新會員Facebooklink連結 *****/
+                                old_member.Facebooklink = "https://www.facebook.com/profile.php?id=" + status[1];
+                                membersService.SpecificUpdate(old_member, new string[] { "Facebooklink" });
+                                membersService.SaveChanges();
+                                /***** End Facebooklink ****/
                                 return RedirectToAction("Certified");
                             }
                             else
                             {
                                 Session["IsLogin"] = true;
                                 Session["Memberid"] = old_member.Memberid;
-                                Session["Facebooklink"] = status[1];
+
+                                /**** 將會員成功登入寫進會員登入紀錄裡 ****/
+                                Memberloginrecord memberloginrecord = new Memberloginrecord();
+                                memberloginrecord.Memberid = old_member.Memberid;
+                                memberloginrecord.Createdate = DateTime.Now;
+                                memberloginrecord.Status = true;
+                                memberloginrecordService.Create(memberloginrecord);
+                                memberloginrecordService.SaveChanges();
+                                /**** End Memberloginrecord ****/
+                                /**** 更新會員Facebooklink連結 *****/
+                                old_member.Facebooklink = "https://www.facebook.com/profile.php?id=" + status[1];
+                                membersService.SpecificUpdate(old_member, new string[] { "Facebooklink" });
+                                membersService.SaveChanges();
+                                /***** End Facebooklink ****/
                                 return RedirectToAction("Order", "OrderMs");
                             }
                         }
@@ -180,7 +208,20 @@ namespace HeO.Controllers
                         {
                             Session["IsLogin"] = true;
                             Session["Memberid"] = old_member.Memberid;
-                            Session["Facebooklink"] = status[1];
+
+                            /**** 將會員成功登入寫進會員登入紀錄裡 ****/
+                            Memberloginrecord memberloginrecord = new Memberloginrecord();
+                            memberloginrecord.Memberid = old_member.Memberid;
+                            memberloginrecord.Createdate = DateTime.Now;
+                            memberloginrecord.Status = true;
+                            memberloginrecordService.Create(memberloginrecord);
+                            memberloginrecordService.SaveChanges();
+                            /**** End Memberloginrecord ****/
+                            /**** 更新會員Facebooklink連結 *****/
+                            old_member.Facebooklink = "https://www.facebook.com/profile.php?id=" + status[1];
+                            membersService.SpecificUpdate(old_member, new string[] { "Facebooklink" });
+                            membersService.SaveChanges();
+                            /***** End Facebooklink ****/
                             return RedirectToAction("Deposit", "DepositMs");
                         }
                     }
@@ -208,6 +249,13 @@ namespace HeO.Controllers
 
                         //memberauthorizationService.Create(memberauthorization);
                     }
+                    /**** 將會員成功登入寫進會員登入紀錄裡 ****/
+                    Memberloginrecord memberloginrecord = new Memberloginrecord();
+                    memberloginrecord.Memberid = members.Memberid;
+                    memberloginrecord.Createdate = members.Createdate;
+                    memberloginrecord.Status = true;
+                    members.Memberloginrecord.Add(memberloginrecord);
+                    /**** End Memberloginrecord ****/
                     membersService.Create(members);
                     membersService.SaveChanges();
                 }
@@ -241,15 +289,6 @@ namespace HeO.Controllers
         [CheckSession]
         public ActionResult Certified()
         {
-            /*** 將該會員的Facebook連結寫進去 ***/
-            if (Session["Facebooklink"] != null)
-            {
-                Members members = membersService.GetByID(Session["Memberid"]);
-                members.Facebooklink = "https://www.facebook.com/profile.php?id=" + Session["Facebooklink"];
-                membersService.SpecificUpdate(members, new string[] { "Facebooklink" });
-                membersService.SaveChanges();
-                Session.Remove("Facebooklink");
-            }
             return View();
         }
         [CheckSession]

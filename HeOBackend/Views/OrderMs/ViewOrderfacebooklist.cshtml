@@ -1,8 +1,9 @@
 ﻿@{
     var data = ViewBag.orderfacebooklist as IPagedList<Orderfaceooklist>;
     int x = 0;
+    string status;
 }
-@model Orderfaceooklist
+@model Members
 <!-- MAIN CONTENT -->
 <div id="content">
 
@@ -33,13 +34,30 @@
                             <table class="table table-hover table-bordered table-striped smart-form">
                                 <thead>
                                     <tr>
+                                        <th width="10%" class="text-center">驗證狀態</th>
                                         <th class="text-center">Facebook帳號</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach (Orderfaceooklist entity in data)
                                     {
+                                        if (entity.Members.Memberloginrecord.OrderByDescending(a => a.Createdate).FirstOrDefault().Status == true)
+                                        {
+                                            status = "已驗證";
+                                        }
+                                        else
+                                        {
+                                            status = "未驗證";
+                                        }
                                         <tr>
+                                            @if (status == "已驗證")
+                                            {
+                                                <td class="text-center"><img src="~/Content/img/bullet_tick.png" /></td>
+                                            }
+                                            else
+                                            {
+                                                <td class="text-center"><img src="~/Content/img/bullet_cross.png" /></td>
+                                            }
                                             <td class="text-center">@entity.Facebookaccount</td>
                                         </tr>
                                         x++;

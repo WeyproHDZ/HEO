@@ -33,21 +33,10 @@ namespace HeO.Controllers
         [CheckSession]
         public ActionResult Order()
         {
-            /*** 將該會員的Facebook連結寫進去 ***/
-            if (Session["Facebooklink"] != null)
-            {
-                Members members = membersService.GetByID(Session["Memberid"]);
-                members.Facebooklink = "https://www.facebook.com/profile.php?id=" + Session["Facebooklink"];
-                membersService.SpecificUpdate(members, new string[] { "Facebooklink" });
-                membersService.SaveChanges();
-                Session.Remove("Facebooklink");
-            }
-
-            var id = Session["Memberid"];
             int Now = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds;
             Setting Setting = settingService.Get().FirstOrDefault();
             Guid VipLevelid = memberlevelService.Get().Where(a => a.Levelname == "VIP").FirstOrDefault().Levelid;       // VIP層級的ID                                 
-            int now_members = membersService.Get().Where(a => a.Levelid != VipLevelid).Where(x => x.Lastdate <= Now).OrderBy(a => a.Lastdate).Count();     // 目前人數(扣掉會員層級為VIP)
+            int now_members = membersService.Get().Where(a => a.Levelid != VipLevelid).Where(c => c.Memberloginrecord.OrderByDescending(a => a.Createdate).FirstOrDefault().Status == true).OrderBy(a => a.Lastdate).Count();     // 目前人數(扣掉會員層級為VIP)
             //int now_members = membersService.Get().Where(a => a.Levelid != VipLevelid).Where(x => DbFunctions.CreateDateTime(x.Lastdate.Year, x.Lastdate.Month, x.Lastdate.Day, x.Lastdate.Hour, x.Lastdate.Minute, x.Lastdate.Second) <= DbFunctions.CreateDateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second)).OrderBy(a => a.Lastdate).Count();     // 目前人數(扣掉會員層級為VIP)
             ViewBag.Now_members = now_members;
             ViewBag.MemberNumber = membersService.Get().Count();
