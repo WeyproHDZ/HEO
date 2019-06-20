@@ -41,6 +41,32 @@ namespace HeOBackend.Controllers
         }
 
         [CheckSession(IsAuth = true)]
+        [HttpPost]
+        public ActionResult Order(string search, int p = 1)
+        {
+            if(search != null)
+            {
+                IEnumerable<Feedbackproduct> feedbackproduct = feedbackproductService.Get();
+                var data = orderService.Get().Where(x => x.Ordernumber.Contains(search)).OrderBy(o => o.Createdate);
+                ViewBag.pageNumber = p;
+                ViewBag.nextpageNumber = 1;
+                ViewBag.Order = data.ToPagedList(pageNumber: p, pageSize: 20);
+                ViewBag.feedbackproduct = feedbackproduct;
+                return View();
+            }
+            else
+            {
+                IEnumerable<Feedbackproduct> feedbackproduct = feedbackproductService.Get();
+                var data = orderService.Get().OrderBy(o => o.Createdate);
+                ViewBag.pageNumber = p;
+                ViewBag.nextpageNumber = 1;
+                ViewBag.Order = data.ToPagedList(pageNumber: p, pageSize: 20);
+                ViewBag.feedbackproduct = feedbackproduct;
+                return View();
+            }
+        }
+
+        [CheckSession(IsAuth = true)]
         [HttpGet]
         public ActionResult ViewOrderfacebooklist(Guid Orderid , int p , int np)
         {
