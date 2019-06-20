@@ -52,11 +52,12 @@ namespace HeOBackend.Controllers
                     orderService.SpecificUpdate(order, new string[] { "OrderStatus" });
                     orderService.SaveChanges();
                     /*** 傳送訂單 ***/
-                    string[] OrderArray = new string[4];
+                    string[] OrderArray = new string[5];
                     OrderArray[0] = order.Ordernumber;
                     OrderArray[1] = order.Remains.ToString();
                     OrderArray[2] = order.Url;
                     OrderArray[3] = order.Service;
+                    OrderArray[4] = order.Message;
 
                     return this.Json(OrderArray, JsonRequestBehavior.AllowGet);
                 }
@@ -109,13 +110,12 @@ namespace HeOBackend.Controllers
         public JsonResult GetAccount(string Id, int number, string Ordernumber)
         {
             if (Id == "heo_order")
-            {
+            {               
                 int Now = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds;                                                                          // 目前時間的總秒數
                 Setting setting = settingService.Get().FirstOrDefault();
                 Order order = orderService.Get().Where(a => a.Ordernumber == Ordernumber).FirstOrDefault();                                                     // 撈此訂單的詳細資料
-                Feedbackproduct feedbackproduct = feedbackproductService.Get().Where(a => a.Feedbackproductname.Contains(order.Service)).FirstOrDefault();      // 撈此訂單所需之產品的詳細資料
-
-                IEnumerable<Order> old_order = orderService.Get().Where(x => x.Ordernumber != order.Ordernumber).Where(a => a.Url == order.Url);                // 撈所有訂單裡網址為此訂單的資料
+                Feedbackproduct feedbackproduct = feedbackproductService.Get().Where(a => a.Feedbackproductname.Contains(order.Service)).FirstOrDefault();      // 撈此訂單所需之產品的詳細資料                
+                IEnumerable<Order> old_order = orderService.Get().Where(x => x.Ordernumber != order.Ordernumber).Where(c => c.Service == feedbackproduct.Feedbackproductname).Where(a => a.Url == order.Url);                // 撈所有訂單裡網址為此訂單的資料
                 List<get_old_member> MemberList = new List<get_old_member>();
                                 
                 if (old_order.Count() > 0)
@@ -135,7 +135,8 @@ namespace HeOBackend.Controllers
                     }
                 }
                 Guid VipLevelid = memberlevelService.Get().Where(a => a.Levelname == "VIP").FirstOrDefault().Levelid;                                           // VIP層級的ID
-                if(order.Ordernumber.Contains("heo"))
+                
+                if (order.Ordernumber.Contains("heo"))
                 {                    
                     /*** HEO內部下的訂單 ***/
                     IEnumerable<Members> members = membersService.Get().Where(c => c.Levelid != VipLevelid).Where(x => x.Lastdate <= Now).Where(c => c.Memberloginrecord.OrderByDescending(a => a.Createdate).FirstOrDefault().Status == true).OrderBy(a => a.Lastdate).OrderBy(a => a.Lastdate);       // 撈層級非VIP的帳號詳細資料
@@ -198,13 +199,13 @@ namespace HeOBackend.Controllers
                     }
                 }
                 else
-                {         
-                    /*** HDZ餵來的訂單 ***/                    
-                    if(order.Isreal == true)
+                {                    
+                    /*** HDZ餵來的訂單 ***/
+                    if (order.Isreal == true)
                     {
                         /*** 此筆訂單需要真人帳號 ****/
-                        IEnumerable<Members> members = membersService.Get().Where(c => c.Isreal == true).Where(x => x.Lastdate <= Now).Where(w => w.Memberloginrecord.OrderByDescending(e => e.Createdate).FirstOrDefault().Status == true).Where(s => s.Memberauthorization.Where(q => q.Feedbackproductid == feedbackproduct.Feedbackproductid).FirstOrDefault().Checked == true).OrderBy(a => a.Lastdate).Take(number);
-                        if (members.Count() == number)
+                        IEnumerable<Members> members = membersService.Get().Where(c => c.Isreal == true).Where(x => x.Lastdate <= Now).Where(w => w.Memberloginrecord.OrderByDescending(e => e.Createdate).FirstOrDefault().Status == true).Where(s => s.Memberauthorization.Where(q => q.Feedbackproductid == feedbackproduct.Feedbackproductid).FirstOrDefault().Checked == true).OrderBy(a => a.Lastdate);
+                        if (members != null)
                         {
                             List<get_member> AccountList = new List<get_member>();
                             bool used_accoount = false;
@@ -262,9 +263,9 @@ namespace HeOBackend.Controllers
                         }
                     }
                     else
-                    {                        
-                        IEnumerable<Members> members = membersService.Get().Where(x => x.Lastdate <= Now).Where(b => b.Memberloginrecord.OrderByDescending(x => x.Createdate).FirstOrDefault().Status == true).OrderBy(a => a.Lastdate).Where(s => s.Memberauthorization.Where(q => q.Feedbackproductid == feedbackproduct.Feedbackproductid).FirstOrDefault().Checked == true).Take(number);
-                        if (members.Count() == number)
+                    {               
+                        IEnumerable<Members> members = membersService.Get().Where(x => x.Lastdate <= Now).Where(b => b.Memberloginrecord.OrderByDescending(x => x.Createdate).FirstOrDefault().Status == true).OrderBy(a => a.Lastdate).Where(s => s.Memberauthorization.Where(q => q.Feedbackproductid == feedbackproduct.Feedbackproductid).FirstOrDefault().Checked == true);
+                        if (members != null)
                         {
                             List<get_member> AccountList = new List<get_member>();
                             bool used_accoount = false;
@@ -319,6 +320,7 @@ namespace HeOBackend.Controllers
 
                             membersService.SaveChanges();
                             return this.Json(AccountList.Take(number), JsonRequestBehavior.AllowGet);
+
                         }
                         else
                         {
@@ -450,12 +452,13 @@ namespace HeOBackend.Controllers
                 order.Ordernumber = heo_array[1];
                 order.Url = heo_array[2];
                 order.Isreal = heo_array[3] == "true" ? true : false;
-              
+                
                 foreach (Feedbackproduct feedbackproductlist in feedbackproduct)
                 {
                     if (heo_array[4].Contains(feedbackproductlist.Feedbackproductname))
                     {
                         order.Service = feedbackproductlist.Feedbackproductname;
+                        order.Message = heo_array[6];
                     }
                 }
                 order.Count = Convert.ToInt32(heo_array[5]);

@@ -315,8 +315,9 @@ namespace HeOBackend.Controllers
             }
 
             var sheet = workBook.GetSheet("工作表1");
-            for (var i = 1; i < sheet.GetRow(1).LastCellNum; i++)
+            for (var i = 1; i <= sheet.LastRowNum; i++)
             {
+                var j = sheet.LastRowNum;
                 if (sheet.GetRow(i) != null)
                 {
                     IEnumerable<Members> old_members = membersService.Get();        // 撈所有會員
@@ -365,7 +366,8 @@ namespace HeOBackend.Controllers
         [CheckSession(IsAuth = true)]
         public ActionResult AuthMembers()
         {
-            IEnumerable<Members> members = membersService.Get();
+            IEnumerable<Members> members = membersService.Get().ToList();
+            IEnumerable<Feedbackproduct> feedbackproduct = feedbackproductService.Get().ToList();
             foreach (Members auth_member in members)
             {
                 string url = "http://heofrontend.4webdemo.com:8080/Check/CheckFacebook?Account=" + auth_member.Account + "&Password=" + auth_member.Password + "&Useragent=" + auth_member.Useragent_com;
@@ -379,7 +381,27 @@ namespace HeOBackend.Controllers
                 StreamReader reader = new StreamReader(receiveStream, Encoding.UTF8);
                 string content = reader.ReadToEnd();
                 string[] status = content.Replace("\"", "").Split(',');
-                if (status[0] != "成功登入!")
+                if (status[0] == "成功登入!")
+                {
+                    auth_member.Facebooklink = "https://www.facebook.com/profile.php?id=" + status[1];
+                    Memberloginrecord loginrecord = new Memberloginrecord();
+                    loginrecord.Status = true;
+                    loginrecord.Memberid = auth_member.Memberid;
+                    loginrecord.Createdate = DateTime.Now;
+                    auth_member.Memberloginrecord.Add(loginrecord);
+                    foreach(Feedbackproduct productList in feedbackproduct)
+                    {
+                        Memberauthorization memberauthorization = new Memberauthorization();
+                        memberauthorization.Id = Guid.NewGuid();
+                        memberauthorization.Memberid = auth_member.Memberid;
+                        memberauthorization.Feedbackproductid = productList.Feedbackproductid;
+                        memberauthorization.Checked = false;
+                        auth_member.Memberauthorization.Add(memberauthorization);
+                    }
+                    membersService.SpecificUpdate(auth_member, new string[] { "Facebooklink" });
+                    membersService.SaveChanges();
+                }
+                else
                 {
                     Memberloginrecord loginrecord = new Memberloginrecord();
                     loginrecord.Status = false;
@@ -387,16 +409,7 @@ namespace HeOBackend.Controllers
                     loginrecord.Createdate = DateTime.Now;
                     memberloginrecordService.Create(loginrecord);
                 }
-                else
-                {
-                    Memberloginrecord loginrecord = new Memberloginrecord();
-                    loginrecord.Status = true;
-                    loginrecord.Memberid = auth_member.Memberid;
-                    loginrecord.Createdate = DateTime.Now;
-                    memberloginrecordService.Create(loginrecord);
-                }
             }
-            memberloginrecordService.SaveChanges();
             TempData["message"] = "驗證已完成";
             return RedirectToAction("Members");
         }

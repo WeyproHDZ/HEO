@@ -85,6 +85,11 @@ namespace HeO.CheckFacebook
             else
             {
                 driver.Navigate().GoToUrl("https://www.facebook.com/profile.php");
+                if (driver.Url.IndexOf("checkpoint") != -1)
+                {
+                    status[0] = "帳號未驗證!";
+                    driver.Quit();
+                }
                 try
                 {
                     if (driver.Title.IndexOf("找不到網頁") != -1)

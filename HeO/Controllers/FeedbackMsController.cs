@@ -10,6 +10,7 @@ using HeO.Models;
 using HeO.Service;
 using System.IO;
 using System.Configuration;
+using System.Net;
 
 namespace HeO.Controllers
 {
@@ -19,6 +20,7 @@ namespace HeO.Controllers
         private FeedbackrecordService feedbackrecordService;
         private MembersService membersService;
         private MemberlevelService memberlevelService;
+        private MemberblacklistService memberblacklistService;
         private OrderfacebooklistService orderfacebooklistService;
 
         public FeedbackMsController()
@@ -27,6 +29,7 @@ namespace HeO.Controllers
             feedbackrecordService = new FeedbackrecordService();
             membersService = new MembersService();
             memberlevelService = new MemberlevelService();
+            memberblacklistService = new MemberblacklistService();
             orderfacebooklistService = new OrderfacebooklistService();
         }
 
@@ -77,11 +80,20 @@ namespace HeO.Controllers
         public ActionResult Feedbackrecord(Feedbackrecord feedbackrecord)
         {
             Guid Memberid = Guid.Parse(Session["Memberid"].ToString());
+            Memberblacklist blacklist = new Memberblacklist();
+            string ipaddress = Request.ServerVariables["REMOTE_ADDR"].ToString();
             Members Member = membersService.GetByID(Memberid);
             RegexStringValidator myRegexValidator = new RegexStringValidator(@"/^[0 - 9] *$/");
             if (feedbackrecord.Money > Member.Feedbackmoney || feedbackrecord.Money <= 0 || myRegexValidator.CanValidate(feedbackrecord.Money.GetType()))
             {
-                return RedirectToAction("Feedbackrecord");
+                blacklist.Account = Member.Account;
+                blacklist.Memberid = Guid.Parse(Session["Memberid"].ToString());
+                blacklist.Useragent = Request.UserAgent;
+                blacklist.IP_Addr = ipaddress;
+                memberblacklistService.Create(blacklist);
+                memberblacklistService.SaveChanges();
+                Session.RemoveAll();
+                return RedirectToAction("Home", "HomeMs");
             }          
             IEnumerable<Feedbackrecord> old_data = feedbackrecordService.Get().Where(a => a.Memberid == Memberid).OrderByDescending(o => o.Createdate);
             int count = old_data.Count();

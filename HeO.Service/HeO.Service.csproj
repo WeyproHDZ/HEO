@@ -135,6 +135,7 @@
     <Compile Include="GuideService.cs" />
     <Compile Include="Interface\IMembersService.cs" />
     <Compile Include="MemberauthorizationService.cs" />
+    <Compile Include="MemberblacklistService.cs" />
     <Compile Include="MemberlevelcooldownService.cs" />
     <Compile Include="MemberlevelService.cs" />
     <Compile Include="MemberloginrecordService.cs" />

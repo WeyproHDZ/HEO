@@ -127,6 +127,9 @@
     <Compile Include="Memberauthorization.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Memberblacklist.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="Memberlevel.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>

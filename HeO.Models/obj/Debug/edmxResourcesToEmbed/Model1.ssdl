@@ -97,6 +97,17 @@
     <Property Name="Feedbackproductid" Type="uniqueidentifier" />
     <Property Name="Checked" Type="bit" Nullable="false" />
   </EntityType>
+  <EntityType Name="Memberblacklist">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Memberid" Type="uniqueidentifier" />
+    <Property Name="Account" Type="nvarchar" MaxLength="1000" />
+    <Property Name="IP_Addr" Type="nvarchar" MaxLength="1000" />
+    <Property Name="Useragent" Type="nvarchar" MaxLength="1000" />
+    <Property Name="Createdate" Type="datetime" />
+  </EntityType>
   <EntityType Name="Memberlevel">
     <Key>
       <PropertyRef Name="Levelid" />
@@ -175,6 +186,7 @@
     <Property Name="Url" Type="nvarchar" MaxLength="500" />
     <Property Name="Isreal" Type="bit" Nullable="false" />
     <Property Name="Service" Type="nvarchar" MaxLength="255" />
+    <Property Name="Message" Type="nvarchar" MaxLength="1000" />
     <Property Name="Count" Type="int" />
     <Property Name="Remains" Type="int" />
     <Property Name="Cost" Type="float" Nullable="false" />
@@ -549,6 +561,7 @@
     <EntitySet Name="Guidelang" EntityType="Self.Guidelang" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Lims" EntityType="Self.Lims" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Memberauthorization" EntityType="Self.Memberauthorization" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Memberblacklist" EntityType="Self.Memberblacklist" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Memberlevel" EntityType="Self.Memberlevel" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Memberlevelcooldown" EntityType="Self.Memberlevelcooldown" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Memberloginrecord" EntityType="Self.Memberloginrecord" Schema="dbo" store:Type="Tables" />

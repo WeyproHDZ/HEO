@@ -33,8 +33,7 @@ namespace HeO.Controllers
         }
         protected override void OnActionExecuted(ActionExecutedContext filterContext)
         {
-            
-            if(Session["Memberid"] != null)           
+            if (Session["Memberid"] != null)           
             {
                 Guid Memberid = Guid.Parse((Session["Memberid"]).ToString());
                 Guid Normalid = memberlevelService.Get().Where(a => a.Levelname == "一般").FirstOrDefault().Levelid;      // 一般會員的ID
