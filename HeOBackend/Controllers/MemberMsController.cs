@@ -139,7 +139,7 @@ namespace HeOBackend.Controllers
         }
         [CheckSession(IsAuth = true)]
         [HttpPost]
-        public ActionResult Members(Guid? Levelid , int p , string account = "")
+        public ActionResult Members(Guid? Levelid , int p = 1 , string account = "")
         {
             /**** Account 、 Levelid有值 *****/
             if(account != "" && Levelid != null)
@@ -204,11 +204,13 @@ namespace HeOBackend.Controllers
             {
                 members.Memberid = Guid.NewGuid();
                 members.Account = Regex.Replace(members.Account, @"\s", "");
-                if (members.Account.Contains("+") || members.Account.Contains("(") || members.Account.Contains(")"))
+                if (members.Account.Contains("+") || members.Account.Contains("(") || members.Account.Contains(")") || members.Account.Contains("（") || members.Account.Contains("）"))
                 {
-                    members.Account = members.Account.Replace("+","");
+                    members.Account = members.Account.Replace("+", "");
                     members.Account = members.Account.Replace("(", "");
                     members.Account = members.Account.Replace(")", "");
+                    members.Account = members.Account.Replace("（", "");
+                    members.Account = members.Account.Replace("）", "");
                 }
                 members.Createdate = DateTime.Now;
                 members.Updatedate = DateTime.Now;
@@ -321,42 +323,47 @@ namespace HeOBackend.Controllers
                 if (sheet.GetRow(i) != null)
                 {
                     IEnumerable<Members> old_members = membersService.Get();        // 撈所有會員
-                    var member = new Members();
-                    member.Account = Regex.Replace(sheet.GetRow(i).GetCell(0).ToString(), @"\s", "");
-                    if (member.Account.Contains("+") || member.Account.Contains("(") || member.Account.Contains(")"))
+                    Members member = new Members();
+                    if(sheet.GetRow(i).GetCell(0).ToString() != "" && sheet.GetRow(i).GetCell(0).ToString() != null)
                     {
-                        member.Account = member.Account.Replace("+", "");
-                        member.Account = member.Account.Replace("(", "");
-                        member.Account = member.Account.Replace(")", "");
-                    }
-                    member.Password = sheet.GetRow(i).GetCell(1).ToString();
-                    member.Name = sheet.GetRow(i).GetCell(2).ToString();
-                    member.Levelid = Guid.Parse("0db21b54-35a7-400b-a8ea-e9c4c2879609");
-                    member.Memberid = Guid.NewGuid();
-                    member.Createdate = DateTime.Now;
-                    member.Updatedate = DateTime.Now;
-                    member.Isenable = 1;
-                    member.Lastdate = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds;
-                    /*** 給予會員useragent ***/
-                    int Now = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds;
-                    Useragent useragent_com = useragentService.Get().Where(a => a.Isweb == 0).Where(x => x.Date <= Now).OrderBy(x => x.Date).FirstOrDefault();
-                    useragent_com.Date += 1800;
-                    useragentService.SpecificUpdate(useragent_com, new string[] { "Date" });
-                    Useragent useragent_phone = useragentService.Get().Where(a => a.Isweb == 1).Where(x => x.Date <= Now).OrderBy(x => x.Date).FirstOrDefault();
-                    useragent_phone.Date += 1800;
-                    useragentService.SpecificUpdate(useragent_phone, new string[] { "Date" });
-                    useragentService.SaveChanges();
-                    /*** End Useragent ***/
-                    member.Useragent_com = useragent_com.User_agent;
-                    member.Useragent_phone = useragent_phone.User_agent;
-                    /**** 將會員寫進會員登入紀錄裡，預設狀態為false ****/
-                    Memberloginrecord memberloginrecord = new Memberloginrecord();
-                    memberloginrecord.Memberid = member.Memberid;
-                    memberloginrecord.Createdate = member.Createdate;
-                    memberloginrecord.Status = false;
-                    member.Memberloginrecord.Add(memberloginrecord);
-                    /**** End Memberloginrecord ****/
-                    membersService.Create(member);                  
+                        member.Account = Regex.Replace(sheet.GetRow(i).GetCell(0).ToString(), @"\s", "");
+                        if (member.Account.Contains("+") || member.Account.Contains("(") || member.Account.Contains(")") || member.Account.Contains("（") || member.Account.Contains("）"))
+                        {
+                            member.Account = member.Account.Replace("+", "");
+                            member.Account = member.Account.Replace("(", "");
+                            member.Account = member.Account.Replace(")", "");
+                            member.Account = member.Account.Replace("（", "");
+                            member.Account = member.Account.Replace("）", "");
+                        }
+                        member.Password = sheet.GetRow(i).GetCell(1).ToString();
+                        member.Name = sheet.GetRow(i).GetCell(2).ToString();
+                        member.Levelid = Guid.Parse("0db21b54-35a7-400b-a8ea-e9c4c2879609");
+                        member.Memberid = Guid.NewGuid();
+                        member.Createdate = DateTime.Now;
+                        member.Updatedate = DateTime.Now;
+                        member.Isenable = 1;
+                        member.Lastdate = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds;
+                        /*** 給予會員useragent ***/
+                        int Now = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds;
+                        Useragent useragent_com = useragentService.Get().Where(a => a.Isweb == 0).Where(x => x.Date <= Now).OrderBy(x => x.Date).FirstOrDefault();
+                        useragent_com.Date += 1800;
+                        useragentService.SpecificUpdate(useragent_com, new string[] { "Date" });
+                        Useragent useragent_phone = useragentService.Get().Where(a => a.Isweb == 1).Where(x => x.Date <= Now).OrderBy(x => x.Date).FirstOrDefault();
+                        useragent_phone.Date += 1800;
+                        useragentService.SpecificUpdate(useragent_phone, new string[] { "Date" });
+                        useragentService.SaveChanges();
+                        /*** End Useragent ***/
+                        member.Useragent_com = useragent_com.User_agent;
+                        member.Useragent_phone = useragent_phone.User_agent;
+                        /**** 將會員寫進會員登入紀錄裡，預設狀態為false ****/
+                        Memberloginrecord memberloginrecord = new Memberloginrecord();
+                        memberloginrecord.Memberid = member.Memberid;
+                        memberloginrecord.Createdate = member.Createdate;
+                        memberloginrecord.Status = false;
+                        member.Memberloginrecord.Add(memberloginrecord);
+                        /**** End Memberloginrecord ****/
+                        membersService.Create(member);
+                    }                                      
                 }               
             }
             membersService.SaveChanges();
@@ -398,8 +405,7 @@ namespace HeOBackend.Controllers
                         memberauthorization.Checked = false;
                         auth_member.Memberauthorization.Add(memberauthorization);
                     }
-                    membersService.SpecificUpdate(auth_member, new string[] { "Facebooklink" });
-                    membersService.SaveChanges();
+                    membersService.SpecificUpdate(auth_member, new string[] { "Facebooklink" });                    
                 }
                 else
                 {
@@ -407,9 +413,10 @@ namespace HeOBackend.Controllers
                     loginrecord.Status = false;
                     loginrecord.Memberid = auth_member.Memberid;
                     loginrecord.Createdate = DateTime.Now;
-                    memberloginrecordService.Create(loginrecord);
+                    auth_member.Memberloginrecord.Add(loginrecord);
                 }
             }
+            membersService.SaveChanges();
             TempData["message"] = "驗證已完成";
             return RedirectToAction("Members");
         }

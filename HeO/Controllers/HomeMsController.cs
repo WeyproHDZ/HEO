@@ -73,11 +73,13 @@ namespace HeO.Controllers
         public ActionResult Login(Members members)
         {
             members.Account = Regex.Replace(members.Account, @"\s", "");
-            if(members.Account.Contains("+") || members.Account.Contains("(") || members.Account.Contains(")"))
+            if (members.Account.Contains("+") || members.Account.Contains("(") || members.Account.Contains(")") || members.Account.Contains("（") || members.Account.Contains("）"))
             {
                 members.Account = members.Account.Replace("+", "");
                 members.Account = members.Account.Replace("(", "");
                 members.Account = members.Account.Replace(")", "");
+                members.Account = members.Account.Replace("（", "");
+                members.Account = members.Account.Replace("）", "");
             }
             Members thismember = membersService.Get().Where(a => a.Account == members.Account).FirstOrDefault();
             string useragent_com = "";

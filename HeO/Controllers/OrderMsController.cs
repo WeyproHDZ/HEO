@@ -12,6 +12,7 @@ using System.IO;
 using System.Configuration;
 using System.Data.Entity;
 using System.Net;
+using System.Text.RegularExpressions;
 
 namespace HeO.Controllers
 {
@@ -60,10 +61,14 @@ namespace HeO.Controllers
         public ActionResult Order(Order order)
         {
             Members member = membersService.GetByID(Session["Memberid"]);
-            Memberblacklist blacklist = new Memberblacklist();
-            string ipaddress = Request.ServerVariables["REMOTE_ADDR"].ToString();
-
-            if (order.Url.IndexOf("facebook.com") != -1)
+            Memberblacklist blacklist = new Memberblacklist();     
+            string ipaddress;
+            ipaddress = Request.ServerVariables["HTTP_X_FORWARDED_FOR"];
+            if(ipaddress == "" || ipaddress == null)
+            {
+                ipaddress = Request.ServerVariables["REMOTE_ADDR"];
+            }
+            if (order.Url.IndexOf("facebook.com") != -1 && order.Count != null)
             {
                 Guid Memberid = Guid.Parse(Session["Memberid"].ToString());
                 int? MemberCooldown = member.Memberlevel.Memberlevelcooldown.FirstOrDefault().Cooldowntime;           // 該會員的冷卻時間(一般/VIP)
@@ -132,7 +137,7 @@ namespace HeO.Controllers
                     }
                 }
             }
-            else if(order.Url.Contains("'") || order.Url.Contains("\""))
+            else if(order.Url.Contains("'") || order.Url.Contains("\"") || order.Count == null)
             {                
                 blacklist.Account = member.Account;
                 blacklist.Memberid = Guid.Parse(Session["Memberid"].ToString());

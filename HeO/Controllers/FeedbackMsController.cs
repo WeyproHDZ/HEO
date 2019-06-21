@@ -80,8 +80,13 @@ namespace HeO.Controllers
         public ActionResult Feedbackrecord(Feedbackrecord feedbackrecord)
         {
             Guid Memberid = Guid.Parse(Session["Memberid"].ToString());
-            Memberblacklist blacklist = new Memberblacklist();
-            string ipaddress = Request.ServerVariables["REMOTE_ADDR"].ToString();
+            Memberblacklist blacklist = new Memberblacklist();           
+            string ipaddress;
+            ipaddress = Request.ServerVariables["HTTP_X_FORWARDED_FOR"];
+            if (ipaddress == "" || ipaddress == null)
+            {
+                ipaddress = Request.ServerVariables["REMOTE_ADDR"];
+            }
             Members Member = membersService.GetByID(Memberid);
             RegexStringValidator myRegexValidator = new RegexStringValidator(@"/^[0 - 9] *$/");
             if (feedbackrecord.Money > Member.Feedbackmoney || feedbackrecord.Money <= 0 || myRegexValidator.CanValidate(feedbackrecord.Money.GetType()))

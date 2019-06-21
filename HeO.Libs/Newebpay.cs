@@ -21,7 +21,8 @@ namespace HeO.Libs
         static string HashKey = "1nfU5bE66Hi1Z58QWsqnPKFcWYB1I7Eg";
         static string HashIv = "l6kANp55PZb8fR26";
         static string Verison = "1.5";
-        static string new_data;
+        static string new_data;
+
         /** 正式藍新 ***/
         //static string transmit_url = "https://core.newebpay.com/MPG/mpg_gateway ";
         //static string MerchantID = "MS3238101803";
@@ -126,7 +127,8 @@ namespace HeO.Libs
             for (var i = iLength; i < output.Length; i++)
                 output[i] = (byte)cPadding;
             return output;
-        }
+        }
+
         private static byte[] RemovePKCS7Padding(byte[] data)
         {
             int iLength = data[data.Length - 1];
@@ -146,7 +148,8 @@ namespace HeO.Libs
                 c[i * 2 + 1] = (char)(b > 9 ? b + 0x37 : b + 0x30);
             }
             return new string(c);
-        }
+        }
+
         private static byte[] HexStringToByteArray(string hexString)
         {
             int hexStringLength = hexString.Length;

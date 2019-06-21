@@ -25,7 +25,7 @@
                     <!-- widget content -->
                     <div class="widget-body">
                         @Html.Partial("_UploadFile")
-                        @using (Html.BeginForm("Members", "MemberMs", new { p = ViewBag.pageNumber }, FormMethod.Post, new { @id = "form" }))
+                        @using (Html.BeginForm("Members", "MemberMs", FormMethod.Post, new { @id = "form" }))
                         {
                         <div class="widget-body-toolbar">
                             <div class="row">

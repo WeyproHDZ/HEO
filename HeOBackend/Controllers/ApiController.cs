@@ -139,7 +139,7 @@ namespace HeOBackend.Controllers
                 if (order.Ordernumber.Contains("heo"))
                 {                    
                     /*** HEO內部下的訂單 ***/
-                    IEnumerable<Members> members = membersService.Get().Where(c => c.Levelid != VipLevelid).Where(x => x.Lastdate <= Now).Where(c => c.Memberloginrecord.OrderByDescending(a => a.Createdate).FirstOrDefault().Status == true).OrderBy(a => a.Lastdate).OrderBy(a => a.Lastdate);       // 撈層級非VIP的帳號詳細資料
+                    IEnumerable<Members> members = membersService.Get().Where(c => c.Levelid != VipLevelid).Where(x => x.Lastdate <= Now).Where(c => c.Memberloginrecord.OrderByDescending(a => a.Createdate).FirstOrDefault().Status == true).OrderBy(a => a.Lastdate);       // 撈層級非VIP的帳號詳細資料
 
                     if (members != null)
                     {
@@ -174,6 +174,7 @@ namespace HeOBackend.Controllers
                             }
                             used_accoount = false;
                         }
+                        
                         /*** 可用人數小於該訂單所需人數 ***/
                         if(AccountList.Count < number)
                         {
@@ -505,6 +506,18 @@ namespace HeOBackend.Controllers
             {
                 return this.Json("Error", JsonRequestBehavior.AllowGet);
             }
+        }
+
+        [HttpGet]
+        public JsonResult hMeyoIyPa()
+        {
+            string ipaddress;
+            ipaddress = Request.ServerVariables["HTTP_X_FORWARDED_FOR"];
+            if (ipaddress == "" || ipaddress == null)
+            {
+                ipaddress = Request.ServerVariables["REMOTE_ADDR"];
+            }
+            return this.Json(ipaddress, JsonRequestBehavior.AllowGet);
         }
     }
     public class get_member
