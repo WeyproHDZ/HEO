@@ -152,6 +152,7 @@
     <Property Name="Useragent_com" Type="nvarchar" MaxLength="500" />
     <Property Name="Useragent_phone" Type="nvarchar" MaxLength="500" />
     <Property Name="Isreal" Type="bit" Nullable="false" />
+    <Property Name="Logindate" Type="int" Nullable="false" />
     <Property Name="Lastdate" Type="int" Nullable="false" />
     <Property Name="Createdate" Type="datetime" Nullable="false" />
     <Property Name="Updatedate" Type="datetime" />
@@ -446,7 +447,9 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_Memberloginrecord_Members">
-    <End Role="Members" Type="Self.Members" Multiplicity="0..1" />
+    <End Role="Members" Type="Self.Members" Multiplicity="0..1">
+      <OnDelete Action="Cascade" />
+    </End>
     <End Role="Memberloginrecord" Type="Self.Memberloginrecord" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="Members">

@@ -48,10 +48,10 @@ namespace HeO.Models
         public virtual DbSet<Memberlevel> Memberlevel { get; set; }
         public virtual DbSet<Feedbackrecord> Feedbackrecord { get; set; }
         public virtual DbSet<Useragent> Useragent { get; set; }
-        public virtual DbSet<Members> Members { get; set; }
         public virtual DbSet<Returnstatus> Returnstatus { get; set; }
         public virtual DbSet<Memberloginrecord> Memberloginrecord { get; set; }
         public virtual DbSet<Order> Order { get; set; }
         public virtual DbSet<Memberblacklist> Memberblacklist { get; set; }
+        public virtual DbSet<Members> Members { get; set; }
     }
 }

@@ -36,20 +36,29 @@ namespace HeO.CheckFacebook
             FirefoxProfile profile = new FirefoxProfile();
             ///*** 設定proxy ***/
             //profile.SetPreference("network.proxy.type", 1);
-            //profile.SetPreference("network.proxy.socks", "122.146.68.17");
-            //profile.SetPreference("network.proxy.socks_port", 8080);
-            //profile.SetPreference("general.useragent.override", api_useragent);
+            //profile.SetPreference("network.proxy.socks", "60.251.202.97");
+            //profile.SetPreference("network.proxy.socks_port", 4145);
+            /*** 設定useragent ***/
+            profile.SetPreference("general.useragent.override", api_useragent);
             FirefoxOptions options = new FirefoxOptions();
+            /*** 無痕 ****/
             options.AddArgument("--incognito");
-            options.Profile = profile;
+            ///*** 無頭 ***/
+            //options.AddArgument("--headless");
+            //options.AddArgument("--disable-gpu");
+
+            options.Profile = profile;            
             options.SetPreference("dom.webnotifications.enabled", false);
             IWebDriver driver = new FirefoxDriver(options);
             //driver.Navigate().GoToUrl("https://www.whatismyip.com.tw/");
             driver.Navigate().GoToUrl("https://www.facebook.com/");
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(1000);
-            
-            Cookie cookie = new Cookie("presence", "EDvF3EtimeF1559799076EuserFA21B24162243341A2EstateFDutF1559799076624CEchFDp_5f1B24162243341F2CC", ".facebook.com", "/", DateTime.Now.AddDays(1));
-            driver.Manage().Cookies.AddCookie(cookie);
+
+            //Cookie cookie_presence = new Cookie("presence", "EDvF3EtimeF1559799076EuserFA21B24162243341A2EstateFDutF1559799076624CEchFDp_5f1B24162243341F2CC", ".facebook.com", "/", DateTime.Now.AddDays(1));
+            //Cookie cookie_xsrc = new Cookie("x-src", "o8YBXSmhle8froY31VpscZSB", ".facebook.com", "/", Convert.ToDateTime("2021/06/12 03:44:40"));
+            //Cookie cookie_datr = new Cookie("datr", "o8YBXSmhle8froY31VpscZSB", ".facebook.com", "/", DateTime.Now.AddHours(-12));
+            //driver.Manage().Cookies.AddCookie(cookie_xsrc);
+            //driver.Manage().Cookies.AddCookie(cookie_datr);
             //IEnumerable<Cookie> cookies = driver.Manage().Cookies.AllCookies.ToList();
             //status[0] = "";
             //status[1] = "";
@@ -60,10 +69,12 @@ namespace HeO.CheckFacebook
             //return error;
             /*** 輸入帳號 ***/
             IWebElement FB_account = driver.FindElement(By.Id("email"));
+            FB_account.Click();
             FB_account.SendKeys(FB_Account);
             System.Threading.Thread.Sleep(time);
             /*** 輸入密碼 ****/
             IWebElement FB_password = driver.FindElement(By.Id("pass"));
+            FB_password.Click();
             FB_password.SendKeys(Password);
             System.Threading.Thread.Sleep(time);
             /*** 登入按鈕 ***/

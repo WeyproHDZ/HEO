@@ -35,8 +35,8 @@ namespace HeO.Models
         public Nullable<System.DateTime> Updatedate { get; set; }
         public System.DateTime Createdate { get; set; }
     
-        public virtual Members Members { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Orderfaceooklist> Orderfaceooklist { get; set; }
+        public virtual Members Members { get; set; }
     }
 }

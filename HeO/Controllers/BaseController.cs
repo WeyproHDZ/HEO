@@ -35,6 +35,7 @@ namespace HeO.Controllers
         {
             if (Session["Memberid"] != null)           
             {
+                int Now = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds;                                    // 目前時間總秒數
                 Guid Memberid = Guid.Parse((Session["Memberid"]).ToString());
                 Guid Normalid = memberlevelService.Get().Where(a => a.Levelname == "一般").FirstOrDefault().Levelid;      // 一般會員的ID
                 Members member = membersService.GetByID(Memberid);                                                        // 該會員的詳細資料
@@ -56,11 +57,13 @@ namespace HeO.Controllers
                         {
                             member.Levelid = Normalid;
                             membersService.SpecificUpdate(member, new string[] { "Levelid" });
-                            membersService.SaveChanges();
                         }
                     }
                 }
 
+                member.Logindate = Now + 1200;                                                      // 登入時間為目前時間+20分鐘
+                membersService.SpecificUpdate(member, new string[] { "Logindate" });
+                membersService.SaveChanges();
                 /*** 判斷該會員是否有買過VIP ***/
                 ViewBag.Checkvip = viprecordService.Get().Where(a => a.Memberid == Memberid).Where(x => x.Status == 2).Count();
             }

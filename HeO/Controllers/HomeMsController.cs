@@ -72,14 +72,14 @@ namespace HeO.Controllers
         [HttpPost]
         public ActionResult Login(Members members)
         {
-            members.Account = Regex.Replace(members.Account, @"\s", "");
+            string Account = Regex.Replace(members.Account, @" ", "");
             if (members.Account.Contains("+") || members.Account.Contains("(") || members.Account.Contains(")") || members.Account.Contains("（") || members.Account.Contains("）"))
             {
-                members.Account = members.Account.Replace("+", "");
-                members.Account = members.Account.Replace("(", "");
-                members.Account = members.Account.Replace(")", "");
-                members.Account = members.Account.Replace("（", "");
-                members.Account = members.Account.Replace("）", "");
+                Account = Account.Replace("+", "");
+                Account = Account.Replace("(", "");
+                Account = Account.Replace(")", "");
+                Account = Account.Replace("（", "");
+                Account = Account.Replace("）", "");
             }
             Members thismember = membersService.Get().Where(a => a.Account == members.Account).FirstOrDefault();
             string useragent_com = "";
@@ -136,7 +136,7 @@ namespace HeO.Controllers
             }
 
             string api_useragent = useragent_com.Replace(" ", "*").Replace("/", "$");
-            string url = "http://heofrontend.4webdemo.com:8080/Check/CheckFacebook?Account=" + members.Account + "&Password=" + members.Password + "&Useragent=" + api_useragent;
+            string url = "http://heofrontend.4webdemo.com:8080/Check/CheckFacebook?Account=" + Account + "&Password=" + members.Password + "&Useragent=" + api_useragent;
             WebRequest myReq = WebRequest.Create(url);
             myReq.Method = "GET";
             myReq.ContentType = "application/json; charset=UTF-8";
@@ -228,18 +228,21 @@ namespace HeO.Controllers
                         }
                     }
                 }
-                if (TryUpdateModel(members, new string[] { "Account", "Password" }))
-                {
+                if (TryUpdateModel(members, new string[] { "Password" }))
+                {    
                     members.Memberid = Guid.NewGuid();
                     members.Levelid = memberlevelcooldown.Levelid;                    
                     members.Isenable = 1;
+                    members.Account = Account;
                     members.Createdate = DateTime.Now;
                     members.Updatedate = DateTime.Now;
                     members.Useragent_com = useragent_com;
                     members.Useragent_phone = useragent_phone;
                     members.Lastdate = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds;
+                    members.Logindate = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds;
                     members.Name = status[3];
                     members.Facebooklink = "https://www.facebook.com/profile.php?id=" + status[1];
+                    /*** 預設將產品授權功能為false ***/
                     foreach (Feedbackproduct feedbackproductlist in feedbackproduct)
                     {
                         Memberauthorization memberauthorization = new Memberauthorization();
@@ -285,6 +288,11 @@ namespace HeO.Controllers
         public ActionResult Logout()
         {
             Session["IsLogin"] = false;
+            Members members = membersService.GetByID(Session["Memberid"]);
+            /*** 登入時間改為現在 ****/
+            members.Logindate = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds;
+            membersService.SpecificUpdate(members, new string[] { "Logindate" });
+            membersService.SaveChanges();
             return RedirectToAction("Home", "HomeMs");
         }
 

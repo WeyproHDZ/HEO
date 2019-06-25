@@ -45,6 +45,8 @@
                                         <th width="15%" class="text-center">天數</th>
                                         <th width="15%" class="text-center">費用</th>
                                         <th width="20%" class="text-center">繳費狀態</th>
+                                        <th width="10%" class="text-center">開始日期</th>
+                                        <th width="10%" class="text-center">截止日期</th>
                                         <th width="10%" class="text-center">編輯</th>
                                         <th width="10%" class="text-center">刪除</th>
                                     </tr>
@@ -72,6 +74,8 @@
                                                     <td class="text-center">資料有誤</td>
                                                     break;
                                             }
+                                            <td class="text-center">@entity.Startdate</td>
+                                            <td class="text-center">@entity.Enddate</td>
                                             <td class="text-center"><a href="@Url.Action("EditViprecord", "MemberMs", new { Viprecordid = entity.Viprecordid, p = ViewBag.pageNumber })" class="btn btn-info btn-xs"><i class="fa fa-edit"></i></a></td>
                                             <td class="text-center"><a href="#" class="btn btn-danger btn-xs del" data-href="@Url.Action("DeleteViprecord", "MemberMs", new { Viprecordid = entity.Viprecordid, p = ViewBag.pageNumber })" data-toggle="modal" data-target="#confirm-delete"><i class="fa fa-trash-o"></i></a></td>
                                         </tr>
