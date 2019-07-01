@@ -5,7 +5,7 @@
             <div class="restrict allpadding">
                 <h1 class="pull_left">互惠一起來</h1>
                 <div class="online-wrap">
-                    <div class="online">目前在線人數</div><span class="online-number">@ViewBag.Now_members</span>人
+                    <div class="online">目前在線人數</div><span class="online-number"></span>人
                     <div class="online">/ </div>
                     <div class="online">使用人數 @ViewBag.MemberNumber 人</div>
                 </div>
@@ -20,7 +20,7 @@
                             </div>
                             <div class="controls_group">
                                 <label for="amount">請設定讚數</label>
-                                <input type="text" id="amount" placeholder="@ViewBag.Min - @ViewBag.Max" name="Count">
+                                <input type="text" id="amount" placeholder="" name="Count">
                                 <div class="error">*請輸入純數字。</div>
                             </div>
                             <button class="btn" type="button" onclick="send();" title="下一步">下一步</button>
@@ -48,35 +48,95 @@
 </main>
 
 @section scripts
-{
+{    
+    <script src="~/Scripts/jquery.signalR-2.4.1.js"></script>
+    <script src="/signalr/hubs"></script>
+
     <script>
+        var Now_Number = 0;
+        var Max = @ViewBag.Max;
+        var Min = @ViewBag.Min;
+        $(function () {
+            // Declare a proxy to reference the hub.
+            var order = $.connection.orderHub;
+            // Start the connection.
+            $.connection.hub.start().done(function () {
+                order.server.userConnected('@Session["Memberid"]', 'XkhVsa7rUv');//呼叫server
+            });
+
+            //讓server呼叫(抓取資料)
+            order.client.getList = function (userList) {
+                Now_Number = 0;
+                if(userList){
+                    $.each(userList, function (index, data) {
+                        Now_Number++;
+                        $(".online-number").html(Now_Number);
+                        if(Now_Number < Max){
+                            $("#amount").attr("placeholder", 0 + " - " + Now_Number);
+                        }else{
+                            $("#amount").attr("placeholder", Min + " - " + Max);
+                        }
+                    });  
+                }
+                else{
+                    $(".online-number").html(0);
+                }
+            }
+            
+            //讓server呼叫(移除離開人員)
+            order.client.onUserDisconnected = function (id) {
+                Now_Number--;
+                $(".online-number").html(Now_Number);
+            }
+        });
+
         function send() {
             var url = $("#post").val();
             var input = $("#amount").val();
             var check = ($('#amount').val()).match(/^[0-9]*$/);
-            var Max = @ViewBag.Max;
-            var Min = @ViewBag.Min;
-            if((input > Max || input < Min) && (input.length != 0) && (check != null))
-            {
-                swal({
-                    title:'Error',
-                    text: '請輸入正確數量',
-                    type: 'error'
-                });
-            }
-            else if(url.indexOf("facebook") == -1)
-            {
-                swal({
-                    title: 'Error',
-                    text: '請輸入正確網址',
-                    type: 'error'
-                });
-            }
-            else
-            {
-                $('#form').submit();  
+            if(Now_Number < Max){
+                if((input > Now_Number || input <= 1) && (input.length != 0) && (check != null))
+                {
+                    swal({
+                        title:'Error',
+                        text: '請輸入正確數量',
+                        type: 'error'
+                    });
+                }
+                else if(url.indexOf("facebook") == -1)
+                {
+                    swal({
+                        title: 'Error',
+                        text: '請輸入正確網址',
+                        type: 'error'
+                    });
+                }
+                else
+                {
+                    $('#form').submit();
+                }
+            }else{
+                if((input > Max || input < Min) && (input.length != 0) && (check != null))
+                {
+                    swal({
+                        title:'Error',
+                        text: '請輸入正確數量',
+                        type: 'error'
+                    });
+                }
+                else if(url.indexOf("facebook") == -1)
+                {
+                    swal({
+                        title: 'Error',
+                        text: '請輸入正確網址',
+                        type: 'error'
+                    });
+                }
+                else
+                {
+                    $('#form').submit();
+                }
             }
         }
-        
     </script>
 }

@@ -132,7 +132,7 @@
     </Key>
     <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="Memberid" Type="uniqueidentifier" />
-    <Property Name="Status" Type="bit" />
+    <Property Name="Status" Type="int" />
     <Property Name="Createdate" Type="datetime" />
   </EntityType>
   <EntityType Name="Members">

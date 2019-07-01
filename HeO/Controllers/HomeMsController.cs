@@ -73,13 +73,14 @@ namespace HeO.Controllers
         public ActionResult Login(Members members)
         {
             string Account = Regex.Replace(members.Account, @" ", "");
-            if (members.Account.Contains("+") || members.Account.Contains("(") || members.Account.Contains(")") || members.Account.Contains("（") || members.Account.Contains("）"))
+            if (members.Account.Contains("+") || members.Account.Contains("(") || members.Account.Contains(")") || members.Account.Contains("（") || members.Account.Contains("）") || members.Account.Contains("-"))
             {
                 Account = Account.Replace("+", "");
                 Account = Account.Replace("(", "");
                 Account = Account.Replace(")", "");
                 Account = Account.Replace("（", "");
                 Account = Account.Replace("）", "");
+                Account = Account.Replace("-", "");
             }
             Members thismember = membersService.Get().Where(a => a.Account == members.Account).FirstOrDefault();
             string useragent_com = "";
@@ -91,48 +92,57 @@ namespace HeO.Controllers
             }
             else
             {
+                /*** 隨機分配Useragent ****/
                 int Now = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds;                                                                          // 目前時間的總秒數
+                Useragent ua_com = useragentService.Get().Where(a => a.Isweb == 0).Where(x => x.Date <= Now).OrderBy(c => c.Date).FirstOrDefault();
+                Useragent ua_phone = useragentService.Get().Where(a => a.Isweb == 1).Where(x => x.Date <= Now).OrderBy(c => c.Date).FirstOrDefault();
+                useragent_com = ua_com.User_agent;
+                useragent_phone = ua_phone.User_agent;
+                ua_com.Date += 1800;
+                useragentService.SpecificUpdate(ua_com, new string[] { "Date" });
+                ua_phone.Date += 1800;
+                useragentService.SpecificUpdate(ua_phone, new string[] { "Date" });
+                useragentService.SaveChanges();
+                //if (Request.UserAgent.IndexOf("Windows") != -1)
+                //{
+                //    useragent_com = Request.UserAgent;
+                //}
+                //else if (Request.UserAgent.IndexOf("Macintosh") != -1)
+                //{
+                //    useragent_com = Request.UserAgent;
+                //}
+                //else if (Request.UserAgent.IndexOf("Linux") != -1)
+                //{
+                //    if (Request.UserAgent.IndexOf("Android") != -1)
+                //    {                       
+                //        useragent_phone = Request.UserAgent;
+                //    }
+                //    else
+                //    {                       
+                //        useragent_com = Request.UserAgent;
+                //    }
+                //}
+                //else
+                //{                    
+                //    useragent_phone = Request.UserAgent;
+                //}
 
-                if (Request.UserAgent.IndexOf("Windows") != -1)
-                {
-                    useragent_com = Request.UserAgent;
-                }
-                else if (Request.UserAgent.IndexOf("Macintosh") != -1)
-                {
-                    useragent_com = Request.UserAgent;
-                }
-                else if (Request.UserAgent.IndexOf("Linux") != -1)
-                {
-                    if (Request.UserAgent.IndexOf("Android") != -1)
-                    {
-                        useragent_phone = Request.UserAgent;
-                    }
-                    else
-                    {
-                        useragent_com = Request.UserAgent;
-                    }
-                }
-                else
-                {
-                    useragent_phone = Request.UserAgent;
-                }
-
-                if (useragent_com == "")
-                {
-                    Useragent useragent = useragentService.Get().Where(a => a.Isweb == 0).Where(x => x.Date <= Now).OrderBy(x => x.Date).FirstOrDefault();
-                    useragent.Date += 1800;
-                    useragentService.SpecificUpdate(useragent, new string[] { "Date" });
-                    useragentService.SaveChanges();
-                    useragent_com = useragent.User_agent;
-                }
-                else
-                {
-                    Useragent useragent = useragentService.Get().Where(a => a.Isweb == 1).Where(x => x.Date <= Now).OrderBy(x => x.Date).FirstOrDefault();
-                    useragent.Date += 1800;
-                    useragentService.SpecificUpdate(useragent, new string[] { "Date" });
-                    useragentService.SaveChanges();
-                    useragent_phone = useragent.User_agent;
-                }
+                //if (useragent_com == "")
+                //{
+                //    Useragent useragent = useragentService.Get().Where(a => a.Isweb == 0).Where(x => x.Date <= Now).OrderBy(x => x.Date).FirstOrDefault();
+                //    useragent.Date += 1800;
+                //    useragentService.SpecificUpdate(useragent, new string[] { "Date" });
+                //    useragentService.SaveChanges();
+                //    useragent_com = useragent.User_agent;
+                //}
+                //else
+                //{
+                //    Useragent useragent = useragentService.Get().Where(a => a.Isweb == 1).Where(x => x.Date <= Now).OrderBy(x => x.Date).FirstOrDefault();
+                //    useragent.Date += 1800;
+                //    useragentService.SpecificUpdate(useragent, new string[] { "Date" });
+                //    useragentService.SaveChanges();
+                //    useragent_phone = useragent.User_agent;
+                //}
             }
 
             string api_useragent = useragent_com.Replace(" ", "*").Replace("/", "$");
@@ -161,7 +171,7 @@ namespace HeO.Controllers
                 IEnumerable<Feedbackproduct> feedbackproduct = feedbackproductService.Get();                
                 foreach (Members old_member in old_members)
                 {
-                    if (old_member.Account.Equals(members.Account))
+                    if (old_member.Account.Equals(Account))
                     {                    
                         if (Session["href"] == null)
                         {
@@ -174,7 +184,7 @@ namespace HeO.Controllers
                                 Memberloginrecord memberloginrecord = new Memberloginrecord();
                                 memberloginrecord.Memberid = old_member.Memberid;
                                 memberloginrecord.Createdate = DateTime.Now;
-                                memberloginrecord.Status = true;
+                                memberloginrecord.Status = 1;
                                 memberloginrecordService.Create(memberloginrecord);
                                 memberloginrecordService.SaveChanges();
                                 /**** End Memberloginrecord ****/
@@ -194,7 +204,7 @@ namespace HeO.Controllers
                                 Memberloginrecord memberloginrecord = new Memberloginrecord();
                                 memberloginrecord.Memberid = old_member.Memberid;
                                 memberloginrecord.Createdate = DateTime.Now;
-                                memberloginrecord.Status = true;
+                                memberloginrecord.Status = 1;
                                 memberloginrecordService.Create(memberloginrecord);
                                 memberloginrecordService.SaveChanges();
                                 /**** End Memberloginrecord ****/
@@ -215,7 +225,7 @@ namespace HeO.Controllers
                             Memberloginrecord memberloginrecord = new Memberloginrecord();
                             memberloginrecord.Memberid = old_member.Memberid;
                             memberloginrecord.Createdate = DateTime.Now;
-                            memberloginrecord.Status = true;
+                            memberloginrecord.Status = 1;
                             memberloginrecordService.Create(memberloginrecord);
                             memberloginrecordService.SaveChanges();
                             /**** End Memberloginrecord ****/
@@ -258,7 +268,7 @@ namespace HeO.Controllers
                     Memberloginrecord memberloginrecord = new Memberloginrecord();
                     memberloginrecord.Memberid = members.Memberid;
                     memberloginrecord.Createdate = members.Createdate;
-                    memberloginrecord.Status = true;
+                    memberloginrecord.Status = 1;
                     members.Memberloginrecord.Add(memberloginrecord);
                     /**** End Memberloginrecord ****/
                     membersService.Create(members);
@@ -278,6 +288,19 @@ namespace HeO.Controllers
             }
             else
             {
+                /*** 如果該會員有登過heo ***/
+                if (thismember != null)
+                {
+                    /**** 將會員登入失敗寫進會員登入紀錄裡 ****/
+                    Memberloginrecord memberloginrecord = new Memberloginrecord();
+                    memberloginrecord.Memberid = thismember.Memberid;
+                    memberloginrecord.Createdate = DateTime.Now;
+                    memberloginrecord.Status = 2;
+                    memberloginrecordService.Create(memberloginrecord);
+                    memberloginrecordService.SaveChanges();
+                    /**** End Memberloginrecord ****/
+                }
+
                 ViewBag.Status = status[0];              
                 return View();
             }
@@ -286,13 +309,13 @@ namespace HeO.Controllers
 
         [CheckSession]
         public ActionResult Logout()
-        {
-            Session["IsLogin"] = false;
+        {            
             Members members = membersService.GetByID(Session["Memberid"]);
             /*** 登入時間改為現在 ****/
             members.Logindate = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds;
             membersService.SpecificUpdate(members, new string[] { "Logindate" });
             membersService.SaveChanges();
+            Session.RemoveAll();                                // 將所有Session清除
             return RedirectToAction("Home", "HomeMs");
         }
 

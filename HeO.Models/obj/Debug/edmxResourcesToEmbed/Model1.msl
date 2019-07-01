@@ -278,16 +278,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Memberloginrecord">
-      <EntityTypeMapping TypeName="HeOModel.Memberloginrecord">
-        <MappingFragment StoreEntitySet="Memberloginrecord">
-          <ScalarProperty Name="Createdate" ColumnName="Createdate" />
-          <ScalarProperty Name="Status" ColumnName="Status" />
-          <ScalarProperty Name="Memberid" ColumnName="Memberid" />
-          <ScalarProperty Name="Id" ColumnName="Id" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="Order">
       <EntityTypeMapping TypeName="HeOModel.Order">
         <MappingFragment StoreEntitySet="Order">
@@ -340,6 +330,16 @@
           <ScalarProperty Name="Levelid" ColumnName="Levelid" />
           <ScalarProperty Name="Memberid" ColumnName="Memberid" />
           <ScalarProperty Name="Isenable" ColumnName="Isenable" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Memberloginrecord">
+      <EntityTypeMapping TypeName="HeOModel.Memberloginrecord">
+        <MappingFragment StoreEntitySet="Memberloginrecord">
+          <ScalarProperty Name="Createdate" ColumnName="Createdate" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="Memberid" ColumnName="Memberid" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

@@ -13,7 +13,12 @@ using System.Configuration;
 using System.Data.Entity;
 using System.Net;
 using System.Text.RegularExpressions;
+using Microsoft.AspNet.SignalR;
+using System.Threading.Tasks;
+using Owin;
+using Microsoft.Owin;
 
+[assembly: OwinStartup(typeof(HeO.Controllers.Startup))]
 namespace HeO.Controllers
 {
     public class OrderMsController : BaseController
@@ -36,24 +41,13 @@ namespace HeO.Controllers
         // GET: OrderMs
         [CheckSession]
         public ActionResult Order()
-        {            
+        {
+            Guid Memberid = Guid.Parse(System.Web.HttpContext.Current.Session["Memberid"].ToString());
             int Now = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds;
             Setting Setting = settingService.Get().FirstOrDefault();
-            Guid VipLevelid = memberlevelService.Get().Where(a => a.Levelname == "VIP").FirstOrDefault().Levelid;       // VIP層級的ID                                 
-            int now_members = membersService.Get().Where(a => a.Levelid != VipLevelid).Where(a => a.Logindate >= Now).Where(c => c.Memberloginrecord.OrderByDescending(a => a.Createdate).FirstOrDefault().Status == true).Count();     // 目前人數(扣掉會員層級為VIP)
-            //int now_members = membersService.Get().Where(a => a.Levelid != VipLevelid).Where(x => DbFunctions.CreateDateTime(x.Lastdate.Year, x.Lastdate.Month, x.Lastdate.Day, x.Lastdate.Hour, x.Lastdate.Minute, x.Lastdate.Second) <= DbFunctions.CreateDateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second)).OrderBy(a => a.Lastdate).Count();     // 目前人數(扣掉會員層級為VIP)
-            ViewBag.Now_members = now_members;
-            ViewBag.MemberNumber = membersService.Get().Count();
-            if (now_members < Setting.Max)
-            {
-                ViewBag.Max = now_members;
-                ViewBag.Min = 1;
-            }
-            else
-            {
-                ViewBag.Max = Setting.Max;
-                ViewBag.Min = Setting.Min;
-            }
+            Guid VipLevelid = memberlevelService.Get().Where(a => a.Levelname == "VIP").FirstOrDefault().Levelid;       // VIP層級的ID            
+            ViewBag.Max = Setting.Max;
+            ViewBag.Min = Setting.Min;           
             return View();
         }
         [CheckSession]
@@ -90,6 +84,7 @@ namespace HeO.Controllers
                 {
                     Cooldowntime = MemberCooldown;
                 }
+                
                 //ViewBag.Max = MemberCooldown;
                 //return View();
                 IEnumerable<Order> old_order = orderService.Get().Where(a => a.Memberid == Memberid).OrderByDescending(o => o.Createdate);
@@ -173,6 +168,66 @@ namespace HeO.Controllers
         {
             ViewBag.Date = Session["Date"];
             return View();
+        }
+    }
+    #region --LoginNumber_Now--
+    public class OrderHub : Hub
+    {
+        private MembersService membersService;
+        private MemberlevelService memberlevelService;
+        public OrderHub()
+        {
+            membersService = new MembersService();
+            memberlevelService = new MemberlevelService();
+        }
+        static List<UserData> Userdata = new List<UserData>(0);
+        public void userConnected(Guid Memberid, string MemberRand)
+        {
+            if (MemberRand.Equals("XkhVsa7rUv"))
+            {
+                Members Member = membersService.GetByID(Memberid);
+                Guid Vipid = memberlevelService.Get().Where(a => a.Levelname == "VIP").FirstOrDefault().Levelid;
+                if (!Member.Levelid.Equals(Vipid))
+                {
+                    var query = from u in Userdata
+                                where u.Id == Context.ConnectionId
+                                select u;
+                    if (query.Count() == 0)
+                    {
+                        Userdata.Add(new UserData { Id = Context.ConnectionId });
+                    }
+                    Clients.All.getList(Userdata);
+                }  
+            }                            
+        }
+
+        public override Task OnDisconnected(bool Order = true)
+        {
+            Clients.All.removeList(Context.ConnectionId);
+            var item = Userdata.FirstOrDefault(a => a.Id == Context.ConnectionId);
+            if (item != null)
+            {
+                Userdata.Remove(item);
+                Clients.All.onUserDisconnected(item.Id);
+            }
+            return base.OnDisconnected(true);
+        }
+    }
+    #endregion
+    public class UserData
+    {
+        public string Id { get; set; }
+        public Guid Memberid { get; set; }
+        public Guid Levelid { get; set; }
+        public string Name { get; set; }
+    }
+
+    public class Startup
+    {
+        public void Configuration(IAppBuilder app)
+        {
+            // Any connection or hub wire up and configuration should go here
+            app.MapSignalR();
         }
     }
 }

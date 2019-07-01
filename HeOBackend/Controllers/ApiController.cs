@@ -139,7 +139,7 @@ namespace HeOBackend.Controllers
                 if (order.Ordernumber.Contains("heo"))
                 {                    
                     /*** HEO內部下的訂單 ***/
-                    IEnumerable<Members> members = membersService.Get().Where(c => c.Levelid != VipLevelid).Where(x => x.Lastdate <= Now).Where(c => c.Memberloginrecord.OrderByDescending(a => a.Createdate).FirstOrDefault().Status == true).Where(a => a.Logindate >= Now);       // 撈層級非VIP的帳號詳細資料
+                    IEnumerable<Members> members = membersService.Get().Where(c => c.Levelid != VipLevelid).Where(x => x.Lastdate <= Now).Where(c => c.Memberloginrecord.OrderByDescending(a => a.Createdate).FirstOrDefault().Status == 1).Where(a => a.Logindate >= Now);       // 撈層級非VIP的帳號詳細資料
 
                     if (members != null)
                     {
@@ -205,7 +205,7 @@ namespace HeOBackend.Controllers
                     if (order.Isreal == true)
                     {
                         /*** 此筆訂單需要真人帳號 ****/
-                        IEnumerable<Members> members = membersService.Get().Where(c => c.Isreal == true).Where(x => x.Lastdate <= Now).Where(w => w.Memberloginrecord.OrderByDescending(e => e.Createdate).FirstOrDefault().Status == true).Where(s => s.Memberauthorization.Where(q => q.Feedbackproductid == feedbackproduct.Feedbackproductid).FirstOrDefault().Checked == true).Where(a => a.Logindate >= Now);
+                        IEnumerable<Members> members = membersService.Get().Where(c => c.Isreal == true).Where(x => x.Lastdate <= Now).Where(w => w.Memberloginrecord.OrderByDescending(e => e.Createdate).FirstOrDefault().Status == 1).Where(s => s.Memberauthorization.Where(q => q.Feedbackproductid == feedbackproduct.Feedbackproductid).FirstOrDefault().Checked == true).Where(a => a.Logindate >= Now);
                         if (members != null)
                         {
                             List<get_member> AccountList = new List<get_member>();
@@ -265,7 +265,7 @@ namespace HeOBackend.Controllers
                     }
                     else
                     {               
-                        IEnumerable<Members> members = membersService.Get().Where(x => x.Lastdate <= Now).Where(b => b.Memberloginrecord.OrderByDescending(x => x.Createdate).FirstOrDefault().Status == true).Where(a => a.Logindate >= Now).Where(s => s.Memberauthorization.Where(q => q.Feedbackproductid == feedbackproduct.Feedbackproductid).FirstOrDefault().Checked == true);
+                        IEnumerable<Members> members = membersService.Get().Where(x => x.Lastdate <= Now).Where(b => b.Memberloginrecord.OrderByDescending(x => x.Createdate).FirstOrDefault().Status == 1).Where(a => a.Logindate >= Now).Where(s => s.Memberauthorization.Where(q => q.Feedbackproductid == feedbackproduct.Feedbackproductid).FirstOrDefault().Checked == true);
                         if (members != null)
                         {
                             List<get_member> AccountList = new List<get_member>();
@@ -481,7 +481,7 @@ namespace HeOBackend.Controllers
         {
             int Now = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds;      // 目前時間的總秒數
             //int members = membersService.Get().Where(x => x.Lastdate <= Now).Count();
-            IEnumerable<Members> members = membersService.Get().Where(x => x.Lastdate <= Now).Where(a => a.Memberloginrecord.OrderByDescending(x => x.Createdate).FirstOrDefault().Status == true);
+            IEnumerable<Members> members = membersService.Get().Where(x => x.Lastdate <= Now).Where(a => a.Memberloginrecord.OrderByDescending(x => x.Createdate).FirstOrDefault().Status == 1);
             IEnumerable<Memberlevel> memberlevel = memberlevelService.Get();
             int[] members_count = new int[3];
             string[] members_levelname = new string[3];

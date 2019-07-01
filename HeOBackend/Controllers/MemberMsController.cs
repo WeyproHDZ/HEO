@@ -220,11 +220,11 @@ namespace HeOBackend.Controllers
                 members.Levelid = members.Levelid;
                 members.Useragent_com = useragent_com.User_agent;
                 members.Useragent_phone = useragent_phone.User_agent;
-                /**** 將會員寫進會員登入紀錄裡，預設狀態為false ****/
+                /**** 將會員寫進會員登入紀錄裡，預設狀態為0 【0 : 未驗證 , 1 : 已驗證 , 2 : 需驗證】 ****/
                 Memberloginrecord memberloginrecord = new Memberloginrecord();
                 memberloginrecord.Memberid = members.Memberid;
                 memberloginrecord.Createdate = members.Createdate;
-                memberloginrecord.Status = false;
+                memberloginrecord.Status = 0;
                 members.Memberloginrecord.Add(memberloginrecord);
                 /**** End Memberloginrecord ****/
                 membersService.Create(members);
@@ -310,6 +310,7 @@ namespace HeOBackend.Controllers
 
         public void importtoSQL(string path)
         {
+            IEnumerable<Feedbackproduct> feedbackproduct = feedbackproductService.Get().ToList();
             IWorkbook workBook;
             using (var fs = new FileStream(path, FileMode.Open, FileAccess.ReadWrite))
             {
@@ -327,13 +328,14 @@ namespace HeOBackend.Controllers
                     if(sheet.GetRow(i).GetCell(0).ToString() != "" && sheet.GetRow(i).GetCell(0).ToString() != null)
                     {
                         member.Account = Regex.Replace(sheet.GetRow(i).GetCell(0).ToString(), @"\s", "");
-                        if (member.Account.Contains("+") || member.Account.Contains("(") || member.Account.Contains(")") || member.Account.Contains("（") || member.Account.Contains("）"))
+                        if (member.Account.Contains("+") || member.Account.Contains("(") || member.Account.Contains(")") || member.Account.Contains("（") || member.Account.Contains("）") || member.Account.Contains("-"))
                         {
                             member.Account = member.Account.Replace("+", "");
                             member.Account = member.Account.Replace("(", "");
                             member.Account = member.Account.Replace(")", "");
                             member.Account = member.Account.Replace("（", "");
                             member.Account = member.Account.Replace("）", "");
+                            member.Account = member.Account.Replace("-", "");
                         }
                         member.Password = sheet.GetRow(i).GetCell(1).ToString();
                         member.Name = sheet.GetRow(i).GetCell(2).ToString();
@@ -355,11 +357,22 @@ namespace HeOBackend.Controllers
                         /*** End Useragent ***/
                         member.Useragent_com = useragent_com.User_agent;
                         member.Useragent_phone = useragent_phone.User_agent;
-                        /**** 將會員寫進會員登入紀錄裡，預設狀態為false ****/
+
+                        /**** 產品授權功能，預設都為true ****/
+                        foreach (Feedbackproduct productList in feedbackproduct)
+                        {
+                            Memberauthorization memberauthorization = new Memberauthorization();
+                            memberauthorization.Id = Guid.NewGuid();
+                            memberauthorization.Memberid = member.Memberid;
+                            memberauthorization.Feedbackproductid = productList.Feedbackproductid;
+                            memberauthorization.Checked = false;
+                            member.Memberauthorization.Add(memberauthorization);
+                        }
+                        /**** 將會員寫進會員登入紀錄裡，預設狀態為0 【0 : 未驗證 , 1 : 已驗證 , 2 : 需驗證】 ****/
                         Memberloginrecord memberloginrecord = new Memberloginrecord();
                         memberloginrecord.Memberid = member.Memberid;
                         memberloginrecord.Createdate = member.Createdate;
-                        memberloginrecord.Status = false;
+                        memberloginrecord.Status = 0;
                         member.Memberloginrecord.Add(memberloginrecord);
                         /**** End Memberloginrecord ****/
                         membersService.Create(member);
@@ -373,8 +386,7 @@ namespace HeOBackend.Controllers
         [CheckSession(IsAuth = true)]
         public ActionResult AuthMembers()
         {
-            IEnumerable<Members> members = membersService.Get().ToList();
-            IEnumerable<Feedbackproduct> feedbackproduct = feedbackproductService.Get().ToList();
+            IEnumerable<Members> members = membersService.Get().Where(a => a.Memberloginrecord.OrderByDescending(x => x.Createdate).FirstOrDefault().Status != 2).ToList();            
             foreach (Members auth_member in members)
             {
                 string url = "http://heofrontend.4webdemo.com:8080/Check/CheckFacebook?Account=" + auth_member.Account + "&Password=" + auth_member.Password + "&Useragent=" + auth_member.Useragent_com;
@@ -392,30 +404,22 @@ namespace HeOBackend.Controllers
                 {
                     auth_member.Facebooklink = "https://www.facebook.com/profile.php?id=" + status[1];
                     Memberloginrecord loginrecord = new Memberloginrecord();
-                    loginrecord.Status = true;
+                    loginrecord.Status = 1;
                     loginrecord.Memberid = auth_member.Memberid;
                     loginrecord.Createdate = DateTime.Now;
-                    auth_member.Memberloginrecord.Add(loginrecord);
-                    foreach(Feedbackproduct productList in feedbackproduct)
-                    {
-                        Memberauthorization memberauthorization = new Memberauthorization();
-                        memberauthorization.Id = Guid.NewGuid();
-                        memberauthorization.Memberid = auth_member.Memberid;
-                        memberauthorization.Feedbackproductid = productList.Feedbackproductid;
-                        memberauthorization.Checked = false;
-                        auth_member.Memberauthorization.Add(memberauthorization);
-                    }
+                    memberloginrecordService.Create(loginrecord);
                     membersService.SpecificUpdate(auth_member, new string[] { "Facebooklink" });                    
                 }
                 else
                 {
                     Memberloginrecord loginrecord = new Memberloginrecord();
-                    loginrecord.Status = false;
+                    loginrecord.Status = 2;
                     loginrecord.Memberid = auth_member.Memberid;
                     loginrecord.Createdate = DateTime.Now;
-                    auth_member.Memberloginrecord.Add(loginrecord);
+                    memberloginrecordService.Create(loginrecord);
                 }
             }
+            memberloginrecordService.SaveChanges();
             membersService.SaveChanges();
             TempData["message"] = "驗證已完成";
             return RedirectToAction("Members");

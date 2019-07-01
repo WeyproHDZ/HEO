@@ -71,3 +71,16 @@ D:\web\HeO\HeO\bin\System.Net.Http.Formatting.xml
 D:\web\HeO\HeO\bin\System.Web.Http.xml
 D:\web\HeO\HeO\bin\System.Web.Http.SelfHost.xml
 D:\web\HeO\HeO\bin\zh-Hant\System.Web.Http.SelfHost.resources.dll
+D:\web\HeO\HeO\bin\Microsoft.Owin.dll
+D:\web\HeO\HeO\bin\Microsoft.Owin.Host.SystemWeb.dll
+D:\web\HeO\HeO\bin\Microsoft.Owin.Security.dll
+D:\web\HeO\HeO\bin\Owin.dll
+D:\web\HeO\HeO\bin\Microsoft.Owin.xml
+D:\web\HeO\HeO\bin\Microsoft.Owin.Host.SystemWeb.xml
+D:\web\HeO\HeO\bin\Microsoft.Owin.Security.xml
+D:\web\HeO\HeO\bin\Microsoft.AspNet.SignalR.Core.dll
+D:\web\HeO\HeO\bin\Microsoft.AspNet.SignalR.SystemWeb.dll
+D:\web\HeO\HeO\bin\Microsoft.AspNet.SignalR.Core.pdb
+D:\web\HeO\HeO\bin\Microsoft.AspNet.SignalR.Core.xml
+D:\web\HeO\HeO\bin\Microsoft.AspNet.SignalR.SystemWeb.pdb
+D:\web\HeO\HeO\bin\Microsoft.AspNet.SignalR.SystemWeb.xml
