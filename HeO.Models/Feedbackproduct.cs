@@ -17,8 +17,8 @@ namespace HeO.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Feedbackproduct()
         {
-            this.Memberauthorization = new HashSet<Memberauthorization>();
             this.Feedbackdetail = new HashSet<Feedbackdetail>();
+            this.Memberauthorization = new HashSet<Memberauthorization>();
         }
     
         public System.Guid Feedbackproductid { get; set; }
@@ -28,8 +28,8 @@ namespace HeO.Models
         public Nullable<System.DateTime> Createdate { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Memberauthorization> Memberauthorization { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Feedbackdetail> Feedbackdetail { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Memberauthorization> Memberauthorization { get; set; }
     }
 }

@@ -140,15 +140,18 @@
       <PropertyRef Name="Memberid" />
     </Key>
     <Property Name="Isenable" Type="int" Nullable="false" />
+    <Property Name="Is_import" Type="bit" Nullable="false" />
     <Property Name="Memberid" Type="uniqueidentifier" Nullable="false" />
     <Property Name="Levelid" Type="uniqueidentifier" />
-    <Property Name="Facebookid" Type="nvarchar" MaxLength="50" />
+    <Property Name="Facebookcookie" Type="ntext" />
     <Property Name="Name" Type="nvarchar" MaxLength="50" />
     <Property Name="Account" Type="nvarchar" MaxLength="50" />
     <Property Name="Password" Type="nvarchar" MaxLength="100" />
     <Property Name="Facebooklink" Type="nvarchar" MaxLength="500" />
     <Property Name="Facebookstatus" Type="int" Nullable="false" />
     <Property Name="Feedbackmoney" Type="float" Nullable="false" />
+    <Property Name="Ipaddress" Type="nvarchar" MaxLength="100" />
+    <Property Name="Port" Type="int" />
     <Property Name="Useragent_com" Type="nvarchar" MaxLength="500" />
     <Property Name="Useragent_phone" Type="nvarchar" MaxLength="500" />
     <Property Name="Isreal" Type="bit" Nullable="false" />

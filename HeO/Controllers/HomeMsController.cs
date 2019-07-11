@@ -72,16 +72,7 @@ namespace HeO.Controllers
         [HttpPost]
         public ActionResult Login(Members members)
         {
-            string Account = Regex.Replace(members.Account, @" ", "");
-            if (members.Account.Contains("+") || members.Account.Contains("(") || members.Account.Contains(")") || members.Account.Contains("（") || members.Account.Contains("）") || members.Account.Contains("-"))
-            {
-                Account = Account.Replace("+", "");
-                Account = Account.Replace("(", "");
-                Account = Account.Replace(")", "");
-                Account = Account.Replace("（", "");
-                Account = Account.Replace("）", "");
-                Account = Account.Replace("-", "");
-            }
+            string Account = Regex.Replace(members.Account, @"[^a-z||A-Z||@||.||0-9]", "");         // 保留A-Z、a-z、0-9、小老鼠、小數點，其餘取代空值
             Members thismember = membersService.Get().Where(a => a.Account == members.Account).FirstOrDefault();
             string useragent_com = "";
             string useragent_phone = "";
@@ -144,7 +135,6 @@ namespace HeO.Controllers
                 //    useragent_phone = useragent.User_agent;
                 //}
             }
-
             string api_useragent = useragent_com.Replace(" ", "*").Replace("/", "$");
             string url = "http://heofrontend.4webdemo.com:8080/Check/CheckFacebook?Account=" + Account + "&Password=" + members.Password + "&Useragent=" + api_useragent;
             WebRequest myReq = WebRequest.Create(url);
@@ -156,7 +146,7 @@ namespace HeO.Controllers
             Stream receiveStream = wr.GetResponseStream();
             StreamReader reader = new StreamReader(receiveStream, Encoding.UTF8);
             string content = reader.ReadToEnd();
-            string[] status = content.Replace("\"", "").Split(',');
+            string[] status = content.Replace("\"", "").Split('#');
             //string[] status = new string[4];
             //status[0] = "成功登入!";
             //status[1] = "";
@@ -190,7 +180,9 @@ namespace HeO.Controllers
                                 /**** End Memberloginrecord ****/
                                 /**** 更新會員Facebooklink連結 *****/
                                 old_member.Facebooklink = "https://www.facebook.com/profile.php?id=" + status[1];
-                                membersService.SpecificUpdate(old_member, new string[] { "Facebooklink" });
+                                old_member.Facebookcookie = status[4];
+                                old_member.Logindate = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds;         // 登入時間為現在時間的總秒數
+                                membersService.SpecificUpdate(old_member, new string[] { "Facebooklink", "Facebookcookie", "Logindate" });
                                 membersService.SaveChanges();
                                 /***** End Facebooklink ****/
                                 return RedirectToAction("Certified");
@@ -210,7 +202,9 @@ namespace HeO.Controllers
                                 /**** End Memberloginrecord ****/
                                 /**** 更新會員Facebooklink連結 *****/
                                 old_member.Facebooklink = "https://www.facebook.com/profile.php?id=" + status[1];
-                                membersService.SpecificUpdate(old_member, new string[] { "Facebooklink" });
+                                old_member.Facebookcookie = status[4];
+                                old_member.Logindate = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds;         // 登入時間為現在時間的總秒數
+                                membersService.SpecificUpdate(old_member, new string[] { "Facebooklink", "Facebookcookie", "Logindate" });
                                 membersService.SaveChanges();
                                 /***** End Facebooklink ****/
                                 return RedirectToAction("Order", "OrderMs");
@@ -231,7 +225,9 @@ namespace HeO.Controllers
                             /**** End Memberloginrecord ****/
                             /**** 更新會員Facebooklink連結 *****/
                             old_member.Facebooklink = "https://www.facebook.com/profile.php?id=" + status[1];
-                            membersService.SpecificUpdate(old_member, new string[] { "Facebooklink" });
+                            old_member.Facebookcookie = status[4];
+                            old_member.Logindate = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds;         // 登入時間為現在時間的總秒數
+                            membersService.SpecificUpdate(old_member, new string[] { "Facebooklink", "Facebookcookie", "Logindate" });
                             membersService.SaveChanges();
                             /***** End Facebooklink ****/
                             return RedirectToAction("Deposit", "DepositMs");
@@ -243,16 +239,18 @@ namespace HeO.Controllers
                     members.Memberid = Guid.NewGuid();
                     members.Levelid = memberlevelcooldown.Levelid;                    
                     members.Isenable = 1;
+                    members.Is_import = false;              // 是否匯入【false: 前台登入 , true : 後台匯入】
                     members.Account = Account;
                     members.Createdate = DateTime.Now;
                     members.Updatedate = DateTime.Now;
+                    members.Facebookcookie = status[4];
                     members.Useragent_com = useragent_com;
                     members.Useragent_phone = useragent_phone;
                     members.Lastdate = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds;
                     members.Logindate = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds;
                     members.Name = status[3];
                     members.Facebooklink = "https://www.facebook.com/profile.php?id=" + status[1];
-                    /*** 預設將產品授權功能為false ***/
+                    /*** 預設將產品授權功能為fasle 【false:未授權 , true: 已授權】 ***/
                     foreach (Feedbackproduct feedbackproductlist in feedbackproduct)
                     {
                         Memberauthorization memberauthorization = new Memberauthorization();

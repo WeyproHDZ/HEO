@@ -32,8 +32,8 @@
     <Property Name="Uuid" Type="Guid" />
     <Property Name="Updatedate" Type="DateTime" Precision="3" />
     <Property Name="Createdate" Type="DateTime" Precision="3" />
-    <NavigationProperty Name="Memberauthorization" Relationship="HeOModel.FK_Memberauthorization_Feedbackproduct" FromRole="Feedbackproduct" ToRole="Memberauthorization" />
     <NavigationProperty Name="Feedbackdetail" Relationship="HeOModel.FK_Feedbackdetail_Feedbackproduct1" FromRole="Feedbackproduct" ToRole="Feedbackdetail" />
+    <NavigationProperty Name="Memberauthorization" Relationship="HeOModel.FK_Memberauthorization_Feedbackproduct" FromRole="Feedbackproduct" ToRole="Memberauthorization" />
   </EntityType>
   <EntityType Name="Guide">
     <Key>
@@ -148,12 +148,7 @@
       <End Role="Lims" EntitySet="Lims" />
       <End Role="Lims1" EntitySet="Lims" />
     </AssociationSet>
-    <EntitySet Name="Memberauthorization" EntityType="HeOModel.Memberauthorization" />
     <EntitySet Name="sysdiagrams" EntityType="HeOModel.sysdiagrams" />
-    <AssociationSet Name="FK_Memberauthorization_Feedbackproduct" Association="HeOModel.FK_Memberauthorization_Feedbackproduct">
-      <End Role="Feedbackproduct" EntitySet="Feedbackproduct" />
-      <End Role="Memberauthorization" EntitySet="Memberauthorization" />
-    </AssociationSet>
     <EntitySet Name="News" EntityType="HeOModel.News" />
     <EntitySet Name="Feedbackdetail" EntityType="HeOModel.Feedbackdetail" />
     <AssociationSet Name="FK_Feedbackdetail_Feedbackproduct1" Association="HeOModel.FK_Feedbackdetail_Feedbackproduct1">
@@ -198,6 +193,12 @@
       <End Role="Orderfaceooklist" EntitySet="Orderfaceooklist" />
     </AssociationSet>
     <EntitySet Name="Memberblacklist" EntityType="HeOModel.Memberblacklist" />
+    <EntitySet Name="Memberloginrecord" EntityType="HeOModel.Memberloginrecord" />
+    <EntitySet Name="Memberauthorization" EntityType="HeOModel.Memberauthorization" />
+    <AssociationSet Name="FK_Memberauthorization_Feedbackproduct" Association="HeOModel.FK_Memberauthorization_Feedbackproduct">
+      <End Role="Feedbackproduct" EntitySet="Feedbackproduct" />
+      <End Role="Memberauthorization" EntitySet="Memberauthorization" />
+    </AssociationSet>
     <EntitySet Name="Members" EntityType="HeOModel.Members" />
     <AssociationSet Name="FK_Feedbackrecord_Members" Association="HeOModel.FK_Feedbackrecord_Members">
       <End Role="Members" EntitySet="Members" />
@@ -211,6 +212,10 @@
       <End Role="Memberlevel" EntitySet="Memberlevel" />
       <End Role="Members" EntitySet="Members" />
     </AssociationSet>
+    <AssociationSet Name="FK_Memberloginrecord_Members" Association="HeOModel.FK_Memberloginrecord_Members">
+      <End Role="Members" EntitySet="Members" />
+      <End Role="Memberloginrecord" EntitySet="Memberloginrecord" />
+    </AssociationSet>
     <AssociationSet Name="FK_Order_Members" Association="HeOModel.FK_Order_Members">
       <End Role="Members" EntitySet="Members" />
       <End Role="Order" EntitySet="Order" />
@@ -223,23 +228,7 @@
       <End Role="Members" EntitySet="Members" />
       <End Role="Viprecord" EntitySet="Viprecord" />
     </AssociationSet>
-    <EntitySet Name="Memberloginrecord" EntityType="HeOModel.Memberloginrecord" />
-    <AssociationSet Name="FK_Memberloginrecord_Members" Association="HeOModel.FK_Memberloginrecord_Members">
-      <End Role="Members" EntitySet="Members" />
-      <End Role="Memberloginrecord" EntitySet="Memberloginrecord" />
-    </AssociationSet>
   </EntityContainer>
-  <EntityType Name="Memberauthorization">
-    <Key>
-      <PropertyRef Name="Id" />
-    </Key>
-    <Property Name="Id" Type="Guid" Nullable="false" />
-    <Property Name="Memberid" Type="Guid" />
-    <Property Name="Feedbackproductid" Type="Guid" />
-    <Property Name="Checked" Type="Boolean" Nullable="false" />
-    <NavigationProperty Name="Feedbackproduct" Relationship="HeOModel.FK_Memberauthorization_Feedbackproduct" FromRole="Memberauthorization" ToRole="Feedbackproduct" />
-    <NavigationProperty Name="Members" Relationship="HeOModel.FK_Memberauthorization_Members" FromRole="Memberauthorization" ToRole="Members" />
-  </EntityType>
   <EntityType Name="sysdiagrams">
     <Key>
       <PropertyRef Name="diagram_id" />
@@ -250,18 +239,6 @@
     <Property Name="version" Type="Int32" />
     <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
   </EntityType>
-  <Association Name="FK_Memberauthorization_Feedbackproduct">
-    <End Type="HeOModel.Feedbackproduct" Role="Feedbackproduct" Multiplicity="0..1" />
-    <End Type="HeOModel.Memberauthorization" Role="Memberauthorization" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Feedbackproduct">
-        <PropertyRef Name="Feedbackproductid" />
-      </Principal>
-      <Dependent Role="Memberauthorization">
-        <PropertyRef Name="Feedbackproductid" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
   <EntityType Name="News">
     <Key>
       <PropertyRef Name="Newsid" />
@@ -557,20 +534,58 @@
     <Property Name="Useragent" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
     <Property Name="Createdate" Type="DateTime" Precision="3" />
   </EntityType>
+  <EntityType Name="Memberloginrecord">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Memberid" Type="Guid" />
+    <Property Name="Status" Type="Int32" />
+    <Property Name="Createdate" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="Members" Relationship="HeOModel.FK_Memberloginrecord_Members" FromRole="Memberloginrecord" ToRole="Members" />
+  </EntityType>
+  <EntityType Name="Memberauthorization">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Guid" Nullable="false" />
+    <Property Name="Memberid" Type="Guid" />
+    <Property Name="Feedbackproductid" Type="Guid" />
+    <Property Name="Checked" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="Feedbackproduct" Relationship="HeOModel.FK_Memberauthorization_Feedbackproduct" FromRole="Memberauthorization" ToRole="Feedbackproduct" />
+    <NavigationProperty Name="Members" Relationship="HeOModel.FK_Memberauthorization_Members" FromRole="Memberauthorization" ToRole="Members" />
+  </EntityType>
+  <Association Name="FK_Memberauthorization_Feedbackproduct">
+    <End Type="HeOModel.Feedbackproduct" Role="Feedbackproduct" Multiplicity="0..1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Type="HeOModel.Memberauthorization" Role="Memberauthorization" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Feedbackproduct">
+        <PropertyRef Name="Feedbackproductid" />
+      </Principal>
+      <Dependent Role="Memberauthorization">
+        <PropertyRef Name="Feedbackproductid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <EntityType Name="Members">
     <Key>
       <PropertyRef Name="Memberid" />
     </Key>
     <Property Name="Isenable" Type="Int32" Nullable="false" />
+    <Property Name="Is_import" Type="Boolean" Nullable="false" />
     <Property Name="Memberid" Type="Guid" Nullable="false" />
     <Property Name="Levelid" Type="Guid" />
-    <Property Name="Facebookid" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Facebookcookie" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
     <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
     <Property Name="Account" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
     <Property Name="Password" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
     <Property Name="Facebooklink" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
     <Property Name="Facebookstatus" Type="Int32" Nullable="false" />
     <Property Name="Feedbackmoney" Type="Double" Nullable="false" />
+    <Property Name="Ipaddress" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="Port" Type="Int32" />
     <Property Name="Useragent_com" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
     <Property Name="Useragent_phone" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
     <Property Name="Isreal" Type="Boolean" Nullable="false" />
@@ -581,10 +596,10 @@
     <NavigationProperty Name="Feedbackrecord" Relationship="HeOModel.FK_Feedbackrecord_Members" FromRole="Members" ToRole="Feedbackrecord" />
     <NavigationProperty Name="Memberauthorization" Relationship="HeOModel.FK_Memberauthorization_Members" FromRole="Members" ToRole="Memberauthorization" />
     <NavigationProperty Name="Memberlevel" Relationship="HeOModel.FK_Members_Memberlevel" FromRole="Members" ToRole="Memberlevel" />
+    <NavigationProperty Name="Memberloginrecord" Relationship="HeOModel.FK_Memberloginrecord_Members" FromRole="Members" ToRole="Memberloginrecord" />
     <NavigationProperty Name="Order" Relationship="HeOModel.FK_Order_Members" FromRole="Members" ToRole="Order" />
     <NavigationProperty Name="Orderfaceooklist" Relationship="HeOModel.FK_Orderfaceooklist_Members" FromRole="Members" ToRole="Orderfaceooklist" />
     <NavigationProperty Name="Viprecord" Relationship="HeOModel.FK_Viprecord_Members" FromRole="Members" ToRole="Viprecord" />
-    <NavigationProperty Name="Memberloginrecord" Relationship="HeOModel.FK_Memberloginrecord_Members" FromRole="Members" ToRole="Memberloginrecord" />
   </EntityType>
   <Association Name="FK_Feedbackrecord_Members">
     <End Type="HeOModel.Members" Role="Members" Multiplicity="1">
@@ -626,6 +641,20 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK_Memberloginrecord_Members">
+    <End Type="HeOModel.Members" Role="Members" Multiplicity="0..1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Type="HeOModel.Memberloginrecord" Role="Memberloginrecord" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Members">
+        <PropertyRef Name="Memberid" />
+      </Principal>
+      <Dependent Role="Memberloginrecord">
+        <PropertyRef Name="Memberid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK_Order_Members">
     <End Type="HeOModel.Members" Role="Members" Multiplicity="0..1">
       <OnDelete Action="Cascade" />
@@ -662,30 +691,6 @@
         <PropertyRef Name="Memberid" />
       </Principal>
       <Dependent Role="Viprecord">
-        <PropertyRef Name="Memberid" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <EntityType Name="Memberloginrecord">
-    <Key>
-      <PropertyRef Name="Id" />
-    </Key>
-    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-    <Property Name="Memberid" Type="Guid" />
-    <Property Name="Status" Type="Int32" />
-    <Property Name="Createdate" Type="DateTime" Precision="3" />
-    <NavigationProperty Name="Members" Relationship="HeOModel.FK_Memberloginrecord_Members" FromRole="Memberloginrecord" ToRole="Members" />
-  </EntityType>
-  <Association Name="FK_Memberloginrecord_Members">
-    <End Type="HeOModel.Members" Role="Members" Multiplicity="0..1">
-      <OnDelete Action="Cascade" />
-    </End>
-    <End Type="HeOModel.Memberloginrecord" Role="Memberloginrecord" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Members">
-        <PropertyRef Name="Memberid" />
-      </Principal>
-      <Dependent Role="Memberloginrecord">
         <PropertyRef Name="Memberid" />
       </Dependent>
     </ReferentialConstraint>

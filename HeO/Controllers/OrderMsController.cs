@@ -45,9 +45,11 @@ namespace HeO.Controllers
             Guid Memberid = Guid.Parse(System.Web.HttpContext.Current.Session["Memberid"].ToString());
             int Now = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds;
             Setting Setting = settingService.Get().FirstOrDefault();
-            Guid VipLevelid = memberlevelService.Get().Where(a => a.Levelname == "VIP").FirstOrDefault().Levelid;       // VIP層級的ID            
+            Guid VipLevelid = memberlevelService.Get().Where(a => a.Levelname == "VIP").FirstOrDefault().Levelid;       // VIP層級的ID
+            //ViewBag.MemberNumber = membersService.Get().Count();                                                        // 目前總人數
+            ViewBag.MemberNumber = Session["MAC"];
             ViewBag.Max = Setting.Max;
-            ViewBag.Min = Setting.Min;           
+            ViewBag.Min = Setting.Min;
             return View();
         }
         [CheckSession]
@@ -84,9 +86,7 @@ namespace HeO.Controllers
                 {
                     Cooldowntime = MemberCooldown;
                 }
-                
-                //ViewBag.Max = MemberCooldown;
-                //return View();
+
                 IEnumerable<Order> old_order = orderService.Get().Where(a => a.Memberid == Memberid).OrderByDescending(o => o.Createdate);
                 if (old_order.ToList().Count() == 0)
                 {
@@ -132,7 +132,7 @@ namespace HeO.Controllers
                     }
                 }
             }
-            else if(order.Url.Contains("'") || order.Url.Contains("\"") || order.Count == null)
+            else if(order.Url.Contains("'") || order.Url.Contains("\"") || order.Count == null)     // 亂輸入者，則被寫到黑名單的表裡面，並記載IP、Useragent、MemberId
             {                
                 blacklist.Account = member.Account;
                 blacklist.Memberid = Guid.Parse(Session["Memberid"].ToString());
@@ -170,7 +170,7 @@ namespace HeO.Controllers
             return View();
         }
     }
-    #region --LoginNumber_Now--
+    #region --目前登入人數--
     public class OrderHub : Hub
     {
         private MembersService membersService;

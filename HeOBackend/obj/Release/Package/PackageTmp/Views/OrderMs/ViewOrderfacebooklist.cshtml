@@ -41,23 +41,19 @@
                                 <tbody>
                                     @foreach (Orderfaceooklist entity in data)
                                     {
-                                        if (entity.Members.Memberloginrecord.OrderByDescending(a => a.Createdate).FirstOrDefault().Status == true)
-                                        {
-                                            status = "已驗證";
-                                        }
-                                        else
-                                        {
-                                            status = "未驗證";
-                                        }
                                         <tr>
-                                            @if (status == "已驗證")
+                                            @if (entity.Members.Memberloginrecord.OrderByDescending(a => a.Createdate).FirstOrDefault().Status == 0)
                                             {
-                                                <td class="text-center"><img src="~/Content/img/bullet_tick.png" /></td>
+                                            <td class="text-center"><i class="fa fa-question" aria-hidden="true" style="color:black"></i></td>
+                                            }
+                                            else if(entity.Members.Memberloginrecord.OrderByDescending(a => a.Createdate).FirstOrDefault().Status == 1)
+                                            {
+                                            <td class="text-center"><i class="fa fa-check" aria-hidden="true" style="color:green"></i></td>
                                             }
                                             else
                                             {
-                                                <td class="text-center"><img src="~/Content/img/bullet_cross.png" /></td>
-                                            }
+                                            <td class="text-center"><i class="fa fa-times" aria-hidden="true" style="color:red"></i></td>
+                                            }                                         
                                             <td class="text-center">@entity.Facebookaccount</td>
                                         </tr>
                                         x++;

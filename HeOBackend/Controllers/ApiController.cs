@@ -9,6 +9,11 @@ using System.Data.Entity;
 using System.Net;
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
+using System.Net.NetworkInformation;
+using System.Runtime.InteropServices;
+using System.Web.Helpers;
+using Newtonsoft.Json;
 
 namespace HeOBackend.Controllers
 {
@@ -139,7 +144,7 @@ namespace HeOBackend.Controllers
                 if (order.Ordernumber.Contains("heo"))
                 {                    
                     /*** HEO內部下的訂單 ***/
-                    IEnumerable<Members> members = membersService.Get().Where(c => c.Levelid != VipLevelid).Where(x => x.Lastdate <= Now).Where(c => c.Memberloginrecord.OrderByDescending(a => a.Createdate).FirstOrDefault().Status == 1).Where(a => a.Logindate >= Now);       // 撈層級非VIP的帳號詳細資料
+                    IEnumerable<Members> members = membersService.Get().Where(c => c.Levelid != VipLevelid).Where(x => x.Lastdate <= Now).Where(c => c.Memberloginrecord.OrderByDescending(a => a.Createdate).FirstOrDefault().Status == 1);       // 撈層級非VIP的帳號詳細資料
 
                     if (members != null)
                     {
@@ -167,7 +172,8 @@ namespace HeOBackend.Controllers
                                         memberid = thismembers.Memberid,
                                         account = thismembers.Account,
                                         password = thismembers.Password,
-                                        useragent_phone = thismembers.Useragent_phone
+                                        useragent_phone = thismembers.Useragent_phone,
+                                        facebookcookie = thismembers.Facebookcookie
                                     }
                                 );
 
@@ -205,7 +211,7 @@ namespace HeOBackend.Controllers
                     if (order.Isreal == true)
                     {
                         /*** 此筆訂單需要真人帳號 ****/
-                        IEnumerable<Members> members = membersService.Get().Where(c => c.Isreal == true).Where(x => x.Lastdate <= Now).Where(w => w.Memberloginrecord.OrderByDescending(e => e.Createdate).FirstOrDefault().Status == 1).Where(s => s.Memberauthorization.Where(q => q.Feedbackproductid == feedbackproduct.Feedbackproductid).FirstOrDefault().Checked == true).Where(a => a.Logindate >= Now);
+                        IEnumerable<Members> members = membersService.Get().Where(c => c.Isreal == true).Where(x => x.Lastdate <= Now).Where(w => w.Memberloginrecord.OrderByDescending(e => e.Createdate).FirstOrDefault().Status == 1).Where(s => s.Memberauthorization.Where(q => q.Feedbackproductid == feedbackproduct.Feedbackproductid).FirstOrDefault().Checked == true);
                         if (members != null)
                         {
                             List<get_member> AccountList = new List<get_member>();
@@ -232,7 +238,8 @@ namespace HeOBackend.Controllers
                                             memberid = thismembers.Memberid,
                                             account = thismembers.Account,
                                             password = thismembers.Password,
-                                            useragent_phone = thismembers.Useragent_phone
+                                            useragent_phone = thismembers.Useragent_phone,
+                                            facebookcookie = thismembers.Facebookcookie
                                         }
                                     );
                                 }
@@ -265,7 +272,7 @@ namespace HeOBackend.Controllers
                     }
                     else
                     {               
-                        IEnumerable<Members> members = membersService.Get().Where(x => x.Lastdate <= Now).Where(b => b.Memberloginrecord.OrderByDescending(x => x.Createdate).FirstOrDefault().Status == 1).Where(a => a.Logindate >= Now).Where(s => s.Memberauthorization.Where(q => q.Feedbackproductid == feedbackproduct.Feedbackproductid).FirstOrDefault().Checked == true);
+                        IEnumerable<Members> members = membersService.Get().Where(x => x.Lastdate <= Now).Where(b => b.Memberloginrecord.OrderByDescending(x => x.Createdate).FirstOrDefault().Status == 1).Where(s => s.Memberauthorization.Where(q => q.Feedbackproductid == feedbackproduct.Feedbackproductid).FirstOrDefault().Checked == true);
                         if (members != null)
                         {
                             List<get_member> AccountList = new List<get_member>();
@@ -292,7 +299,8 @@ namespace HeOBackend.Controllers
                                             memberid = thismembers.Memberid,
                                             account = thismembers.Account,
                                             password = thismembers.Password,
-                                            useragent_phone = thismembers.Useragent_phone
+                                            useragent_phone = thismembers.Useragent_phone,
+                                            facebookcookie = thismembers.Facebookcookie
                                         }
                                     );
                                     /*** 將此會員更新下次互惠時間 ****/
@@ -371,7 +379,7 @@ namespace HeOBackend.Controllers
                 {
                     /**** HDZ餵來的訂單 ****/
                     /*** 更新訂單成本及撥回饋金給該會員 ****/
-                    if (member.Isreal == true)
+                    if (member.Isreal == true && member.Is_import == false)
                     {
                         order.Cost += 1.0 * Convert.ToDouble(feedbackproduct.Feedbackdetail.FirstOrDefault(a => a.Memberlevel.Levelname == "真人").Money);
                         member.Feedbackmoney += order.Cost;
@@ -379,14 +387,16 @@ namespace HeOBackend.Controllers
                     }
                     else
                     {
-                        foreach(Memberlevel level in memberlevel)
+                        if(member.Is_import == false)
                         {
-                            if (member.Memberlevel.Levelname == level.Levelname)
+                            foreach (Memberlevel level in memberlevel)
                             {
-                                order.Cost += 1.0 * Convert.ToDouble(feedbackproduct.Feedbackdetail.FirstOrDefault(a => a.Memberlevel.Levelname == level.Levelname).Money);
+                                if (member.Memberlevel.Levelname == level.Levelname)
+                                {
+                                    order.Cost += 1.0 * Convert.ToDouble(feedbackproduct.Feedbackdetail.FirstOrDefault(a => a.Memberlevel.Levelname == level.Levelname).Money);
+                                }
                             }
-                        }
-                        
+                        }                                                
                     }
                     orderService.SpecificUpdate(order, new string[] { "Cost" });
                     orderService.SaveChanges();
@@ -511,13 +521,50 @@ namespace HeOBackend.Controllers
         [HttpGet]
         public JsonResult hMeyoIyPa()
         {
-            string ipaddress;
-            ipaddress = Request.ServerVariables["HTTP_X_FORWARDED_FOR"];
-            if (ipaddress == "" || ipaddress == null)
-            {
-                ipaddress = Request.ServerVariables["REMOTE_ADDR"];
-            }
-            return this.Json(ipaddress, JsonRequestBehavior.AllowGet);
+            #region --只選出a-z、A-Z、小老鼠、小數點，其餘捨去--
+            //string s = @"+1 612-399-9713";
+            //string r = Regex.Replace(s, @"[^a-z||A-Z||@||.||1-9]", "");
+            //return this.Json(r, JsonRequestBehavior.AllowGet);
+            #endregion
+
+            #region --顯示真實IP--
+            //string ipaddress;
+            //ipaddress = Request.ServerVariables["HTTP_X_FORWARDED_FOR"];
+            //if (ipaddress == "" || ipaddress == null)
+            //{
+            //    ipaddress = Request.ServerVariables["REMOTE_ADDR"];
+            //}
+            //return this.Json(ipaddress, JsonRequestBehavior.AllowGet);
+            #endregion
+
+            #region --取得網頁port號--
+            //int url;
+            //url = Request.Url.Port;
+            //return this.Json(url, JsonRequestBehavior.AllowGet);
+            #endregion
+
+            #region --取得電腦名稱--
+            //string name = Dns.GetHostName();
+            //return this.Json(name, JsonRequestBehavior.AllowGet);
+            #endregion
+            int Now = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds;      // 目前時間的總秒數
+            Guid VipLevelid = memberlevelService.Get().Where(a => a.Levelname == "VIP").FirstOrDefault().Levelid;                                           // VIP層級的ID
+            IEnumerable<Members> members = membersService.Get().Where(c => c.Levelid != VipLevelid).Where(x => x.Lastdate <= Now).Where(c => c.Memberloginrecord.OrderByDescending(a => a.Createdate).FirstOrDefault().Status == 1).ToList();       // 撈層級非VIP的帳號詳細資料
+            return this.Json(members, JsonRequestBehavior.AllowGet);
+            #region--取得MAC Address--
+            //NetworkInterface[] nics = NetworkInterface.GetAllNetworkInterfaces();
+            //string[] mac = new string[1];
+            //List<string> macList = new List<string>();
+            //foreach (var nic in nics)
+            //{
+            //    if (nic.NetworkInterfaceType == NetworkInterfaceType.Ethernet)
+            //    {
+            //        macList.Add(nic.GetPhysicalAddress().ToString());
+            //    }
+            //}
+            //return this.Json(macList[0], JsonRequestBehavior.AllowGet);
+            #endregion
+
         }
     }
     public class get_member
@@ -526,6 +573,7 @@ namespace HeOBackend.Controllers
         public string account { get; set; }
         public string password { get; set; }
         public string useragent_phone { get; set; }
+        public string facebookcookie { get; set; }
     }
 
     public class get_old_member
