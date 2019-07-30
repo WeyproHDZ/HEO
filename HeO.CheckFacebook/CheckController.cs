@@ -129,32 +129,10 @@ namespace HeO.CheckFacebook
                             System.Threading.Thread.Sleep(Delay());
                         }
                     }
-
-                    try
+                    /**** 判斷唉呀，好像有東西出錯的錯誤訊息 ****/
+                    if(driver.Url.IndexOf("error") != -1)
                     {
-                        /*** 帳號需驗證 ***/
-                        if (driver.Url.IndexOf("checkpoint") != -1)
-                        {
-                            status[0] = "帳號未驗證";
-                            driver.Quit();
-                            content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
-                            return content;
-                        }
-                        else
-                        /*** 帳密輸入錯誤 ***/
-                        {
-                            status[0] = "帳號密碼有誤!";
-                            driver.Quit();
-                            content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
-                            return content;
-                        }
-                    }
-                    catch
-                    {
-                        /*** 稍後再用按鈕 ****/
-                        IWebElement FB_continue = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[3]/div[1]/div[1]/div[1]/a[1]"));
-                        FB_continue.Click();
-                        System.Threading.Thread.Sleep(Delay());
+                        driver.Navigate().GoToUrl("https://mobile.facebook.com");
                         /*** 個人頁面 ****/
 
                         IWebElement Setting = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/a[1]"));
@@ -173,7 +151,52 @@ namespace HeO.CheckFacebook
                         System.Threading.Thread.Sleep(Delay());
                         driver.Quit();
                     }
+                    else
+                    {
+                        if (driver.Url.IndexOf("save-device") != -1)
+                        {
+                            /*** 稍後再用按鈕 ****/
+                            IWebElement FB_continue = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[3]/div[1]/div[1]/div[1]/a[1]"));
+                            FB_continue.Click();
+                            System.Threading.Thread.Sleep(Delay());
+                            /*** 個人頁面 ****/
 
+                            IWebElement Setting = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/a[1]"));
+                            Setting.Click();
+                            System.Threading.Thread.Sleep(Delay());
+                            IWebElement Profile = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/ul[1]/li[1]/div[1]/a[1]/div[1]/img[1]"));
+                            Profile.Click();
+                            IWebElement img = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[4]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/a[1]/div[1]/i[1]"));
+                            string[] imgdata = img.GetAttribute("style").Replace("\'", "\"").Split('\"');
+                            string name = img.GetAttribute("aria-label");
+                            status[0] = "成功登入!";
+                            status[1] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
+                            status[2] = imgdata[1].Replace("amp;", "");
+                            status[3] = name;
+                            status[4] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
+                            System.Threading.Thread.Sleep(Delay());
+                            driver.Quit();
+                        }
+                        else
+                        {
+                            /*** 帳號需驗證 ***/
+                            if (driver.Url.IndexOf("checkpoint") != -1)
+                            {
+                                status[0] = "帳號未驗證";
+                                driver.Quit();
+                                content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
+                                return content;
+                            }
+                            else if (driver.Url.IndexOf("save-device") == -1)
+                            /*** 帳密輸入錯誤 ***/
+                            {
+                                status[0] = "帳號密碼有誤!";
+                                driver.Quit();
+                                content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
+                                return content;
+                            }
+                        }
+                    }                                                               
                     var response = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
                     System.Threading.Thread.Sleep(500);
                     driver.Quit();
@@ -253,26 +276,7 @@ namespace HeO.CheckFacebook
                         }
                     }
 
-                    try
-                    {
-                        /*** 帳號需驗證 ***/
-                        if (driver.Url.IndexOf("checkpoint") != -1)
-                        {
-                            status[0] = "帳號未驗證";
-                            driver.Quit();
-                            content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
-                            return content;
-                        }
-                        else
-                        /*** 帳密輸入錯誤 ***/
-                        {
-                            status[0] = "帳號密碼有誤!";
-                            driver.Quit();
-                            content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
-                            return content;
-                        }
-                    }
-                    catch
+                    if (driver.Url.IndexOf("save-device") != -1)
                     {
                         /*** 稍後再用按鈕 ****/
                         IWebElement FB_continue = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[3]/div[1]/div[1]/div[1]/a[1]"));
@@ -295,6 +299,25 @@ namespace HeO.CheckFacebook
                         status[4] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
                         System.Threading.Thread.Sleep(Delay());
                         driver.Quit();
+                    }
+                    else
+                    {
+                        /*** 帳號需驗證 ***/
+                        if (driver.Url.IndexOf("checkpoint") != -1)
+                        {
+                            status[0] = "帳號未驗證";
+                            driver.Quit();
+                            content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
+                            return content;
+                        }
+                        else if (driver.Url.IndexOf("save-device") == -1)
+                        /*** 帳密輸入錯誤 ***/
+                        {
+                            status[0] = "帳號密碼有誤!";
+                            driver.Quit();
+                            content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
+                            return content;
+                        }
                     }
 
                     var response = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
@@ -378,27 +401,7 @@ namespace HeO.CheckFacebook
                         System.Threading.Thread.Sleep(Delay());
                     }
                 }
-
-                try
-                {
-                    /*** 帳號需驗證 ***/
-                    if (driver.Url.IndexOf("checkpoint") != -1)
-                    {
-                        status[0] = "帳號未驗證";
-                        driver.Quit();
-                        content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
-                        return content;
-                    }
-                    else
-                    /*** 帳密輸入錯誤 ***/
-                    {
-                        status[0] = "帳號密碼有誤!";
-                        driver.Quit();
-                        content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
-                        return content;
-                    }                   
-                }
-                catch
+                if(driver.Url.IndexOf("save-device") != -1)
                 {
                     /*** 稍後再用按鈕 ****/
                     IWebElement FB_continue = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[3]/div[1]/div[1]/div[1]/a[1]"));
@@ -422,7 +425,25 @@ namespace HeO.CheckFacebook
                     System.Threading.Thread.Sleep(Delay());
                     driver.Quit();
                 }
-
+                else
+                {
+                    /*** 帳號需驗證 ***/
+                    if (driver.Url.IndexOf("checkpoint") != -1)
+                    {
+                        status[0] = "帳號未驗證";
+                        driver.Quit();
+                        content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
+                        return content;
+                    }
+                    else if (driver.Url.IndexOf("save-device") == -1)
+                    /*** 帳密輸入錯誤 ***/
+                    {
+                        status[0] = "帳號密碼有誤!";
+                        driver.Quit();
+                        content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
+                        return content;
+                    }
+                }                                            
                 var response = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
                 System.Threading.Thread.Sleep(500);
                 driver.Quit();

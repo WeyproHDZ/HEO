@@ -63,24 +63,8 @@
                         @foreach (Feedbackproduct FeedbackproductList in Feedbackproduct)
                         {
                             <div class="switcher-item">
-                                <div class="minion-switcher">
-                                    @if (Model.Memberauthorization.FirstOrDefault(a => a.Feedbackproductid == FeedbackproductList.Feedbackproductid).Checked == true)
-                                    {
-                                        <input class="check" type="checkbox" id="product_@FeedbackproductList.Feedbackproductid" onclick="check('@FeedbackproductList.Feedbackproductid');" checked />
-                                        <div class="btn">
-                                            <div class="circle"> </div>
-                                        </div>
-                                    }
-                                    else
-                                    {
-                                        <input class="check" type="checkbox" id="product_@FeedbackproductList.Feedbackproductid" onclick="check('@FeedbackproductList.Feedbackproductid');" />
-                                        <div class="btn">
-                                            <div class="circle"> </div>
-                                        </div>
-                                    }
-
-
-                                    <input class="check" type="checkbox" id="product_@FeedbackproductList.Feedbackproductid" onclick="check('@FeedbackproductList.Feedbackproductid');" @(Model.Memberauthorization.FirstOrDefault(a => a.Feedbackproductid == FeedbackproductList.Feedbackproductid).Checked == true ? "checked" : "") />                                
+                                <div class="minion-switcher">                                  
+                                    <input class="check" type="checkbox" id="product_@FeedbackproductList.Feedbackproductid" onclick="check('@FeedbackproductList.Feedbackproductid');" @(FeedbackproductList.Memberauthorization.FirstOrDefault(a => a.Feedbackproductid == FeedbackproductList.Feedbackproductid).Checked == true ? "checked" : "") />
                                     <div class="btn">
                                         <div class="circle"> </div>
                                     </div>
@@ -100,18 +84,18 @@
         function check(uuid)
         {
             var check = $('input#product_'+uuid);
-
-                $.ajax({
-                    url: '@Url.Action("AjaxMember" , "Ajax")',
-                    data: {
-                        uuid : uuid
-                    },
-                    type: 'post',
-                    dateType: 'json',
-                    success: function (response) {
-                        console.log("成功");
-                    }
-                });
+            console.log(check);
+            $.ajax({
+                url: '@Url.Action("AjaxMember" , "Ajax")',
+                data: {
+                    uuid : uuid
+                },
+                type: 'post',
+                dateType: 'json',
+                success: function (response) {
+                    console.log("成功");
+                }
+            });
         }
     </script>
 }

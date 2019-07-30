@@ -31,9 +31,9 @@ namespace HeO.Controllers
         [CheckSession]
         public ActionResult Member()
         {
-            IEnumerable<Feedbackproduct> Feedbackproduct = feedbackproductService.Get();
+            IEnumerable<Feedbackproduct> Feedbackproduct = feedbackproductService.Get();            
             Members member = membersService.GetByID(Session["Memberid"]);
-            if(member.Isreal == true)
+            if (member.Isreal == true)
             {
                 ViewBag.Levelid = memberlevelService.Get().Where(a => a.Levelname == "真人").FirstOrDefault().Levelid;
             }
@@ -41,6 +41,7 @@ namespace HeO.Controllers
             {
                 ViewBag.Levelid = memberlevelService.Get().Where(a => a.Levelname == "一般").FirstOrDefault().Levelid;
             }
+            ViewBag.member = member;
             ViewBag.Feedbackproduct = Feedbackproduct;
             ViewBag.Facebookstatus = member.Facebookstatus;
             return View();

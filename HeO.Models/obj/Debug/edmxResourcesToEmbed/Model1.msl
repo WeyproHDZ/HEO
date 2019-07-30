@@ -300,26 +300,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Memberloginrecord">
-      <EntityTypeMapping TypeName="HeOModel.Memberloginrecord">
-        <MappingFragment StoreEntitySet="Memberloginrecord">
-          <ScalarProperty Name="Createdate" ColumnName="Createdate" />
-          <ScalarProperty Name="Status" ColumnName="Status" />
-          <ScalarProperty Name="Memberid" ColumnName="Memberid" />
-          <ScalarProperty Name="Id" ColumnName="Id" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="Memberauthorization">
-      <EntityTypeMapping TypeName="HeOModel.Memberauthorization">
-        <MappingFragment StoreEntitySet="Memberauthorization">
-          <ScalarProperty Name="Checked" ColumnName="Checked" />
-          <ScalarProperty Name="Feedbackproductid" ColumnName="Feedbackproductid" />
-          <ScalarProperty Name="Memberid" ColumnName="Memberid" />
-          <ScalarProperty Name="Id" ColumnName="Id" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="Members">
       <EntityTypeMapping TypeName="HeOModel.Members">
         <MappingFragment StoreEntitySet="Members">
@@ -343,6 +323,26 @@
           <ScalarProperty Name="Memberid" ColumnName="Memberid" />
           <ScalarProperty Name="Is_import" ColumnName="Is_import" />
           <ScalarProperty Name="Isenable" ColumnName="Isenable" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Memberauthorization">
+      <EntityTypeMapping TypeName="HeOModel.Memberauthorization">
+        <MappingFragment StoreEntitySet="Memberauthorization">
+          <ScalarProperty Name="Checked" ColumnName="Checked" />
+          <ScalarProperty Name="Feedbackproductid" ColumnName="Feedbackproductid" />
+          <ScalarProperty Name="Memberid" ColumnName="Memberid" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Memberloginrecord">
+      <EntityTypeMapping TypeName="HeOModel.Memberloginrecord">
+        <MappingFragment StoreEntitySet="Memberloginrecord">
+          <ScalarProperty Name="Createdate" ColumnName="Createdate" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="Memberid" ColumnName="Memberid" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
