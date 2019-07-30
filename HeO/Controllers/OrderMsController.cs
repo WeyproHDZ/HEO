@@ -46,8 +46,8 @@ namespace HeO.Controllers
             int Now = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds;
             Setting Setting = settingService.Get().FirstOrDefault();
             Guid VipLevelid = memberlevelService.Get().Where(a => a.Levelname == "VIP").FirstOrDefault().Levelid;       // VIP層級的ID
-            //ViewBag.MemberNumber = membersService.Get().Count();                                                        // 目前總人數
-            ViewBag.MemberNumber = Session["MAC"];
+            ViewBag.Number = membersService.Get().Where(c => c.Levelid != VipLevelid).Where(x => x.Lastdate <= Now).Where(c => c.Memberloginrecord.OrderByDescending(a => a.Createdate).FirstOrDefault().Status == 1).Count();       // 測試用
+            ViewBag.MemberNumber = membersService.Get().Count();                                                        // 目前總人數
             ViewBag.Max = Setting.Max;
             ViewBag.Min = Setting.Min;
             return View();

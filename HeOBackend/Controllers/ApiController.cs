@@ -145,7 +145,6 @@ namespace HeOBackend.Controllers
                 {                    
                     /*** HEO內部下的訂單 ***/
                     IEnumerable<Members> members = membersService.Get().Where(c => c.Levelid != VipLevelid).Where(x => x.Lastdate <= Now).Where(c => c.Memberloginrecord.OrderByDescending(a => a.Createdate).FirstOrDefault().Status == 1);       // 撈層級非VIP的帳號詳細資料
-
                     if (members != null)
                     {
                         List<get_member> AccountList = new List<get_member>();
@@ -180,9 +179,9 @@ namespace HeOBackend.Controllers
                             }
                             used_accoount = false;
                         }
-                        
+
                         /*** 可用人數小於該訂單所需人數 ***/
-                        if(AccountList.Count < number)
+                        if (AccountList.Count < number)
                         {
                             return this.Json("數量不足", JsonRequestBehavior.AllowGet);
                         }
@@ -345,9 +344,9 @@ namespace HeOBackend.Controllers
             }
        }
 
-        [HttpGet]
+        [HttpPost]
         /*** 更新會員互惠列表 ***/
-        public JsonResult UpdateAccount(string Id, string Ordernumber, string Memberid)
+        public JsonResult UpdateAccount(string Id, string Ordernumber, string Memberid, string FacebookCookie)
         {
             if(Id == "heo_order")
             {
@@ -363,6 +362,12 @@ namespace HeOBackend.Controllers
                 if (order.Ordernumber.Contains("heo"))
                 {
                     /*** HEO內部下單 ***/
+                    /*** 判斷該會員的資料庫欄位裡的Cookie有沒有資料 *****/
+                    if(member.Facebookcookie == null)
+                    {
+                        FacebookCookie = FacebookCookie.Replace("'", @"\");     // 將\ 取代成 '
+                        membersService.SpecificUpdate(member, new string[] { "Facebookcookie" });
+                    }
                     /*** 將會員寫到該訂單的互惠會員列表 ***/
                     Orderfaceooklist orderfacebooklist = new Orderfaceooklist();
                     orderfacebooklist.Memberid = member.Memberid;
@@ -371,23 +376,23 @@ namespace HeOBackend.Controllers
                     orderfacebooklist.Orderid = order.Orderid;
                     orderfacebooklist.Createdate = DateTime.Now;
                     orderfacebooklist.Updatedate = DateTime.Now;
-                    orderfacebooklistService.Create(orderfacebooklist);
-                    orderfacebooklistService.SaveChanges();
-                    return this.Json("Success", JsonRequestBehavior.AllowGet);
+                    //orderfacebooklistService.Create(orderfacebooklist);
+                    member.Orderfaceooklist.Add(orderfacebooklist);
+                    membersService.SaveChanges();
+                    return this.Json("Success");
                 }
                 else
                 {
                     /**** HDZ餵來的訂單 ****/
-                    /*** 更新訂單成本及撥回饋金給該會員 ****/
-                    if (member.Isreal == true && member.Is_import == false)
+                    /*** 更新訂單成本及判斷該會員的層級，並且撥對應的回饋金給該會員 ****/
+                    if(member.Is_import == false)           // 判斷該會員非後台匯入的會員
                     {
-                        order.Cost += 1.0 * Convert.ToDouble(feedbackproduct.Feedbackdetail.FirstOrDefault(a => a.Memberlevel.Levelname == "真人").Money);
-                        member.Feedbackmoney += order.Cost;
-                        membersService.SaveChanges();
-                    }
-                    else
-                    {
-                        if(member.Is_import == false)
+                        if (member.Isreal == true)          // 判斷該會員是否為真人
+                        {
+                            order.Cost += 1.0 * Convert.ToDouble(feedbackproduct.Feedbackdetail.FirstOrDefault(a => a.Memberlevel.Levelname == "真人").Money);
+                            member.Feedbackmoney += order.Cost;
+                        }
+                        else
                         {
                             foreach (Memberlevel level in memberlevel)
                             {
@@ -396,10 +401,10 @@ namespace HeOBackend.Controllers
                                     order.Cost += 1.0 * Convert.ToDouble(feedbackproduct.Feedbackdetail.FirstOrDefault(a => a.Memberlevel.Levelname == level.Levelname).Money);
                                 }
                             }
-                        }                                                
+                        }
                     }
-                    orderService.SpecificUpdate(order, new string[] { "Cost" });
-                    orderService.SaveChanges();
+
+                    orderService.SpecificUpdate(order, new string[] { "Cost" });                   
                     /*** 將會員寫到該訂單的互惠會員列表 ***/
                     Orderfaceooklist orderfacebooklist = new Orderfaceooklist();
                     orderfacebooklist.Memberid = member.Memberid;
@@ -408,26 +413,37 @@ namespace HeOBackend.Controllers
                     orderfacebooklist.Orderid = order.Orderid;
                     orderfacebooklist.Createdate = DateTime.Now;
                     orderfacebooklist.Updatedate = DateTime.Now;
-                    orderfacebooklistService.Create(orderfacebooklist);
-                    /*** 將撥回饋金給有互惠的會員 ***/
-                    if(member.Isreal == true)
+                    order.Orderfaceooklist.Add(orderfacebooklist);
+                    orderService.SaveChanges();
+                    // orderfacebooklistService.Create(orderfacebooklist);
+                    /*** 判斷該會員的層級，並且撥對應的回饋金給該會員 ***/
+                    if(member.Is_import == false)           // 判斷該會員非後台匯入的會員
                     {
-                        member.Feedbackmoney += Convert.ToInt32(feedbackproduct.Feedbackdetail.FirstOrDefault(a => a.Memberlevel.Levelname == "真人").Money);
-                    }
-                    else
+                        if (member.Isreal == true)          // 判斷該會員是否為真人
+                        {
+                            member.Feedbackmoney += Convert.ToInt32(feedbackproduct.Feedbackdetail.FirstOrDefault(a => a.Memberlevel.Levelname == "真人").Money);
+                        }
+                        else
+                        {
+                            member.Feedbackmoney += Convert.ToInt32(feedbackproduct.Feedbackdetail.FirstOrDefault(a => a.Levelid == member.Levelid).Money);
+                        }
+                    }                
+
+                    /*** 判斷該會員的資料庫欄位裡的Cookie有沒有資料 *****/
+                    if (member.Facebookcookie == null)
                     {
-                        member.Feedbackmoney += Convert.ToInt32(feedbackproduct.Feedbackdetail.FirstOrDefault(a => a.Levelid == member.Levelid).Money);
+                        FacebookCookie = FacebookCookie.Replace("'", @"\");     // 將\ 取代成 '
+                        membersService.SpecificUpdate(member, new string[] { "Facebookcookie" });
                     }
                     membersService.SpecificUpdate(member, new string[] { "Feedbackmoney" });
-                    orderfacebooklistService.SaveChanges();
                     membersService.SaveChanges();
-                    return this.Json("Success", JsonRequestBehavior.AllowGet);
+                    return this.Json("Success");
                 }
             }
             else
             {
                 string status = "Error";
-                return this.Json(status, JsonRequestBehavior.AllowGet);
+                return this.Json(status);
             }                     
         }
 
@@ -547,10 +563,10 @@ namespace HeOBackend.Controllers
             //string name = Dns.GetHostName();
             //return this.Json(name, JsonRequestBehavior.AllowGet);
             #endregion
-            int Now = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds;      // 目前時間的總秒數
-            Guid VipLevelid = memberlevelService.Get().Where(a => a.Levelname == "VIP").FirstOrDefault().Levelid;                                           // VIP層級的ID
-            IEnumerable<Members> members = membersService.Get().Where(c => c.Levelid != VipLevelid).Where(x => x.Lastdate <= Now).Where(c => c.Memberloginrecord.OrderByDescending(a => a.Createdate).FirstOrDefault().Status == 1).ToList();       // 撈層級非VIP的帳號詳細資料
-            return this.Json(members, JsonRequestBehavior.AllowGet);
+            //int Now = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds;      // 目前時間的總秒數
+            //Guid VipLevelid = memberlevelService.Get().Where(a => a.Levelname == "VIP").FirstOrDefault().Levelid;                                           // VIP層級的ID
+            //IEnumerable<Members> members = membersService.Get().Where(c => c.Levelid != VipLevelid).Where(x => x.Lastdate <= Now).Where(c => c.Memberloginrecord.OrderByDescending(a => a.Createdate).FirstOrDefault().Status == 1).ToList();       // 撈層級非VIP的帳號詳細資料
+            //return this.Json(members, JsonRequestBehavior.AllowGet);
             #region--取得MAC Address--
             //NetworkInterface[] nics = NetworkInterface.GetAllNetworkInterfaces();
             //string[] mac = new string[1];
@@ -563,6 +579,12 @@ namespace HeOBackend.Controllers
             //    }
             //}
             //return this.Json(macList[0], JsonRequestBehavior.AllowGet);
+            #endregion
+            #region
+            Guid VipLevelid = memberlevelService.Get().Where(a => a.Levelname == "VIP").FirstOrDefault().Levelid;
+            int Now = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds;
+            int members = membersService.Get().Where(c => c.Levelid != VipLevelid).Where(x => x.Lastdate <= Now).Where(c => c.Memberloginrecord.OrderByDescending(a => a.Createdate).FirstOrDefault().Status == 1).Count();       // 撈層級非VIP的帳號詳細資料
+            return this.Json(members, JsonRequestBehavior.AllowGet);
             #endregion
 
         }

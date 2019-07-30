@@ -368,6 +368,7 @@ namespace HeOBackend.Controllers
             membersService.SaveChanges();
         }
 
+        /**** 驗證打勾跟問號會員 ***/
         [HttpGet]
         [CheckSession(IsAuth = true)]
         public ActionResult AuthMembers()
@@ -393,6 +394,90 @@ namespace HeOBackend.Controllers
                     loginrecord.Memberid = auth_member.Memberid;
                     loginrecord.Createdate = DateTime.Now;
                     memberloginrecordService.Create(loginrecord);                                 
+                }
+                else
+                {
+                    Memberloginrecord loginrecord = new Memberloginrecord();
+                    loginrecord.Status = 2;
+                    loginrecord.Memberid = auth_member.Memberid;
+                    loginrecord.Createdate = DateTime.Now;
+                    memberloginrecordService.Create(loginrecord);
+                }
+            }
+            memberloginrecordService.SaveChanges();
+            membersService.SaveChanges();
+            TempData["message"] = "驗證已完成";
+            return RedirectToAction("Members");
+        }
+
+        /*** 驗證全部會員 ***/
+        [HttpGet]
+        [CheckSession(IsAuth = true)]
+        public ActionResult AllAuthMembers()
+        {
+            IEnumerable<Members> members = membersService.Get().ToList();
+            foreach (Members auth_member in members)
+            {
+                string url = "http://heofrontend.4webdemo.com:8080/Check/BackendCkeckFacebook?Facebooklink=" + auth_member.Facebooklink;
+                WebRequest myReq = WebRequest.Create(url);
+                myReq.Method = "GET";
+                myReq.ContentType = "application/json; charset=UTF-8";
+                UTF8Encoding enc = new UTF8Encoding();
+                myReq.Headers.Remove("auth-token");
+                WebResponse wr = myReq.GetResponse();
+                Stream receiveStream = wr.GetResponseStream();
+                StreamReader reader = new StreamReader(receiveStream, Encoding.UTF8);
+                string content = reader.ReadToEnd();
+                content = content.Replace("\"", "");
+                if (content == "已驗證")
+                {
+                    Memberloginrecord loginrecord = new Memberloginrecord();
+                    loginrecord.Status = 1;
+                    loginrecord.Memberid = auth_member.Memberid;
+                    loginrecord.Createdate = DateTime.Now;
+                    memberloginrecordService.Create(loginrecord);
+                }
+                else
+                {
+                    Memberloginrecord loginrecord = new Memberloginrecord();
+                    loginrecord.Status = 2;
+                    loginrecord.Memberid = auth_member.Memberid;
+                    loginrecord.Createdate = DateTime.Now;
+                    memberloginrecordService.Create(loginrecord);
+                }
+            }
+            memberloginrecordService.SaveChanges();
+            membersService.SaveChanges();
+            TempData["message"] = "驗證已完成";
+            return RedirectToAction("Members");
+        }
+
+        /**** 驗證打叉會員 ***/
+        [HttpGet]
+        [CheckSession(IsAuth = true)]
+        public ActionResult ErrorAuthMembers()
+        {
+            IEnumerable<Members> members = membersService.Get().Where(a => a.Memberloginrecord.OrderByDescending(x => x.Createdate).FirstOrDefault().Status == 2).ToList();
+            foreach (Members auth_member in members)
+            {
+                string url = "http://heofrontend.4webdemo.com:8080/Check/BackendCkeckFacebook?Facebooklink=" + auth_member.Facebooklink;
+                WebRequest myReq = WebRequest.Create(url);
+                myReq.Method = "GET";
+                myReq.ContentType = "application/json; charset=UTF-8";
+                UTF8Encoding enc = new UTF8Encoding();
+                myReq.Headers.Remove("auth-token");
+                WebResponse wr = myReq.GetResponse();
+                Stream receiveStream = wr.GetResponseStream();
+                StreamReader reader = new StreamReader(receiveStream, Encoding.UTF8);
+                string content = reader.ReadToEnd();
+                content = content.Replace("\"", "");
+                if (content == "已驗證")
+                {
+                    Memberloginrecord loginrecord = new Memberloginrecord();
+                    loginrecord.Status = 1;
+                    loginrecord.Memberid = auth_member.Memberid;
+                    loginrecord.Createdate = DateTime.Now;
+                    memberloginrecordService.Create(loginrecord);
                 }
                 else
                 {

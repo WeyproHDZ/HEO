@@ -32,7 +32,7 @@ namespace HeOBackend.Controllers
         public ActionResult Order(int p = 1)
         {
             IEnumerable<Feedbackproduct> feedbackproduct = feedbackproductService.Get();
-            var data = orderService.Get().OrderBy(o => o.Createdate);
+            var data = orderService.Get().OrderByDescending(o => o.Createdate);
             ViewBag.pageNumber = p;
             ViewBag.nextpageNumber = 1;
             ViewBag.Order = data.ToPagedList(pageNumber: p, pageSize: 20);

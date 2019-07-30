@@ -5,7 +5,7 @@
             <div class="restrict allpadding">
                 <h1 class="pull_left">互惠一起來</h1>
                 <div class="online-wrap">
-                    <div class="online">目前在線人數</div><span class="online-number"></span>人
+                    <div class="online">目前在線人數</div>@ViewBag.Number <!--<span class="online-number"></span>-->人
                     <div class="online">/ </div>
                     <div class="online">使用人數 @ViewBag.MemberNumber 人</div>
                 </div>
@@ -54,8 +54,10 @@
 
     <script>
         var Now_Number = 0;
-        var Max = @ViewBag.Max;
-        var Min = @ViewBag.Min;
+        var Max = 4;
+        var Min = 1;
+        @*var Max = @ViewBag.Max;
+        var Min = @ViewBag.Min;*@
         $(function () {
             // Declare a proxy to reference the hub.
             var order = $.connection.orderHub;
@@ -94,8 +96,9 @@
             var url = $("#post").val();
             var input = $("#amount").val();
             var check = ($('#amount').val()).match(/^[0-9]*$/);
-            if(Now_Number < Max){
-                if((input > Now_Number || input <= 1) && (input.length != 0) && (check != null))
+            var Number = @ViewBag.Number;
+            if(Number < Max){
+                if((input > Now_Number || input <= 0) && (input.length != 0) && (check != null))
                 {
                     swal({
                         title:'Error',

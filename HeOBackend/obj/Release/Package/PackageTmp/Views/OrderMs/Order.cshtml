@@ -43,6 +43,7 @@
                                             <th width="10%" class="text-center">網址</th>
                                             <th width="10%" class="text-center">訂單狀態</th>                                            
                                             <th width="10%" class="text-center">成本</th>
+                                            <th width="15%" class="text-center">下單時間</th>
                                             <th width="15%" class="text-center">查看使用列表</th>
                                             <th width="10%" class="text-center">編輯</th>
                                         </tr>
@@ -73,7 +74,8 @@
                                                         <td class="text-center">資料有誤</td>
                                                         break;
                                                 }
-                                                <td class="text-center">@entity.Cost </td>                                                
+                                                <td class="text-center">@entity.Cost </td>
+                                                <td class="text-center">@entity.Createdate.ToString("yyyy/MM/dd HH:mm:ss") </td>                                                
                                                 <td class="text-center"><a href="@Url.Action("ViewOrderfacebooklist", "OrderMs", new { Orderid = entity.Orderid, p = ViewBag.pageNumber, np = ViewBag.nextpageNumber })" class="btn btn-info btn-xs"><i class="fa fa-search"></i></a></td>                    
                                                 <td class="text-center"><a href="@Url.Action("EditOrder", "OrderMs", new { Orderid = entity.Orderid, p = ViewBag.pageNumber })" class="btn btn-info btn-xs"><i class="fa fa-edit"></i></a></td>
                                             </tr>

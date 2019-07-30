@@ -27,7 +27,6 @@ namespace HeO.CheckFacebook
         [HttpGet]
         public string CheckFacebook(string Account, string Password, string Useragent)
         {
-            Members member = membersService.Get().Where(a => a.Account == Account).FirstOrDefault();            
             string[] user_agent = new string[4];
             string FB_Account = Convert.ToString(Account);
             string[] status = new string[5];
@@ -36,146 +35,278 @@ namespace HeO.CheckFacebook
             status[3] = "";
             status[4] = "";
             string api_useragent = Useragent.Replace("$", "/").Replace("*", " ");
-            if (member != null)
+            int member = membersService.Get().Where(a => a.Account == Account).Count();
+            if(member != 0)     // 判斷資料庫裡是否有這個會員的資料
             {
-                string FacebookCookieJson = member.Facebookcookie;      // 撈該會員資料庫裡的FacebookCookie欄位資料
-                FacebookCookieJson = FacebookCookieJson.Replace(@"\", "'");     // 將\ 取代成 '
-                var FacebookCookieObject = JsonConvert.DeserializeObject<dynamic>(FacebookCookieJson); // FacebookCookieJson的json格式轉成物件
- 
-                FirefoxProfile profile = new FirefoxProfile();
-                /*** 設定proxy ***/
-                //profile.SetPreference("network.proxy.type", 1);
-                //profile.SetPreference("network.proxy.http", "211.21.120.163");
-                //profile.SetPreference("network.proxy.http_port", 8080);
-                //profile.SetPreference("network.proxy.ssl", "211.23.221.121");
-                //profile.SetPreference("network.proxy.ssl_port", 40135);
-                //profile.SetPreference("network.proxy.socks", "123.205.179.16");
-                //profile.SetPreference("network.proxy.socks_port", 4145);
-                /*** 設定useragent ***/
-                profile.SetPreference("general.useragent.override", api_useragent);
-                FirefoxOptions options = new FirefoxOptions();
-                /*** 無痕 ****/
-                options.AddArgument("--incognito");
-                ///*** 無頭 ***/
-                //options.AddArgument("--headless");
-                //options.AddArgument("--disable-gpu");
-                options.Profile = profile;
-                options.SetPreference("dom.webnotifications.enabled", false);
-                IWebDriver driver = new FirefoxDriver(options);
-                //driver.Navigate().GoToUrl("https://www.whatismyip.com.tw/");
-                driver.Navigate().GoToUrl("https://www.facebook.com/");
-                driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(1000);
-                /**** 放大螢幕 ****/
-                driver.Manage().Window.Maximize();
-                Cookie cookie;
-                DateTime date;
-                foreach (var Object in FacebookCookieObject)
+                Members members = membersService.Get().Where(a => a.Account == Account).FirstOrDefault();       // 撈該會員的詳細資料
+                if (members.Facebookcookie != null)      // 判斷該會員在資料庫裡是否有Cookie資料
                 {
-                    if (Object.Expiry.ToString() != "")
+                    string FacebookCookieJson = members.Facebookcookie;      // 撈該會員資料庫裡的FacebookCookie欄位資料
+                    FacebookCookieJson = FacebookCookieJson.Replace(@"\", "'");     // 將\ 取代成 '
+                    var FacebookCookieObject = JsonConvert.DeserializeObject<dynamic>(FacebookCookieJson); // FacebookCookieJson的json格式轉成物件
+                    var content = "";
+                    FirefoxProfile profile = new FirefoxProfile();
+                    /*** 設定proxy ***/
+                    //profile.SetPreference("network.proxy.type", 1);
+                    //profile.SetPreference("network.proxy.http", "211.21.120.163");
+                    //profile.SetPreference("network.proxy.http_port", 8080);
+                    //profile.SetPreference("network.proxy.ssl", "211.23.221.121");
+                    //profile.SetPreference("network.proxy.ssl_port", 40135);
+                    //profile.SetPreference("network.proxy.socks", "123.205.179.16");
+                    //profile.SetPreference("network.proxy.socks_port", 4145);
+                    /*** 設定useragent ***/
+                    profile.SetPreference("general.useragent.override", api_useragent);
+                    FirefoxOptions options = new FirefoxOptions();
+                    /*** 無痕 ****/
+                    options.AddArgument("--incognito");
+                    ///*** 無頭 ***/
+                    //options.AddArgument("--headless");
+                    //options.AddArgument("--disable-gpu");
+                    options.Profile = profile;
+                    options.SetPreference("dom.webnotifications.enabled", false);
+                    IWebDriver driver = new FirefoxDriver(options);
+                    //driver.Navigate().GoToUrl("https://www.whatismyip.com.tw/");
+                    driver.Navigate().GoToUrl("https://mobile.facebook.com");
+                    driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(1000);
+                    /**** 放大螢幕 ****/
+                    driver.Manage().Window.Maximize();
+                    Cookie cookie;
+                    DateTime date;
+                    foreach (var Object in FacebookCookieObject)
                     {
-                        date = Convert.ToDateTime(Object.Expiry);
-                        if (date.ToString() != "")
+                        if (Object.Expiry.ToString() != "")
                         {
-                            cookie = new Cookie(Object.Name.ToString(), Object.Value.ToString(), Object.Domain.ToString(), Object.Path.ToString(), Convert.ToDateTime(Object.Expiry.ToString()));
-                            driver.Manage().Cookies.AddCookie(cookie);
+                            date = Convert.ToDateTime(Object.Expiry);
+                            if (date.ToString() != "")
+                            {
+                                cookie = new Cookie(Object.Name.ToString(), Object.Value.ToString(), Object.Domain.ToString(), Object.Path.ToString(), Convert.ToDateTime(Object.Expiry.ToString()));
+                                driver.Manage().Cookies.AddCookie(cookie);
+                            }
                         }
                     }
-                }
-                /*** 輸入帳號 ***/
-                IWebElement FB_account = driver.FindElement(By.Id("email"));
-                FB_account.Click();
-                FB_account.SendKeys(FB_Account);
-                System.Threading.Thread.Sleep(Delay());
-                /*** 輸入密碼 ****/
-                IWebElement FB_password = driver.FindElement(By.Id("pass"));
-                FB_password.Click();
-                FB_password.SendKeys(Password);
-                System.Threading.Thread.Sleep(Delay());
-                /*** 登入按鈕 ***/
-                IWebElement SubmitButton = driver.FindElement(By.Id("loginbutton"));
-                System.Threading.Thread.Sleep(Delay());
-                SubmitButton.Click();
-                System.Threading.Thread.Sleep(Delay());
-                /*** 關閉網頁 ***/
-                if (driver.Url.IndexOf("login") != -1)
-                {
-                    status[0] = "帳號密碼有誤!";
-                    driver.Quit();
-                }
-                else if (driver.Url.IndexOf("checkpoint") != -1)
-                {
-                    status[0] = "帳號未驗證!";
-                    /*** 登出 ***/
-                    driver.Navigate().GoToUrl("https://www.facebook.com/logout.php?h=Affi1hR_vyy5xR3E&t=1561684373&ref=mb");
-                    driver.Quit();
-                }
-                else
-                {
-                    /***** 滑鼠滾輪 *****/
-                    IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
-                    js.ExecuteScript("window.scrollTo(0," + Wheel() + ");");
-                    Delay();
-                    js.ExecuteScript("window.scrollTo(0," + Wheel() + ");");
-                    Delay();
-                    /*** 個人頁面 ****/
-                    IWebElement Profile = driver.FindElement(By.ClassName("linkWrap"));
-                    Profile.Click();
+                    /*** 輸入帳號 ***/
+                    IWebElement FB_account = driver.FindElement(By.Id("m_login_email"));
+                    FB_account.Click();
+                    FB_account.SendKeys(FB_Account);
                     System.Threading.Thread.Sleep(Delay());
-                    if (driver.Url.IndexOf("checkpoint") != -1)
-                    {
-                        status[0] = "帳號未驗證!";
-                        /*** 登出 ***/
-                        driver.Navigate().GoToUrl("https://www.facebook.com/logout.php?h=Affi1hR_vyy5xR3E&t=1561684373&ref=mb");
-                        driver.Quit();
-                    }
                     try
                     {
-                        if (driver.Title.IndexOf("找不到網頁") != -1)
+                        /*** 輸入密碼 ****/
+                        IWebElement FB_password = driver.FindElement(By.Name("pass"));
+                        FB_password.Click();
+                        FB_password.SendKeys(Password);
+                        System.Threading.Thread.Sleep(Delay());
+                        /*** 登入按鈕 ***/
+                        IWebElement SubmitButton = driver.FindElement(By.Name("login"));
+                        System.Threading.Thread.Sleep(Delay());
+                        SubmitButton.Click();
+                        System.Threading.Thread.Sleep(Delay());
+                    }
+                    catch
+                    {
+                        try
                         {
-                            status[0] = "此帳號尚有其他防護，請解除後再登入!";
-                            /*** 登出 ***/
-                            driver.Navigate().GoToUrl("https://www.facebook.com/logout.php?h=Affi1hR_vyy5xR3E&t=1561684373&ref=mb");
+                            IWebElement FB_continue = driver.FindElement(By.XPath("/html/body/div[1]/div/div[2]/div[2]/div/div[2]/div[2]/form/div[4]/div[1]/button"));
+                            FB_continue.Click();
+                            System.Threading.Thread.Sleep(Delay());
+                            /*** 輸入密碼 ****/
+                            IWebElement FB_password = driver.FindElement(By.Name("pass"));
+                            FB_password.Click();
+                            FB_password.SendKeys(Password);
+                            System.Threading.Thread.Sleep(Delay());
+                            /*** 登入按鈕 ***/
+                            IWebElement SubmitButton = driver.FindElement(By.Name("login"));
+                            System.Threading.Thread.Sleep(Delay());
+                            SubmitButton.Click();
+                            System.Threading.Thread.Sleep(Delay());
+                        }
+                        catch
+                        {
+                            /*** 登入按鈕 ***/
+                            IWebElement SubmitButton = driver.FindElement(By.Name("login_form"));
+                            System.Threading.Thread.Sleep(Delay());
+                            SubmitButton.Submit();
+                            System.Threading.Thread.Sleep(Delay());
+                        }
+                    }
+
+                    try
+                    {
+                        /*** 帳號需驗證 ***/
+                        if (driver.Url.IndexOf("checkpoint") != -1)
+                        {
+                            status[0] = "帳號未驗證";
                             driver.Quit();
+                            content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
+                            return content;
                         }
                         else
+                        /*** 帳密輸入錯誤 ***/
                         {
-                            var id_url = driver.FindElement(By.ClassName("profilePicThumb"));
-                            var id = id_url.GetAttribute("href").Split('=');
-                            var img = driver.FindElement(By.ClassName("_11kf")).GetAttribute("src");
-                            var name = driver.Title.Split(')');
-                            status[0] = "成功登入!";
-                            status[1] = id.Last();
-                            status[2] = img;
-                            status[3] = name.Last();
-                            /*** 登出 ***/
-                            IWebElement Logout = driver.FindElement(By.XPath("//div[@id='logoutMenu']"));
-                            Logout.Click();
-                            System.Threading.Thread.Sleep(Delay());
-                            IWebElement LogoutCheck = driver.FindElement(By.XPath("//div[@class='uiScrollableAreaContent']//li//*[text()='登出']"));
-                            //IWebElement LogoutCheck = driver.FindElement(By.XPath("//li[8]/a/span/span"));                  
-                            LogoutCheck.Click();
-                            status[4] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
-                            System.Threading.Thread.Sleep(Delay());
+                            status[0] = "帳號密碼有誤!";
                             driver.Quit();
+                            content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
+                            return content;
                         }
                     }
                     catch
                     {
-                        status[0] = "請再輸入一次!";
-                        var error = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
+                        /*** 稍後再用按鈕 ****/
+                        IWebElement FB_continue = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[3]/div[1]/div[1]/div[1]/a[1]"));
+                        FB_continue.Click();
+                        System.Threading.Thread.Sleep(Delay());
+                        /*** 個人頁面 ****/
+
+                        IWebElement Setting = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/a[1]"));
+                        Setting.Click();
+                        System.Threading.Thread.Sleep(Delay());
+                        IWebElement Profile = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/ul[1]/li[1]/div[1]/a[1]/div[1]/img[1]"));
+                        Profile.Click();
+                        IWebElement img = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[4]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/a[1]/div[1]/i[1]"));
+                        string[] imgdata = img.GetAttribute("style").Replace("\'", "\"").Split('\"');
+                        string name = img.GetAttribute("aria-label");
+                        status[0] = "成功登入!";
+                        status[1] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
+                        status[2] = imgdata[1].Replace("amp;", "");
+                        status[3] = name;
+                        status[4] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
+                        System.Threading.Thread.Sleep(Delay());
                         driver.Quit();
-                        return error;
                     }
+
+                    var response = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
+                    System.Threading.Thread.Sleep(500);
+                    driver.Quit();
+                    return response;
                 }
-                var response = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
+                else
+                {
+                    var content = "";
+                    FirefoxProfile profile = new FirefoxProfile();
+                    /*** 設定proxy ***/
+                    //profile.SetPreference("network.proxy.type", 1);
+                    //profile.SetPreference("network.proxy.http", "211.21.120.163");
+                    //profile.SetPreference("network.proxy.http_port", 8080);
+                    //profile.SetPreference("network.proxy.ssl", "211.23.221.121");
+                    //profile.SetPreference("network.proxy.ssl_port", 40135);
+                    //profile.SetPreference("network.proxy.socks", "123.205.179.16");
+                    //profile.SetPreference("network.proxy.socks_port", 4145);
+                    /*** 設定useragent ***/
+                    profile.SetPreference("general.useragent.override", api_useragent);
+                    FirefoxOptions options = new FirefoxOptions();
+                    /*** 無痕 ****/
+                    options.AddArgument("--incognito");
+                    ///*** 無頭 ***/
+                    //options.AddArgument("--headless");
+                    //options.AddArgument("--disable-gpu");
+                    options.Profile = profile;
+                    options.SetPreference("dom.webnotifications.enabled", false);
+                    IWebDriver driver = new FirefoxDriver(options);
+                    //driver.Navigate().GoToUrl("https://www.whatismyip.com.tw/");
+                    driver.Navigate().GoToUrl("https://mobile.facebook.com/");
+                    driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(1000);
+                    /**** 放大螢幕 ****/
+                    driver.Manage().Window.Maximize();
+                    /*** 輸入帳號 ***/
+                    IWebElement FB_account = driver.FindElement(By.Id("m_login_email"));
+                    FB_account.Click();
+                    FB_account.SendKeys(FB_Account);
+                    System.Threading.Thread.Sleep(Delay());
+                    try
+                    {
+                        /*** 輸入密碼 ****/
+                        IWebElement FB_password = driver.FindElement(By.Name("pass"));
+                        FB_password.Click();
+                        FB_password.SendKeys(Password);
+                        System.Threading.Thread.Sleep(Delay());
+                        /*** 登入按鈕 ***/
+                        IWebElement SubmitButton = driver.FindElement(By.Name("login"));
+                        System.Threading.Thread.Sleep(Delay());
+                        SubmitButton.Click();
+                        System.Threading.Thread.Sleep(Delay());
+                    }
+                    catch
+                    {
+                        try
+                        {
+                            IWebElement FB_continue = driver.FindElement(By.XPath("/html/body/div[1]/div/div[2]/div[2]/div/div[2]/div[2]/form/div[4]/div[1]/button"));
+                            FB_continue.Click();
+                            System.Threading.Thread.Sleep(Delay());
+                            /*** 輸入密碼 ****/
+                            IWebElement FB_password = driver.FindElement(By.Name("pass"));
+                            FB_password.Click();
+                            FB_password.SendKeys(Password);
+                            System.Threading.Thread.Sleep(Delay());
+                            /*** 登入按鈕 ***/
+                            IWebElement SubmitButton = driver.FindElement(By.Name("login"));
+                            System.Threading.Thread.Sleep(Delay());
+                            SubmitButton.Click();
+                            System.Threading.Thread.Sleep(Delay());
+                        }
+                        catch
+                        {
+                            /*** 登入按鈕 ***/
+                            IWebElement SubmitButton = driver.FindElement(By.Name("login_form"));
+                            System.Threading.Thread.Sleep(Delay());
+                            SubmitButton.Submit();
+                            System.Threading.Thread.Sleep(Delay());
+                        }
+                    }
 
+                    try
+                    {
+                        /*** 帳號需驗證 ***/
+                        if (driver.Url.IndexOf("checkpoint") != -1)
+                        {
+                            status[0] = "帳號未驗證";
+                            driver.Quit();
+                            content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
+                            return content;
+                        }
+                        else
+                        /*** 帳密輸入錯誤 ***/
+                        {
+                            status[0] = "帳號密碼有誤!";
+                            driver.Quit();
+                            content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
+                            return content;
+                        }
+                    }
+                    catch
+                    {
+                        /*** 稍後再用按鈕 ****/
+                        IWebElement FB_continue = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[3]/div[1]/div[1]/div[1]/a[1]"));
+                        FB_continue.Click();
+                        System.Threading.Thread.Sleep(Delay());
+                        /*** 個人頁面 ****/
 
-                System.Threading.Thread.Sleep(500);
-                driver.Quit();
-                return response;
+                        IWebElement Setting = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/a[1]"));
+                        Setting.Click();
+                        System.Threading.Thread.Sleep(Delay());
+                        IWebElement Profile = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/ul[1]/li[1]/div[1]/a[1]/div[1]/img[1]"));
+                        Profile.Click();
+                        IWebElement img = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[4]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/a[1]/div[1]/i[1]"));
+                        string[] imgdata = img.GetAttribute("style").Replace("\'", "\"").Split('\"');
+                        string name = img.GetAttribute("aria-label");
+                        status[0] = "成功登入!";
+                        status[1] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
+                        status[2] = imgdata[1].Replace("amp;", "");
+                        status[3] = name;
+                        status[4] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
+                        System.Threading.Thread.Sleep(Delay());
+                        driver.Quit();
+                    }
+
+                    var response = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
+                    System.Threading.Thread.Sleep(500);
+                    driver.Quit();
+                    return response;
+                }
             }
+            /**** 資料庫裡沒有該會員的資料(該會員為第一次登入HEO的新會員) ****/
             else
-            {                
+            {
+                var content = "";
                 FirefoxProfile profile = new FirefoxProfile();
                 /*** 設定proxy ***/
                 //profile.SetPreference("network.proxy.type", 1);
@@ -197,99 +328,102 @@ namespace HeO.CheckFacebook
                 options.SetPreference("dom.webnotifications.enabled", false);
                 IWebDriver driver = new FirefoxDriver(options);
                 //driver.Navigate().GoToUrl("https://www.whatismyip.com.tw/");
-                driver.Navigate().GoToUrl("https://www.facebook.com/");
+                driver.Navigate().GoToUrl("https://mobile.facebook.com/");
                 driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(1000);
                 /**** 放大螢幕 ****/
                 driver.Manage().Window.Maximize();
                 /*** 輸入帳號 ***/
-                IWebElement FB_account = driver.FindElement(By.Id("email"));
+                IWebElement FB_account = driver.FindElement(By.Id("m_login_email"));
                 FB_account.Click();
                 FB_account.SendKeys(FB_Account);
                 System.Threading.Thread.Sleep(Delay());
-                /*** 輸入密碼 ****/
-                IWebElement FB_password = driver.FindElement(By.Id("pass"));
-                FB_password.Click();
-                FB_password.SendKeys(Password);
-                System.Threading.Thread.Sleep(Delay());
-                /*** 登入按鈕 ***/
-                IWebElement SubmitButton = driver.FindElement(By.Id("loginbutton"));
-                System.Threading.Thread.Sleep(Delay());
-                SubmitButton.Click();
-                System.Threading.Thread.Sleep(Delay());
-                /*** 關閉網頁 ***/
-                if (driver.Url.IndexOf("login") != -1)
+                try
                 {
-                    status[0] = "帳號密碼有誤!";
-                    driver.Quit();
-                }
-                else if (driver.Url.IndexOf("checkpoint") != -1)
-                {
-                    status[0] = "帳號未驗證!";
-                    /*** 登出 ***/
-                    driver.Navigate().GoToUrl("https://www.facebook.com/logout.php?h=Affi1hR_vyy5xR3E&t=1561684373&ref=mb");
-                    driver.Quit();
-                }
-                else
-                {
-                    /***** 滑鼠滾輪 *****/
-                    IJavaScriptExecutor js = (IJavaScriptExecutor)driver;
-                    js.ExecuteScript("window.scrollTo(0," + Wheel() + ");");
-                    Delay();
-                    js.ExecuteScript("window.scrollTo(0," + Wheel() + ");");
-                    Delay();
-                    /*** 個人頁面 ****/
-                    IWebElement Profile = driver.FindElement(By.ClassName("linkWrap"));
-                    Profile.Click();
+                    /*** 輸入密碼 ****/
+                    IWebElement FB_password = driver.FindElement(By.Name("pass"));
+                    FB_password.Click();
+                    FB_password.SendKeys(Password);
                     System.Threading.Thread.Sleep(Delay());
-                    if (driver.Url.IndexOf("checkpoint") != -1)
-                    {
-                        status[0] = "帳號未驗證!";
-                        /*** 登出 ***/
-                        driver.Navigate().GoToUrl("https://www.facebook.com/logout.php?h=Affi1hR_vyy5xR3E&t=1561684373&ref=mb");
-                        driver.Quit();
-                    }
+                    /*** 登入按鈕 ***/
+                    IWebElement SubmitButton = driver.FindElement(By.Name("login"));
+                    System.Threading.Thread.Sleep(Delay());
+                    SubmitButton.Click();
+                    System.Threading.Thread.Sleep(Delay());
+                }
+                catch
+                {
                     try
                     {
-                        if (driver.Title.IndexOf("找不到網頁") != -1)
-                        {
-                            status[0] = "此帳號尚有其他防護，請解除後再登入!";
-                            /*** 登出 ***/
-                            driver.Navigate().GoToUrl("https://www.facebook.com/logout.php?h=Affi1hR_vyy5xR3E&t=1561684373&ref=mb");
-                            driver.Quit();
-                        }
-                        else
-                        {
-                            var id_url = driver.FindElement(By.ClassName("profilePicThumb"));
-                            var id = id_url.GetAttribute("href").Split('=');
-                            var img = driver.FindElement(By.ClassName("_11kf")).GetAttribute("src");
-                            var name = driver.Title.Split(')');
-                            status[0] = "成功登入!";
-                            status[1] = id.Last();
-                            status[2] = img;
-                            status[3] = name.Last();
-                            /*** 登出 ***/
-                            IWebElement Logout = driver.FindElement(By.XPath("//div[@id='logoutMenu']"));
-                            Logout.Click();
-                            System.Threading.Thread.Sleep(Delay());
-                            IWebElement LogoutCheck = driver.FindElement(By.XPath("//div[@class='uiScrollableAreaContent']//li//*[text()='登出']"));
-                            //IWebElement LogoutCheck = driver.FindElement(By.XPath("//li[8]/a/span/span"));                  
-                            LogoutCheck.Click();
-                            status[4] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
-                            System.Threading.Thread.Sleep(Delay());
-                            driver.Quit();
-                        }
+                        
+                        IWebElement FB_continue = driver.FindElement(By.XPath("/html/body/div[1]/div/div[2]/div[2]/div/div[2]/div[2]/form/div[4]/div[1]/button"));
+                        FB_continue.Click();
+                        System.Threading.Thread.Sleep(Delay());
+                        /*** 輸入密碼 ****/
+                        IWebElement FB_password = driver.FindElement(By.Name("pass"));
+                        FB_password.Click();
+                        FB_password.SendKeys(Password);
+                        System.Threading.Thread.Sleep(Delay());
+                        /*** 登入按鈕 ***/
+                        IWebElement SubmitButton = driver.FindElement(By.Name("login"));
+                        System.Threading.Thread.Sleep(Delay());
+                        SubmitButton.Click();
+                        System.Threading.Thread.Sleep(Delay());
                     }
                     catch
                     {
-                        status[0] = "請再輸入一次!";
-                        var error = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
-                        driver.Quit();
-                        return error;
+                        /*** 登入按鈕 ***/
+                        IWebElement SubmitButton = driver.FindElement(By.Name("login_form"));
+                        System.Threading.Thread.Sleep(Delay());
+                        SubmitButton.Submit();
+                        System.Threading.Thread.Sleep(Delay());
                     }
                 }
+
+                try
+                {
+                    /*** 帳號需驗證 ***/
+                    if (driver.Url.IndexOf("checkpoint") != -1)
+                    {
+                        status[0] = "帳號未驗證";
+                        driver.Quit();
+                        content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
+                        return content;
+                    }
+                    else
+                    /*** 帳密輸入錯誤 ***/
+                    {
+                        status[0] = "帳號密碼有誤!";
+                        driver.Quit();
+                        content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
+                        return content;
+                    }                   
+                }
+                catch
+                {
+                    /*** 稍後再用按鈕 ****/
+                    IWebElement FB_continue = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[3]/div[1]/div[1]/div[1]/a[1]"));
+                    FB_continue.Click();
+                    System.Threading.Thread.Sleep(Delay());
+                    /*** 個人頁面 ****/
+
+                    IWebElement Setting = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/a[1]"));
+                    Setting.Click();
+                    System.Threading.Thread.Sleep(Delay());
+                    IWebElement Profile = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/ul[1]/li[1]/div[1]/a[1]/div[1]/img[1]"));
+                    Profile.Click();
+                    IWebElement img = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[4]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/a[1]/div[1]/i[1]"));
+                    string[] imgdata = img.GetAttribute("style").Replace("\'", "\"").Split('\"');
+                    string name = img.GetAttribute("aria-label");
+                    status[0] = "成功登入!";
+                    status[1] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
+                    status[2] = imgdata[1].Replace("amp;", "");
+                    status[3] = name;
+                    status[4] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
+                    System.Threading.Thread.Sleep(Delay());
+                    driver.Quit();
+                }
+
                 var response = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
-
-
                 System.Threading.Thread.Sleep(500);
                 driver.Quit();
                 return response;
