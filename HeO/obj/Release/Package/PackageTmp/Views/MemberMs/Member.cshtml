@@ -17,6 +17,7 @@
             break;
     }
     var Feedbackproduct = (IEnumerable<Feedbackproduct>)ViewBag.Feedbackproduct;
+    var Memberauthorization = (IEnumerable<Memberauthorization>)ViewBag.Memberauthorization;
 }
 @model Members
 <main id="main">
@@ -62,15 +63,22 @@
                     <div class="switcher-wrap">
                         @foreach (Feedbackproduct FeedbackproductList in Feedbackproduct)
                         {
-                            <div class="switcher-item">
-                                <div class="minion-switcher">                                  
-                                    <input class="check" type="checkbox" id="product_@FeedbackproductList.Feedbackproductid" onclick="check('@FeedbackproductList.Feedbackproductid');" @(FeedbackproductList.Memberauthorization.FirstOrDefault(a => a.Feedbackproductid == FeedbackproductList.Feedbackproductid).Checked == true ? "checked" : "") />
-                                    <div class="btn">
-                                        <div class="circle"> </div>
+                            foreach (Memberauthorization MemberauthorizationList in Memberauthorization)
+                            {
+                                if (MemberauthorizationList.Feedbackproductid == FeedbackproductList.Feedbackproductid)
+                                {
+                                    <div class="switcher-item">
+                                        <div class="minion-switcher">
+                                            <input class="check" type="checkbox" id="product_@FeedbackproductList.Feedbackproductid" onclick="check('@FeedbackproductList.Feedbackproductid');" @(MemberauthorizationList.Checked == true ? "checked" : "") />
+                                            <div class="btn">
+                                                <div class="circle"> </div>
+                                            </div>
+                                        </div>
+                                        <div class="switch-title">我願意開放-@FeedbackproductList.Feedbackproductname<span>( 1個 @FeedbackproductList.Feedbackproductname = @FeedbackproductList.Feedbackdetail.FirstOrDefault(a => a.Levelid == ViewBag.Levelid).Money $ )</span></div>
                                     </div>
-                                </div>
-                            <div class="switch-title">我願意開放-@FeedbackproductList.Feedbackproductname<span>( 1個 @FeedbackproductList.Feedbackproductname = @FeedbackproductList.Feedbackdetail.FirstOrDefault(a => a.Levelid == ViewBag.Levelid).Money $ )</span></div>                         
-                        </div>
+                                }
+                            }
+
                         }
                     </div>
                 </div>

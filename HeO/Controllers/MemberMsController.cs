@@ -16,6 +16,7 @@ namespace HeO.Controllers
     public class MemberMsController : BaseController
     {
         private MembersService membersService;
+        private MemberauthorizationService memberauthorizationService;
         private MemberlevelService memberlevelService;
         private FeedbackproductService feedbackproductService;
         private ViprecordService viprecordService;
@@ -23,6 +24,7 @@ namespace HeO.Controllers
         public MemberMsController()
         {
             membersService = new MembersService();
+            memberauthorizationService = new MemberauthorizationService();
             memberlevelService = new MemberlevelService();
             feedbackproductService = new FeedbackproductService();
             viprecordService = new ViprecordService();
@@ -33,6 +35,7 @@ namespace HeO.Controllers
         {
             IEnumerable<Feedbackproduct> Feedbackproduct = feedbackproductService.Get();            
             Members member = membersService.GetByID(Session["Memberid"]);
+            IEnumerable<Memberauthorization> Memberauthorization = memberauthorizationService.Get().Where(a => a.Memberid == member.Memberid);
             if (member.Isreal == true)
             {
                 ViewBag.Levelid = memberlevelService.Get().Where(a => a.Levelname == "真人").FirstOrDefault().Levelid;
@@ -41,7 +44,7 @@ namespace HeO.Controllers
             {
                 ViewBag.Levelid = memberlevelService.Get().Where(a => a.Levelname == "一般").FirstOrDefault().Levelid;
             }
-            ViewBag.member = member;
+            ViewBag.Memberauthorization = Memberauthorization;
             ViewBag.Feedbackproduct = Feedbackproduct;
             ViewBag.Facebookstatus = member.Facebookstatus;
             return View();

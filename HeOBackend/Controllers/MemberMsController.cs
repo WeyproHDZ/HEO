@@ -200,7 +200,7 @@ namespace HeOBackend.Controllers
             useragentService.SpecificUpdate(useragent_phone, new string[] { "Date" });
             useragentService.SaveChanges();
             /*** End Useragent ***/
-            if (TryUpdateModel(members , new string[] { "Account" , "Password" , "Facebookstauts" , "Facebooklink" , "Feedbackmoney" , "Name" , "Isenable"}) && ModelState.IsValid)
+            if (TryUpdateModel(members , new string[] {"Sex" , "Account" , "Password" , "Facebookstauts" , "Facebooklink" , "Feedbackmoney" , "Name" , "Isenable"}) && ModelState.IsValid)
             {
                 members.Memberid = Guid.NewGuid();
                 members.Account = Regex.Replace(members.Account, @"[^a-z||A-Z||@||.||0-9]", "");         // 保留A-Z、a-z、0-9、小老鼠、小數點，其餘取代空值
@@ -259,7 +259,7 @@ namespace HeOBackend.Controllers
         public ActionResult EditMembers(Guid Memberid , int p, ICollection<Memberauthorization> Memberauthorization)
         {
             Members member = membersService.GetByID(Memberid);
-            if (TryUpdateModel(member, new string[] { "Account", "Levelid" , "Feedbackmoney" , "Name" , "Isreal"}) && ModelState.IsValid)
+            if (TryUpdateModel(member, new string[] {"Sex" , "Account", "Levelid" , "Feedbackmoney" , "Name" , "Isreal"}) && ModelState.IsValid)
             {
                 //更新權限新資料
                 foreach (Memberauthorization new_auth in Memberauthorization)

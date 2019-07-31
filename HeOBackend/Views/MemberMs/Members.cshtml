@@ -51,8 +51,9 @@
                             <table class="table table-hover table-bordered table-striped smart-form">
                                 <thead>
                                     <tr>
-                                        <th width="10%" class="text-center">驗證狀態</th>
-                                        <th width="10%" class="text-center">層級</th>
+                                        <th width="5%" class="text-center">驗證狀態</th>
+                                        <th width="3%" class="text-center">層級</th>
+                                        <th width="3%" class="text-center">性別</th>
                                         <th class="text-center">Facebook帳號</th>
                                         <th width="10%" class="text-center">姓名</th>
                                         <th width="10%" class="text-center">連結</th>
@@ -80,10 +81,29 @@
                                                 <td class="text-center"><i class="fa fa-times" aria-hidden="true" style="color:red"></i></td>
                                             }
                                             <td class="text-center">@entity.Memberlevel.Levelname</td>
+                                            @if (entity.Sex == 0)
+                                            {
+                                                <td class="text-center"><i class="fa fa-question" aria-hidden="true" style="color:black"></i></td>
+                                            }
+                                            else if (entity.Sex == 1)
+                                            {
+                                                <td class="text-center"><i class="fa fa-male" aria-hidden="true" style="color:blue"></i></td>
+                                            }
+                                            else
+                                            {
+                                                <td class="text-center"><i class="fa fa-female" aria-hidden="true" style="color:red"></i></td>
+                                            }
                                             <td class="text-center">@entity.Account</td>
                                             <td class="text-center">@entity.Name</td>
                                             <td class="text-center"><a href="@entity.Facebooklink" target="_blank">連結</a></td>
-                                            <td class="text-center">@entity.Isreal</td>
+                                            @if (entity.Isreal == true)
+                                            {
+                                                <td class="text-center"><i class="fa  fa-circle-o" aria-hidden="true" style="color:green"></i></td>
+                                            }
+                                            else
+                                            {
+                                                <td class="text-center"><i class="fa fa-times" aria-hidden="true" style="color:red"></i></td>
+                                            }
                                             <td class="text-center"><a href="@Url.Action("Viprecord", "MemberMs", new { Memberid = entity.Memberid })" class="btn btn-info btn-xs"><i class="fa fa-paper-plane-o"></i></a></td>
                                             <td class="text-center"><a href="@Url.Action("Feedbackrecord", "FeedbackMs", new { Memberid = entity.Memberid })" class="btn btn-info btn-xs"><i class="fa fa-book"></i></a></td>
                                             <td class="text-center"><a href="@Url.Action("EditMembers", "MemberMs", new { Memberid = entity.Memberid, p = ViewBag.pageNumber })" class="btn btn-info btn-xs"><i class="fa fa-edit"></i></a></td>

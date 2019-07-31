@@ -59,6 +59,16 @@
                                                 </section>
                                             </div>
                                             <div class="form-group">
+                                                <label class="col-lg-2 control-label" for="title">性別</label>
+                                                <section class="col-lg-3">
+                                                    <select class="form-control" id="Sex" name="Sex">
+                                                        <option value="0">未設定</option>
+                                                        <option value="1">男性</option>
+                                                        <option value="2">女性</option>
+                                                    </select>
+                                                </section>
+                                            </div>
+                                            <div class="form-group">
                                                 <label class="col-lg-2 control-label" for="title">Facebook姓名</label>
                                                 <section class="col-lg-3">
                                                     @Html.TextBoxFor(model => model.Name, new Dictionary<string, object>() { { "class", "form-control" } })
