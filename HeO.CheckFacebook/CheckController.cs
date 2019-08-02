@@ -177,6 +177,26 @@ namespace HeO.CheckFacebook
                             System.Threading.Thread.Sleep(Delay());
                             driver.Quit();
                         }
+                        else if(driver.Url.IndexOf("home.php") != -1)
+                        {
+                            /*** 個人頁面 ****/
+
+                            IWebElement Setting = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/a[1]"));
+                            Setting.Click();
+                            System.Threading.Thread.Sleep(Delay());
+                            IWebElement Profile = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/ul[1]/li[1]/div[1]/a[1]/div[1]/img[1]"));
+                            Profile.Click();
+                            IWebElement img = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[4]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/a[1]/div[1]/i[1]"));
+                            string[] imgdata = img.GetAttribute("style").Replace("\'", "\"").Split('\"');
+                            string name = img.GetAttribute("aria-label");
+                            status[0] = "成功登入!";
+                            status[1] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
+                            status[2] = imgdata[1].Replace("amp;", "");
+                            status[3] = name;
+                            status[4] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
+                            System.Threading.Thread.Sleep(Delay());
+                            driver.Quit();
+                        }
                         else
                         {
                             /*** 帳號需驗證 ***/
@@ -282,6 +302,26 @@ namespace HeO.CheckFacebook
                         IWebElement FB_continue = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[3]/div[1]/div[1]/div[1]/a[1]"));
                         FB_continue.Click();
                         System.Threading.Thread.Sleep(Delay());
+                        /*** 個人頁面 ****/
+
+                        IWebElement Setting = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/a[1]"));
+                        Setting.Click();
+                        System.Threading.Thread.Sleep(Delay());
+                        IWebElement Profile = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/ul[1]/li[1]/div[1]/a[1]/div[1]/img[1]"));
+                        Profile.Click();
+                        IWebElement img = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[4]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/a[1]/div[1]/i[1]"));
+                        string[] imgdata = img.GetAttribute("style").Replace("\'", "\"").Split('\"');
+                        string name = img.GetAttribute("aria-label");
+                        status[0] = "成功登入!";
+                        status[1] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
+                        status[2] = imgdata[1].Replace("amp;", "");
+                        status[3] = name;
+                        status[4] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
+                        System.Threading.Thread.Sleep(Delay());
+                        driver.Quit();
+                    }
+                    else if(driver.Url.IndexOf("home.php") != -1)
+                    {
                         /*** 個人頁面 ****/
 
                         IWebElement Setting = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/a[1]"));
@@ -407,6 +447,26 @@ namespace HeO.CheckFacebook
                     IWebElement FB_continue = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[3]/div[1]/div[1]/div[1]/a[1]"));
                     FB_continue.Click();
                     System.Threading.Thread.Sleep(Delay());
+                    /*** 個人頁面 ****/
+
+                    IWebElement Setting = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/a[1]"));
+                    Setting.Click();
+                    System.Threading.Thread.Sleep(Delay());
+                    IWebElement Profile = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/ul[1]/li[1]/div[1]/a[1]/div[1]/img[1]"));
+                    Profile.Click();
+                    IWebElement img = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[4]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/a[1]/div[1]/i[1]"));
+                    string[] imgdata = img.GetAttribute("style").Replace("\'", "\"").Split('\"');
+                    string name = img.GetAttribute("aria-label");
+                    status[0] = "成功登入!";
+                    status[1] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
+                    status[2] = imgdata[1].Replace("amp;", "");
+                    status[3] = name;
+                    status[4] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
+                    System.Threading.Thread.Sleep(Delay());
+                    driver.Quit();
+                }
+                else if(driver.Url.IndexOf("home.php") != -1)
+                {
                     /*** 個人頁面 ****/
 
                     IWebElement Setting = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/a[1]"));
