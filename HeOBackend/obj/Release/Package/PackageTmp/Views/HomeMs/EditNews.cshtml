@@ -72,7 +72,7 @@
                                                 @Html.HiddenFor(model => model.Newslang.FirstOrDefault(a => a.Langid == 1).Langid)
                                                 @Html.HiddenFor(model => model.Newslang.FirstOrDefault(a => a.Langid == 1).Id)
                                                 <section class="col-lg-3">
-                                                    @Html.TextBoxFor(model => model.Newslang.FirstOrDefault(a => a.Langid == 1).Title, new Dictionary<string, object>() { { "class", "form-control" } })
+                                                    @Html.TextAreaFor(model => model.Newslang.FirstOrDefault(a => a.Langid == 1).Title,10,20, new Dictionary<string, object>() { { "class", "form-control" } })
                                                     @Html.ValidationMessageFor(model => model.Newslang.FirstOrDefault(a => a.Langid == 1).Title)
                                                 </section>
                                             </div>

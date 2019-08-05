@@ -153,7 +153,6 @@
     <Property Name="Feedbackmoney" Type="float" Nullable="false" />
     <Property Name="Ipaddress" Type="nvarchar" MaxLength="100" />
     <Property Name="Port" Type="int" />
-    <Property Name="Useragent_com" Type="nvarchar" MaxLength="500" />
     <Property Name="Useragent_phone" Type="nvarchar" MaxLength="500" />
     <Property Name="Isreal" Type="bit" Nullable="false" />
     <Property Name="Logindate" Type="int" Nullable="false" />
@@ -283,7 +282,6 @@
     <Property Name="Isweb" Type="int" />
     <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="User_agent" Type="ntext" />
-    <Property Name="Date" Type="int" />
   </EntityType>
   <EntityType Name="Vipdetail">
     <Key>

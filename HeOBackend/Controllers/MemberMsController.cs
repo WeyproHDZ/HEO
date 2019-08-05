@@ -190,16 +190,13 @@ namespace HeOBackend.Controllers
         [HttpPost]
         public ActionResult AddMembers(Members members)
         {
-            /*** 給予會員useragent ***/
-            int Now = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds;
-            Useragent useragent_com = useragentService.Get().Where(a => a.Isweb == 0).Where(x => x.Date <= Now).OrderBy(x => x.Date).FirstOrDefault();
-            useragent_com.Date += 1800;
-            useragentService.SpecificUpdate(useragent_com, new string[] { "Date" });
-            Useragent useragent_phone = useragentService.Get().Where(a => a.Isweb == 1).Where(x => x.Date <= Now).OrderBy(x => x.Date).FirstOrDefault();
-            useragent_phone.Date += 1800;
-            useragentService.SpecificUpdate(useragent_phone, new string[] { "Date" });
-            useragentService.SaveChanges();
+            /*** 隨機指派手機版Useragent ***/
+            int useragent_phone = useragentService.Get().Where(a => a.Isweb == 1).Count();
+            Random rnd = new Random();
+            int rnd_useragent = rnd.Next(1, useragent_phone);
+            Useragent useragent = useragentService.Get().Where(a => a.Id == rnd_useragent).FirstOrDefault();
             /*** End Useragent ***/
+
             if (TryUpdateModel(members , new string[] {"Sex" , "Account" , "Password" , "Facebookstauts" , "Facebooklink" , "Feedbackmoney" , "Name" , "Isenable"}) && ModelState.IsValid)
             {
                 members.Memberid = Guid.NewGuid();
@@ -209,9 +206,8 @@ namespace HeOBackend.Controllers
                 members.Lastdate = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds;      // 總秒數
                 members.Isenable = 1;
                 members.Isreal = members.Isreal;
-                members.Levelid = members.Levelid;
-                members.Useragent_com = useragent_com.User_agent;
-                members.Useragent_phone = useragent_phone.User_agent;
+                members.Levelid = members.Levelid;              
+                members.Useragent_phone = useragent.User_agent;
                 /**** 將會員寫進會員登入紀錄裡，預設狀態為0 【0 : 未驗證 , 1 : 已驗證 , 2 : 需驗證】 ****/
                 Memberloginrecord memberloginrecord = new Memberloginrecord();
                 memberloginrecord.Memberid = members.Memberid;
@@ -331,18 +327,13 @@ namespace HeOBackend.Controllers
                         member.Isenable = 1;
                         member.Is_import = true;       // 是否匯入 【false : 前台登入 , true : 後台匯入】 
                         member.Lastdate = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds;
-                        /*** 給予會員useragent ***/
-                        int Now = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds;
-                        Useragent useragent_com = useragentService.Get().Where(a => a.Isweb == 0).Where(x => x.Date <= Now).OrderBy(x => x.Date).FirstOrDefault();
-                        useragent_com.Date += 1800;
-                        useragentService.SpecificUpdate(useragent_com, new string[] { "Date" });
-                        Useragent useragent_phone = useragentService.Get().Where(a => a.Isweb == 1).Where(x => x.Date <= Now).OrderBy(x => x.Date).FirstOrDefault();
-                        useragent_phone.Date += 1800;
-                        useragentService.SpecificUpdate(useragent_phone, new string[] { "Date" });
-                        useragentService.SaveChanges();
+                        /*** 隨機指派手機版Useragent ***/
+                        int useragent_phone = useragentService.Get().Where(a => a.Isweb == 1).Count();
+                        Random rnd = new Random();
+                        int rnd_useragent = rnd.Next(1, useragent_phone);
+                        Useragent useragent = useragentService.Get().Where(a => a.Id == rnd_useragent).FirstOrDefault();
                         /*** End Useragent ***/
-                        member.Useragent_com = useragent_com.User_agent;
-                        member.Useragent_phone = useragent_phone.User_agent;
+                        member.Useragent_phone = useragent.User_agent;
 
                         /**** 產品授權功能，預設都為true 【false : 未授權 , true: 已授權】 ****/
                         foreach (Feedbackproduct productList in feedbackproduct)
@@ -387,22 +378,34 @@ namespace HeOBackend.Controllers
                 StreamReader reader = new StreamReader(receiveStream, Encoding.UTF8);
                 string content = reader.ReadToEnd();
                 content = content.Replace("\"", "");
-                if (content == "已驗證")
+                if (content != "")          // 假設content不是空值時
                 {
-                    Memberloginrecord loginrecord = new Memberloginrecord();
-                    loginrecord.Status = 1;
-                    loginrecord.Memberid = auth_member.Memberid;
-                    loginrecord.Createdate = DateTime.Now;
-                    memberloginrecordService.Create(loginrecord);                                 
+                    if (content == "已驗證")
+                    {
+                        Memberloginrecord loginrecord = new Memberloginrecord();
+                        loginrecord.Status = 1;
+                        loginrecord.Memberid = auth_member.Memberid;
+                        loginrecord.Createdate = DateTime.Now;
+                        memberloginrecordService.Create(loginrecord);
+                    }
+                    else
+                    {
+                        Memberloginrecord loginrecord = new Memberloginrecord();
+                        loginrecord.Status = 2;
+                        loginrecord.Memberid = auth_member.Memberid;
+                        loginrecord.Createdate = DateTime.Now;
+                        memberloginrecordService.Create(loginrecord);
+                    }
                 }
                 else
                 {
                     Memberloginrecord loginrecord = new Memberloginrecord();
-                    loginrecord.Status = 2;
+                    loginrecord.Status = 0;
                     loginrecord.Memberid = auth_member.Memberid;
                     loginrecord.Createdate = DateTime.Now;
                     memberloginrecordService.Create(loginrecord);
                 }
+
             }
             memberloginrecordService.SaveChanges();
             membersService.SaveChanges();
@@ -429,22 +432,34 @@ namespace HeOBackend.Controllers
                 StreamReader reader = new StreamReader(receiveStream, Encoding.UTF8);
                 string content = reader.ReadToEnd();
                 content = content.Replace("\"", "");
-                if (content == "已驗證")
+                if(content != "")       // 假設content不是空值時
                 {
-                    Memberloginrecord loginrecord = new Memberloginrecord();
-                    loginrecord.Status = 1;
-                    loginrecord.Memberid = auth_member.Memberid;
-                    loginrecord.Createdate = DateTime.Now;
-                    memberloginrecordService.Create(loginrecord);
+                    if (content == "已驗證")
+                    {
+                        Memberloginrecord loginrecord = new Memberloginrecord();
+                        loginrecord.Status = 1;
+                        loginrecord.Memberid = auth_member.Memberid;
+                        loginrecord.Createdate = DateTime.Now;
+                        memberloginrecordService.Create(loginrecord);
+                    }
+                    else
+                    {
+                        Memberloginrecord loginrecord = new Memberloginrecord();
+                        loginrecord.Status = 2;
+                        loginrecord.Memberid = auth_member.Memberid;
+                        loginrecord.Createdate = DateTime.Now;
+                        memberloginrecordService.Create(loginrecord);
+                    }
                 }
                 else
                 {
                     Memberloginrecord loginrecord = new Memberloginrecord();
-                    loginrecord.Status = 2;
+                    loginrecord.Status = 0;
                     loginrecord.Memberid = auth_member.Memberid;
                     loginrecord.Createdate = DateTime.Now;
                     memberloginrecordService.Create(loginrecord);
                 }
+
             }
             memberloginrecordService.SaveChanges();
             membersService.SaveChanges();
@@ -471,18 +486,29 @@ namespace HeOBackend.Controllers
                 StreamReader reader = new StreamReader(receiveStream, Encoding.UTF8);
                 string content = reader.ReadToEnd();
                 content = content.Replace("\"", "");
-                if (content == "已驗證")
+                if(content != "")       // 假設content不是空值時
                 {
-                    Memberloginrecord loginrecord = new Memberloginrecord();
-                    loginrecord.Status = 1;
-                    loginrecord.Memberid = auth_member.Memberid;
-                    loginrecord.Createdate = DateTime.Now;
-                    memberloginrecordService.Create(loginrecord);
+                    if (content == "已驗證")
+                    {
+                        Memberloginrecord loginrecord = new Memberloginrecord();
+                        loginrecord.Status = 1;
+                        loginrecord.Memberid = auth_member.Memberid;
+                        loginrecord.Createdate = DateTime.Now;
+                        memberloginrecordService.Create(loginrecord);
+                    }
+                    else
+                    {
+                        Memberloginrecord loginrecord = new Memberloginrecord();
+                        loginrecord.Status = 2;
+                        loginrecord.Memberid = auth_member.Memberid;
+                        loginrecord.Createdate = DateTime.Now;
+                        memberloginrecordService.Create(loginrecord);
+                    }
                 }
                 else
                 {
                     Memberloginrecord loginrecord = new Memberloginrecord();
-                    loginrecord.Status = 2;
+                    loginrecord.Status = 0;
                     loginrecord.Memberid = auth_member.Memberid;
                     loginrecord.Createdate = DateTime.Now;
                     memberloginrecordService.Create(loginrecord);
@@ -557,29 +583,31 @@ namespace HeOBackend.Controllers
         }
 
         /**** VIP購買紀錄 新增/刪除/修改 ****/
-        [CheckSession(IsAuth = true)]
-        public ActionResult Viprecord(int p = 1)
-        {
-            MembersDropDownList();
-            var data = viprecordService.Get().OrderBy(o => o.Createdate);
-            ViewBag.pageNumber = p;
-            ViewBag.Viprecord = data.ToPagedList(pageNumber: p, pageSize: 20);
-            return View();
-        }
+        //[HttpGet]
+        //[CheckSession(IsAuth = true)]
+        //public ActionResult Viprecord(int p = 1)
+        //{
+            
+        //    //MembersDropDownList();
+        //    var data = viprecordService.Get().OrderBy(o => o.Createdate);
+        //    ViewBag.pageNumber = p;
+        //    ViewBag.Viprecord = data.ToPagedList(pageNumber: p, pageSize: 20);
+        //    return View();
+        //}
         [CheckSession(IsAuth = true)]
         [HttpGet]
-        public ActionResult Viprecord(Guid? Memberid, int p = 1)
+        public ActionResult Viprecord(string Account = "", int p = 1)
         {
-            if (Memberid != null)
+            if (Account != "")
             {
-                MembersDropDownList();
-                var data = viprecordService.Get().Where(w => w.Memberid == Memberid).OrderBy(o => o.Createdate);
+                //MembersDropDownList();
+                var data = viprecordService.Get().Where(w => w.Members.Account.Contains(Account)).OrderBy(o => o.Createdate);
                 ViewBag.pageNumber = p;
                 ViewBag.Viprecord = data.ToPagedList(pageNumber: p, pageSize: 20);
             }
             else
             {
-                MembersDropDownList();
+                //MembersDropDownList();
                 var data = viprecordService.Get().OrderBy(o => o.Createdate);
                 ViewBag.pageNumber = p;
                 ViewBag.Viprecord = data.ToPagedList(pageNumber: p, pageSize: 20);

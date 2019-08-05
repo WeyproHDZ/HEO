@@ -42,7 +42,6 @@ namespace HeOBackend.Controllers
         [HttpPost]
         public ActionResult AddUseragent(Useragent useragent)
         {            
-            useragent.Date = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds;
             useragentService.Create(useragent);
             useragentService.SaveChanges();
             return RedirectToAction("Useragent");

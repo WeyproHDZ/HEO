@@ -104,8 +104,8 @@
                                             {
                                                 <td class="text-center"><i class="fa fa-times" aria-hidden="true" style="color:red"></i></td>
                                             }
-                                            <td class="text-center"><a href="@Url.Action("Viprecord", "MemberMs", new { Memberid = entity.Memberid })" class="btn btn-info btn-xs"><i class="fa fa-paper-plane-o"></i></a></td>
-                                            <td class="text-center"><a href="@Url.Action("Feedbackrecord", "FeedbackMs", new { Memberid = entity.Memberid })" class="btn btn-info btn-xs"><i class="fa fa-book"></i></a></td>
+                                            <td class="text-center"><a href="@Url.Action("Viprecord", "MemberMs", new { Account = entity.Account })" class="btn btn-info btn-xs"><i class="fa fa-paper-plane-o"></i></a></td>
+                                            <td class="text-center"><a href="@Url.Action("Feedbackrecord", "FeedbackMs", new { Account = entity.Account })" class="btn btn-info btn-xs"><i class="fa fa-book"></i></a></td>
                                             <td class="text-center"><a href="@Url.Action("EditMembers", "MemberMs", new { Memberid = entity.Memberid, p = ViewBag.pageNumber })" class="btn btn-info btn-xs"><i class="fa fa-edit"></i></a></td>
                                             <td class="text-center"><a href="#" class="btn btn-danger btn-xs del" data-href="@Url.Action("DeleteMembers", "MemberMs", new { Memberid = entity.Memberid, p = ViewBag.pageNumber })" data-toggle="modal" data-target="#confirm-delete"><i class="fa fa-trash-o"></i></a></td>
                                         </tr>

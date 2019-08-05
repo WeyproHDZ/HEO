@@ -16,9 +16,10 @@
             <ul>
                 @foreach (News NewsList in News)
                 {
+                    string[] date = NewsList.Date.Split('/');
                     <li>
-                        <time datetime="@NewsList.Date">@NewsList.Date</time>
-                        <p class="news-letter">@NewsList.Newslang.FirstOrDefault().Title</p>
+                        <time datetime="@(date[2] + "/" + date[0] + "/" + date[1] + "/")">@(date[2] + "/" + date[0] + "/" + date[1])</time>
+                        <p class="news-letter">@Html.Raw(NewsList.Newslang.FirstOrDefault().Title.Replace("\r\n", "<br />\r\n")) </p>
                     </li>
                 }
                 @*<li>

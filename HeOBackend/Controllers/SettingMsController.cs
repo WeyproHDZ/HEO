@@ -29,7 +29,7 @@ namespace HeOBackend.Controllers
         [CheckSession(IsAuth = true)]
         public ActionResult Admins(int p = 1)
         {
-            var data = adminsService.Get().OrderBy(o => o.AdminID);
+            var data = adminsService.Get().Where(a => a.Isenable == 1).OrderBy(o => o.AdminID);
 
             ViewBag.pageNumber = p;
             ViewBag.Admins = data.ToPagedList(pageNumber: p, pageSize: 20);

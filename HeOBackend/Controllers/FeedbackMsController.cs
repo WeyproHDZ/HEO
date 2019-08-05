@@ -191,32 +191,13 @@ namespace HeOBackend.Controllers
 
         /**** 回饋金申請紀錄 新增/修改/刪除 ****/
         [CheckSession(IsAuth = true)]
-        public ActionResult Feedbackrecord(int p = 1)
-        {
-            IEnumerable<Feedbackrecord> data = feedbackrecordService.Get().OrderByDescending(o =>o.Createdate);
-
-            IList<RecordTotal> total = db.Feedbackrecord.GroupBy(c => c.Memberid)
-                        .Select(c => new RecordTotal
-                        {
-                            Memberid = c.Key,
-                            Total = c.Sum(s => s.Money)
-                        }).ToList();
-            
-            ViewBag.total = total;
-            ViewBag.count = total.Count;
-            ViewBag.pageNumber = p;
-            ViewBag.Feedbackrecord = data.ToPagedList(pageNumber: p, pageSize: 20);
-            MembersDropDownList();
-            return View();
-        }
-        [CheckSession(IsAuth = true)]
         [HttpGet]
-        public ActionResult Feedbackrecord(Guid? Memberid , int p = 1)
+        public ActionResult Feedbackrecord(string Account = "" , int p = 1)
         {
             /*** 下拉選單有填值 ****/
-            if(Memberid != null)
+            if(Account != "")
             {
-                IEnumerable<Feedbackrecord> data = feedbackrecordService.Get().Where(w => w.Memberid == Memberid).OrderByDescending(o => o.Createdate);
+                IEnumerable<Feedbackrecord> data = feedbackrecordService.Get().Where(w => w.Members.Account.Contains(Account)).OrderByDescending(o => o.Createdate);
 
                 IList<RecordTotal> total = db.Feedbackrecord.GroupBy(c => c.Memberid)
                             .Select(c => new RecordTotal
@@ -229,7 +210,7 @@ namespace HeOBackend.Controllers
                 ViewBag.count = total.Count;
                 ViewBag.pageNumber = p;
                 ViewBag.Feedbackrecord = data.ToPagedList(pageNumber: p, pageSize: 20);
-                MembersDropDownList();
+                //MembersDropDownList();
             }
             /**** 下拉選單沒填值 *****/
             else
@@ -247,7 +228,7 @@ namespace HeOBackend.Controllers
                 ViewBag.count = total.Count;
                 ViewBag.pageNumber = p;
                 ViewBag.Feedbackrecord = data.ToPagedList(pageNumber: p, pageSize: 20);
-                MembersDropDownList();
+                //MembersDropDownList();
             }
 
             return View();

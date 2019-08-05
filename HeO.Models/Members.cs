@@ -39,7 +39,6 @@ namespace HeO.Models
         public double Feedbackmoney { get; set; }
         public string Ipaddress { get; set; }
         public Nullable<int> Port { get; set; }
-        public string Useragent_com { get; set; }
         public string Useragent_phone { get; set; }
         public bool Isreal { get; set; }
         public int Logindate { get; set; }

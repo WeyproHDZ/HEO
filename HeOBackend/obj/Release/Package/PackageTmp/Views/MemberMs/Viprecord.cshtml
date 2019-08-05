@@ -25,7 +25,9 @@
 
                                 <div class="form-inline">
                                     <div class="col-sm-10">
-                                        @Html.DropDownListFor(model => model.Memberid, null, "--請選擇--", new Dictionary<string, object>() { { "class", "form-control" } })
+                                        @Html.TextBoxFor(model => model.Account, new Dictionary<string, object>() { { "class", "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.Account)
+                                        @*@Html.DropDownListFor(model => model.Memberid, null, "--請選擇--", new Dictionary<string, object>() { { "class", "form-control" } })*@
                                         <button class="btn btn-info btn-labeled" type="submit"> <span class="btn-label"><i class="fa fa-search"></i></span>查詢</button>
                                     </div>
                                     <div class="col-sm-1">
@@ -42,9 +44,9 @@
                                     <tr>
                                         <th class="text-center">訂單編號</th>
                                         <th class="text-center">Facebook帳號</th>
-                                        <th width="15%" class="text-center">天數</th>
-                                        <th width="15%" class="text-center">費用</th>
-                                        <th width="20%" class="text-center">繳費狀態</th>
+                                        <th width="10%" class="text-center">天數</th>
+                                        <th width="10%" class="text-center">費用</th>
+                                        <th width="15%" class="text-center">繳費狀態</th>
                                         <th width="10%" class="text-center">開始日期</th>
                                         <th width="10%" class="text-center">截止日期</th>
                                         <th width="10%" class="text-center">編輯</th>

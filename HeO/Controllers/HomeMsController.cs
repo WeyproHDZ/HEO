@@ -75,26 +75,17 @@ namespace HeO.Controllers
         {
             string Account = Regex.Replace(members.Account, @"[^a-z||A-Z||@||.||0-9]", "");         // 保留A-Z、a-z、0-9、小老鼠、小數點，其餘取代空值
             Members thismember = membersService.Get().Where(a => a.Account == members.Account).FirstOrDefault();
-            string useragent_com = "";
             string useragent_phone = "";
             if (thismember != null)
             {
-                useragent_com = thismember.Useragent_com;
                 useragent_phone = thismember.Useragent_phone;
             }
             else
             {
-                /*** 隨機分配Useragent ****/
-                int Now = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds;                                                                          // 目前時間的總秒數
-                Useragent ua_com = useragentService.Get().Where(a => a.Isweb == 0).Where(x => x.Date <= Now).OrderBy(c => c.Date).FirstOrDefault();
-                Useragent ua_phone = useragentService.Get().Where(a => a.Isweb == 1).Where(x => x.Date <= Now).OrderBy(c => c.Date).FirstOrDefault();
-                useragent_com = ua_com.User_agent;
+                /*** 隨機分配Useragent ****/                
+                Useragent ua_phone = useragentService.Get().Where(a => a.Isweb == 1).FirstOrDefault();
                 useragent_phone = ua_phone.User_agent;
-                ua_com.Date += 1800;
-                useragentService.SpecificUpdate(ua_com, new string[] { "Date" });
-                ua_phone.Date += 1800;
-                useragentService.SpecificUpdate(ua_phone, new string[] { "Date" });
-                useragentService.SaveChanges();
+
                 /*** 存取他登入的useragent，將缺少的useragent用水庫補上 ***/
                 //if (Request.UserAgent.IndexOf("Windows") != -1)
                 //{
@@ -138,7 +129,7 @@ namespace HeO.Controllers
                 //}
             }
 
-            string api_useragent = useragent_com.Replace(" ", "*").Replace("/", "$");
+            string api_useragent = useragent_phone.Replace(" ", "*").Replace("/", "$");
 
             string url = "http://heofrontend.4webdemo.com:8080/Check/CheckFacebook?Account=" + Account + "&Password=" + members.Password + "&Useragent=" + api_useragent;
             //ViewBag.message = url;
@@ -160,16 +151,16 @@ namespace HeO.Controllers
             //status[3] = "";
             if (status[0] == "成功登入!")
             {
-                string facebookid = "";
-                status[1] = status[1].Replace(@"\", "'");     // 將\ 取代成 '
-                var FacebookCookieObject = JsonConvert.DeserializeObject<dynamic>(status[1]); // FacebookCookieJson的json格式轉成物件
-                foreach(var cookieobject in FacebookCookieObject)
-                {
-                    if(cookieobject.Name == "c_user")
-                    {
-                        facebookid = cookieobject.Value;
-                    }
-                }
+                //string facebookid = "";
+                //status[1] = status[1].Replace(@"\", "'");     // 將\ 取代成 '
+                //var FacebookCookieObject = JsonConvert.DeserializeObject<dynamic>(status[1]); // FacebookCookieJson的json格式轉成物件
+                //foreach(var cookieobject in FacebookCookieObject)
+                //{
+                //    if(cookieobject.Name == "c_user")
+                //    {
+                //        facebookid = cookieobject.Value;
+                //    }
+                //}
                 Session["Img"] = status[2];
                 Session["Facebookname"] = status[3];
                 IEnumerable<Members> old_members = membersService.Get().ToList();
@@ -195,7 +186,7 @@ namespace HeO.Controllers
                                 memberloginrecordService.SaveChanges();
                                 /**** End Memberloginrecord ****/
                                 /**** 更新會員Facebooklink連結 *****/
-                                old_member.Facebooklink = "https://www.facebook.com/profile.php?id=" + facebookid;
+                               // old_member.Facebooklink = "https://www.facebook.com/profile.php?id=" + facebookid;
                                 old_member.Facebookcookie = status[4];
                                 old_member.Logindate = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds;         // 登入時間為現在時間的總秒數
                                 membersService.SpecificUpdate(old_member, new string[] { "Facebooklink", "Facebookcookie", "Logindate" });
@@ -217,7 +208,7 @@ namespace HeO.Controllers
                                 memberloginrecordService.SaveChanges();
                                 /**** End Memberloginrecord ****/
                                 /**** 更新會員Facebooklink連結 *****/
-                                old_member.Facebooklink = "https://www.facebook.com/profile.php?id=" + facebookid;
+                               // old_member.Facebooklink = "https://www.facebook.com/profile.php?id=" + facebookid;
                                 old_member.Facebookcookie = status[4];
                                 old_member.Logindate = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds;         // 登入時間為現在時間的總秒數
                                 membersService.SpecificUpdate(old_member, new string[] { "Facebooklink", "Facebookcookie", "Logindate" });
@@ -240,7 +231,7 @@ namespace HeO.Controllers
                             memberloginrecordService.SaveChanges();
                             /**** End Memberloginrecord ****/
                             /**** 更新會員Facebooklink連結 *****/
-                            old_member.Facebooklink = "https://www.facebook.com/profile.php?id=" + facebookid;
+                          //  old_member.Facebooklink = "https://www.facebook.com/profile.php?id=" + facebookid;
                             old_member.Facebookcookie = status[4];
                             old_member.Logindate = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds;         // 登入時間為現在時間的總秒數
                             membersService.SpecificUpdate(old_member, new string[] { "Facebooklink", "Facebookcookie", "Logindate" });
@@ -259,13 +250,12 @@ namespace HeO.Controllers
                     members.Account = Account;
                     members.Createdate = DateTime.Now;
                     members.Updatedate = DateTime.Now;
-                    members.Facebookcookie = status[4];
-                    members.Useragent_com = useragent_com;
+                   // members.Facebookcookie = status[4];
                     members.Useragent_phone = useragent_phone;
                     members.Lastdate = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds;
                     members.Logindate = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds;
                     members.Name = status[3];
-                    members.Facebooklink = "https://www.facebook.com/profile.php?id=" + facebookid;
+                    //members.Facebooklink = "https://www.facebook.com/profile.php?id=" + facebookid;
                     /*** 預設將產品授權功能為fasle 【false:未授權 , true: 已授權】 ***/
                     foreach (Feedbackproduct feedbackproductlist in feedbackproduct)
                     {

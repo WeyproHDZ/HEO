@@ -158,7 +158,6 @@
           <Property Name="Feedbackmoney" Type="float" Nullable="false" />
           <Property Name="Ipaddress" Type="nvarchar" MaxLength="100" />
           <Property Name="Port" Type="int" />
-          <Property Name="Useragent_com" Type="nvarchar" MaxLength="500" />
           <Property Name="Useragent_phone" Type="nvarchar" MaxLength="500" />
           <Property Name="Isreal" Type="bit" Nullable="false" />
           <Property Name="Logindate" Type="int" Nullable="false" />
@@ -288,7 +287,6 @@
           <Property Name="Isweb" Type="int" />
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="User_agent" Type="ntext" />
-          <Property Name="Date" Type="int" />
         </EntityType>
         <EntityType Name="Vipdetail">
           <Key>
@@ -854,7 +852,6 @@
             <End Role="Memberlevelcooldown" EntitySet="Memberlevelcooldown" />
           </AssociationSet>
           <EntitySet Name="Feedbackrecord" EntityType="HeOModel.Feedbackrecord" />
-          <EntitySet Name="Useragent" EntityType="HeOModel.Useragent" />
           <EntitySet Name="Returnstatus" EntityType="HeOModel.Returnstatus" />
           <EntitySet Name="Order" EntityType="HeOModel.Order" />
           <AssociationSet Name="FK_Orderfaceooklist_Order" Association="HeOModel.FK_Orderfaceooklist_Order">
@@ -868,6 +865,7 @@
             <End Role="Memberauthorization" EntitySet="Memberauthorization" />
           </AssociationSet>
           <EntitySet Name="Memberloginrecord" EntityType="HeOModel.Memberloginrecord" />
+          <EntitySet Name="Useragent" EntityType="HeOModel.Useragent" />
           <EntitySet Name="Members" EntityType="HeOModel.Members" />
           <AssociationSet Name="FK_Feedbackrecord_Members" Association="HeOModel.FK_Feedbackrecord_Members">
             <End Role="Members" EntitySet="Members" />
@@ -1140,15 +1138,6 @@
           <Property Name="Updatedate" Type="DateTime" Nullable="false" Precision="3" />
           <NavigationProperty Name="Members" Relationship="HeOModel.FK_Feedbackrecord_Members" FromRole="Feedbackrecord" ToRole="Members" />
         </EntityType>
-        <EntityType Name="Useragent">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Isweb" Type="Int32" />
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="User_agent" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="Date" Type="Int32" />
-        </EntityType>
         <EntityType Name="Returnstatus">
           <Key>
             <PropertyRef Name="Id" />
@@ -1238,6 +1227,14 @@
           <Property Name="Createdate" Type="DateTime" Precision="3" />
           <NavigationProperty Name="Members" Relationship="HeOModel.FK_Memberloginrecord_Members" FromRole="Memberloginrecord" ToRole="Members" />
         </EntityType>
+        <EntityType Name="Useragent">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Isweb" Type="Int32" />
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="User_agent" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
         <EntityType Name="Members">
           <Key>
             <PropertyRef Name="Memberid" />
@@ -1256,7 +1253,6 @@
           <Property Name="Feedbackmoney" Type="Double" Nullable="false" />
           <Property Name="Ipaddress" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="Port" Type="Int32" />
-          <Property Name="Useragent_com" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="Useragent_phone" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="Isreal" Type="Boolean" Nullable="false" />
           <Property Name="Logindate" Type="Int32" Nullable="false" />
@@ -1619,16 +1615,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Useragent">
-            <EntityTypeMapping TypeName="HeOModel.Useragent">
-              <MappingFragment StoreEntitySet="Useragent">
-                <ScalarProperty Name="Date" ColumnName="Date" />
-                <ScalarProperty Name="User_agent" ColumnName="User_agent" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="Isweb" ColumnName="Isweb" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Returnstatus">
             <EntityTypeMapping TypeName="HeOModel.Returnstatus">
               <MappingFragment StoreEntitySet="Returnstatus">
@@ -1690,6 +1676,15 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="Useragent">
+            <EntityTypeMapping TypeName="HeOModel.Useragent">
+              <MappingFragment StoreEntitySet="Useragent">
+                <ScalarProperty Name="User_agent" ColumnName="User_agent" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Isweb" ColumnName="Isweb" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Members">
             <EntityTypeMapping TypeName="HeOModel.Members">
               <MappingFragment StoreEntitySet="Members">
@@ -1699,7 +1694,6 @@
                 <ScalarProperty Name="Logindate" ColumnName="Logindate" />
                 <ScalarProperty Name="Isreal" ColumnName="Isreal" />
                 <ScalarProperty Name="Useragent_phone" ColumnName="Useragent_phone" />
-                <ScalarProperty Name="Useragent_com" ColumnName="Useragent_com" />
                 <ScalarProperty Name="Port" ColumnName="Port" />
                 <ScalarProperty Name="Ipaddress" ColumnName="Ipaddress" />
                 <ScalarProperty Name="Feedbackmoney" ColumnName="Feedbackmoney" />

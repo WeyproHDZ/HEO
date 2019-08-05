@@ -1,6 +1,7 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Firefox;
 using System;
+using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -515,21 +516,30 @@ namespace HeO.CheckFacebook
         public string BackendCkeckFacebook(string Facebooklink)
         {
             string status = "";
-            FirefoxProfile profile = new FirefoxProfile();
-            FirefoxOptions options = new FirefoxOptions();
-            options.Profile = profile;
-            options.SetPreference("dom.webnotifications.enabled", false);
-            IWebDriver driver = new FirefoxDriver(options);
-            driver.Navigate().GoToUrl(Facebooklink);
-            if (driver.Title.IndexOf("找不到網頁") != -1)
-            {
-                status = "需驗證";
+            if (Facebooklink.IndexOf("facebook.com") != -1)
+            {         
+                ///**** 寫入TXT檔 *****/       
+                //using (StreamWriter sw = new StreamWriter(@"C:\Users\wadmin\Desktop\TestFile.txt", true))
+                //{
+                //    sw.Write(Facebooklink);
+                //    sw.Write(Environment.NewLine);
+                //}
+                FirefoxProfile profile = new FirefoxProfile();
+                FirefoxOptions options = new FirefoxOptions();
+                options.Profile = profile;
+                options.SetPreference("dom.webnotifications.enabled", false);
+                IWebDriver driver = new FirefoxDriver(options);
+                driver.Navigate().GoToUrl(Facebooklink);
+                if (driver.Title.IndexOf("找不到網頁") != -1)
+                {
+                    status = "需驗證";
+                }
+                else
+                {
+                    status = "已驗證";
+                }
+                driver.Quit();                
             }
-            else
-            {
-                status = "已驗證";
-            }
-            driver.Quit();
             return status;
         }
         #region --延遲時間--

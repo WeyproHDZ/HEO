@@ -249,16 +249,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Useragent">
-      <EntityTypeMapping TypeName="HeOModel.Useragent">
-        <MappingFragment StoreEntitySet="Useragent">
-          <ScalarProperty Name="Date" ColumnName="Date" />
-          <ScalarProperty Name="User_agent" ColumnName="User_agent" />
-          <ScalarProperty Name="Id" ColumnName="Id" />
-          <ScalarProperty Name="Isweb" ColumnName="Isweb" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="Returnstatus">
       <EntityTypeMapping TypeName="HeOModel.Returnstatus">
         <MappingFragment StoreEntitySet="Returnstatus">
@@ -320,6 +310,15 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="Useragent">
+      <EntityTypeMapping TypeName="HeOModel.Useragent">
+        <MappingFragment StoreEntitySet="Useragent">
+          <ScalarProperty Name="User_agent" ColumnName="User_agent" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Isweb" ColumnName="Isweb" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
     <EntitySetMapping Name="Members">
       <EntityTypeMapping TypeName="HeOModel.Members">
         <MappingFragment StoreEntitySet="Members">
@@ -329,7 +328,6 @@
           <ScalarProperty Name="Logindate" ColumnName="Logindate" />
           <ScalarProperty Name="Isreal" ColumnName="Isreal" />
           <ScalarProperty Name="Useragent_phone" ColumnName="Useragent_phone" />
-          <ScalarProperty Name="Useragent_com" ColumnName="Useragent_com" />
           <ScalarProperty Name="Port" ColumnName="Port" />
           <ScalarProperty Name="Ipaddress" ColumnName="Ipaddress" />
           <ScalarProperty Name="Feedbackmoney" ColumnName="Feedbackmoney" />

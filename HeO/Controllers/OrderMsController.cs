@@ -194,7 +194,7 @@ namespace HeO.Controllers
                                 select u;
                     if (query.Count() == 0)
                     {
-                        Userdata.Add(new UserData { Id = Context.ConnectionId });
+                        Userdata.Add(new UserData { Id = Context.ConnectionId});
                     }
                     Clients.All.getList(Userdata);
                 }  

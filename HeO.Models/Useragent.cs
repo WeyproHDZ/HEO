@@ -17,6 +17,5 @@ namespace HeO.Models
         public Nullable<int> Isweb { get; set; }
         public int Id { get; set; }
         public string User_agent { get; set; }
-        public Nullable<int> Date { get; set; }
     }
 }

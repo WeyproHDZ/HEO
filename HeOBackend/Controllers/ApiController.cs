@@ -27,6 +27,7 @@ namespace HeOBackend.Controllers
         private OrderfacebooklistService orderfacebooklistService;
         private FeedbackproductService feedbackproductService;
         private ServicelogService servicelogService;
+        private UseragentService useragentService;
         public ApiController()
         {
             orderService = new OrderService();
@@ -36,6 +37,7 @@ namespace HeOBackend.Controllers
             orderfacebooklistService = new OrderfacebooklistService();
             feedbackproductService = new FeedbackproductService();
             servicelogService = new ServicelogService();
+            useragentService = new UseragentService();
         }
 
         [HttpGet]
@@ -580,11 +582,13 @@ namespace HeOBackend.Controllers
             //}
             //return this.Json(macList[0], JsonRequestBehavior.AllowGet);
             #endregion
-            #region
-            Guid VipLevelid = memberlevelService.Get().Where(a => a.Levelname == "VIP").FirstOrDefault().Levelid;
-            int Now = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds;
-            int members = membersService.Get().Where(c => c.Levelid != VipLevelid).Where(x => x.Lastdate <= Now).Where(c => c.Memberloginrecord.OrderByDescending(a => a.Createdate).FirstOrDefault().Status == 1).Count();       // 撈層級非VIP的帳號詳細資料
-            return this.Json(members, JsonRequestBehavior.AllowGet);
+            #region --Useragent列表--
+            int useragent_phone = useragentService.Get().Where(a => a.Isweb == 1).Count();
+            Random rnd = new Random();
+            int rnd_useragent = rnd.Next(1, useragent_phone);
+            Useragent useragent = useragentService.Get().Where(a => a.Id == rnd_useragent).FirstOrDefault();
+            
+            return this.Json(useragent.User_agent+ "," + rnd_useragent + "," + useragent_phone, JsonRequestBehavior.AllowGet);
             #endregion
 
         }
