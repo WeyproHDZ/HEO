@@ -14,6 +14,7 @@ using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 using System.Web.Helpers;
 using Newtonsoft.Json;
+using System.Web.Script.Serialization;
 
 namespace HeOBackend.Controllers
 {
@@ -544,7 +545,6 @@ namespace HeOBackend.Controllers
             //string r = Regex.Replace(s, @"[^a-z||A-Z||@||.||1-9]", "");
             //return this.Json(r, JsonRequestBehavior.AllowGet);
             #endregion
-
             #region --顯示真實IP--
             //string ipaddress;
             //ipaddress = Request.ServerVariables["HTTP_X_FORWARDED_FOR"];
@@ -554,21 +554,15 @@ namespace HeOBackend.Controllers
             //}
             //return this.Json(ipaddress, JsonRequestBehavior.AllowGet);
             #endregion
-
             #region --取得網頁port號--
             //int url;
             //url = Request.Url.Port;
             //return this.Json(url, JsonRequestBehavior.AllowGet);
             #endregion
-
             #region --取得電腦名稱--
             //string name = Dns.GetHostName();
             //return this.Json(name, JsonRequestBehavior.AllowGet);
             #endregion
-            //int Now = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds;      // 目前時間的總秒數
-            //Guid VipLevelid = memberlevelService.Get().Where(a => a.Levelname == "VIP").FirstOrDefault().Levelid;                                           // VIP層級的ID
-            //IEnumerable<Members> members = membersService.Get().Where(c => c.Levelid != VipLevelid).Where(x => x.Lastdate <= Now).Where(c => c.Memberloginrecord.OrderByDescending(a => a.Createdate).FirstOrDefault().Status == 1).ToList();       // 撈層級非VIP的帳號詳細資料
-            //return this.Json(members, JsonRequestBehavior.AllowGet);
             #region--取得MAC Address--
             //NetworkInterface[] nics = NetworkInterface.GetAllNetworkInterfaces();
             //string[] mac = new string[1];
@@ -583,12 +577,37 @@ namespace HeOBackend.Controllers
             //return this.Json(macList[0], JsonRequestBehavior.AllowGet);
             #endregion
             #region --Useragent列表--
-            int useragent_phone = useragentService.Get().Where(a => a.Isweb == 1).Count();
-            Random rnd = new Random();
-            int rnd_useragent = rnd.Next(1, useragent_phone);
-            Useragent useragent = useragentService.Get().Where(a => a.Id == rnd_useragent).FirstOrDefault();
-            
-            return this.Json(useragent.User_agent+ "," + rnd_useragent + "," + useragent_phone, JsonRequestBehavior.AllowGet);
+            //int useragent_phone = useragentService.Get().Where(a => a.Isweb == 1).Count();
+            //Random rnd = new Random();
+            //int rnd_useragent = rnd.Next(1, useragent_phone);
+            //Useragent useragent = useragentService.Get().Where(a => a.Id == rnd_useragent).FirstOrDefault();
+
+            //return this.Json(useragent.User_agent+ "," + rnd_useragent + "," + useragent_phone, JsonRequestBehavior.AllowGet);
+            #endregion
+            #region --Self_hosted(Post)--
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://heofrontend.4webdemo.com:8080/Check/Login");
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.Method = "POST";
+
+            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+            {
+                string json = new JavaScriptSerializer().Serialize(new
+                {
+                    user = "Foo",
+                    password = "Baz"
+                });
+
+                streamWriter.Write(json);
+            }
+
+            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            string result = "";
+            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+            {
+                result = streamReader.ReadToEnd();
+
+            }
+            return this.Json(result, JsonRequestBehavior.AllowGet);
             #endregion
 
         }

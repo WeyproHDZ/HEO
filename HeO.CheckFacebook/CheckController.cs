@@ -12,6 +12,7 @@ using HeO.Service;
 using System.Web;
 using System.Net.NetworkInformation;
 using Newtonsoft.Json;
+using System.Net.Http;
 
 namespace HeO.CheckFacebook
 {
@@ -25,11 +26,13 @@ namespace HeO.CheckFacebook
             useragentService = new UseragentService();
             membersService = new MembersService();
         }
-        [HttpGet]
-        public string CheckFacebook(string Account, string Password, string Useragent)
+        [HttpPost]
+        public string CheckFacebook([FromBody] LoginJson loginJson)
         {
+            string Account = loginJson.Account;
+            string Password = loginJson.Password;
+            string Useragent = loginJson.Useragent;
             string[] user_agent = new string[4];
-            string FB_Account = Convert.ToString(Account);
             string[] status = new string[5];
             status[1] = "";
             status[2] = "";
@@ -86,9 +89,9 @@ namespace HeO.CheckFacebook
                         }
                     }
                     /*** 輸入帳號 ***/
-                    IWebElement FB_account = driver.FindElement(By.Id("m_login_email"));
-                    FB_account.Click();
-                    FB_account.SendKeys(FB_Account);
+                    IWebElement FB_Account = driver.FindElement(By.Id("m_login_email"));
+                    FB_Account.Click();
+                    FB_Account.SendKeys(Account);
                     System.Threading.Thread.Sleep(Delay());
                     try
                     {
@@ -252,9 +255,9 @@ namespace HeO.CheckFacebook
                     /**** 放大螢幕 ****/
                     driver.Manage().Window.Maximize();
                     /*** 輸入帳號 ***/
-                    IWebElement FB_account = driver.FindElement(By.Id("m_login_email"));
-                    FB_account.Click();
-                    FB_account.SendKeys(FB_Account);
+                    IWebElement FB_Account = driver.FindElement(By.Id("m_login_email"));
+                    FB_Account.Click();
+                    FB_Account.SendKeys(Account);
                     System.Threading.Thread.Sleep(Delay());
                     try
                     {
@@ -397,9 +400,9 @@ namespace HeO.CheckFacebook
                 /**** 放大螢幕 ****/
                 driver.Manage().Window.Maximize();
                 /*** 輸入帳號 ***/
-                IWebElement FB_account = driver.FindElement(By.Id("m_login_email"));
-                FB_account.Click();
-                FB_account.SendKeys(FB_Account);
+                IWebElement FB_Account = driver.FindElement(By.Id("m_login_email"));
+                FB_Account.Click();
+                FB_Account.SendKeys(Account);
                 System.Threading.Thread.Sleep(Delay());
                 try
                 {
@@ -542,6 +545,19 @@ namespace HeO.CheckFacebook
             }
             return status;
         }
+
+        //[HttpPost]
+        //public string Login([FromBody] LoginJson loginJson)
+        //{
+        //    return test.password;
+        //}
+
+        public class LoginJson
+        {
+            public string Account { get; set; }
+            public string Password { get; set; }
+            public string Useragent { get; set; }
+        }
         #region --延遲時間--
         private int Delay()
         {
@@ -559,16 +575,5 @@ namespace HeO.CheckFacebook
             return wheel_coordinate;
         }
         #endregion
-
-
-    }
-
-    public class JsontoObjectList
-    {
-        public string Name { get; set; }
-        public string Value { get; set; }
-        public string Domain { get; set; }
-        public string Path { get; set; }
-        public DateTime Expiry { get; set; }
     }
 }

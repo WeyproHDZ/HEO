@@ -17,6 +17,7 @@ using System.Net;
 using System.Collections.Specialized;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json;
+using System.Web.Script.Serialization;
 
 namespace HeO.Controllers
 {
@@ -131,19 +132,44 @@ namespace HeO.Controllers
 
             string api_useragent = useragent_phone.Replace(" ", "*").Replace("/", "$");
 
-            string url = "http://heofrontend.4webdemo.com:8080/Check/CheckFacebook?Account=" + Account + "&Password=" + members.Password + "&Useragent=" + api_useragent;
-            //ViewBag.message = url;
-            //return View();
-            WebRequest myReq = WebRequest.Create(url);
-            myReq.Method = "GET";
-            myReq.ContentType = "application/json; charset=UTF-8";
-            UTF8Encoding enc = new UTF8Encoding();
-            myReq.Headers.Remove("auth-token");
-            WebResponse wr = myReq.GetResponse();
-            Stream receiveStream = wr.GetResponseStream();
-            StreamReader reader = new StreamReader(receiveStream, Encoding.UTF8);
-            string content = reader.ReadToEnd();
-            string[] status = content.Replace("\"", "").Split('#');
+            /**** HTTP GET ****/
+            //string url = "http://heofrontend.4webdemo.com:8080/Check/CheckFacebook?Account=" + Account + "&Password=" + members.Password + "&Useragent=" + api_useragent;
+            //WebRequest myReq = WebRequest.Create(url);
+            //myReq.Method = "GET";
+            //myReq.ContentType = "application/json; charset=UTF-8";
+            //UTF8Encoding enc = new UTF8Encoding();
+            //myReq.Headers.Remove("auth-token");
+            //WebResponse wr = myReq.GetResponse();
+            //Stream receiveStream = wr.GetResponseStream();
+            //StreamReader reader = new StreamReader(receiveStream, Encoding.UTF8);
+            //string content = reader.ReadToEnd();
+            //string[] status = content.Replace("\"", "").Split('#');
+
+            /**** HTTP POST ****/
+            HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create("http://heofrontend.4webdemo.com:8080/Check/CheckFacebook");
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.Method = "POST";
+
+            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+            {
+                string json = new JavaScriptSerializer().Serialize(new
+                {
+                    Account = Account,
+                    Password = members.Password,
+                    Useragent = api_useragent
+                });
+
+                streamWriter.Write(json);
+            }
+
+            HttpWebResponse httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            string result = "";
+            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+            {
+                result = streamReader.ReadToEnd();
+            }
+            string[] status = result.Replace("\"", "").Split('#');
+            /**** 測試用 ****/
             //string[] status = new string[4];
             //status[0] = "成功登入!";
             //status[1] = "";
@@ -343,10 +369,10 @@ namespace HeO.Controllers
         }
 
 
-        [HttpPost]
-        public string CheckFacebook(string Account, string Password, string Useragent)
-        {
-            return "account ="+Account+"password ="+Password+"useragent = "+Useragent;
-        }
+        //[HttpPost]
+        //public string CheckFacebook(string Account, string Password, string Useragent)
+        //{
+        //    return "account ="+Account+"password ="+Password+"useragent = "+Useragent;
+        //}
      }
 }
