@@ -56,3 +56,4 @@ D:\web\HeO\HeO.Service\bin\zh-Hant\System.Web.Mvc.resources.dll
 D:\web\HeO\HeO.Service\obj\Debug\HeO.Service.csprojResolveAssemblyReference.cache
 D:\web\HeO\HeO.Service\obj\Debug\HeO.Service.dll
 D:\web\HeO\HeO.Service\obj\Debug\HeO.Service.pdb
+D:\web\HeO\HeO.Service\bin\HeO.Service.dll.config

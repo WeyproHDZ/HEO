@@ -84,3 +84,9 @@ D:\web\HeO\HeO\bin\Microsoft.AspNet.SignalR.Core.pdb
 D:\web\HeO\HeO\bin\Microsoft.AspNet.SignalR.Core.xml
 D:\web\HeO\HeO\bin\Microsoft.AspNet.SignalR.SystemWeb.pdb
 D:\web\HeO\HeO\bin\Microsoft.AspNet.SignalR.SystemWeb.xml
+D:\web\HeO\HeO\bin\zh-Hant\Microsoft.AspNet.SignalR.Core.resources.dll
+D:\web\HeO\HeO\bin\zh-Hant\Microsoft.AspNet.SignalR.SystemWeb.resources.dll
+D:\web\HeO\HeO\bin\zh-Hant\Microsoft.Owin.resources.dll
+D:\web\HeO\HeO\bin\zh-Hant\Microsoft.Owin.Host.SystemWeb.resources.dll
+D:\web\HeO\HeO\bin\zh-Hant\Microsoft.Owin.Security.resources.dll
+D:\web\HeO\HeO\bin\System.Net.WebSockets.dll

@@ -17,7 +17,7 @@ namespace HeOBackend.Controllers
         private FeedbackrecordService feedbackrecordService;
         private MemberlevelService memberlevelService;
         private MembersService membersService;
-
+        private MemberauthorizationService memberauthorizationService;
         public FeedbackMsController()
         {
             db = new HeOEntities();
@@ -26,9 +26,10 @@ namespace HeOBackend.Controllers
             feedbackrecordService = new FeedbackrecordService();
             memberlevelService = new MemberlevelService();
             membersService = new MembersService();
+            memberauthorizationService = new MemberauthorizationService();
         }
         // GET: FeedbackMs
-        /**** 回饋金產品 新增/刪除/修改 ****/
+        /**** 回饋金產品&價格 新增/刪除/修改 ****/
         [CheckSession(IsAuth = true)]
         public ActionResult Feedbackproduct(int p = 1)
         {
@@ -42,6 +43,8 @@ namespace HeOBackend.Controllers
         [CheckSession(IsAuth = true)]
         public ActionResult AddFeedbackproduct()
         {
+            IEnumerable<Memberlevel> Levelname = memberlevelService.Get();
+            ViewBag.Levelname = Levelname;
             return View();
         }
         [CheckSession(IsAuth = true)]
@@ -55,7 +58,25 @@ namespace HeOBackend.Controllers
                 feedbackproduct.Createdate = DateTime.Now;
                 feedbackproduct.Updatedate = DateTime.Now;
                 feedbackproductService.Create(feedbackproduct);
+                foreach (Feedbackdetail feedbackdetail in feedbackproduct.Feedbackdetail)
+                {
+                    feedbackdetail.Setid = Guid.NewGuid();
+                    feedbackdetail.Feedbackproductid = feedbackproduct.Feedbackproductid;
+                    feedbackdetailService.Create(feedbackdetail);
+                }            
                 feedbackproductService.SaveChanges();
+
+                IEnumerable<Members> member = membersService.Get();
+                foreach (Members thismember in member)
+                {
+                    Memberauthorization memberauth = new Memberauthorization();
+                    memberauth.Id = Guid.NewGuid();
+                    memberauth.Memberid = thismember.Memberid;
+                    memberauth.Feedbackproductid = feedbackproduct.Feedbackproductid;
+                    memberauth.Checked = true;
+                    memberauthorizationService.Create(memberauth);
+                }
+                memberauthorizationService.SaveChanges();
             }
             return RedirectToAction("Feedbackproduct");
         }
@@ -77,116 +98,36 @@ namespace HeOBackend.Controllers
         {
             ViewBag.pageNumber = p;
             Feedbackproduct feedbackproduct = feedbackproductService.GetByID(productid);
+            IEnumerable<Memberlevel> Levelname = memberlevelService.Get();
+            ViewBag.Levelname = Levelname;
             return View(feedbackproduct);
         }
         [CheckSession(IsAuth = true)]
         [HttpPost]
-        public ActionResult EditFeedbackproduct(Guid Feedbackproductid, Feedbackproduct feedbackproduct)
+        public ActionResult EditFeedbackproduct(Guid Feedbackproductid, ICollection<Feedbackdetail> Feedbackdetail)
         {
+            Feedbackproduct feedbackproduct = feedbackproductService.GetByID(Feedbackproductid);
             if (TryUpdateModel(feedbackproduct, new string[] { "Feedbackproductname" }) && ModelState.IsValid)
             {
-                feedbackproduct.Uuid = Guid.NewGuid();
-                feedbackproduct.Updatedate = DateTime.Now;
+                //更新產品價格
+                foreach (Feedbackdetail new_feedbackdetail in Feedbackdetail)
+                {
+                    if(feedbackproduct.Feedbackdetail.ToList().Exists(a => a.Setid == new_feedbackdetail.Setid))
+                    {
+                        Feedbackdetail feedbackdetail = feedbackproduct.Feedbackdetail.Where(a => a.Setid == new_feedbackdetail.Setid).FirstOrDefault();
+                        feedbackdetail.Money = new_feedbackdetail.Money;
+                    }
+                    else
+                    {
+                        new_feedbackdetail.Setid = Guid.NewGuid();
+                        new_feedbackdetail.Feedbackproductid = Feedbackproductid;
+                        feedbackproduct.Feedbackdetail.Add(new_feedbackdetail);
+                    }                    
+                }
                 feedbackproductService.Update(feedbackproduct);
                 feedbackproductService.SaveChanges();
             }
             return RedirectToAction("Feedbackproduct");
-        }
-
-        /**** 回饋金金額 新增/刪除/修改 ****/
-        [CheckSession(IsAuth = true)]
-        public ActionResult Feedbackdetail(int p = 1)
-        {
-            var data = feedbackproductService.Get().OrderBy(o => o.Createdate);
-            ViewBag.pageNumber = p;
-            ViewBag.Feedbackproduct = data.ToPagedList(pageNumber: p, pageSize: 20);
-
-            return View();
-        }
-
-        [CheckSession(IsAuth = true)]
-        public ActionResult AddFeedbackdetail()
-        {
-            IEnumerable<Feedbackproduct> feedbackproduct = feedbackproductService.Get();
-            SelectList selectList = new SelectList(feedbackproduct, "feedbackproductid", "feedbackproductname");
-            ViewBag.feedbackproductList = selectList;
-            IEnumerable<Memberlevel> Levelname = memberlevelService.Get();
-            ViewBag.Levelname = Levelname;
-            return View();
-        }
-        [CheckSession(IsAuth = true)]
-        [HttpPost]
-        public ActionResult AddFeedbackdetail(Guid feedbackproductid,Feedbackproduct feedbackproduct)
-        {
-            if (TryUpdateModel(feedbackproduct, new string[] { "Money" }) && ModelState.IsValid)
-            {
-                foreach (Feedbackdetail feedbackdetail in feedbackproduct.Feedbackdetail)
-                {
-                    feedbackdetail.Setid = Guid.NewGuid();
-                    feedbackdetail.Feedbackproductid = feedbackproductid;
-                    feedbackdetailService.Create(feedbackdetail);
-                }
-                feedbackdetailService.SaveChanges();
-
-            }
-           
-            return RedirectToAction("Feedbackdetail");
-        }
-
-        [CheckSession(IsAuth = true)]
-        [HttpGet]
-        public ActionResult DeleteFeedbackdetail(Guid Feedbackproductid , int p)
-        {
-            Feedbackproduct feedbackproduct = feedbackproductService.GetByID(Feedbackproductid);
-            foreach (Feedbackdetail fd in feedbackproduct.Feedbackdetail.ToArray())
-            {
-                feedbackdetailService.Delete(fd.Setid);
-            }
-            feedbackdetailService.SaveChanges();
-            return RedirectToAction("Feedbackdetail", new { p = p });
-        }
-
-        [CheckSession(IsAuth = true)]
-        [HttpGet]
-        public ActionResult EditFeedbackdetail(Guid Feedbackproductid, int p)
-        {
-            ViewBag.pageNumber = p;
-
-            Feedbackproduct feedbackproduct = feedbackproductService.GetByID(Feedbackproductid);
-            IEnumerable<Feedbackproduct> feedbackproduct_select = feedbackproductService.Get();
-            SelectList selectList = new SelectList(feedbackproduct_select, "feedbackproductid", "feedbackproductname");
-            IEnumerable<Memberlevel> Levelname = memberlevelService.Get();
-            ViewBag.Levelname = Levelname;
-            ViewBag.feedbackproductList = selectList;
-            return View(feedbackproduct);
-        }
-
-        [CheckSession(IsAuth = true)]
-        [HttpPost]
-        public ActionResult EditFeedbackdetail(Guid Feedbackproductid,Feedbackproduct feedbackproduct_response)
-        {
-            Feedbackproduct feedbackproduct = feedbackproductService.GetByID(Feedbackproductid);
-
-            foreach (Feedbackdetail feedbackproductdetail in feedbackproduct_response.Feedbackdetail)
-            {
-                //找尋資料庫有資料有資料-更新
-                if (feedbackproduct.Feedbackdetail.ToList().Exists(x => x.Setid == feedbackproductdetail.Setid))
-                {
-                    Feedbackdetail fd = feedbackproduct.Feedbackdetail.Where(a => a.Setid == feedbackproductdetail.Setid).FirstOrDefault();
-                    fd.Money = feedbackproductdetail.Money;
-                    fd.Feedbackproductid = Feedbackproductid;
-                }
-                //找尋資料庫有資料無資料-新增
-                else
-                {
-                    feedbackproductdetail.Setid = Guid.NewGuid();
-                    feedbackproductdetail.Feedbackproductid = Feedbackproductid;
-                    feedbackdetailService.Create(feedbackproductdetail);
-                }
-            }
-            feedbackproductService.Update(feedbackproduct);
-            feedbackproductService.SaveChanges();
-            return RedirectToAction("Feedbackdetail", new { p = 1 });
         }
 
         /**** 回饋金申請紀錄 新增/修改/刪除 ****/
@@ -305,26 +246,61 @@ namespace HeOBackend.Controllers
 
             if (feedbackrecord.Ishdz == 0)
             {
-                if (TryUpdateModel(feedbackrecord, new string[] { "Ishdz", "Money", "Status", "Hdzaccount", "Remark" }) && ModelState.IsValid)
+                if(feedbackrecord.Status == 2)
                 {
-                    feedbackrecord.Updatedate = DateTime.Now;
-                    feedbackrecord.Remains = old_total - feedbackrecord.Money;
-                    feedbackrecordService.Update(feedbackrecord);
-                    feedbackrecordService.SaveChanges();
+                    if (TryUpdateModel(feedbackrecord, new string[] { "Ishdz", "Money", "Status", "Hdzaccount", "Remark" }) && ModelState.IsValid)
+                    {
+                        feedbackrecord.Updatedate = DateTime.Now;
+                        feedbackrecord.Remains = old_total + feedbackrecord.Money;
+                        feedbackrecordService.Update(feedbackrecord);
+                        feedbackrecordService.SaveChanges();
+                    }
+                }
+                else
+                {
+                    if (TryUpdateModel(feedbackrecord, new string[] { "Ishdz", "Money", "Status", "Hdzaccount", "Remark" }) && ModelState.IsValid)
+                    {
+                        feedbackrecord.Updatedate = DateTime.Now;
+                        feedbackrecord.Remains = old_total - feedbackrecord.Money;
+                        feedbackrecordService.Update(feedbackrecord);
+                        feedbackrecordService.SaveChanges();
+                    }
                 }
             }
             else
             {
-                if (TryUpdateModel(feedbackrecord, new string[] { "Ishdz", "Money", "Status", "Bankaccount", "Remark" }) && ModelState.IsValid)
+                if (feedbackrecord.Status == 2)
                 {
-                    feedbackrecord.Updatedate = DateTime.Now;
-                    feedbackrecord.Cash = feedbackrecord.Money / 2;
-                    feedbackrecord.Remains = old_total - feedbackrecord.Money;
-                    feedbackrecordService.Update(feedbackrecord);
-                    feedbackrecordService.SaveChanges();
+                    if (TryUpdateModel(feedbackrecord, new string[] { "Ishdz", "Money", "Status", "Bankaccount", "Remark" }) && ModelState.IsValid)
+                    {
+                        feedbackrecord.Updatedate = DateTime.Now;
+                        feedbackrecord.Cash = feedbackrecord.Money / 2;
+                        feedbackrecord.Remains = old_total + feedbackrecord.Money;
+                        feedbackrecordService.Update(feedbackrecord);
+                        feedbackrecordService.SaveChanges();
+                    }
                 }
+                else
+                {
+                    if (TryUpdateModel(feedbackrecord, new string[] { "Ishdz", "Money", "Status", "Bankaccount", "Remark" }) && ModelState.IsValid)
+                    {
+                        feedbackrecord.Updatedate = DateTime.Now;
+                        feedbackrecord.Cash = feedbackrecord.Money / 2;
+                        feedbackrecord.Remains = old_total - feedbackrecord.Money;
+                        feedbackrecordService.Update(feedbackrecord);
+                        feedbackrecordService.SaveChanges();
+                    }
+                }
+
             }
-            member.Feedbackmoney = member.Feedbackmoney + (member.Feedbackrecord.FirstOrDefault(a => a.Feedbackid == Feedbackid).Money - feedbackrecord.Money);
+            if(feedbackrecord.Status == 2)
+            {
+                member.Feedbackmoney = member.Feedbackmoney + feedbackrecord.Money;
+            }
+            else
+            {
+                member.Feedbackmoney = member.Feedbackmoney + (member.Feedbackrecord.FirstOrDefault(a => a.Feedbackid == Feedbackid).Money - feedbackrecord.Money);
+            }
             membersService.SpecificUpdate(member, new string[] { "Feedbackmoney" });
             membersService.SaveChanges();
             return RedirectToAction("Feedbackrecord");

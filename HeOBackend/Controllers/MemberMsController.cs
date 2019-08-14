@@ -130,31 +130,58 @@ namespace HeOBackend.Controllers
         [CheckSession(IsAuth = true)]
         public ActionResult Members(int p = 1)
         {
-            var data = membersService.Get().OrderBy(o => o.Createdate);
+            var data = membersService.Get().OrderByDescending(o => o.Createdate);
             ViewBag.pageNumber = p;
             ViewBag.Members = data.ToPagedList(pageNumber: p, pageSize: 20);
             ViewBag.message = "按下確定後開始驗證帳號，請勿關閉分頁";
-            LevelDropDownList();
+            LevelDropDownList("Members");
             return View();
         }
         [CheckSession(IsAuth = true)]
         [HttpPost]
-        public ActionResult Members(Guid? Levelid , int p = 1 , string account = "")
+        public ActionResult Members(Guid? Levelid , int p = 1 , string account = "" , string gender = "")
         {
-            /**** Account 、 Levelid有值 *****/
+            Guid RealLevelid = memberlevelService.Get().Where(a => a.Levelname == "真人").FirstOrDefault().Levelid;
+            int genders;
+            if (gender != "")
+            {
+                genders = Convert.ToInt16(gender);
+            }
+            /**** Account 、 Levelid有值  *****/
             if(account != "" && Levelid != null)
             {
-                var data = membersService.Get().Where(x => x.Account.Contains(account)).Where(a => a.Levelid == Levelid).OrderBy(o => o.Createdate);
-                ViewBag.pageNumber = p;
-                ViewBag.Members = data.ToPagedList(pageNumber: p, pageSize: 20);
-                ViewBag.Account = account;
+                if (Levelid == RealLevelid)
+                {
+                    var data = membersService.Get().Where(x => x.Account.Contains(account)).Where(a => a.Isreal == true).OrderBy(o => o.Createdate);
+                    ViewBag.pageNumber = p;
+                    ViewBag.Members = data.ToPagedList(pageNumber: p, pageSize: 20);
+                    ViewBag.Account = account;
+                }
+                else
+                {
+                    var data = membersService.Get().Where(x => x.Account.Contains(account)).Where(a => a.Levelid == Levelid).OrderBy(o => o.Createdate);
+                    ViewBag.pageNumber = p;
+                    ViewBag.Members = data.ToPagedList(pageNumber: p, pageSize: 20);
+                    ViewBag.Account = account;
+                }
+
             }
             /**** Levelid有值 *****/
             else if (Levelid != null && account == "")
             {
-                var data = membersService.Get().Where(a => a.Levelid == Levelid).OrderBy(o => o.Createdate);
-                ViewBag.pageNumber = p;
-                ViewBag.Members = data.ToPagedList(pageNumber: p, pageSize: 20);
+                if(Levelid == RealLevelid)
+                {
+                    var data = membersService.Get().Where(a => a.Isreal == true).OrderBy(o => o.Createdate);
+                    ViewBag.pageNumber = p;
+                    ViewBag.Members = data.ToPagedList(pageNumber: p, pageSize: 20);
+                }
+                else
+                {
+                    var data = membersService.Get().Where(a => a.Levelid == Levelid).OrderBy(o => o.Createdate);
+                    ViewBag.pageNumber = p;
+                    ViewBag.Members = data.ToPagedList(pageNumber: p, pageSize: 20);
+                }
+               
             }
             /**** Account有值 *****/
             else if (account != "" && Levelid == null)
@@ -163,14 +190,14 @@ namespace HeOBackend.Controllers
                 ViewBag.pageNumber = p;
                 ViewBag.Members = data.ToPagedList(pageNumber: p, pageSize: 20);
             }
-            /**** Account 、 Levelid皆沒值 *****/
+            /**** Account 、 Levelid 、 Gender皆沒值 *****/
             else
             {
-                var data = membersService.Get().OrderBy(o => o.Createdate);
+                var data = membersService.Get().OrderByDescending(o => o.Createdate);
                 ViewBag.pageNumber = p;
                 ViewBag.Members = data.ToPagedList(pageNumber: p, pageSize: 20);
             }
-            LevelDropDownList();
+            LevelDropDownList("Members");
 
             return View();
         }
@@ -244,7 +271,7 @@ namespace HeOBackend.Controllers
         { 
             ViewBag.pageNumber = p;
             Members member = membersService.GetByID(Memberid);
-            LevelDropDownList(member);
+            LevelDropDownList(null,member);
             /**** 回饋金產品 *****/
             IEnumerable<Feedbackproduct> feedbackproduct = feedbackproductService.Get();
             ViewBag.feedbackproduct = feedbackproduct;
@@ -367,7 +394,7 @@ namespace HeOBackend.Controllers
             IEnumerable<Members> members = membersService.Get().Where(a => a.Memberloginrecord.OrderByDescending(x => x.Createdate).FirstOrDefault().Status != 2).ToList();            
             foreach (Members auth_member in members)
             {
-                string url = "http://heofrontend.4webdemo.com:8080/Check/BackendCkeckFacebook?Facebooklink=" + auth_member.Facebooklink;
+                string url = "http://heohelp.com:8080/Check/BackendCkeckFacebook?Facebooklink=" + auth_member.Facebooklink;
                 WebRequest myReq = WebRequest.Create(url);
                 myReq.Method = "GET";
                 myReq.ContentType = "application/json; charset=UTF-8";
@@ -601,14 +628,14 @@ namespace HeOBackend.Controllers
             if (Account != "")
             {
                 //MembersDropDownList();
-                var data = viprecordService.Get().Where(w => w.Members.Account.Contains(Account)).OrderBy(o => o.Createdate);
+                var data = viprecordService.Get().Where(w => w.Members.Account.Contains(Account)).OrderByDescending(o => o.Createdate);
                 ViewBag.pageNumber = p;
                 ViewBag.Viprecord = data.ToPagedList(pageNumber: p, pageSize: 20);
             }
             else
             {
                 //MembersDropDownList();
-                var data = viprecordService.Get().OrderBy(o => o.Createdate);
+                var data = viprecordService.Get().OrderByDescending(o => o.Createdate);
                 ViewBag.pageNumber = p;
                 ViewBag.Viprecord = data.ToPagedList(pageNumber: p, pageSize: 20);
             }
@@ -736,7 +763,7 @@ namespace HeOBackend.Controllers
         [CheckSession(IsAuth = true)]
         public ActionResult Reallist(int p = 1)
         {
-            var data = membersService.Get().Where(a => a.Facebookstatus != 0).OrderBy(o => o.Createdate);
+            var data = membersService.Get().Where(a => a.Facebookstatus != 0).OrderByDescending(o => o.Createdate);
             ViewBag.pageNumber = p;
             ViewBag.Reallist = data.ToPagedList(pageNumber: p, pageSize: 20);
             return View();
@@ -748,14 +775,14 @@ namespace HeOBackend.Controllers
             var members = membersService.Get();
             if (account != "")
             {
-                var data = membersService.Get().Where(a => a.Facebookstatus != 0).Where(x => x.Account.Contains(account)).OrderBy(o => o.Createdate);
+                var data = membersService.Get().Where(a => a.Facebookstatus != 0).Where(x => x.Account.Contains(account)).OrderByDescending(o => o.Createdate);
                 ViewBag.pageNumber = p;
                 ViewBag.Reallist = data.ToPagedList(pageNumber: p, pageSize: 20);
                 ViewBag.Account = account;
             }
             else
             {
-                var data = membersService.Get().Where(a => a.Facebookstatus != 0).OrderBy(o => o.Createdate);
+                var data = membersService.Get().Where(a => a.Facebookstatus != 0).OrderByDescending(o => o.Createdate);
                 ViewBag.pageNumber = p;
                 ViewBag.Reallist = data.ToPagedList(pageNumber: p, pageSize: 20);
             }
@@ -790,11 +817,21 @@ namespace HeOBackend.Controllers
         }
 
         #region -- LevelDropDownList ViewBag --
-        private void LevelDropDownList(Object selectLevel = null)
+        private void LevelDropDownList(string Action = null,Object selectLevel = null)
         {
-            var querys = memberlevelService.Get().Where(a => a.Isenable == 1);
+            if(Action == "Members")
+            {
+                var querys = memberlevelService.Get();
 
-            ViewBag.Levelid = new SelectList(querys, "Levelid", "Levelname", selectLevel);
+                ViewBag.Levelid = new SelectList(querys, "Levelid", "Levelname", selectLevel);
+            }
+            else
+            {
+                var querys = memberlevelService.Get().Where(a => a.Isenable == 1);
+
+                ViewBag.Levelid = new SelectList(querys, "Levelid", "Levelname", selectLevel);
+            }
+          
         }
         #endregion
 

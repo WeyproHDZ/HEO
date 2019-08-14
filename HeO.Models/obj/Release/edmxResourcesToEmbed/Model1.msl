@@ -1,28 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
   <EntityContainerMapping StorageEntityContainer="HeOModelStoreContainer" CdmEntityContainer="HeOEntities">
-    <EntitySetMapping Name="AdminLims">
-      <EntityTypeMapping TypeName="HeOModel.AdminLims">
-        <MappingFragment StoreEntitySet="AdminLims">
-          <ScalarProperty Name="AdminLimID" ColumnName="AdminLimID" />
-          <ScalarProperty Name="AdminID" ColumnName="AdminID" />
-          <ScalarProperty Name="LimID" ColumnName="LimID" />
-          <ScalarProperty Name="IsAdd" ColumnName="IsAdd" />
-          <ScalarProperty Name="IsUpdate" ColumnName="IsUpdate" />
-          <ScalarProperty Name="IsDelete" ColumnName="IsDelete" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="Admins">
-      <EntityTypeMapping TypeName="HeOModel.Admins">
-        <MappingFragment StoreEntitySet="Admins">
-          <ScalarProperty Name="AdminID" ColumnName="AdminID" />
-          <ScalarProperty Name="Username" ColumnName="Username" />
-          <ScalarProperty Name="Password" ColumnName="Password" />
-          <ScalarProperty Name="Isenable" ColumnName="Isenable" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="Feedbackproduct">
       <EntityTypeMapping TypeName="HeOModel.Feedbackproduct">
         <MappingFragment StoreEntitySet="Feedbackproduct">
@@ -45,36 +23,12 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Lims">
-      <EntityTypeMapping TypeName="HeOModel.Lims">
-        <MappingFragment StoreEntitySet="Lims">
-          <ScalarProperty Name="LimID" ColumnName="LimID" />
-          <ScalarProperty Name="Key" ColumnName="Key" />
-          <ScalarProperty Name="Value" ColumnName="Value" />
-          <ScalarProperty Name="Icon" ColumnName="Icon" />
-          <ScalarProperty Name="Sort" ColumnName="Sort" />
-          <ScalarProperty Name="ParentID" ColumnName="ParentID" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="Memberlevelcooldown">
       <EntityTypeMapping TypeName="HeOModel.Memberlevelcooldown">
         <MappingFragment StoreEntitySet="Memberlevelcooldown">
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="Levelid" ColumnName="Levelid" />
           <ScalarProperty Name="Cooldowntime" ColumnName="Cooldowntime" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="Setting">
-      <EntityTypeMapping TypeName="HeOModel.Setting">
-        <MappingFragment StoreEntitySet="Setting">
-          <ScalarProperty Name="Id" ColumnName="Id" />
-          <ScalarProperty Name="Time" ColumnName="Time" />
-          <ScalarProperty Name="Max" ColumnName="Max" />
-          <ScalarProperty Name="Min" ColumnName="Min" />
-          <ScalarProperty Name="Createdate" ColumnName="Createdate" />
-          <ScalarProperty Name="Updatedate" ColumnName="Updatedate" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -342,6 +296,54 @@
           <ScalarProperty Name="Memberid" ColumnName="Memberid" />
           <ScalarProperty Name="Is_import" ColumnName="Is_import" />
           <ScalarProperty Name="Isenable" ColumnName="Isenable" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="AdminLims">
+      <EntityTypeMapping TypeName="HeOModel.AdminLims">
+        <MappingFragment StoreEntitySet="AdminLims">
+          <ScalarProperty Name="IsDelete" ColumnName="IsDelete" />
+          <ScalarProperty Name="IsUpdate" ColumnName="IsUpdate" />
+          <ScalarProperty Name="IsAdd" ColumnName="IsAdd" />
+          <ScalarProperty Name="LimID" ColumnName="LimID" />
+          <ScalarProperty Name="AdminID" ColumnName="AdminID" />
+          <ScalarProperty Name="AdminLimID" ColumnName="AdminLimID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Admins">
+      <EntityTypeMapping TypeName="HeOModel.Admins">
+        <MappingFragment StoreEntitySet="Admins">
+          <ScalarProperty Name="Isenable" ColumnName="Isenable" />
+          <ScalarProperty Name="Password" ColumnName="Password" />
+          <ScalarProperty Name="Username" ColumnName="Username" />
+          <ScalarProperty Name="AdminID" ColumnName="AdminID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Lims">
+      <EntityTypeMapping TypeName="HeOModel.Lims">
+        <MappingFragment StoreEntitySet="Lims">
+          <ScalarProperty Name="ParentID" ColumnName="ParentID" />
+          <ScalarProperty Name="Sort" ColumnName="Sort" />
+          <ScalarProperty Name="Icon" ColumnName="Icon" />
+          <ScalarProperty Name="Value" ColumnName="Value" />
+          <ScalarProperty Name="Key" ColumnName="Key" />
+          <ScalarProperty Name="LimID" ColumnName="LimID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Setting">
+      <EntityTypeMapping TypeName="HeOModel.Setting">
+        <MappingFragment StoreEntitySet="Setting">
+          <ScalarProperty Name="Updatedate" ColumnName="Updatedate" />
+          <ScalarProperty Name="Createdate" ColumnName="Createdate" />
+          <ScalarProperty Name="OrderResultRand" ColumnName="OrderResultRand" />
+          <ScalarProperty Name="OrderLoginRand" ColumnName="OrderLoginRand" />
+          <ScalarProperty Name="Min" ColumnName="Min" />
+          <ScalarProperty Name="Max" ColumnName="Max" />
+          <ScalarProperty Name="Time" ColumnName="Time" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

@@ -5,17 +5,10 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="70d401c30ee24cf497a25c2930df424c" Name="Diagram1" ZoomLevel="88">
-        <EntityTypeShape EntityType="HeOModel.AdminLims" Width="1.5" PointX="11" PointY="1" IsExpanded="true" />
-        <EntityTypeShape EntityType="HeOModel.Admins" Width="1.5" PointX="9.5" PointY="5.625" IsExpanded="true" />
         <EntityTypeShape EntityType="HeOModel.Feedbackproduct" Width="1.5" PointX="3.75" PointY="3.75" IsExpanded="true" />
         <EntityTypeShape EntityType="HeOModel.Guide" Width="1.5" PointX="10.75" PointY="12.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="HeOModel.Lims" Width="1.5" PointX="8.75" PointY="1" IsExpanded="true" />
         <EntityTypeShape EntityType="HeOModel.Memberlevelcooldown" Width="1.5" PointX="3" PointY="7.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="HeOModel.Setting" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="HeOModel.Term" Width="1.5" PointX="8.75" PointY="8.875" IsExpanded="true" />
-        <AssociationConnector Association="HeOModel.FK_Adminlims_Admins" ManuallyRouted="false" />
-        <AssociationConnector Association="HeOModel.FK_Adminlims_Lims" ManuallyRouted="false" />
-        <AssociationConnector Association="HeOModel.FK_Lims_Lims1" ManuallyRouted="false" />
         <EntityTypeShape EntityType="HeOModel.sysdiagrams" Width="1.5" PointX="0.75" PointY="3.75" />
         <EntityTypeShape EntityType="HeOModel.News" Width="1.5" PointX="13" PointY="5.5" />
         <EntityTypeShape EntityType="HeOModel.Feedbackdetail" Width="1.5" PointX="6" PointY="6.25" />
@@ -51,6 +44,13 @@
         <AssociationConnector Association="HeOModel.FK_Order_Members" />
         <AssociationConnector Association="HeOModel.FK_Orderfaceooklist_Members" />
         <AssociationConnector Association="HeOModel.FK_Viprecord_Members" />
+        <EntityTypeShape EntityType="HeOModel.AdminLims" Width="1.5" PointX="9.625" PointY="1" />
+        <EntityTypeShape EntityType="HeOModel.Admins" Width="1.5" PointX="9" PointY="4.25" />
+        <EntityTypeShape EntityType="HeOModel.Lims" Width="1.5" PointX="7.375" PointY="1" />
+        <AssociationConnector Association="HeOModel.FK_Adminlims_Admins" />
+        <AssociationConnector Association="HeOModel.FK_Adminlims_Lims" />
+        <AssociationConnector Association="HeOModel.FK_Lims_Lims1" />
+        <EntityTypeShape EntityType="HeOModel.Setting" Width="1.5" PointX="15.375" PointY="8.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

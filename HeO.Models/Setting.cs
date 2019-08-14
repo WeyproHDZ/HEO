@@ -18,6 +18,8 @@ namespace HeO.Models
         public Nullable<int> Time { get; set; }
         public Nullable<int> Max { get; set; }
         public Nullable<int> Min { get; set; }
+        public string OrderLoginRand { get; set; }
+        public string OrderResultRand { get; set; }
         public Nullable<System.DateTime> Createdate { get; set; }
         public Nullable<System.DateTime> Updatedate { get; set; }
     }

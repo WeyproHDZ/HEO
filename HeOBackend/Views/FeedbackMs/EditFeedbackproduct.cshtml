@@ -1,5 +1,7 @@
 ﻿@model Feedbackproduct
-
+@{
+    int i = 0;
+}
 <div id="content">
 
     <!-- widget grid -->
@@ -18,12 +20,12 @@
                         <h2>編輯產品</h2>
                         <ul class="nav nav-tabs pull-right in">
                             <li><a data-toggle="tab" href="#hb1">繁體中文</a></li>
+                            <li><a data-toggle="tab" href="#hb2">金額設定</a></li>
                         </ul>
                     </header>
 
                     <!-- widget div-->
                     <div>
-
                         <!-- widget edit box -->
                         <div class="jarviswidget-editbox">
                             <!-- This area used as dropdown edit box -->
@@ -47,7 +49,6 @@
                                     </div>
                                 }
                                 @Html.HiddenFor(model => model.Feedbackproductid)
-                                @Html.HiddenFor(model => model.Createdate)
                                 <div id="content" class="tab-content">
                                     <div class="tab-pane" id="hb1">
                                         <fieldset>
@@ -60,11 +61,40 @@
                                             </div>
                                         </fieldset>
                                     </div>
+                                    <div class="tab-pane" id="hb2">
+                                        <fieldset>
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label" for="title">階級價格</label>
+                                                <div class="col-sm-5 col-lg-4">
+                                                    @foreach (Memberlevel entity in ViewBag.Levelname)
+                                                    {
+                                                        @Html.HiddenFor(model => entity.Levelid, new { Name = "Memberauthorization[" + i + "].Feedbackproductid" })
+                                                        if (Model.Feedbackdetail.FirstOrDefault(a => a.Levelid == entity.Levelid) != null)
+                                                        {
+                                                            <input type="hidden" name="Feedbackdetail[@i].SetId" value="@Model.Feedbackdetail.FirstOrDefault(a => a.Levelid == entity.Levelid).Setid" />
+                                                        }
+                                                        else
+                                                        {
+                                                            <input type="hidden" name="Feedbackdetail[@i].SetId" value="00000000-0000-0000-0000-000000000000" />
+                                                        }
+                                                        <label class="col-sm-3 col-lg-2 control-label" for="title">@entity.Levelname</label>
+
+                                                        <div class="col-sm-5 col-lg-4 control-label">
+                                                            @Html.TextBoxFor(model => model.Feedbackdetail.FirstOrDefault(a => a.Levelid == entity.Levelid).Money, new Dictionary<string, object>() { { "class", "form-control" }, { "Name", "feedbackdetail[" + i + "].Money" } })
+                                                            @Html.ValidationMessageFor(model => model.Feedbackdetail.FirstOrDefault(a => a.Levelid == entity.Levelid).Money)
+                                                        </div>
+                                                        <br /><br /><br />
+                                                        i++;
+                                                    }
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                    </div>
                                 </div>
                                 <div class="form-actions">
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <a class="btn btn-default" href="@Url.Action("Feedbaclproduct", "FeedbackMs")">
+                                            <a class="btn btn-default" href="@Url.Action("Feedbackproduct", "FeedbackMs")">
                                                 取消
                                             </a>
                                             <button class="btn btn-primary" type="submit">

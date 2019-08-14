@@ -82,7 +82,7 @@
       <PropertyRef Name="LimID" />
     </Key>
     <Property Name="LimID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="Key" Type="text" />
+    <Property Name="Key" Type="nvarchar" MaxLength="50" />
     <Property Name="Value" Type="nvarchar" MaxLength="50" />
     <Property Name="Icon" Type="nvarchar" MaxLength="50" />
     <Property Name="Sort" Type="int" Nullable="false" />
@@ -234,6 +234,8 @@
     <Property Name="Time" Type="int" />
     <Property Name="Max" Type="int" />
     <Property Name="Min" Type="int" />
+    <Property Name="OrderLoginRand" Type="nvarchar" MaxLength="50" />
+    <Property Name="OrderResultRand" Type="nvarchar" MaxLength="50" />
     <Property Name="Createdate" Type="datetime" />
     <Property Name="Updatedate" Type="datetime" />
   </EntityType>

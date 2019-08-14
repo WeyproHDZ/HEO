@@ -56,3 +56,4 @@ D:\web\HeO\HeO.Service\bin\Microsoft.AI.ServerTelemetryChannel.xml
 D:\web\HeO\HeO.Service\bin\Microsoft.AI.Web.xml
 D:\web\HeO\HeO.Service\bin\Microsoft.AI.WindowsServer.xml
 D:\web\HeO\HeO.Service\bin\Microsoft.ApplicationInsights.xml
+D:\web\HeO\HeO.Service\bin\HeO.Service.dll.config

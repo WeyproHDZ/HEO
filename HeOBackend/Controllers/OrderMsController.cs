@@ -29,20 +29,27 @@ namespace HeOBackend.Controllers
         }
         // GET: OrderMs
         [CheckSession(IsAuth = true)]
-        public ActionResult Order(int p = 1)
+        public ActionResult Order(string prev, int p = 1)
         {
-            IEnumerable<Feedbackproduct> feedbackproduct = feedbackproductService.Get();
-            var data = orderService.Get().OrderByDescending(o => o.Createdate);
-            ViewBag.pageNumber = p;
-            ViewBag.nextpageNumber = 1;
-            ViewBag.Order = data.ToPagedList(pageNumber: p, pageSize: 20);
-            ViewBag.feedbackproduct = feedbackproduct;
-            return View();
+            if(prev == "order")
+            {
+                IEnumerable<Feedbackproduct> feedbackproduct = feedbackproductService.Get();
+                var data = orderService.Get().Where(a => a.Ordernumber.Contains("Hdz")).OrderByDescending(o => o.Createdate);
+                ViewBag.pageNumber = p;
+                ViewBag.nextpageNumber = 1;
+                ViewBag.Order = data.ToPagedList(pageNumber: p, pageSize: 20);
+                ViewBag.feedbackproduct = feedbackproduct;
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("OrderFree");
+            }
         }
 
         [CheckSession(IsAuth = true)]
         [HttpPost]
-        public ActionResult Order(string search, int p = 1)
+        public ActionResult Order(string prev, string search, int p = 1)
         {
             if(search != null)
             {
@@ -67,34 +74,80 @@ namespace HeOBackend.Controllers
         }
 
         [CheckSession(IsAuth = true)]
+        public ActionResult OrderFree(int p = 1)
+        {
+            IEnumerable<Feedbackproduct> feedbackproduct = feedbackproductService.Get();
+            var data = orderService.Get().Where(a => a.Ordernumber.Contains("heoorder")).OrderByDescending(o => o.Createdate);
+            ViewBag.pageNumber = p;
+            ViewBag.nextpageNumber = 1;
+            ViewBag.Order = data.ToPagedList(pageNumber: p, pageSize: 20);
+            ViewBag.feedbackproduct = feedbackproduct;
+            return View();
+        }
+
+        [CheckSession(IsAuth = true)]
+        [HttpPost]
+        public ActionResult OrderFree(string search, int p = 1)
+        {
+            if (search != null)
+            {
+                IEnumerable<Feedbackproduct> feedbackproduct = feedbackproductService.Get();
+                var data = orderService.Get().Where(x => x.Ordernumber.Contains(search)).OrderBy(o => o.Createdate);
+                ViewBag.pageNumber = p;
+                ViewBag.nextpageNumber = 1;
+                ViewBag.Order = data.ToPagedList(pageNumber: p, pageSize: 20);
+                ViewBag.feedbackproduct = feedbackproduct;
+                return View();
+            }
+            else
+            {
+                IEnumerable<Feedbackproduct> feedbackproduct = feedbackproductService.Get();
+                var data = orderService.Get().OrderBy(o => o.Createdate);
+                ViewBag.pageNumber = p;
+                ViewBag.nextpageNumber = 1;
+                ViewBag.Order = data.ToPagedList(pageNumber: p, pageSize: 20);
+                ViewBag.feedbackproduct = feedbackproduct;
+                return View();
+            }
+        }
+        [CheckSession(IsAuth = true)]
         [HttpGet]
-        public ActionResult ViewOrderfacebooklist(Guid Orderid , int p , int np)
+        public ActionResult ViewOrderfacebooklist(Guid Orderid , int p , int np, string prev)
         {
             IEnumerable<Orderfaceooklist> orderfacebooklist = orderfacebooklistService.Get().Where(a => a.Orderid == Orderid).OrderBy(o => o.Createdate);
             ViewBag.pageNumber = p;
             ViewBag.nextpageNumber = np;
             ViewBag.Orderid = Orderid;
             ViewBag.orderfacebooklist = orderfacebooklist.ToPagedList(pageNumber: np, pageSize: 20);
+            ViewBag.prev = prev;
             return View();
         }
 
         [CheckSession(IsAuth = true)]
         [HttpGet]
-        public ActionResult EditOrder(Guid Orderid, int p)
+        public ActionResult EditOrder(Guid Orderid, int p, string prev)
         {
             ViewBag.pageNumber = p;
             Order order = orderService.GetByID(Orderid);
+            ViewBag.prev = prev;
             return View(order);
         }
         [CheckSession(IsAuth = true)]
         [HttpPost]
-        public ActionResult EditOrder(Guid Orderid, string Orderstatus)
+        public ActionResult EditOrder(Guid Orderid, string Orderstatus, string prev)
         {
             Order order = orderService.GetByID(Orderid);
             order.OrderStatus = Convert.ToInt32(Orderstatus);
             orderService.Update(order);
             orderService.SaveChanges();
-            return RedirectToAction("Order");
+            if (prev == "order")
+            {
+                return RedirectToAction("Order");
+            }
+            else
+            {
+                return RedirectToAction("OrderFree");
+            }           
         }
     }
 }

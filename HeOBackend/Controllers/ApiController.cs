@@ -52,7 +52,7 @@ namespace HeOBackend.Controllers
                 {
                     order = orderService.Get().OrderBy(o => o.Createdate).Where(a => a.OrderStatus == 0).FirstOrDefault();
                 }
-                if(order != null)
+                if (order != null)
                 {
                     // 將訂單狀態改為進行中
                     order.OrderStatus = 1;
@@ -541,7 +541,7 @@ namespace HeOBackend.Controllers
         public JsonResult hMeyoIyPa()
         {
             #region --只選出a-z、A-Z、小老鼠、小數點，其餘捨去--
-            //string s = @"+1 612-399-9713";
+            //string s = @"=+7 (931) 533-2433";
             //string r = Regex.Replace(s, @"[^a-z||A-Z||@||.||1-9]", "");
             //return this.Json(r, JsonRequestBehavior.AllowGet);
             #endregion
@@ -585,31 +585,62 @@ namespace HeOBackend.Controllers
             //return this.Json(useragent.User_agent+ "," + rnd_useragent + "," + useragent_phone, JsonRequestBehavior.AllowGet);
             #endregion
             #region --Self_hosted(Post)--
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://heofrontend.4webdemo.com:8080/Check/Login");
-            httpWebRequest.ContentType = "application/json";
-            httpWebRequest.Method = "POST";
+            //var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://heofrontend.4webdemo.com:8080/Check/Login");
+            //httpWebRequest.ContentType = "application/json";
+            //httpWebRequest.Method = "POST";
 
-            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
-            {
-                string json = new JavaScriptSerializer().Serialize(new
-                {
-                    user = "Foo",
-                    password = "Baz"
-                });
+            //using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+            //{
+            //    string json = new JavaScriptSerializer().Serialize(new
+            //    {
+            //        user = "Foo",
+            //        password = "Baz"
+            //    });
 
-                streamWriter.Write(json);
-            }
+            //    streamWriter.Write(json);
+            //}
 
-            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-            string result = "";
-            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
-            {
-                result = streamReader.ReadToEnd();
+            //var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            //string result = "";
+            //using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+            //{
+            //    result = streamReader.ReadToEnd();
 
-            }
-            return this.Json(result, JsonRequestBehavior.AllowGet);
+            //}
+            //return this.Json(result, JsonRequestBehavior.AllowGet);
+            #endregion
+            #region --目前登入人數--
+            int Now = ((int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds - 28800);         // 登入時間為現在時間的總秒數
+            int number = membersService.Get().Where(a => a.Logindate >= Now).Count();
+            return this.Json(Now, JsonRequestBehavior.AllowGet);
             #endregion
 
+        }
+
+        [HttpGet]
+        public JsonResult cloudmanage(string Id)
+        {
+            if(Id == "ClOuD_MaNaGe")
+            {
+                int Now = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds;      // 目前時間的總秒數
+                IEnumerable<Members> members = membersService.Get().Where(x => x.Lastdate <= Now).Where(c => c.Memberloginrecord.OrderByDescending(a => a.Createdate).FirstOrDefault().Status == 1);       // 撈所有能用的FB
+                List<get_member> AccountList = new List<get_member>();
+                AccountList.Add(
+                    new get_member
+                    {
+                        memberid = Guid.Parse(("c6ed9156-c847-468d-a012-47949856fc26").ToString()),
+                        account = "exorcist5859@livemail.tw",
+                        password = "innocence5757",
+                        useragent_phone = "Mozilla/5.0 (iPhone; CPU iPhone OS 7_0_4 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) Version/7.0 Mobile/11B554a Safari/9537.53",
+                        facebookcookie = @"[{\Secure\:false,\IsHttpOnly\:false,\Name\:\datr\,\Value\:\7McmXQlXdEfjpeyQSFOMIks8\,\Domain\:\.facebook.com\,\Path\:\/\,\Expiry\:\2021-07-10T13:23:57+08:00\},{\Secure\:false,\IsHttpOnly\:false,\Name\:\sb\,\Value\:\7McmXdZHJzL8gLngTdF-d0d3\,\Domain\:\.facebook.com\,\Path\:\/\,\Expiry\:\2021-07-30T16:32:54+08:00\},{\Secure\:false,\IsHttpOnly\:false,\Name\:\c_user\,\Value\:\100002472553723\,\Domain\:\.facebook.com\,\Path\:\/\,\Expiry\:\2020-08-11T15:35:37+08:00\},{\Secure\:false,\IsHttpOnly\:false,\Name\:\xs\,\Value\:\26%3ApalMR0PMSXeAIQ%3A2%3A1564561973%3A7745%3A11316\,\Domain\:\.facebook.com\,\Path\:\/\,\Expiry\:\2020-08-11T15:35:37+08:00\},{\Secure\:false,\IsHttpOnly\:false,\Name\:\fr\,\Value\:\10jGuqfCI3pjOP4cm.AWW8UDkXIBfzMY5D6qCzLojMAnU.BdJsfs.F-.F0v.0.0.BdURbJ.AWUyPE99\,\Domain\:\.facebook.com\,\Path\:\/\,\Expiry\:\2020-08-11T15:35:36+08:00\},{\Secure\:true,\IsHttpOnly\:false,\Name\:\x-referer\,\Value\:\eyJyIjoiL2Vycm9yL2luZGV4LnBocD9lcnI9ZWMma2Vycj0xMzU3MDA0JmtlcnJfc3VtbWFyeT0lRTUlOTQlODklRTUlOTElODAlRUYlQkMlOEMlRTUlQTUlQkQlRTUlODMlOEYlRTYlOUMlODklRTYlOUQlQjElRTglQTUlQkYlRTUlODclQkElRTklOEMlQUYlRTQlQkElODYma2Vycl9kZXNjcmlwdGlvbj0lRTglQUIlOEIlRTUlOTglOTclRTglQTklQTYlRTklOTclOUMlRTklOTYlODklRTQlQjglQTYlRTklODclOEQlRTYlOTYlQjAlRTklOTYlOEIlRTUlOTUlOUYlRTQlQkQlQTAlRTclOUElODQlRTclODAlOEYlRTglQTYlQkQlRTUlOTklQTglRTglQTYlOTYlRTclQUElOTclRTMlODAlODIiLCJoIjoiL2Vycm9yL2luZGV4LnBocD9lcnI9ZWMma2Vycj0xMzU3MDA0JmtlcnJfc3VtbWFyeT0lRTUlOTQlODklRTUlOTElODAlRUYlQkMlOEMlRTUlQTUlQkQlRTUlODMlOEYlRTYlOUMlODklRTYlOUQlQjElRTglQTUlQkYlRTUlODclQkElRTklOEMlQUYlRTQlQkElODYma2Vycl9kZXNjcmlwdGlvbj0lRTglQUIlOEIlRTUlOTglOTclRTglQTklQTYlRTklOTclOUMlRTklOTYlODklRTQlQjglQTYlRTklODclOEQlRTYlOTYlQjAlRTklOTYlOEIlRTUlOTUlOUYlRTQlQkQlQTAlRTclOUElODQlRTclODAlOEYlRTglQTYlQkQlRTUlOTklQTglRTglQTYlOTYlRTclQUElOTclRTMlODAlODIiLCJzIjoibSJ9\,\Domain\:\.facebook.com\,\Path\:\/\,\Expiry\:null},{\Secure\:true,\IsHttpOnly\:false,\Name\:\wd\,\Value\:\1080x1920\,\Domain\:\.facebook.com\,\Path\:\/\,\Expiry\:\2019-08-19T15:39:32+08:00\},{\Secure\:true,\IsHttpOnly\:false,\Name\:\m_pixel_ratio\,\Value\:\1\,\Domain\:\.facebook.com\,\Path\:\/\,\Expiry\:\2019-08-19T15:39:32+08:00\}]"
+                    }
+                );
+                return this.Json(AccountList, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return this.Json("Error", JsonRequestBehavior.AllowGet);
+            }
         }
     }
     public class get_member

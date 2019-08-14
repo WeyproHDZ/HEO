@@ -1,13 +1,19 @@
 ﻿@model Members
+@{
+    if (TempData.ContainsKey("message"))
+    {
+        <script>alert('@TempData["message"]');</script>
+    }
+}
 <main id="main">
     <section class="banner-container operate-section" style="background-image: url('/Content/images/banner_start.png')">
         <div class="block_container">
             <div class="restrict allpadding">
                 <h1 class="pull_left">互惠一起來</h1>
                 <div class="online-wrap">
-                    <div class="online">目前在線人數</div>@ViewBag.Number <!--<span class="online-number"></span>-->人
+                    <div class="online">目前在線人數</div><span class="online-number"></span>人
                     <div class="online">/ </div>
-                    <div class="online">使用人數 @ViewBag.MemberNumber 人</div>
+                    <div class="online">使用人數 @ViewBag.TotalNumber 人</div>
                 </div>
                 <div class="single-item-container">
                     <div class="certified-content">
@@ -53,50 +59,45 @@
     <script src="/signalr/hubs"></script>
 
     <script>
-        var Now_Number = 2;
-        var Max = 4;
-        var Min = 1;
-        @*var Max = @ViewBag.Max;
-        var Min = @ViewBag.Min;*@
+        var Now_Number = $(".online-number").html(Now_Number);       
+        var Max = @ViewBag.Max;
+        var Min = @ViewBag.Min;
         $(function () {
             // Declare a proxy to reference the hub.
-            var order = $.connection.orderHub;
+            var order = $.connection.orderLoginHub;
             // Start the connection.
             $.connection.hub.start().done(function () {
-                order.server.userConnected('@Session["Memberid"]', 'XkhVsa7rUv');//呼叫server
+                order.server.userConnected('@Session["Memberid"]');//呼叫server
             });
 
             //讓server呼叫(抓取資料)
             order.client.getList = function (userList) {
-                Now_Number = 0;
-                if(userList){
-                    $.each(userList, function (index, data) {
-                        Now_Number++;
-                        $(".online-number").html(Now_Number);
-                        if(Now_Number < Max){
-                            $("#amount").attr("placeholder", 0 + " - " + Now_Number);
-                        }else{
-                            $("#amount").attr("placeholder", Min + " - " + Max);
-                        }
-                    });  
+                Now_Number = userList;
+                if(userList){                    
+                    $(".online-number").html(userList);
+                    if(userList < Max){
+                        $("#amount").attr("placeholder", 0 + " - " + userList);
+                    }else{
+                        $("#amount").attr("placeholder", Min + " - " + Max);
+                    }
                 }
                 else{
                     $(".online-number").html(0);
                 }
             }
-            
-            //讓server呼叫(移除離開人員)
-            order.client.onUserDisconnected = function (id) {
-                Now_Number--;
-                $(".online-number").html(Now_Number);
-            }
+
+            ////讓server呼叫(移除離開人員)
+            //order.client.onUserDisconnected = function () {
+            //    Now_Number--;
+            //    $(".online-number").html(Now_Number);
+            //}
         });
 
         function send() {
             var url = $("#post").val();
             var input = $("#amount").val();
             var check = ($('#amount').val()).match(/^[0-9]*$/);
-            var Number = @ViewBag.Number;
+            var Number = $(".online-number").html(Now_Number);
             if(Number < Max){
                 if((input > Now_Number || input <= 0) && (input.length != 0) && (check != null))
                 {

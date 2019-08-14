@@ -87,7 +87,7 @@
             <PropertyRef Name="LimID" />
           </Key>
           <Property Name="LimID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Key" Type="text" />
+          <Property Name="Key" Type="nvarchar" MaxLength="50" />
           <Property Name="Value" Type="nvarchar" MaxLength="50" />
           <Property Name="Icon" Type="nvarchar" MaxLength="50" />
           <Property Name="Sort" Type="int" Nullable="false" />
@@ -239,6 +239,8 @@
           <Property Name="Time" Type="int" />
           <Property Name="Max" Type="int" />
           <Property Name="Min" Type="int" />
+          <Property Name="OrderLoginRand" Type="nvarchar" MaxLength="50" />
+          <Property Name="OrderResultRand" Type="nvarchar" MaxLength="50" />
           <Property Name="Createdate" Type="datetime" />
           <Property Name="Updatedate" Type="datetime" />
         </EntityType>
@@ -667,29 +669,6 @@
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="HeOModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
-        <EntityType Name="AdminLims">
-          <Key>
-            <PropertyRef Name="AdminLimID" />
-          </Key>
-          <Property Name="AdminLimID" Type="Guid" Nullable="false" />
-          <Property Name="AdminID" Type="Int32" Nullable="false" />
-          <Property Name="LimID" Type="Int32" Nullable="false" />
-          <Property Name="IsAdd" Type="Boolean" Nullable="false" />
-          <Property Name="IsUpdate" Type="Boolean" Nullable="false" />
-          <Property Name="IsDelete" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Admins" Relationship="Self.FK_Adminlims_Admins" FromRole="AdminLims" ToRole="Admins" />
-          <NavigationProperty Name="Lims" Relationship="Self.FK_Adminlims_Lims" FromRole="AdminLims" ToRole="Lims" />
-        </EntityType>
-        <EntityType Name="Admins">
-          <Key>
-            <PropertyRef Name="AdminID" />
-          </Key>
-          <Property Name="AdminID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Username" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Password" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Isenable" Type="Byte" Nullable="false" />
-          <NavigationProperty Name="AdminLims" Relationship="Self.FK_Adminlims_Admins" FromRole="Admins" ToRole="AdminLims" />
-        </EntityType>
         <EntityType Name="Feedbackproduct">
           <Key>
             <PropertyRef Name="Feedbackproductid" />
@@ -713,20 +692,6 @@
           <Property Name="Updatedate" Type="DateTime" Precision="3" />
           <NavigationProperty Name="Guidelang" Relationship="HeOModel.FK_Guidelang_Guide" FromRole="Guide" ToRole="Guidelang" />
         </EntityType>
-        <EntityType Name="Lims">
-          <Key>
-            <PropertyRef Name="LimID" />
-          </Key>
-          <Property Name="LimID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Key" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="Value" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Icon" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Sort" Type="Int32" Nullable="false" />
-          <Property Name="ParentID" Type="Int32" />
-          <NavigationProperty Name="AdminLims" Relationship="Self.FK_Adminlims_Lims" FromRole="Lims" ToRole="AdminLims" />
-          <NavigationProperty Name="Lims1" Relationship="Self.FK_Lims_Lims1" FromRole="Lims" ToRole="Lims1" />
-          <NavigationProperty Name="Lims2" Relationship="Self.FK_Lims_Lims1" FromRole="Lims1" ToRole="Lims" />
-        </EntityType>
         <EntityType Name="Memberlevelcooldown">
           <Key>
             <PropertyRef Name="Id" />
@@ -735,17 +700,6 @@
           <Property Name="Levelid" Type="Guid" />
           <Property Name="Cooldowntime" Type="Int32" />
           <NavigationProperty Name="Memberlevel" Relationship="HeOModel.FK_Memberlevelcooldown_Memberlevel" FromRole="Memberlevelcooldown" ToRole="Memberlevel" />
-        </EntityType>
-        <EntityType Name="Setting">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Guid" Nullable="false" />
-          <Property Name="Time" Type="Int32" />
-          <Property Name="Max" Type="Int32" />
-          <Property Name="Min" Type="Int32" />
-          <Property Name="Createdate" Type="DateTime" Precision="3" />
-          <Property Name="Updatedate" Type="DateTime" Precision="3" />
         </EntityType>
         <EntityType Name="Term">
           <Key>
@@ -758,63 +712,11 @@
           <Property Name="Updatedate" Type="DateTime" Precision="3" />
           <NavigationProperty Name="Termlang" Relationship="HeOModel.FK_Termlang_Term" FromRole="Term" ToRole="Termlang" />
         </EntityType>
-        <Association Name="FK_Adminlims_Admins">
-          <End Role="Admins" Type="Self.Admins" Multiplicity="1" />
-          <End Role="AdminLims" Type="Self.AdminLims" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Admins">
-              <PropertyRef Name="AdminID" />
-            </Principal>
-            <Dependent Role="AdminLims">
-              <PropertyRef Name="AdminID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Adminlims_Lims">
-          <End Role="Lims" Type="Self.Lims" Multiplicity="1" />
-          <End Role="AdminLims" Type="Self.AdminLims" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Lims">
-              <PropertyRef Name="LimID" />
-            </Principal>
-            <Dependent Role="AdminLims">
-              <PropertyRef Name="LimID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Lims_Lims1">
-          <End Role="Lims" Type="Self.Lims" Multiplicity="0..1" />
-          <End Role="Lims1" Type="Self.Lims" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Lims">
-              <PropertyRef Name="LimID" />
-            </Principal>
-            <Dependent Role="Lims1">
-              <PropertyRef Name="ParentID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityContainer Name="HeOEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="AdminLims" EntityType="Self.AdminLims" />
-          <EntitySet Name="Admins" EntityType="Self.Admins" />
           <EntitySet Name="Feedbackproduct" EntityType="Self.Feedbackproduct" />
           <EntitySet Name="Guide" EntityType="Self.Guide" />
-          <EntitySet Name="Lims" EntityType="Self.Lims" />
           <EntitySet Name="Memberlevelcooldown" EntityType="Self.Memberlevelcooldown" />
-          <EntitySet Name="Setting" EntityType="Self.Setting" />
           <EntitySet Name="Term" EntityType="Self.Term" />
-          <AssociationSet Name="FK_Adminlims_Admins" Association="Self.FK_Adminlims_Admins">
-            <End Role="Admins" EntitySet="Admins" />
-            <End Role="AdminLims" EntitySet="AdminLims" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Adminlims_Lims" Association="Self.FK_Adminlims_Lims">
-            <End Role="Lims" EntitySet="Lims" />
-            <End Role="AdminLims" EntitySet="AdminLims" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Lims_Lims1" Association="Self.FK_Lims_Lims1">
-            <End Role="Lims" EntitySet="Lims" />
-            <End Role="Lims1" EntitySet="Lims" />
-          </AssociationSet>
           <EntitySet Name="sysdiagrams" EntityType="HeOModel.sysdiagrams" />
           <EntitySet Name="News" EntityType="HeOModel.News" />
           <EntitySet Name="Feedbackdetail" EntityType="HeOModel.Feedbackdetail" />
@@ -895,6 +797,22 @@
             <End Role="Members" EntitySet="Members" />
             <End Role="Viprecord" EntitySet="Viprecord" />
           </AssociationSet>
+          <EntitySet Name="AdminLims" EntityType="HeOModel.AdminLims" />
+          <EntitySet Name="Admins" EntityType="HeOModel.Admins" />
+          <EntitySet Name="Lims" EntityType="HeOModel.Lims" />
+          <AssociationSet Name="FK_Adminlims_Admins" Association="HeOModel.FK_Adminlims_Admins">
+            <End Role="Admins" EntitySet="Admins" />
+            <End Role="AdminLims" EntitySet="AdminLims" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Adminlims_Lims" Association="HeOModel.FK_Adminlims_Lims">
+            <End Role="Lims" EntitySet="Lims" />
+            <End Role="AdminLims" EntitySet="AdminLims" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Lims_Lims1" Association="HeOModel.FK_Lims_Lims1">
+            <End Role="Lims" EntitySet="Lims" />
+            <End Role="Lims1" EntitySet="Lims" />
+          </AssociationSet>
+          <EntitySet Name="Setting" EntityType="HeOModel.Setting" />
           </EntityContainer>
         <EntityType Name="sysdiagrams">
           <Key>
@@ -1361,34 +1279,98 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="AdminLims">
+          <Key>
+            <PropertyRef Name="AdminLimID" />
+          </Key>
+          <Property Name="AdminLimID" Type="Guid" Nullable="false" />
+          <Property Name="AdminID" Type="Int32" Nullable="false" />
+          <Property Name="LimID" Type="Int32" Nullable="false" />
+          <Property Name="IsAdd" Type="Boolean" Nullable="false" />
+          <Property Name="IsUpdate" Type="Boolean" Nullable="false" />
+          <Property Name="IsDelete" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Admins" Relationship="HeOModel.FK_Adminlims_Admins" FromRole="AdminLims" ToRole="Admins" />
+          <NavigationProperty Name="Lims" Relationship="HeOModel.FK_Adminlims_Lims" FromRole="AdminLims" ToRole="Lims" />
+        </EntityType>
+        <EntityType Name="Admins">
+          <Key>
+            <PropertyRef Name="AdminID" />
+          </Key>
+          <Property Name="AdminID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Username" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Password" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Isenable" Type="Byte" Nullable="false" />
+          <NavigationProperty Name="AdminLims" Relationship="HeOModel.FK_Adminlims_Admins" FromRole="Admins" ToRole="AdminLims" />
+        </EntityType>
+        <EntityType Name="Lims">
+          <Key>
+            <PropertyRef Name="LimID" />
+          </Key>
+          <Property Name="LimID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Key" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Value" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Icon" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Sort" Type="Int32" Nullable="false" />
+          <Property Name="ParentID" Type="Int32" />
+          <NavigationProperty Name="AdminLims" Relationship="HeOModel.FK_Adminlims_Lims" FromRole="Lims" ToRole="AdminLims" />
+          <NavigationProperty Name="Lims1" Relationship="HeOModel.FK_Lims_Lims1" FromRole="Lims" ToRole="Lims1" />
+          <NavigationProperty Name="Lims2" Relationship="HeOModel.FK_Lims_Lims1" FromRole="Lims1" ToRole="Lims" />
+        </EntityType>
+        <Association Name="FK_Adminlims_Admins">
+          <End Type="HeOModel.Admins" Role="Admins" Multiplicity="1" />
+          <End Type="HeOModel.AdminLims" Role="AdminLims" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Admins">
+              <PropertyRef Name="AdminID" />
+            </Principal>
+            <Dependent Role="AdminLims">
+              <PropertyRef Name="AdminID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Adminlims_Lims">
+          <End Type="HeOModel.Lims" Role="Lims" Multiplicity="1" />
+          <End Type="HeOModel.AdminLims" Role="AdminLims" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Lims">
+              <PropertyRef Name="LimID" />
+            </Principal>
+            <Dependent Role="AdminLims">
+              <PropertyRef Name="LimID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Lims_Lims1">
+          <End Type="HeOModel.Lims" Role="Lims" Multiplicity="0..1" />
+          <End Type="HeOModel.Lims" Role="Lims1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Lims">
+              <PropertyRef Name="LimID" />
+            </Principal>
+            <Dependent Role="Lims1">
+              <PropertyRef Name="ParentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Setting">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="Time" Type="Int32" />
+          <Property Name="Max" Type="Int32" />
+          <Property Name="Min" Type="Int32" />
+          <Property Name="OrderLoginRand" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="OrderResultRand" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Createdate" Type="DateTime" Precision="3" />
+          <Property Name="Updatedate" Type="DateTime" Precision="3" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="HeOModelStoreContainer" CdmEntityContainer="HeOEntities">
-          <EntitySetMapping Name="AdminLims">
-            <EntityTypeMapping TypeName="HeOModel.AdminLims">
-              <MappingFragment StoreEntitySet="AdminLims">
-                <ScalarProperty Name="AdminLimID" ColumnName="AdminLimID" />
-                <ScalarProperty Name="AdminID" ColumnName="AdminID" />
-                <ScalarProperty Name="LimID" ColumnName="LimID" />
-                <ScalarProperty Name="IsAdd" ColumnName="IsAdd" />
-                <ScalarProperty Name="IsUpdate" ColumnName="IsUpdate" />
-                <ScalarProperty Name="IsDelete" ColumnName="IsDelete" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Admins">
-            <EntityTypeMapping TypeName="HeOModel.Admins">
-              <MappingFragment StoreEntitySet="Admins">
-                <ScalarProperty Name="AdminID" ColumnName="AdminID" />
-                <ScalarProperty Name="Username" ColumnName="Username" />
-                <ScalarProperty Name="Password" ColumnName="Password" />
-                <ScalarProperty Name="Isenable" ColumnName="Isenable" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Feedbackproduct">
             <EntityTypeMapping TypeName="HeOModel.Feedbackproduct">
               <MappingFragment StoreEntitySet="Feedbackproduct">
@@ -1411,36 +1393,12 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Lims">
-            <EntityTypeMapping TypeName="HeOModel.Lims">
-              <MappingFragment StoreEntitySet="Lims">
-                <ScalarProperty Name="LimID" ColumnName="LimID" />
-                <ScalarProperty Name="Key" ColumnName="Key" />
-                <ScalarProperty Name="Value" ColumnName="Value" />
-                <ScalarProperty Name="Icon" ColumnName="Icon" />
-                <ScalarProperty Name="Sort" ColumnName="Sort" />
-                <ScalarProperty Name="ParentID" ColumnName="ParentID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Memberlevelcooldown">
             <EntityTypeMapping TypeName="HeOModel.Memberlevelcooldown">
               <MappingFragment StoreEntitySet="Memberlevelcooldown">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Levelid" ColumnName="Levelid" />
                 <ScalarProperty Name="Cooldowntime" ColumnName="Cooldowntime" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Setting">
-            <EntityTypeMapping TypeName="HeOModel.Setting">
-              <MappingFragment StoreEntitySet="Setting">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="Time" ColumnName="Time" />
-                <ScalarProperty Name="Max" ColumnName="Max" />
-                <ScalarProperty Name="Min" ColumnName="Min" />
-                <ScalarProperty Name="Createdate" ColumnName="Createdate" />
-                <ScalarProperty Name="Updatedate" ColumnName="Updatedate" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1708,6 +1666,54 @@
                 <ScalarProperty Name="Memberid" ColumnName="Memberid" />
                 <ScalarProperty Name="Is_import" ColumnName="Is_import" />
                 <ScalarProperty Name="Isenable" ColumnName="Isenable" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AdminLims">
+            <EntityTypeMapping TypeName="HeOModel.AdminLims">
+              <MappingFragment StoreEntitySet="AdminLims">
+                <ScalarProperty Name="IsDelete" ColumnName="IsDelete" />
+                <ScalarProperty Name="IsUpdate" ColumnName="IsUpdate" />
+                <ScalarProperty Name="IsAdd" ColumnName="IsAdd" />
+                <ScalarProperty Name="LimID" ColumnName="LimID" />
+                <ScalarProperty Name="AdminID" ColumnName="AdminID" />
+                <ScalarProperty Name="AdminLimID" ColumnName="AdminLimID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Admins">
+            <EntityTypeMapping TypeName="HeOModel.Admins">
+              <MappingFragment StoreEntitySet="Admins">
+                <ScalarProperty Name="Isenable" ColumnName="Isenable" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="AdminID" ColumnName="AdminID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Lims">
+            <EntityTypeMapping TypeName="HeOModel.Lims">
+              <MappingFragment StoreEntitySet="Lims">
+                <ScalarProperty Name="ParentID" ColumnName="ParentID" />
+                <ScalarProperty Name="Sort" ColumnName="Sort" />
+                <ScalarProperty Name="Icon" ColumnName="Icon" />
+                <ScalarProperty Name="Value" ColumnName="Value" />
+                <ScalarProperty Name="Key" ColumnName="Key" />
+                <ScalarProperty Name="LimID" ColumnName="LimID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Setting">
+            <EntityTypeMapping TypeName="HeOModel.Setting">
+              <MappingFragment StoreEntitySet="Setting">
+                <ScalarProperty Name="Updatedate" ColumnName="Updatedate" />
+                <ScalarProperty Name="Createdate" ColumnName="Createdate" />
+                <ScalarProperty Name="OrderResultRand" ColumnName="OrderResultRand" />
+                <ScalarProperty Name="OrderLoginRand" ColumnName="OrderLoginRand" />
+                <ScalarProperty Name="Min" ColumnName="Min" />
+                <ScalarProperty Name="Max" ColumnName="Max" />
+                <ScalarProperty Name="Time" ColumnName="Time" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

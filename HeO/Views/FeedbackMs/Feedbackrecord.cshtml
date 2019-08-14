@@ -1,6 +1,7 @@
 ﻿@{ 
     var Feedbackrecord = (IEnumerable<Feedbackrecord>)ViewBag.Feedbackrecord;
     string status;
+    string platform;
 }
 <main id="main">
     <section class="member block_container">
@@ -11,15 +12,35 @@
                     <h1>您目前的獎勵金<span class="reward-number" id="number"> @ViewBag.Membermoney</span>$</h1>
                     <div class="text">獎勵金累積5000$可轉換成台幣(需聯繫客服處理)。<br>目前獎勵金:台幣比值為1:0.5(5000獎勵金轉換2500台幣),僅限於HEO上的獎勵金,<br>若該獎勵金已轉去HDZ則不接受轉換現金。</div>
                     <div class="main-content">
-                        @using (Html.BeginForm("Feedbackrecord", "FeedbackMs", FormMethod.Post, new { @id = "form" }))
+                                               
+                        @if (Feedbackrecord.Where(a => a.Memberid == Guid.Parse(Session["Memberid"].ToString())).Count() != 0)
                         {
-                            <div class="transfer-number">
-                                <p>我要轉出</p>
-                                <input class="transfer" type="text" name="Money" id="Money">
-                                <p>獎勵金至HDz</p>
-                            </div>
-                            <div class="transfer-submit"><button class="btn" type="button" onclick="send()" title="轉出">轉出</button></div>
+                            if (Feedbackrecord.Where(a => a.Memberid == Guid.Parse(Session["Memberid"].ToString())).OrderByDescending(x => x.Createdate).FirstOrDefault().Status != 0)
+                            {
+                                using (Html.BeginForm("Feedbackrecord", "FeedbackMs", FormMethod.Post, new { @id = "form" }))
+                                {
+                                    <div class="transfer-number">
+                                        <p>我要轉出</p>
+                                        <input class="transfer" type="text" name="Money" id="Money">
+                                        <p>獎勵金至HDz</p>
+                                    </div>
+                                    <div class="transfer-submit"><button class="btn" type="button" onclick="send()" title="轉出">轉出</button></div>
+                                }
+                            }
                         }
+                        else
+                        {
+                            using (Html.BeginForm("Feedbackrecord", "FeedbackMs", FormMethod.Post, new { @id = "form" }))
+                            {
+                                <div class="transfer-number">
+                                    <p>我要轉出</p>
+                                    <input class="transfer" type="text" name="Money" id="Money">
+                                    <p>獎勵金至HDz</p>
+                                </div>
+                                    <div class="transfer-submit"><button class="btn" type="button" onclick="send()" title="轉出">轉出</button></div>
+                            }
+                        }
+
                     </div>
                 </div>
                 <div class="content-block">
@@ -35,53 +56,121 @@
                                             <th>轉前獎勵金</th>
                                             <th>轉出獎勵金</th>
                                             <th>剩餘獎勵金</th>
+                                            <th>平台</th>
                                             <th>狀態</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach (Feedbackrecord FeedbackrecordList in Feedbackrecord)
                                         {
-                                            switch (FeedbackrecordList.Status)
+                                            string[] time = new string[2];
+                                            time = FeedbackrecordList.Createdate.ToString().Split(' ');
+                                            string[] date = new string[3];
+                                            date = time[0].Split('/');
+                                            if (FeedbackrecordList.Status == 2)
                                             {
-                                                case 0:
-                                                    status = "等待中";
-                                                    break;
-                                                case 1:
-                                                    status = "轉入HDZ";
-                                                    break;
-                                                case 2:
-                                                    status = "轉出台幣";
-                                                    break;
-                                                case 3:
-                                                    status = "失敗";
-                                                    break;
-                                                default:
-                                                    status = "Error";
-                                                    break;
-                                            }
-                                            if (FeedbackrecordList.Ishdz == 0)
-                                            {
-                                                <tr>
-                                                    <td class="align_left">@FeedbackrecordList.Createdate</td>
-                                                    <td>@FeedbackrecordList.Hdzaccount</td>
-                                                    <td>@(FeedbackrecordList.Remains + FeedbackrecordList.Money)</td>
-                                                    <td>@FeedbackrecordList.Money</td>
-                                                    <td>@FeedbackrecordList.Remains</td>
-                                                    <td>@status</td>
-                                                </tr>
+                                                switch (FeedbackrecordList.Status)
+                                                {
+                                                    case 0:
+                                                        status = "等待中";
+                                                        break;
+                                                    case 1:
+                                                        status = "完成轉入";
+                                                        break;
+                                                    case 2:
+                                                        status = "失敗";
+                                                        break;
+                                                    default:
+                                                        status = "Error";
+                                                        break;
+                                                }
+
+                                                if (FeedbackrecordList.Ishdz == 0)
+                                                {
+                                                    platform = "轉入HDZ";
+                                                }
+                                                else
+                                                {
+                                                    platform = "轉出台幣";
+                                                }
+
+                                                if (FeedbackrecordList.Ishdz == 0)
+                                                {
+                                                    <tr>
+                                                        <td class="align_left">@date[2]/@date[0]/@date[1]</td>
+                                                        <td>@FeedbackrecordList.Hdzaccount</td>
+                                                        <td>@(FeedbackrecordList.Remains)</td>
+                                                        <td>@FeedbackrecordList.Money</td>
+                                                        <td>@FeedbackrecordList.Remains</td>
+                                                        <td>@platform</td>
+                                                        <td>@status</td>
+                                                    </tr>
+                                                }
+                                                else
+                                                {
+                                                    <tr>
+                                                        <td class="align_left">@date[2]/@date[0]/@date[1]</td>
+                                                        <td>@FeedbackrecordList.Bankaccount</td>
+                                                        <td>@(FeedbackrecordList.Remains)</td>
+                                                        <td>@FeedbackrecordList.Money</td>
+                                                        <td>@FeedbackrecordList.Remains</td>
+                                                        <td>@platform</td>
+                                                        <td>@status</td>
+                                                    </tr>
+                                                }
                                             }
                                             else
                                             {
-                                                <tr>
-                                                    <td class="align_left">@FeedbackrecordList.Createdate</td>
-                                                    <td>@FeedbackrecordList.Bankaccount</td>
-                                                    <td>@(FeedbackrecordList.Remains + FeedbackrecordList.Money)</td>
-                                                    <td>@FeedbackrecordList.Money</td>
-                                                    <td>@FeedbackrecordList.Remains</td>
-                                                    <td>@status</td>
-                                                </tr>
-                                            }
+                                                switch (FeedbackrecordList.Status)
+                                                {
+                                                    case 0:
+                                                        status = "等待中";
+                                                        break;
+                                                    case 1:
+                                                        status = "完成轉入";
+                                                        break;
+                                                    case 2:
+                                                        status = "失敗";
+                                                        break;
+                                                    default:
+                                                        status = "Error";
+                                                        break;
+                                                }
 
+                                                if (FeedbackrecordList.Ishdz == 0)
+                                                {
+                                                    platform = "轉入HDZ";
+                                                }
+                                                else
+                                                {
+                                                    platform = "轉出台幣";
+                                                }
+
+                                                if (FeedbackrecordList.Ishdz == 0)
+                                                {
+                                                    <tr>
+                                                        <td class="align_left">@date[2]/@date[0]/@date[1]</td>
+                                                        <td>@FeedbackrecordList.Hdzaccount</td>
+                                                        <td>@(FeedbackrecordList.Remains + FeedbackrecordList.Money)</td>
+                                                        <td>@FeedbackrecordList.Money</td>
+                                                        <td>@FeedbackrecordList.Remains</td>
+                                                        <td>@platform</td>
+                                                        <td>@status</td>
+                                                    </tr>
+                                                }
+                                                else
+                                                {
+                                                    <tr>
+                                                        <td class="align_left">@date[2]/@date[0]/@date[1]</td>
+                                                        <td>@FeedbackrecordList.Bankaccount</td>
+                                                        <td>@(FeedbackrecordList.Remains + FeedbackrecordList.Money)</td>
+                                                        <td>@FeedbackrecordList.Money</td>
+                                                        <td>@FeedbackrecordList.Remains</td>
+                                                        <td>@platform</td>
+                                                        <td>@status</td>
+                                                    </tr>
+                                                }
+                                            }
                                         }
                                     </tbody>
                                 </table>
@@ -98,7 +187,7 @@
 {
     <script>
         function send() {
-            var Membermoney = $("#number").html();
+            var Membermoney = @ViewBag.Membermoney;
             var check = ($('#Money').val()).match(/^[0-9]*$/);
             if ($('#Money').val().length != 0 && (check != null)) {
                 if($('#Money').val() <= 0) {

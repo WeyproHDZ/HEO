@@ -25,13 +25,9 @@ namespace HeO.Models
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<AdminLims> AdminLims { get; set; }
-        public virtual DbSet<Admins> Admins { get; set; }
         public virtual DbSet<Feedbackproduct> Feedbackproduct { get; set; }
         public virtual DbSet<Guide> Guide { get; set; }
-        public virtual DbSet<Lims> Lims { get; set; }
         public virtual DbSet<Memberlevelcooldown> Memberlevelcooldown { get; set; }
-        public virtual DbSet<Setting> Setting { get; set; }
         public virtual DbSet<Term> Term { get; set; }
         public virtual DbSet<sysdiagrams> sysdiagrams { get; set; }
         public virtual DbSet<News> News { get; set; }
@@ -53,5 +49,9 @@ namespace HeO.Models
         public virtual DbSet<Memberloginrecord> Memberloginrecord { get; set; }
         public virtual DbSet<Useragent> Useragent { get; set; }
         public virtual DbSet<Members> Members { get; set; }
+        public virtual DbSet<AdminLims> AdminLims { get; set; }
+        public virtual DbSet<Admins> Admins { get; set; }
+        public virtual DbSet<Lims> Lims { get; set; }
+        public virtual DbSet<Setting> Setting { get; set; }
     }
 }

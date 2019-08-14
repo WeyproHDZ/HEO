@@ -35,10 +35,9 @@ namespace HeO.CheckFacebook
             string[] user_agent = new string[4];
             string[] status = new string[5];
             status[1] = "";
-            status[2] = "";
+            status[2] = "https://scontent.frmq2-1.fna.fbcdn.net/v/t1.0-1/c47.0.160.160a/p160x160/10354686_10150004552801856_220367501106153455_n.jpg?_nc_cat=1&_nc_oc=AQnwuPVNtEyWQ8DxG-_WU5TmHr2CRrJklH_3-Em1d-BBL7pBo_2onHA5Fqz-_GtlKu8&_nc_ht=scontent.frmq2-1.fna&oh=f85d870222f145ff686ba73eacee7778&oe=5DD8371E";;
             status[3] = "";
             status[4] = "";
-            string api_useragent = Useragent.Replace("$", "/").Replace("*", " ");
             int member = membersService.Get().Where(a => a.Account == Account).Count();
             if(member != 0)     // 判斷資料庫裡是否有這個會員的資料
             {
@@ -59,7 +58,7 @@ namespace HeO.CheckFacebook
                     //profile.SetPreference("network.proxy.socks", "123.205.179.16");
                     //profile.SetPreference("network.proxy.socks_port", 4145);
                     /*** 設定useragent ***/
-                    profile.SetPreference("general.useragent.override", api_useragent);
+                    profile.SetPreference("general.useragent.override", Useragent);
                     FirefoxOptions options = new FirefoxOptions();
                     /*** 無痕 ****/
                     options.AddArgument("--incognito");
@@ -136,24 +135,44 @@ namespace HeO.CheckFacebook
                     /**** 判斷唉呀，好像有東西出錯的錯誤訊息 ****/
                     if(driver.Url.IndexOf("error") != -1)
                     {
-                        driver.Navigate().GoToUrl("https://mobile.facebook.com");
                         /*** 個人頁面 ****/
+                        driver.Navigate().GoToUrl("https://m.facebook.com/#!/profile.php");
+                        //IWebElement Setting = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/a[1]"));
+                        //Setting.Click();
+                        //System.Threading.Thread.Sleep(Delay());
+                        //IWebElement Profile = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/ul[1]/li[1]/div[1]/a[1]/div[1]/img[1]"));
+                        //Profile.Click();
+                        //IWebElement img = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[4]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/a[1]/div[1]/i[1]")); 
+                        //string[] imgdata = img.GetAttribute("style").Replace("\'", "\"").Split('\"');
+                        //string name = img.GetAttribute("aria-label");
+                        //status[0] = "成功登入!";
+                        //status[1] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
+                        //status[2] = imgdata[1].Replace("amp;", "");
+                        //status[3] = name;
+                        //status[4] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
+                        //System.Threading.Thread.Sleep(Delay());
+                        //driver.Quit();
 
-                        IWebElement Setting = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/a[1]"));
-                        Setting.Click();
-                        System.Threading.Thread.Sleep(Delay());
-                        IWebElement Profile = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/ul[1]/li[1]/div[1]/a[1]/div[1]/img[1]"));
-                        Profile.Click();
-                        IWebElement img = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[4]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/a[1]/div[1]/i[1]"));
-                        string[] imgdata = img.GetAttribute("style").Replace("\'", "\"").Split('\"');
-                        string name = img.GetAttribute("aria-label");
-                        status[0] = "成功登入!";
-                        status[1] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
-                        status[2] = imgdata[1].Replace("amp;", "");
-                        status[3] = name;
-                        status[4] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
-                        System.Threading.Thread.Sleep(Delay());
-                        driver.Quit();
+                        /*** 帳號需驗證 ***/
+                        if (driver.Url.IndexOf("checkpoint") != -1)
+                        {
+                            status[0] = "帳號未驗證";
+                            driver.Quit();
+                            content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
+                            return content;
+                        }
+                        else
+                        {
+                            string name = driver.Title;
+                            status[0] = "成功登入!";
+                            status[1] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
+                            status[2] = "https://scontent.frmq2-1.fna.fbcdn.net/v/t1.0-1/c47.0.160.160a/p160x160/10354686_10150004552801856_220367501106153455_n.jpg?_nc_cat=1&_nc_oc=AQnwuPVNtEyWQ8DxG-_WU5TmHr2CRrJklH_3-Em1d-BBL7pBo_2onHA5Fqz-_GtlKu8&_nc_ht=scontent.frmq2-1.fna&oh=f85d870222f145ff686ba73eacee7778&oe=5DD8371E";
+                            status[3] = name;
+                            status[4] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
+                            System.Threading.Thread.Sleep(Delay());
+                            driver.Quit();
+                        }
+
                     }
                     else
                     {
@@ -164,38 +183,85 @@ namespace HeO.CheckFacebook
                             FB_continue.Click();
                             System.Threading.Thread.Sleep(Delay());
                             /*** 個人頁面 ****/
+                            driver.Navigate().GoToUrl("https://m.facebook.com/#!/profile.php");
+                            //IWebElement Setting = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/a[1]"));
+                            //Setting.Click();
+                            //System.Threading.Thread.Sleep(Delay());
+                            //IWebElement Profile = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/ul[1]/li[1]/div[1]/a[1]/div[1]/img[1]"));
+                            //Profile.Click();
+                            //IWebElement img = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[4]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/a[1]/div[1]/i[1]"));
+                            //string[] imgdata = img.GetAttribute("style").Replace("\'", "\"").Split('\"');
+                            //string name = img.GetAttribute("aria-label");
+                            //status[0] = "成功登入!";
+                            //status[1] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
+                            //status[2] = imgdata[1].Replace("amp;", "");
+                            //status[3] = name;
+                            //status[4] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
+                            //System.Threading.Thread.Sleep(Delay());
+                            //driver.Quit();
 
-                            IWebElement Setting = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/a[1]"));
-                            Setting.Click();
-                            System.Threading.Thread.Sleep(Delay());
-                            IWebElement Profile = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/ul[1]/li[1]/div[1]/a[1]/div[1]/img[1]"));
-                            Profile.Click();
-                            IWebElement img = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[4]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/a[1]/div[1]/i[1]"));
-                            string[] imgdata = img.GetAttribute("style").Replace("\'", "\"").Split('\"');
-                            string name = img.GetAttribute("aria-label");
+                            string name = driver.Title;
                             status[0] = "成功登入!";
                             status[1] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
-                            status[2] = imgdata[1].Replace("amp;", "");
+                            status[2] = "https://scontent.frmq2-1.fna.fbcdn.net/v/t1.0-1/c47.0.160.160a/p160x160/10354686_10150004552801856_220367501106153455_n.jpg?_nc_cat=1&_nc_oc=AQnwuPVNtEyWQ8DxG-_WU5TmHr2CRrJklH_3-Em1d-BBL7pBo_2onHA5Fqz-_GtlKu8&_nc_ht=scontent.frmq2-1.fna&oh=f85d870222f145ff686ba73eacee7778&oe=5DD8371E";;
                             status[3] = name;
                             status[4] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
                             System.Threading.Thread.Sleep(Delay());
                             driver.Quit();
                         }
+                        /**** 你可能認識的人 or 請使用Facebook app ****/
+                        else if (driver.Url.IndexOf("gettingstarted") != -1)
+                        {
+                            /*** 個人頁面 ****/
+                            driver.Navigate().GoToUrl("https://m.facebook.com/#!/profile.php");
+                            //IWebElement Setting = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/a[1]"));
+                            //Setting.Click();
+                            //System.Threading.Thread.Sleep(Delay());
+                            //IWebElement Profile = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/ul[1]/li[1]/div[1]/a[1]/div[1]/img[1]"));
+                            //Profile.Click();
+                            //IWebElement img = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[4]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/a[1]/div[1]/i[1]"));
+                            //string[] imgdata = img.GetAttribute("style").Replace("\'", "\"").Split('\"');
+                            //string name = img.GetAttribute("aria-label");
+                            //status[0] = "成功登入!";
+                            //status[1] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
+                            //status[2] = imgdata[1].Replace("amp;", "");
+                            //status[3] = name;
+                            //status[4] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
+                            //System.Threading.Thread.Sleep(Delay());
+                            //driver.Quit();
+                            string name = driver.Title;
+                            status[0] = "成功登入!";
+                            status[1] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
+                            status[2] = "https://scontent.frmq2-1.fna.fbcdn.net/v/t1.0-1/c47.0.160.160a/p160x160/10354686_10150004552801856_220367501106153455_n.jpg?_nc_cat=1&_nc_oc=AQnwuPVNtEyWQ8DxG-_WU5TmHr2CRrJklH_3-Em1d-BBL7pBo_2onHA5Fqz-_GtlKu8&_nc_ht=scontent.frmq2-1.fna&oh=f85d870222f145ff686ba73eacee7778&oe=5DD8371E";;
+                            status[3] = name;
+                            status[4] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
+                            System.Threading.Thread.Sleep(Delay());
+                            driver.Quit();
+
+                        }
                         else if(driver.Url.IndexOf("home.php") != -1)
                         {
                             /*** 個人頁面 ****/
-
-                            IWebElement Setting = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/a[1]"));
-                            Setting.Click();
-                            System.Threading.Thread.Sleep(Delay());
-                            IWebElement Profile = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/ul[1]/li[1]/div[1]/a[1]/div[1]/img[1]"));
-                            Profile.Click();
-                            IWebElement img = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[4]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/a[1]/div[1]/i[1]"));
-                            string[] imgdata = img.GetAttribute("style").Replace("\'", "\"").Split('\"');
-                            string name = img.GetAttribute("aria-label");
+                            driver.Navigate().GoToUrl("https://m.facebook.com/#!/profile.php");
+                            //IWebElement Setting = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/a[1]"));
+                            //Setting.Click();
+                            //System.Threading.Thread.Sleep(Delay());
+                            //IWebElement Profile = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/ul[1]/li[1]/div[1]/a[1]/div[1]/img[1]"));
+                            //Profile.Click();
+                            //IWebElement img = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[4]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/a[1]/div[1]/i[1]"));
+                            //string[] imgdata = img.GetAttribute("style").Replace("\'", "\"").Split('\"');
+                            //string name = img.GetAttribute("aria-label");
+                            //status[0] = "成功登入!";
+                            //status[1] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
+                            //status[2] = imgdata[1].Replace("amp;", "");
+                            //status[3] = name;
+                            //status[4] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
+                            //System.Threading.Thread.Sleep(Delay());
+                            //driver.Quit();
+                            string name = driver.Title;
                             status[0] = "成功登入!";
                             status[1] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
-                            status[2] = imgdata[1].Replace("amp;", "");
+                            status[2] = "https://scontent.frmq2-1.fna.fbcdn.net/v/t1.0-1/c47.0.160.160a/p160x160/10354686_10150004552801856_220367501106153455_n.jpg?_nc_cat=1&_nc_oc=AQnwuPVNtEyWQ8DxG-_WU5TmHr2CRrJklH_3-Em1d-BBL7pBo_2onHA5Fqz-_GtlKu8&_nc_ht=scontent.frmq2-1.fna&oh=f85d870222f145ff686ba73eacee7778&oe=5DD8371E";;
                             status[3] = name;
                             status[4] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
                             System.Threading.Thread.Sleep(Delay());
@@ -239,7 +305,7 @@ namespace HeO.CheckFacebook
                     //profile.SetPreference("network.proxy.socks", "123.205.179.16");
                     //profile.SetPreference("network.proxy.socks_port", 4145);
                     /*** 設定useragent ***/
-                    profile.SetPreference("general.useragent.override", api_useragent);
+                    profile.SetPreference("general.useragent.override", Useragent);
                     FirefoxOptions options = new FirefoxOptions();
                     /*** 無痕 ****/
                     options.AddArgument("--incognito");
@@ -302,43 +368,90 @@ namespace HeO.CheckFacebook
 
                     if (driver.Url.IndexOf("save-device") != -1)
                     {
+                        System.Threading.Thread.Sleep(Delay());
                         /*** 稍後再用按鈕 ****/
                         IWebElement FB_continue = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[3]/div[1]/div[1]/div[1]/a[1]"));
                         FB_continue.Click();
                         System.Threading.Thread.Sleep(Delay());
                         /*** 個人頁面 ****/
-
-                        IWebElement Setting = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/a[1]"));
-                        Setting.Click();
-                        System.Threading.Thread.Sleep(Delay());
-                        IWebElement Profile = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/ul[1]/li[1]/div[1]/a[1]/div[1]/img[1]"));
-                        Profile.Click();
-                        IWebElement img = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[4]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/a[1]/div[1]/i[1]"));
-                        string[] imgdata = img.GetAttribute("style").Replace("\'", "\"").Split('\"');
-                        string name = img.GetAttribute("aria-label");
+                        driver.Navigate().GoToUrl("https://m.facebook.com/#!/profile.php");
+                        //IWebElement Setting = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/a[1]"));
+                        //Setting.Click();
+                        //System.Threading.Thread.Sleep(Delay());
+                        //IWebElement Profile = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/ul[1]/li[1]/div[1]/a[1]/div[1]/img[1]"));
+                        //Profile.Click();
+                        //IWebElement img = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[4]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/a[1]/div[1]/i[1]"));
+                        //string[] imgdata = img.GetAttribute("style").Replace("\'", "\"").Split('\"');
+                        //string name = img.GetAttribute("aria-label");
+                        //status[0] = "成功登入!";
+                        //status[1] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
+                        //status[2] = imgdata[1].Replace("amp;", "");
+                        //status[3] = name;
+                        //status[4] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
+                        //System.Threading.Thread.Sleep(Delay());
+                        //driver.Quit();
+                        string name = driver.Title;
                         status[0] = "成功登入!";
                         status[1] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
-                        status[2] = imgdata[1].Replace("amp;", "");
+                        status[2] = "https://scontent.frmq2-1.fna.fbcdn.net/v/t1.0-1/c47.0.160.160a/p160x160/10354686_10150004552801856_220367501106153455_n.jpg?_nc_cat=1&_nc_oc=AQnwuPVNtEyWQ8DxG-_WU5TmHr2CRrJklH_3-Em1d-BBL7pBo_2onHA5Fqz-_GtlKu8&_nc_ht=scontent.frmq2-1.fna&oh=f85d870222f145ff686ba73eacee7778&oe=5DD8371E";;
                         status[3] = name;
                         status[4] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
                         System.Threading.Thread.Sleep(Delay());
                         driver.Quit();
                     }
+                    /**** 你可能認識的人 or 請使用Facebook app ****/
+                    else if (driver.Url.IndexOf("gettingstarted") != -1)
+                    {
+                        /*** 個人頁面 ****/
+                        driver.Navigate().GoToUrl("https://m.facebook.com/#!/profile.php");
+                        //IWebElement Setting = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/a[1]"));
+                        //Setting.Click();
+                        //System.Threading.Thread.Sleep(Delay());
+                        //IWebElement Profile = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/ul[1]/li[1]/div[1]/a[1]/div[1]/img[1]"));
+                        //Profile.Click();
+                        //IWebElement img = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[4]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/a[1]/div[1]/i[1]"));
+                        //string[] imgdata = img.GetAttribute("style").Replace("\'", "\"").Split('\"');
+                        //string name = img.GetAttribute("aria-label");
+                        //status[0] = "成功登入!";
+                        //status[1] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
+                        //status[2] = imgdata[1].Replace("amp;", "");
+                        //status[3] = name;
+                        //status[4] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
+                        //System.Threading.Thread.Sleep(Delay());
+                        //driver.Quit();
+                        string name = driver.Title;
+                        status[0] = "成功登入!";
+                        status[1] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
+                        status[2] = "https://scontent.frmq2-1.fna.fbcdn.net/v/t1.0-1/c47.0.160.160a/p160x160/10354686_10150004552801856_220367501106153455_n.jpg?_nc_cat=1&_nc_oc=AQnwuPVNtEyWQ8DxG-_WU5TmHr2CRrJklH_3-Em1d-BBL7pBo_2onHA5Fqz-_GtlKu8&_nc_ht=scontent.frmq2-1.fna&oh=f85d870222f145ff686ba73eacee7778&oe=5DD8371E";;
+                        status[3] = name;
+                        status[4] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
+                        System.Threading.Thread.Sleep(Delay());
+                        driver.Quit();
+
+                    }
                     else if(driver.Url.IndexOf("home.php") != -1)
                     {
                         /*** 個人頁面 ****/
-
-                        IWebElement Setting = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/a[1]"));
-                        Setting.Click();
-                        System.Threading.Thread.Sleep(Delay());
-                        IWebElement Profile = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/ul[1]/li[1]/div[1]/a[1]/div[1]/img[1]"));
-                        Profile.Click();
-                        IWebElement img = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[4]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/a[1]/div[1]/i[1]"));
-                        string[] imgdata = img.GetAttribute("style").Replace("\'", "\"").Split('\"');
-                        string name = img.GetAttribute("aria-label");
+                        driver.Navigate().GoToUrl("https://m.facebook.com/#!/profile.php");
+                        //IWebElement Setting = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/a[1]"));
+                        //Setting.Click();
+                        //System.Threading.Thread.Sleep(Delay());
+                        //IWebElement Profile = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/ul[1]/li[1]/div[1]/a[1]/div[1]/img[1]"));
+                        //Profile.Click();
+                        //IWebElement img = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[4]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/a[1]/div[1]/i[1]"));
+                        //string[] imgdata = img.GetAttribute("style").Replace("\'", "\"").Split('\"');
+                        //string name = img.GetAttribute("aria-label");
+                        //status[0] = "成功登入!";
+                        //status[1] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
+                        //status[2] = imgdata[1].Replace("amp;", "");
+                        //status[3] = name;
+                        //status[4] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
+                        //System.Threading.Thread.Sleep(Delay());
+                        //driver.Quit();
+                        string name = driver.Title;
                         status[0] = "成功登入!";
                         status[1] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
-                        status[2] = imgdata[1].Replace("amp;", "");
+                        status[2] = "https://scontent.frmq2-1.fna.fbcdn.net/v/t1.0-1/c47.0.160.160a/p160x160/10354686_10150004552801856_220367501106153455_n.jpg?_nc_cat=1&_nc_oc=AQnwuPVNtEyWQ8DxG-_WU5TmHr2CRrJklH_3-Em1d-BBL7pBo_2onHA5Fqz-_GtlKu8&_nc_ht=scontent.frmq2-1.fna&oh=f85d870222f145ff686ba73eacee7778&oe=5DD8371E";;
                         status[3] = name;
                         status[4] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
                         System.Threading.Thread.Sleep(Delay());
@@ -384,7 +497,7 @@ namespace HeO.CheckFacebook
                 //profile.SetPreference("network.proxy.socks", "123.205.179.16");
                 //profile.SetPreference("network.proxy.socks_port", 4145);
                 /*** 設定useragent ***/
-                profile.SetPreference("general.useragent.override", api_useragent);
+                profile.SetPreference("general.useragent.override", Useragent);
                 FirefoxOptions options = new FirefoxOptions();
                 /*** 無痕 ****/
                 options.AddArgument("--incognito");
@@ -447,50 +560,119 @@ namespace HeO.CheckFacebook
                 }
                 if(driver.Url.IndexOf("save-device") != -1)
                 {
+                    System.Threading.Thread.Sleep(Delay());
                     /*** 稍後再用按鈕 ****/
                     IWebElement FB_continue = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[3]/div[1]/div[1]/div[1]/a[1]"));
                     FB_continue.Click();
                     System.Threading.Thread.Sleep(Delay());
                     /*** 個人頁面 ****/
+                    driver.Navigate().GoToUrl("https://m.facebook.com/#!/profile.php");
+                    //IWebElement Setting = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/a[1]"));
+                    //Setting.Click();
+                    //System.Threading.Thread.Sleep(Delay());
+                    //IWebElement Profile = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/ul[1]/li[1]/div[1]/a[1]/div[1]/img[1]"));
+                    //Profile.Click();
 
-                    IWebElement Setting = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/a[1]"));
-                    Setting.Click();
-                    System.Threading.Thread.Sleep(Delay());
-                    IWebElement Profile = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/ul[1]/li[1]/div[1]/a[1]/div[1]/img[1]"));
-                    Profile.Click();
-                    IWebElement img = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[4]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/a[1]/div[1]/i[1]"));
-                    string[] imgdata = img.GetAttribute("style").Replace("\'", "\"").Split('\"');
-                    string name = img.GetAttribute("aria-label");
+                    string name = driver.Title;
                     status[0] = "成功登入!";
                     status[1] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
-                    status[2] = imgdata[1].Replace("amp;", "");
+                    status[2] = "https://scontent.frmq2-1.fna.fbcdn.net/v/t1.0-1/c47.0.160.160a/p160x160/10354686_10150004552801856_220367501106153455_n.jpg?_nc_cat=1&_nc_oc=AQnwuPVNtEyWQ8DxG-_WU5TmHr2CRrJklH_3-Em1d-BBL7pBo_2onHA5Fqz-_GtlKu8&_nc_ht=scontent.frmq2-1.fna&oh=f85d870222f145ff686ba73eacee7778&oe=5DD8371E";
                     status[3] = name;
                     status[4] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
                     System.Threading.Thread.Sleep(Delay());
                     driver.Quit();
+                    //driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(300);
+                    //try
+                    //{                        
+                    //    IWebElement img = driver.FindElement(By.XPath("/html/body/div[1]/div/div[4]/div/div[1]/div/div[1]/div/div[1]/div[2]/div/a/div/i"));                        
+                    //    string[] imgdata = img.GetAttribute("style").Replace("\'", "\"").Split('\"');
+                    //    string name = img.GetAttribute("aria-label");
+                    //    status[0] = "成功登入!";
+                    //    status[1] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
+                    //    status[2] = imgdata[1].Replace("amp;", "");
+                    //    status[3] = name;
+                    //    status[4] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
+                    //    System.Threading.Thread.Sleep(Delay());
+                    //    driver.Quit();
+                    //}
+                    //catch
+                    //{
+                    //    string name = driver.Title;                     
+                    //    //IWebElement img = driver.FindElement(By.XPath("/html/body/div[1]/div/div[4]/div/div[1]/div/div[1]/div/div[1]/div[2]/div[1]/div/div/i"));
+                    //    //string[] imgdata = img.GetAttribute("style").Replace("\'", "\"").Split('\"');
+                    //    //string name = img.GetAttribute("aria-label");                       
+                    //    status[0] = "成功登入!";
+                    //    status[1] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
+                    //    status[2] = "https://scontent.frmq2-1.fna.fbcdn.net/v/t1.0-1/c47.0.160.160a/p160x160/10354686_10150004552801856_220367501106153455_n.jpg?_nc_cat=1&_nc_oc=AQnwuPVNtEyWQ8DxG-_WU5TmHr2CRrJklH_3-Em1d-BBL7pBo_2onHA5Fqz-_GtlKu8&_nc_ht=scontent.frmq2-1.fna&oh=f85d870222f145ff686ba73eacee7778&oe=5DD8371E";
+                    //    status[3] = name;
+                    //    status[4] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
+                    //    System.Threading.Thread.Sleep(Delay());
+                    //    driver.Quit();
+
+                    //}
+
+                }
+                /**** 你可能認識的人 or 請使用Facebook app ****/
+                else if (driver.Url.IndexOf("gettingstarted") != -1)
+                {
+                    driver.Navigate().GoToUrl("https://m.facebook.com/#!/profile.php");
+                    /*** 個人頁面 ****/
+
+                    //IWebElement Setting = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/a[1]"));
+                    //Setting.Click();
+                    //System.Threading.Thread.Sleep(Delay());
+                    //IWebElement Profile = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/ul[1]/li[1]/div[1]/a[1]/div[1]/img[1]"));
+                    //Profile.Click();
+                    //IWebElement img = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[4]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/a[1]/div[1]/i[1]"));
+                    //string[] imgdata = img.GetAttribute("style").Replace("\'", "\"").Split('\"');
+                    //string name = img.GetAttribute("aria-label");
+                    //status[0] = "成功登入!";
+                    //status[1] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
+                    //status[2] = imgdata[1].Replace("amp;", "");
+                    //status[3] = name;
+                    //status[4] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
+                    //System.Threading.Thread.Sleep(Delay());
+                    //driver.Quit();
+                    string name = driver.Title;
+                    status[0] = "成功登入!";
+                    status[1] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
+                    status[2] = "https://scontent.frmq2-1.fna.fbcdn.net/v/t1.0-1/c47.0.160.160a/p160x160/10354686_10150004552801856_220367501106153455_n.jpg?_nc_cat=1&_nc_oc=AQnwuPVNtEyWQ8DxG-_WU5TmHr2CRrJklH_3-Em1d-BBL7pBo_2onHA5Fqz-_GtlKu8&_nc_ht=scontent.frmq2-1.fna&oh=f85d870222f145ff686ba73eacee7778&oe=5DD8371E";;
+                    status[3] = name;
+                    status[4] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
+                    System.Threading.Thread.Sleep(Delay());
+                    driver.Quit();
+
                 }
                 else if(driver.Url.IndexOf("home.php") != -1)
                 {
                     /*** 個人頁面 ****/
-
-                    IWebElement Setting = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/a[1]"));
-                    Setting.Click();
-                    System.Threading.Thread.Sleep(Delay());
-                    IWebElement Profile = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/ul[1]/li[1]/div[1]/a[1]/div[1]/img[1]"));
-                    Profile.Click();
-                    IWebElement img = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[4]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/a[1]/div[1]/i[1]"));
-                    string[] imgdata = img.GetAttribute("style").Replace("\'", "\"").Split('\"');
-                    string name = img.GetAttribute("aria-label");
+                    driver.Navigate().GoToUrl("https://m.facebook.com/#!/profile.php");
+                    //IWebElement Setting = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/a[1]"));
+                    //Setting.Click();
+                    //System.Threading.Thread.Sleep(Delay());
+                    //IWebElement Profile = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/ul[1]/li[1]/div[1]/a[1]/div[1]/img[1]"));
+                    //Profile.Click();
+                    //IWebElement img = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[4]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/a[1]/div[1]/i[1]"));
+                    //string[] imgdata = img.GetAttribute("style").Replace("\'", "\"").Split('\"');
+                    //string name = img.GetAttribute("aria-label");
+                    //status[0] = "成功登入!";
+                    //status[1] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
+                    //status[2] = imgdata[1].Replace("amp;", "");
+                    //status[3] = name;
+                    //status[4] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
+                    //System.Threading.Thread.Sleep(Delay());
+                    //driver.Quit();
+                    string name = driver.Title;
                     status[0] = "成功登入!";
                     status[1] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
-                    status[2] = imgdata[1].Replace("amp;", "");
+                    status[2] = "https://scontent.frmq2-1.fna.fbcdn.net/v/t1.0-1/c47.0.160.160a/p160x160/10354686_10150004552801856_220367501106153455_n.jpg?_nc_cat=1&_nc_oc=AQnwuPVNtEyWQ8DxG-_WU5TmHr2CRrJklH_3-Em1d-BBL7pBo_2onHA5Fqz-_GtlKu8&_nc_ht=scontent.frmq2-1.fna&oh=f85d870222f145ff686ba73eacee7778&oe=5DD8371E";
                     status[3] = name;
                     status[4] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
                     System.Threading.Thread.Sleep(Delay());
                     driver.Quit();
                 }
                 else
-                {
+                {                    
                     /*** 帳號需驗證 ***/
                     if (driver.Url.IndexOf("checkpoint") != -1)
                     {
