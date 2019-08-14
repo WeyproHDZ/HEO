@@ -29,7 +29,7 @@ namespace HeOBackend.Controllers
         [CheckSession(IsAuth = true)]
         public ActionResult News(int p = 1)
         {
-            var data = newslangService.Get().OrderBy(o => o.News.Updatedate);
+            var data = newslangService.Get().OrderByDescending(o => o.News.Createdate);
             ViewBag.pageNumber = p;
             ViewBag.News = data.ToPagedList(pageNumber: p, pageSize: 20);
             

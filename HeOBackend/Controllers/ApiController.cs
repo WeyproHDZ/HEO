@@ -611,8 +611,9 @@ namespace HeOBackend.Controllers
             #endregion
             #region --目前登入人數--
             int Now = ((int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds - 28800);         // 登入時間為現在時間的總秒數
-            int number = membersService.Get().Where(a => a.Logindate >= Now).Count();
-            return this.Json(Now, JsonRequestBehavior.AllowGet);
+            Guid Vipid = memberlevelService.Get().Where(a => a.Levelname == "VIP").FirstOrDefault().Levelid;
+            int number = membersService.Get().Where(x => x.Levelid != Vipid).Where(a => a.Logindate >= Now).Count();
+            return this.Json(number, JsonRequestBehavior.AllowGet);
             #endregion
 
         }

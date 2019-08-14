@@ -112,7 +112,7 @@ namespace HeOBackend.Controllers
         }
         [CheckSession(IsAuth = true)]
         [HttpGet]
-        public ActionResult ViewOrderfacebooklist(Guid Orderid , int p , int np, string prev)
+        public ActionResult ViewfacebooklistOrder(Guid Orderid , int p , int np, string prev)
         {
             IEnumerable<Orderfaceooklist> orderfacebooklist = orderfacebooklistService.Get().Where(a => a.Orderid == Orderid).OrderBy(o => o.Createdate);
             ViewBag.pageNumber = p;

@@ -965,7 +965,7 @@
     <Content Include="Views\MemberMs\AddViprecord.cshtml" />
     <Content Include="Views\MemberMs\EditViprecord.cshtml" />
     <Content Include="Views\OrderMs\Order.cshtml" />
-    <Content Include="Views\OrderMs\ViewOrderfacebooklist.cshtml" />
+    <Content Include="Views\OrderMs\ViewfacebooklistOrder.cshtml" />
     <Content Include="Views\UseragentMs\Useragent.cshtml" />
     <Content Include="Views\UseragentMs\AddUseragent.cshtml" />
     <Content Include="Views\UseragentMs\EditUseragent.cshtml" />

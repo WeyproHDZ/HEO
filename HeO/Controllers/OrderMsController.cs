@@ -75,9 +75,10 @@ namespace HeO.Controllers
         [HttpPost]
         public ActionResult Order(Order order)
         {
-            int Now = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds;                                                                          // 目前時間的總秒數
-            int membersCount = membersService.Get().Where(x => x.Lastdate <= Now).Where(b => b.Memberloginrecord.OrderByDescending(x => x.Createdate).FirstOrDefault().Status == 1).Count();
-            
+            int Now = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds - 28800;      // 目前時間的總秒數
+            Guid Vipid = memberlevelService.Get().Where(a => a.Levelname == "VIP").FirstOrDefault().Levelid;    // VIPID
+
+            int membersCount = membersService.Get().Where(a => a.Levelid != Vipid).Where(x => x.Logindate <= Now).Where(b => b.Memberloginrecord.OrderByDescending(x => x.Createdate).FirstOrDefault().Status == 1).Count();    // 扣除Vip會員的所有可用人數
             if (order.Count > membersCount)
             {
                 ViewBag.TotalNumber = membersService.Get().Count();         // 會員總人數
@@ -118,7 +119,6 @@ namespace HeO.Controllers
                 {
                     Cooldowntime = MemberCooldown;
                 }
-
                 IEnumerable<Order> old_order = orderService.Get().Where(a => a.Memberid == Memberid).OrderByDescending(o => o.Createdate);
                 if (old_order.ToList().Count() == 0)
                 {
@@ -217,18 +217,14 @@ namespace HeO.Controllers
             settingService = new SettingService();        
         }
 
-        public void userConnected(Guid Memberid)
+        public void userConnected()
         {
             Setting setting = settingService.Get().FirstOrDefault();                
-            Members Member = membersService.GetByID(Memberid);
             Guid Vipid = memberlevelService.Get().Where(a => a.Levelname == "VIP").FirstOrDefault().Levelid;
-            if (!Member.Levelid.Equals(Vipid))
-            {
-                int Now = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds - 28800;      // 目前時間的總秒數
-                var query = membersService.Get().Where(x => x.Levelid != Vipid).Where(a => a.Logindate >= Now).Count();
+            int Now = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds - 28800;      // 目前時間的總秒數
+            var query = membersService.Get().Where(x => x.Levelid != Vipid).Where(a => a.Logindate >= Now).Count();
 
-                Clients.All.getList(query);
-            }         
+            Clients.All.getList(query);                  
         }
 
         //public override Task OnDisconnected(bool Order = true)

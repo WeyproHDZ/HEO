@@ -76,7 +76,7 @@
                                                 }
                                                 <td class="text-center">@entity.Cost </td>
                                                 <td class="text-center">@entity.Createdate.ToString("yyyy/MM/dd HH:mm:ss") </td>                                                
-                                                <td class="text-center"><a href="@Url.Action("ViewOrderfacebooklist", "OrderMs", new { Orderid = entity.Orderid, p = ViewBag.pageNumber, np = ViewBag.nextpageNumber, prev="order" })" class="btn btn-info btn-xs"><i class="fa fa-search"></i></a></td>                    
+                                                <td class="text-center"><a href="@Url.Action("ViewfacebooklistOrder", "OrderMs", new { Orderid = entity.Orderid, p = ViewBag.pageNumber, np = ViewBag.nextpageNumber, prev="order" })" class="btn btn-info btn-xs"><i class="fa fa-search"></i></a></td>                    
                                                 <td class="text-center"><a href="@Url.Action("EditOrder", "OrderMs", new { Orderid = entity.Orderid, p = ViewBag.pageNumber, prev = "order" })" class="btn btn-info btn-xs"><i class="fa fa-edit"></i></a></td>
                                             </tr>
                                             x++;

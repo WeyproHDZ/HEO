@@ -23,7 +23,7 @@
 
                                 <div class="form-inline">
                                     <div class="col-sm-10">
-                                        <a href="@Url.Action("Order", "OrderMs", new { p = ViewBag.pageNumber })" class="btn btn-info">返回</a>
+                                        <a href="@Url.Action("Order", "OrderMs", new { p = ViewBag.pageNumber, prev = ViewBag.prev })" class="btn btn-info">返回</a>
                                     </div>
                                 </div>
                             </div>
@@ -66,7 +66,7 @@
                     <!-- end widget content -->
 
                     <div class="text-center">
-                        @Html.PagedListPager(list: data, generatePageUrl: page => Url.Action("ViewOrderfacebooklist", new {Orderid = ViewBag.Orderid, p = ViewBag.pageNumber, np = page }))
+                        @Html.PagedListPager(list: data, generatePageUrl: page => Url.Action("ViewfacebooklistOrder", new {Orderid = ViewBag.Orderid, p = ViewBag.pageNumber, np = page }))
                     </div>
 
                 </div>

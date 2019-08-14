@@ -64,8 +64,8 @@ namespace HeO.Controllers
                 viprecordService.SaveChanges();          
             }
             
-            string CustomerURL = "http://heofrontend.4webdemo.com/DepositMs/DepositSuccess";
-            string NotifyURL = "http://heofrontend.4webdemo.com/DepositMs/DepositReceive";
+            string CustomerURL = "http://heohelp.com/DepositMs/DepositSuccess";
+            string NotifyURL = "http://heohelp.com/DepositMs/DepositReceive";
 
             int TimeStamp =  (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;      // 總秒數
             Newebpay.set_paramer(viprecord, CustomerURL, NotifyURL, TimeStamp);

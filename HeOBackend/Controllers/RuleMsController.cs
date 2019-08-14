@@ -116,7 +116,7 @@ namespace HeOBackend.Controllers
         }
 
         [CheckSession(IsAuth = true)]
-        public ActionResult OrdersTerm(int p, IEnumerable<Term> EntityLists = null)
+        public ActionResult SortTerm(int p, IEnumerable<Term> EntityLists = null)
         {
             foreach (Term term in EntityLists)
             {
@@ -212,7 +212,7 @@ namespace HeOBackend.Controllers
         }
 
         [CheckSession(IsAuth = true)]
-        public ActionResult OrdersGuide(int p, IEnumerable<Guide> EntityLists = null)
+        public ActionResult SortGuide(int p, IEnumerable<Guide> EntityLists = null)
         {
             foreach (Guide guide in EntityLists)
             {

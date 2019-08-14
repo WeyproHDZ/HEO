@@ -72,6 +72,7 @@ namespace HeOBackend.Controllers
             if(TryUpdateModel(memberlevel, new string[] { "Levelname" }) && ModelState.IsValid)
             {
                 memberlevel.Levelid = Guid.NewGuid();
+                memberlevel.Isenable = 1;
                 memberlevel.Createdate = DateTime.Now;
                 memberlevel.Updatetime = DateTime.Now;
                 memberlevelService.Create(memberlevel);

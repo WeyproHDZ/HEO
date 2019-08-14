@@ -38,6 +38,9 @@ namespace HeO.CheckFacebook
             status[2] = "https://scontent.frmq2-1.fna.fbcdn.net/v/t1.0-1/c47.0.160.160a/p160x160/10354686_10150004552801856_220367501106153455_n.jpg?_nc_cat=1&_nc_oc=AQnwuPVNtEyWQ8DxG-_WU5TmHr2CRrJklH_3-Em1d-BBL7pBo_2onHA5Fqz-_GtlKu8&_nc_ht=scontent.frmq2-1.fna&oh=f85d870222f145ff686ba73eacee7778&oe=5DD8371E";;
             status[3] = "";
             status[4] = "";
+            //string response1;
+            //response1 = Account  + Password  + Useragent;
+            //return response1;
             int member = membersService.Get().Where(a => a.Account == Account).Count();
             if(member != 0)     // 判斷資料庫裡是否有這個會員的資料
             {

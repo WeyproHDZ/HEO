@@ -8,10 +8,30 @@
                         <div class="result-title">哎呀！系統冷卻時間未到！</div>
                     </div>
                     <div class="controls_group">
-                        <div class="result-title">請稍候<span class="wait-sec">@ViewBag.Date</span>秒再使用！</div>
+                        <div class="result-title">請稍候<span class="wait-sec" id="wait"></span>秒再使用！</div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 </main>
+@section scripts
+{
+    <script>
+        var t = @Session["Date"];
+        function showTime() {
+
+            console.log(t);
+            t -= 1;
+            document.getElementById('wait').innerHTML = t;
+
+            if (t == 0) {
+                location.href = '@Url.Action("Order", "OrderMs")';
+            }
+
+            //每秒執行一次,showTime()
+            setTimeout("showTime()", 1000);
+        }
+        showTime();
+    </script>
+}

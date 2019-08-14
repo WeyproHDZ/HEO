@@ -66,7 +66,7 @@
                     <!-- end widget content -->
 
                     <div class="text-center">
-                        @Html.PagedListPager(list: data, generatePageUrl: page => Url.Action("ViewOrderfacebooklist", new {Orderid = ViewBag.Orderid, p = ViewBag.pageNumber, np = page }))
+                        @Html.PagedListPager(list: data, generatePageUrl: page => Url.Action("ViewfacebooklistOrder", new {Orderid = ViewBag.Orderid, p = ViewBag.pageNumber, np = page }))
                     </div>
 
                 </div>

@@ -67,7 +67,7 @@
             var order = $.connection.orderLoginHub;
             // Start the connection.
             $.connection.hub.start().done(function () {
-                order.server.userConnected('@Session["Memberid"]');//呼叫server
+                order.server.userConnected();//呼叫server
             });
 
             //讓server呼叫(抓取資料)
