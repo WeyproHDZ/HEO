@@ -2,7 +2,7 @@
 	// Header Nav
 	.head_nav {
     display: block;
-    width: calc(100% - 252px - 1em);
+    width: calc(100% - 220px - 1em);
     float: right;
     line-height: 40px;
     text-align: right;
@@ -12,8 +12,8 @@
       vertical-align: middle;
       li {
         display: inline-block;
-        margin-right: 2rem;
-        font-size: 1.125em;
+        margin-right: 1rem;
+        font-size: 1em;
         &:last-child {
           margin-right: 0;
         }
