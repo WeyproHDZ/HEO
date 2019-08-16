@@ -96,7 +96,7 @@ namespace HeOBackend.Controllers
                 if (Ordernumber.Contains("Hdz"))
                 {
                     /*** 回傳訂單編號及成功字眼到hdz ***/
-                    string url = "http://hdz.4webdemo.com/index.php/backend/api_connect/get_heo_status/heo_order?Ordernumber=" + Ordernumber+"&&status=success";
+                    string url = "https://www.hdzbulk.com/index.php/backend/api_connect/get_heo_status/heo_order?Ordernumber=" + Ordernumber+"&&status=success";
                     WebRequest myReq = WebRequest.Create(url);
                     myReq.Method = "GET";
                     myReq.ContentType = "application/json; charset=UTF-8";
@@ -259,7 +259,7 @@ namespace HeOBackend.Controllers
                                 {
                                     /*** 將此會員更新下次互惠時間 ****/
                                     Members member = membersService.GetByID(entity.memberid);
-                                    member.Lastdate += (int)setting.Time;
+                                    member.Lastdate = Now + (int)setting.Time;
                                     membersService.SpecificUpdate(member, new string[] { "Lastdate" });
                                 }
                             }
@@ -306,7 +306,7 @@ namespace HeOBackend.Controllers
                                         }
                                     );
                                     /*** 將此會員更新下次互惠時間 ****/
-                                    thismembers.Lastdate += (int)setting.Time;
+                                    thismembers.Lastdate = Now + (int)setting.Time;
                                     membersService.SpecificUpdate(thismembers, new string[] { "Lastdate" });
 
                                 }
@@ -324,7 +324,7 @@ namespace HeOBackend.Controllers
                                 {
                                     /*** 將此會員更新下次互惠時間 ****/
                                     Members member = membersService.GetByID(entity.memberid);
-                                    member.Lastdate += (int)setting.Time;
+                                    member.Lastdate = Now + (int)setting.Time;
                                     membersService.SpecificUpdate(member, new string[] { "Lastdate" });
                                 }
                             }
@@ -480,7 +480,7 @@ namespace HeOBackend.Controllers
                 Order order = new Order();
                 order.Orderid = Guid.NewGuid();
                 order.Ordernumber = heo_array[1];
-                order.Url = heo_array[2];
+                order.Url = heo_array[2].Replace(" ", "");
                 order.Isreal = heo_array[3] == "true" ? true : false;
                 
                 foreach (Feedbackproduct feedbackproductlist in feedbackproduct)
@@ -610,33 +610,52 @@ namespace HeOBackend.Controllers
             //return this.Json(result, JsonRequestBehavior.AllowGet);
             #endregion
             #region --目前登入人數--
-            int Now = ((int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds - 28800);         // 登入時間為現在時間的總秒數
-            Guid Vipid = memberlevelService.Get().Where(a => a.Levelname == "VIP").FirstOrDefault().Levelid;
-            int number = membersService.Get().Where(x => x.Levelid != Vipid).Where(a => a.Logindate >= Now).Count();
-            return this.Json(number, JsonRequestBehavior.AllowGet);
+            //int Now = ((int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds - 28800);         // 登入時間為現在時間的總秒數
+            //Guid Vipid = memberlevelService.Get().Where(a => a.Levelname == "VIP").FirstOrDefault().Levelid;
+            //int number = membersService.Get().Where(x => x.Levelid != Vipid).Where(a => a.Logindate >= Now).Count();
+            //return this.Json(number, JsonRequestBehavior.AllowGet);
             #endregion
+            int ts = membersService.Get().Where(a => a.Sex == 0).Count();
+            return this.Json(ts, JsonRequestBehavior.AllowGet);
 
         }
 
         [HttpGet]
-        public JsonResult cloudmanage(string Id)
+        public JsonResult cloudmanage(string Id, int Count)
         {
             if(Id == "ClOuD_MaNaGe")
             {
                 int Now = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds;      // 目前時間的總秒數
                 IEnumerable<Members> members = membersService.Get().Where(x => x.Lastdate <= Now).Where(c => c.Memberloginrecord.OrderByDescending(a => a.Createdate).FirstOrDefault().Status == 1);       // 撈所有能用的FB
                 List<get_member> AccountList = new List<get_member>();
-                AccountList.Add(
-                    new get_member
+                foreach(Members thismember in members)
+                {
+                    if(thismember.Facebookcookie != null)       // 判斷該會員是否有cookie                  
                     {
-                        memberid = Guid.Parse(("c6ed9156-c847-468d-a012-47949856fc26").ToString()),
-                        account = "exorcist5859@livemail.tw",
-                        password = "innocence5757",
-                        useragent_phone = "Mozilla/5.0 (iPhone; CPU iPhone OS 7_0_4 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) Version/7.0 Mobile/11B554a Safari/9537.53",
-                        facebookcookie = @"[{\Secure\:false,\IsHttpOnly\:false,\Name\:\datr\,\Value\:\7McmXQlXdEfjpeyQSFOMIks8\,\Domain\:\.facebook.com\,\Path\:\/\,\Expiry\:\2021-07-10T13:23:57+08:00\},{\Secure\:false,\IsHttpOnly\:false,\Name\:\sb\,\Value\:\7McmXdZHJzL8gLngTdF-d0d3\,\Domain\:\.facebook.com\,\Path\:\/\,\Expiry\:\2021-07-30T16:32:54+08:00\},{\Secure\:false,\IsHttpOnly\:false,\Name\:\c_user\,\Value\:\100002472553723\,\Domain\:\.facebook.com\,\Path\:\/\,\Expiry\:\2020-08-11T15:35:37+08:00\},{\Secure\:false,\IsHttpOnly\:false,\Name\:\xs\,\Value\:\26%3ApalMR0PMSXeAIQ%3A2%3A1564561973%3A7745%3A11316\,\Domain\:\.facebook.com\,\Path\:\/\,\Expiry\:\2020-08-11T15:35:37+08:00\},{\Secure\:false,\IsHttpOnly\:false,\Name\:\fr\,\Value\:\10jGuqfCI3pjOP4cm.AWW8UDkXIBfzMY5D6qCzLojMAnU.BdJsfs.F-.F0v.0.0.BdURbJ.AWUyPE99\,\Domain\:\.facebook.com\,\Path\:\/\,\Expiry\:\2020-08-11T15:35:36+08:00\},{\Secure\:true,\IsHttpOnly\:false,\Name\:\x-referer\,\Value\:\eyJyIjoiL2Vycm9yL2luZGV4LnBocD9lcnI9ZWMma2Vycj0xMzU3MDA0JmtlcnJfc3VtbWFyeT0lRTUlOTQlODklRTUlOTElODAlRUYlQkMlOEMlRTUlQTUlQkQlRTUlODMlOEYlRTYlOUMlODklRTYlOUQlQjElRTglQTUlQkYlRTUlODclQkElRTklOEMlQUYlRTQlQkElODYma2Vycl9kZXNjcmlwdGlvbj0lRTglQUIlOEIlRTUlOTglOTclRTglQTklQTYlRTklOTclOUMlRTklOTYlODklRTQlQjglQTYlRTklODclOEQlRTYlOTYlQjAlRTklOTYlOEIlRTUlOTUlOUYlRTQlQkQlQTAlRTclOUElODQlRTclODAlOEYlRTglQTYlQkQlRTUlOTklQTglRTglQTYlOTYlRTclQUElOTclRTMlODAlODIiLCJoIjoiL2Vycm9yL2luZGV4LnBocD9lcnI9ZWMma2Vycj0xMzU3MDA0JmtlcnJfc3VtbWFyeT0lRTUlOTQlODklRTUlOTElODAlRUYlQkMlOEMlRTUlQTUlQkQlRTUlODMlOEYlRTYlOUMlODklRTYlOUQlQjElRTglQTUlQkYlRTUlODclQkElRTklOEMlQUYlRTQlQkElODYma2Vycl9kZXNjcmlwdGlvbj0lRTglQUIlOEIlRTUlOTglOTclRTglQTklQTYlRTklOTclOUMlRTklOTYlODklRTQlQjglQTYlRTklODclOEQlRTYlOTYlQjAlRTklOTYlOEIlRTUlOTUlOUYlRTQlQkQlQTAlRTclOUElODQlRTclODAlOEYlRTglQTYlQkQlRTUlOTklQTglRTglQTYlOTYlRTclQUElOTclRTMlODAlODIiLCJzIjoibSJ9\,\Domain\:\.facebook.com\,\Path\:\/\,\Expiry\:null},{\Secure\:true,\IsHttpOnly\:false,\Name\:\wd\,\Value\:\1080x1920\,\Domain\:\.facebook.com\,\Path\:\/\,\Expiry\:\2019-08-19T15:39:32+08:00\},{\Secure\:true,\IsHttpOnly\:false,\Name\:\m_pixel_ratio\,\Value\:\1\,\Domain\:\.facebook.com\,\Path\:\/\,\Expiry\:\2019-08-19T15:39:32+08:00\}]"
+                        AccountList.Add(
+                            new get_member
+                            {
+                                account = thismember.Account,
+                                password = thismember.Password,
+                                useragent_phone = thismember.Useragent_phone,
+                                facebookcookie = thismember.Facebookcookie
+                            }
+                        );
                     }
-                );
-                return this.Json(AccountList, JsonRequestBehavior.AllowGet);
+                    else
+                    {
+                        AccountList.Add(
+                            new get_member
+                            {
+                                account = thismember.Account,
+                                password = thismember.Password,
+                                useragent_phone = thismember.Useragent_phone,
+                            }
+                        );
+                    }
+                    
+                }                
+                return this.Json(AccountList.Take(Count), JsonRequestBehavior.AllowGet);
             }
             else
             {

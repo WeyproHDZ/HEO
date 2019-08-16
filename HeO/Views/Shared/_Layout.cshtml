@@ -26,29 +26,37 @@
     @{ Html.RenderPartial("_Sidebar"); }
     @{ Html.RenderPartial("_Script"); }
     @RenderSection("scripts", required: false)
-    <!-- Load Facebook SDK for JavaScript -->
     <div id="fb-root"></div>
     <script>
-            window.fbAsyncInit = function() {
-              FB.init({
-                xfbml            : true,
-                version          : 'v4.0'
-              });
-            };
+        window.fbAsyncInit = function() {
+            FB.init({
+                appId:  '536474613759201', // Your app id
+                cookie  : true,  // enable cookies to allow the server to access the session
+                xfbml   : true,  // disable xfbml improves the page load time
+                version : 'v3.0', // use version 2.4
+            });
 
-            (function(d, s, id) {
-              var js, fjs = d.getElementsByTagName(s)[0];
-              if (d.getElementById(id)) return;
-              js = d.createElement(s); js.id = id;
-              js.src = 'https://connect.facebook.net/zh_TW/sdk/xfbml.customerchat.js';
-              fjs.parentNode.insertBefore(js, fjs);
-            }(document, 'script', 'facebook-jssdk'));</script>
+            FB.AppEvents.logPageView();
 
+
+            // FB.getLoginStatus(function(response) {
+            // 	console.log('getLoginStatus', response);
+            // 	loginCheck(response);
+            // });
+        };
+        (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = 'https://connect.facebook.net/zh_TW/sdk/xfbml.customerchat.js#xfbml=1&version=v2.12&autoLogAppEvents=1';
+        fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));</script>
     <!-- Your customer chat code -->
     <div class="fb-customerchat"
          attribution=install_email
          page_id="100229668010808"
-         theme_color="#ff5ca1">
+         logged_in_greeting="您好! 請留言?"
+         logged_out_greeting="您好! 請留言?">
     </div>
-    </body>
+</body>
 </html>

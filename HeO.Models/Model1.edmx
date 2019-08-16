@@ -87,7 +87,7 @@
             <PropertyRef Name="LimID" />
           </Key>
           <Property Name="LimID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Key" Type="nvarchar" MaxLength="50" />
+          <Property Name="Key" Type="nvarchar" MaxLength="255" />
           <Property Name="Value" Type="nvarchar" MaxLength="50" />
           <Property Name="Icon" Type="nvarchar" MaxLength="50" />
           <Property Name="Sort" Type="int" Nullable="false" />
@@ -137,7 +137,7 @@
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Memberid" Type="uniqueidentifier" />
-          <Property Name="Status" Type="int" />
+          <Property Name="Status" Type="int" Nullable="false" />
           <Property Name="Createdate" Type="datetime" />
         </EntityType>
         <EntityType Name="Members">
@@ -766,7 +766,6 @@
             <End Role="Feedbackproduct" EntitySet="Feedbackproduct" />
             <End Role="Memberauthorization" EntitySet="Memberauthorization" />
           </AssociationSet>
-          <EntitySet Name="Memberloginrecord" EntityType="HeOModel.Memberloginrecord" />
           <EntitySet Name="Useragent" EntityType="HeOModel.Useragent" />
           <EntitySet Name="Members" EntityType="HeOModel.Members" />
           <AssociationSet Name="FK_Feedbackrecord_Members" Association="HeOModel.FK_Feedbackrecord_Members">
@@ -780,10 +779,6 @@
           <AssociationSet Name="FK_Members_Memberlevel" Association="HeOModel.FK_Members_Memberlevel">
             <End Role="Memberlevel" EntitySet="Memberlevel" />
             <End Role="Members" EntitySet="Members" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Memberloginrecord_Members" Association="HeOModel.FK_Memberloginrecord_Members">
-            <End Role="Members" EntitySet="Members" />
-            <End Role="Memberloginrecord" EntitySet="Memberloginrecord" />
           </AssociationSet>
           <AssociationSet Name="FK_Order_Members" Association="HeOModel.FK_Order_Members">
             <End Role="Members" EntitySet="Members" />
@@ -813,6 +808,11 @@
             <End Role="Lims1" EntitySet="Lims" />
           </AssociationSet>
           <EntitySet Name="Setting" EntityType="HeOModel.Setting" />
+          <EntitySet Name="Memberloginrecord" EntityType="HeOModel.Memberloginrecord" />
+          <AssociationSet Name="FK_Memberloginrecord_Members" Association="HeOModel.FK_Memberloginrecord_Members">
+            <End Role="Members" EntitySet="Members" />
+            <End Role="Memberloginrecord" EntitySet="Memberloginrecord" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="sysdiagrams">
           <Key>
@@ -1135,16 +1135,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="Memberloginrecord">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Memberid" Type="Guid" />
-          <Property Name="Status" Type="Int32" />
-          <Property Name="Createdate" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="Members" Relationship="HeOModel.FK_Memberloginrecord_Members" FromRole="Memberloginrecord" ToRole="Members" />
-        </EntityType>
         <EntityType Name="Useragent">
           <Key>
             <PropertyRef Name="Id" />
@@ -1180,10 +1170,10 @@
           <NavigationProperty Name="Feedbackrecord" Relationship="HeOModel.FK_Feedbackrecord_Members" FromRole="Members" ToRole="Feedbackrecord" />
           <NavigationProperty Name="Memberauthorization" Relationship="HeOModel.FK_Memberauthorization_Members" FromRole="Members" ToRole="Memberauthorization" />
           <NavigationProperty Name="Memberlevel" Relationship="HeOModel.FK_Members_Memberlevel" FromRole="Members" ToRole="Memberlevel" />
-          <NavigationProperty Name="Memberloginrecord" Relationship="HeOModel.FK_Memberloginrecord_Members" FromRole="Members" ToRole="Memberloginrecord" />
           <NavigationProperty Name="Order" Relationship="HeOModel.FK_Order_Members" FromRole="Members" ToRole="Order" />
           <NavigationProperty Name="Orderfaceooklist" Relationship="HeOModel.FK_Orderfaceooklist_Members" FromRole="Members" ToRole="Orderfaceooklist" />
           <NavigationProperty Name="Viprecord" Relationship="HeOModel.FK_Viprecord_Members" FromRole="Members" ToRole="Viprecord" />
+          <NavigationProperty Name="Memberloginrecord" Relationship="HeOModel.FK_Memberloginrecord_Members" FromRole="Members" ToRole="Memberloginrecord" />
         </EntityType>
         <Association Name="FK_Feedbackrecord_Members">
           <End Type="HeOModel.Members" Role="Members" Multiplicity="1">
@@ -1222,20 +1212,6 @@
             </Principal>
             <Dependent Role="Members">
               <PropertyRef Name="Levelid" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Memberloginrecord_Members">
-          <End Type="HeOModel.Members" Role="Members" Multiplicity="0..1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="HeOModel.Memberloginrecord" Role="Memberloginrecord" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Members">
-              <PropertyRef Name="Memberid" />
-            </Principal>
-            <Dependent Role="Memberloginrecord">
-              <PropertyRef Name="Memberid" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1365,6 +1341,30 @@
           <Property Name="Createdate" Type="DateTime" Precision="3" />
           <Property Name="Updatedate" Type="DateTime" Precision="3" />
         </EntityType>
+        <EntityType Name="Memberloginrecord">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Memberid" Type="Guid" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="Createdate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Members" Relationship="HeOModel.FK_Memberloginrecord_Members" FromRole="Memberloginrecord" ToRole="Members" />
+        </EntityType>
+        <Association Name="FK_Memberloginrecord_Members">
+          <End Type="HeOModel.Members" Role="Members" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="HeOModel.Memberloginrecord" Role="Memberloginrecord" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Members">
+              <PropertyRef Name="Memberid" />
+            </Principal>
+            <Dependent Role="Memberloginrecord">
+              <PropertyRef Name="Memberid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1624,16 +1624,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Memberloginrecord">
-            <EntityTypeMapping TypeName="HeOModel.Memberloginrecord">
-              <MappingFragment StoreEntitySet="Memberloginrecord">
-                <ScalarProperty Name="Createdate" ColumnName="Createdate" />
-                <ScalarProperty Name="Status" ColumnName="Status" />
-                <ScalarProperty Name="Memberid" ColumnName="Memberid" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Useragent">
             <EntityTypeMapping TypeName="HeOModel.Useragent">
               <MappingFragment StoreEntitySet="Useragent">
@@ -1713,6 +1703,16 @@
                 <ScalarProperty Name="Min" ColumnName="Min" />
                 <ScalarProperty Name="Max" ColumnName="Max" />
                 <ScalarProperty Name="Time" ColumnName="Time" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Memberloginrecord">
+            <EntityTypeMapping TypeName="HeOModel.Memberloginrecord">
+              <MappingFragment StoreEntitySet="Memberloginrecord">
+                <ScalarProperty Name="Createdate" ColumnName="Createdate" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="Memberid" ColumnName="Memberid" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

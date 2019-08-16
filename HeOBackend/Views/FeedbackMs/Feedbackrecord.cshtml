@@ -48,6 +48,7 @@
                                 <thead>
                                     <tr>
                                         <th class="text-center">Facebook帳號</th>
+                                        <th width="10%" class="text-center">轉前回饋金</th>
                                         <th width="10%" class="text-center">提出金額</th>
                                         <th class="text-center">內容</th>
                                         <th width="10%" class="text-center">剩餘金額</th>
@@ -91,6 +92,7 @@
 
                                         <tr>
                                             <td class="text-center">@entity.Members.Account</td>
+                                            <td class="text-center">@(entity.Money + (entity.Members.Feedbackmoney + ((Array.IndexOf(member, entity.Memberid) == -1) ? 0 : spend_total)))</td>
                                             <td class="text-center">@entity.Money</td>
                                             @* 0:轉入hdz 1:轉出現金 *@
                                             @if (entity.Ishdz == 0)

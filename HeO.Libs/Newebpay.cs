@@ -15,20 +15,21 @@ namespace HeO.Libs
 {
     public class Newebpay
     {
-        /*** 測試藍新 **/
-        static string transmit_url = "https://ccore.newebpay.com/MPG/mpg_gateway";
-        static string MerchantID = "MS36268010";
-        static string HashKey = "1nfU5bE66Hi1Z58QWsqnPKFcWYB1I7Eg";
-        static string HashIv = "l6kANp55PZb8fR26";
-        static string Verison = "1.5";
-        static string new_data;
+        ///*** 測試藍新 **/
+        //static string transmit_url = "https://ccore.newebpay.com/MPG/mpg_gateway";
+        //static string MerchantID = "MS36268010";
+        //static string HashKey = "1nfU5bE66Hi1Z58QWsqnPKFcWYB1I7Eg";
+        //static string HashIv = "l6kANp55PZb8fR26";
+        //static string Verison = "1.5";
+        //static string new_data;
 
         /** 正式藍新 ***/
-        //static string transmit_url = "https://core.newebpay.com/MPG/mpg_gateway ";
-        //static string MerchantID = "MS3238101803";
-        //static string HashKey = "L4qf007CFT0zJqaMTGSUGK3dZDhjpXF9";
-        //static string HashIv = "l3YgEsZxk9JcVq5t";
-        //static string Verison = "1.5";
+        static string transmit_url = "https://core.newebpay.com/MPG/mpg_gateway ";
+        static string MerchantID = "MS3274182107";
+        static string HashKey = "kzTpZp5yFOjTdCuCMFWiwvFuJAVv3ySR";
+        static string HashIv = "Psz7oMbjG1eq8ubC";
+        static string Verison = "1.5";
+        static string new_data;
         public static void set_paramer(Viprecord viprecord, string CustomerURL, string NotifyURL, int TimeStamp)
         {
             if (viprecord != null)

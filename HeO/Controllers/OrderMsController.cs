@@ -33,6 +33,7 @@ namespace HeO.Controllers
         private OrderService orderService;
         private MembersService membersService;
         private MemberlevelService memberlevelService;
+        private MemberlevelcooldownService memberlevelcooldownService;
         private MemberblacklistService memberblacklistService;
         private SettingService settingService;
         
@@ -42,6 +43,7 @@ namespace HeO.Controllers
             orderService = new OrderService();
             membersService = new MembersService();
             memberlevelService = new MemberlevelService();
+            memberlevelcooldownService = new MemberlevelcooldownService();
             memberblacklistService = new MemberblacklistService();
             settingService = new SettingService();
         }
@@ -105,7 +107,7 @@ namespace HeO.Controllers
                 if (member.Isreal == true)
                 {
                     Guid Realid = memberlevelService.Get().Where(a => a.Levelname == "真人").FirstOrDefault().Levelid;        // 取得真人ID
-                    int? RealCooldowntime = member.Memberlevel.Memberlevelcooldown.FirstOrDefault(a => a.Levelid == Realid).Cooldowntime;       // 取得真人的冷卻時間
+                    int? RealCooldowntime = memberlevelcooldownService.Get().Where(a => a.Levelid == Realid).FirstOrDefault().Cooldowntime;      // 取得真人的冷卻時間
                     if (MemberCooldown > RealCooldowntime)
                     {
                         Cooldowntime = RealCooldowntime;

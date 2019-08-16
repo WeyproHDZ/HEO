@@ -34,13 +34,11 @@
         <EntityTypeShape EntityType="HeOModel.Memberblacklist" Width="1.5" PointX="1.625" PointY="12.375" />
         <EntityTypeShape EntityType="HeOModel.Memberauthorization" Width="1.5" PointX="8" PointY="16.625" />
         <AssociationConnector Association="HeOModel.FK_Memberauthorization_Feedbackproduct" />
-        <EntityTypeShape EntityType="HeOModel.Memberloginrecord" Width="1.5" PointX="5.375" PointY="25.625" />
         <EntityTypeShape EntityType="HeOModel.Useragent" Width="1.5" PointX="15.375" PointY="0.75" />
         <EntityTypeShape EntityType="HeOModel.Members" Width="1.5" PointX="3" PointY="15.625" />
         <AssociationConnector Association="HeOModel.FK_Feedbackrecord_Members" />
         <AssociationConnector Association="HeOModel.FK_Memberauthorization_Members" />
         <AssociationConnector Association="HeOModel.FK_Members_Memberlevel" />
-        <AssociationConnector Association="HeOModel.FK_Memberloginrecord_Members" />
         <AssociationConnector Association="HeOModel.FK_Order_Members" />
         <AssociationConnector Association="HeOModel.FK_Orderfaceooklist_Members" />
         <AssociationConnector Association="HeOModel.FK_Viprecord_Members" />
@@ -51,6 +49,8 @@
         <AssociationConnector Association="HeOModel.FK_Adminlims_Lims" />
         <AssociationConnector Association="HeOModel.FK_Lims_Lims1" />
         <EntityTypeShape EntityType="HeOModel.Setting" Width="1.5" PointX="15.375" PointY="8.75" />
+        <EntityTypeShape EntityType="HeOModel.Memberloginrecord" Width="1.5" PointX="5.25" PointY="25.625" />
+        <AssociationConnector Association="HeOModel.FK_Memberloginrecord_Members" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

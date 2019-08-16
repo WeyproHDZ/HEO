@@ -133,71 +133,59 @@ namespace HeOBackend.Controllers
         {
             var data = membersService.Get().OrderByDescending(o => o.Createdate);
             ViewBag.pageNumber = p;
-            ViewBag.Members = data.ToPagedList(pageNumber: p, pageSize: 20);
+            ViewBag.Members = data.ToPagedList(pageNumber: p, pageSize: 100);
             ViewBag.message = "按下確定後開始驗證帳號，請勿關閉分頁";
             LevelDropDownList("Members");
             return View();
         }
         [CheckSession(IsAuth = true)]
         [HttpPost]
-        public ActionResult Members(Guid? Levelid , int p = 1 , string account = "" , string gender = "")
+        public ActionResult Members(Guid? Levelid, ICollection<int> Status, int p = 1 , string account = "", int Sex = 3)
         {
-            Guid RealLevelid = memberlevelService.Get().Where(a => a.Levelname == "真人").FirstOrDefault().Levelid;
-            int genders;
-            if (gender != "")
+            Guid RealLevelid = memberlevelService.Get().Where(a => a.Levelname == "真人").FirstOrDefault().Levelid;            
+            var data = membersService.Get();
+            /*** 搜尋帳號 ****/
+            if (account != "")
             {
-                genders = Convert.ToInt16(gender);
+                data = data.Where(x => x.Account.Contains(account));
             }
-            /**** Account 、 Levelid有值  *****/
-            if(account != "" && Levelid != null)
+            /**** 搜尋等級 ***/
+            if(Levelid == RealLevelid && Levelid != null)  // 搜尋真人
             {
-                if (Levelid == RealLevelid)
-                {
-                    var data = membersService.Get().Where(x => x.Account.Contains(account)).Where(a => a.Isreal == true).OrderBy(o => o.Createdate);
-                    ViewBag.pageNumber = p;
-                    ViewBag.Members = data.ToPagedList(pageNumber: p, pageSize: 20);
-                    ViewBag.Account = account;
-                }
-                else
-                {
-                    var data = membersService.Get().Where(x => x.Account.Contains(account)).Where(a => a.Levelid == Levelid).OrderBy(o => o.Createdate);
-                    ViewBag.pageNumber = p;
-                    ViewBag.Members = data.ToPagedList(pageNumber: p, pageSize: 20);
-                    ViewBag.Account = account;
-                }
+                data = data.Where(a => a.Isreal == true);
+            }
+            else if(Levelid != null)
+            {
+                data = data.Where(a => a.Levelid == Levelid);
+            }
+            /***** 搜尋性別【0:未設定、1:男生、2女生、3.全部】 ****/
+            switch (Sex)
+            {
+                case 0:
+                    data = data.Where(a => a.Sex == 0);
+                    ViewBag.Sex = 0;
+                    break;
+                case 1:
+                    data = data.Where(a => a.Sex == 1);
+                    ViewBag.Sex = 1;
+                    break;
+                case 2:
+                    data = data.Where(a => a.Sex == 2);
+                    ViewBag.Sex = 2;
+                    break;
+                default:
+                    break;
+            }
+            /***** 驗證狀態【0:未驗證、1:已驗證、2:需驗證】 *****/
+            if(Status != null)
+            {
+                data = data.Where(a => Status.Contains(a.Memberloginrecord.OrderByDescending(x => x.Createdate).FirstOrDefault().Status));
+            }
+            data = data.OrderByDescending(o => o.Createdate);
+            ViewBag.pageNumber = p;
+            ViewBag.Members = data.ToPagedList(pageNumber: p, pageSize: 100);
+            ViewBag.Account = account;
 
-            }
-            /**** Levelid有值 *****/
-            else if (Levelid != null && account == "")
-            {
-                if(Levelid == RealLevelid)
-                {
-                    var data = membersService.Get().Where(a => a.Isreal == true).OrderBy(o => o.Createdate);
-                    ViewBag.pageNumber = p;
-                    ViewBag.Members = data.ToPagedList(pageNumber: p, pageSize: 20);
-                }
-                else
-                {
-                    var data = membersService.Get().Where(a => a.Levelid == Levelid).OrderBy(o => o.Createdate);
-                    ViewBag.pageNumber = p;
-                    ViewBag.Members = data.ToPagedList(pageNumber: p, pageSize: 20);
-                }
-               
-            }
-            /**** Account有值 *****/
-            else if (account != "" && Levelid == null)
-            {
-                var data = membersService.Get().Where(x => x.Account.Contains(account)).OrderBy(o => o.Createdate);
-                ViewBag.pageNumber = p;
-                ViewBag.Members = data.ToPagedList(pageNumber: p, pageSize: 20);
-            }
-            /**** Account 、 Levelid 、 Gender皆沒值 *****/
-            else
-            {
-                var data = membersService.Get().OrderByDescending(o => o.Createdate);
-                ViewBag.pageNumber = p;
-                ViewBag.Members = data.ToPagedList(pageNumber: p, pageSize: 20);
-            }
             LevelDropDownList("Members");
 
             return View();
@@ -658,7 +646,7 @@ namespace HeOBackend.Controllers
         public ActionResult AddViprecord(Viprecord viprecord , Guid Vipdetailid)
         {
             Vipdetail vipdetail = vipdetailService.GetByID(Vipdetailid);
-            Viprecord old_record = viprecordService.Get().OrderByDescending(o => o.Enddate).FirstOrDefault(a => a.Memberid == viprecord.Memberid);
+            Viprecord old_record = viprecordService.Get().Where(a => a.Status == 2).OrderByDescending(o => o.Enddate).FirstOrDefault(a => a.Memberid == viprecord.Memberid);
             DateTime now = DateTime.Now;
             
             if (TryUpdateModel(viprecord, new string[] { "Payway" , "Status" }) && ModelState.IsValid)
@@ -666,38 +654,39 @@ namespace HeOBackend.Controllers
                 viprecord.Viprecordid = Guid.NewGuid();
                 viprecord.Createdate = DateTime.Now;
                 viprecord.Updatedate = DateTime.Now;
+                viprecord.Enddate = DateTime.Now;
                 viprecord.Day = vipdetail.Day;
-                viprecord.Money = vipdetail.Money;
+                viprecord.Money = vipdetail.Money;                
                 viprecord.Depositnumber = DateTime.Now.ToString("yyyyMMddHHmmssfff");
                 double day = Convert.ToDouble(viprecord.Day);
-                /** 假設沒有舊資料，就直接新增進去 **/
-                if(old_record != null)
+
+                /*** 如果有完成付款，就將開始日期填入今天，填寫付款方式，並且將該會員之層級提升至VIP ***/
+                if (viprecord.Status == 2)
                 {
-                    if (old_record.Enddate > now)
+                    /** 假設沒有舊資料，就直接新增進去 **/
+                    if (old_record != null)
                     {
-                        viprecord.Enddate = old_record.Enddate.AddDays(day);
-                        viprecord.Startdate = old_record.Enddate;
+                        if (old_record.Enddate > now)
+                        {
+                            viprecord.Enddate = old_record.Enddate.AddDays(day);
+                            viprecord.Startdate = old_record.Enddate;
+                        }
+                        else
+                        {
+                            viprecord.Enddate = DateTime.Now.AddDays(day);
+                            viprecord.Startdate = DateTime.Now;
+                        }
                     }
                     else
                     {
                         viprecord.Enddate = DateTime.Now.AddDays(day);
                         viprecord.Startdate = DateTime.Now;
                     }
-                }
-                else
-                {
-                    viprecord.Enddate = DateTime.Now.AddDays(day);
-                    viprecord.Startdate = DateTime.Now;
-                }
 
-                /*** 如果有完成付款，就將開始日期填入今天，填寫付款方式，並且將該會員之層級提升至VIP ***/
-                if (viprecord.Status == 2)
-                {
                     Members Member = membersService.GetByID(viprecord.Memberid);
                     Memberlevel Memberlevel = memberlevelService.Get().Where(a => a.Levelname == "VIP").FirstOrDefault();
                     Member.Levelid = Memberlevel.Levelid;
-                    Member.Feedbackmoney+= viprecord.Money;
-                    membersService.SpecificUpdate(Member, new string[] { "Levelid" , "Feedbackmoney" });
+                    membersService.SpecificUpdate(Member, new string[] { "Levelid" });
                     membersService.SaveChanges();                   
                 }
                 viprecordService.Create(viprecord);
@@ -732,31 +721,52 @@ namespace HeOBackend.Controllers
         }
         [CheckSession(IsAuth = true)]
         [HttpPost]
-        public ActionResult EditViprecord(Viprecord viprecord , Guid Vipdetailid)
+        public ActionResult EditViprecord(Viprecord viprecord)
         {
-            Vipdetail vipdetail = vipdetailService.GetByID(Vipdetailid);
-            if (TryUpdateModel(viprecord, new string[] { "Payway", "Status" }) && ModelState.IsValid)
+            Vipdetail vipdetail = vipdetailService.Get().Where(a => a.Day == viprecord.Day).FirstOrDefault();
+            Viprecord old_record = viprecordService.Get().Where(a => a.Status == 2).OrderByDescending(o => o.Enddate).FirstOrDefault(a => a.Memberid == viprecord.Memberid);
+            DateTime now = DateTime.Now;
+
+            if (TryUpdateModel(viprecord, new string[] { "Status" }) && ModelState.IsValid)
             {
-                viprecord.Updatedate = DateTime.Now;
                 viprecord.Startdate = DateTime.Now;
-                viprecord.Day = vipdetail.Day;
-                viprecord.Money = vipdetail.Money;
-                double day = Convert.ToDouble(viprecord.Day);
-                viprecord.Enddate = DateTime.Now.AddDays(day);
+                viprecord.Updatedate = DateTime.Now;
+                
+
+                /*** 如果有完成付款，就將開始日期填入今天，填寫付款方式，並且將該會員之層級提升至VIP ***/
+                if (viprecord.Status == 2)
+                {
+                    double day = Convert.ToDouble(viprecord.Day);
+                    /** 假設沒有舊資料，就直接新增進去 **/
+                    if (old_record != null)
+                    {
+                        if (old_record.Enddate > now)
+                        {
+                            viprecord.Enddate = old_record.Enddate.AddDays(day);
+                            viprecord.Startdate = old_record.Enddate;
+                        }
+                        else
+                        {
+                            viprecord.Enddate = DateTime.Now.AddDays(day);
+                            viprecord.Startdate = DateTime.Now;
+                        }
+                    }
+                    else
+                    {
+                        viprecord.Enddate = DateTime.Now.AddDays(day);
+                        viprecord.Startdate = DateTime.Now;
+                    }
+
+                    Members Member = membersService.GetByID(viprecord.Memberid);
+                    Memberlevel Memberlevel = memberlevelService.Get().Where(a => a.Levelname == "VIP").FirstOrDefault();
+                    Member.Levelid = Memberlevel.Levelid;
+                    membersService.SpecificUpdate(Member, new string[] { "Levelid" });
+                    membersService.SaveChanges();
+                }
                 viprecordService.Update(viprecord);
                 viprecordService.SaveChanges();
             }
 
-            /*** 如果有完成付款，就將該會員之層級提升至VIP ***/
-            if (viprecord.Status == 2)
-            {
-                Members Member = membersService.GetByID(viprecord.Memberid);
-                Memberlevel Memberlevel = memberlevelService.Get().Where(a => a.Levelname == "VIP").FirstOrDefault();
-                Member.Levelid = Memberlevel.Levelid;
-                Member.Feedbackmoney += viprecord.Money;
-                membersService.SpecificUpdate(Member, new string[] { "Levelid", "Feedbackmoney" });
-                membersService.SaveChanges();
-            }
             return RedirectToAction("Viprecord");
         }
 

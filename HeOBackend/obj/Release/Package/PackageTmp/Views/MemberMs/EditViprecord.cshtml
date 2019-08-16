@@ -45,28 +45,38 @@
                                         @Html.ValidationSummary(true)
                                     </div>
                                 }
+                                @Html.HiddenFor(model => model.Enddate)
                                 @Html.HiddenFor(model => model.Viprecordid)
-                                @Html.HiddenFor(model => model.Createdate)
+                                @Html.HiddenFor(model => model.Memberid)
+                                @Html.HiddenFor(model => model.Day)
+                                @Html.HiddenFor(model => model.Money)
+                                @Html.HiddenFor(model => model.Paymentnumber)
+                                @Html.HiddenFor(model => model.Paymenttype)
+                                @Html.HiddenFor(model => model.Payway)
                                 @Html.HiddenFor(model => model.Depositnumber)
+                                @Html.HiddenFor(model => model.Createdate)                             
+                                @Html.HiddenFor(model => model.Buydate)
+                                @Html.HiddenFor(model => model.Duedate) 
+                                                               
                                 <div id="content" class="tab-content">
                                     <div class="tab-pane" id="hb1">
                                         <fieldset>
                                             <div class="form-group">
                                                 <label class="col-lg-2 control-label" for="title">Facebook帳號</label>
                                                 <section class="col-lg-3">
-                                                    @Html.DropDownListFor(model => model.Memberid, null, "--請選擇--", new Dictionary<string, object>() { { "class", "form-control" } })
+                                                    @Html.DropDownListFor(model => model.Memberid, null, "--請選擇--", new Dictionary<string, object>() { { "class", "form-control" }, { "disabled", "disabled" } })
                                                 </section>
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-lg-2 control-label" for="title">天數(天)</label>
                                                 <section class="col-lg-3">
-                                                    @Html.DropDownList("Vipdetailid", (SelectList)ViewBag.VipdetailList, new Dictionary<string, object>() { { "class", "form-control" } })
+                                                    @Html.DropDownList("Vipdetailid", (SelectList)ViewBag.VipdetailList, new Dictionary<string, object>() { { "class", "form-control" }, { "disabled", "disabled" } })
                                                 </section>
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-lg-2 control-label" for="title">付款方式</label>
                                                 <section class="col-lg-3">
-                                                    <select class="form-control" id="payway" name="payway">
+                                                    <select class="form-control" id="payway" name="payway" disabled>
                                                         <option value="0" @(Model.Payway == 0 ? "selected" : "")>超商付款繳款</option>
                                                         <option value="1" @(Model.Payway == 1 ? "selected" : "")>轉帳付款</option>
                                                         <option value="2" @(Model.Payway == 2 ? "selected" : "")>信用卡</option>

@@ -16,7 +16,7 @@ namespace HeO.Models
     {
         public int Id { get; set; }
         public Nullable<System.Guid> Memberid { get; set; }
-        public Nullable<int> Status { get; set; }
+        public int Status { get; set; }
         public Nullable<System.DateTime> Createdate { get; set; }
     
         public virtual Members Members { get; set; }

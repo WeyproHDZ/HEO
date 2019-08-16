@@ -163,7 +163,6 @@ namespace HeO.Controllers
         }
 
         [HttpPost]
-        [CheckSession]
         public ActionResult DepositSuccess(string TradeInfo)
         {
             string Receive = Newebpay.DecryptAES256(TradeInfo);
