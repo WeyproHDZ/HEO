@@ -38,8 +38,11 @@
                                     <thead>
                                         <tr>
                                             <th class="text-center">訂單編號</th>
+                                            <th width="10%" class="text-center">帳戶</th>
+                                            <th width="5%" class="text-center">姓名</th>
                                             <th class="text-center">服務</th>
                                             <th width="10%" class="text-center">數量</th>
+                                            <th width="10%" class="text-center">剩餘數量</th>
                                             <th width="10%" class="text-center">網址</th>
                                             <th width="10%" class="text-center">訂單狀態</th>
                                             <th width="10%" class="text-center">成本</th>
@@ -53,8 +56,11 @@
                                         {
                                             <tr>
                                                 <td class="text-center">@entity.Ordernumber</td>
+                                                <td class="text-center">@entity.Members.Account</td>
+                                                <td class="text-center">@entity.Members.Name</td>
                                                 <td class="text-center">@entity.Service</td>
                                                 <td class="text-center">@entity.Count</td>
+                                                <td class="text-center">@entity.Remains</td>
                                                 <td class="text-center"><a href="@entity.Url" target="_blank">網址</a></td>
                                                 @switch (entity.OrderStatus)
                                                 {

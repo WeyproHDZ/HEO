@@ -212,38 +212,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Order">
-      <EntityTypeMapping TypeName="HeOModel.Order">
-        <MappingFragment StoreEntitySet="Order">
-          <ScalarProperty Name="Createdate" ColumnName="Createdate" />
-          <ScalarProperty Name="Updatedate" ColumnName="Updatedate" />
-          <ScalarProperty Name="OrderStatus" ColumnName="OrderStatus" />
-          <ScalarProperty Name="Cost" ColumnName="Cost" />
-          <ScalarProperty Name="Remains" ColumnName="Remains" />
-          <ScalarProperty Name="Count" ColumnName="Count" />
-          <ScalarProperty Name="Message" ColumnName="Message" />
-          <ScalarProperty Name="Service" ColumnName="Service" />
-          <ScalarProperty Name="Isreal" ColumnName="Isreal" />
-          <ScalarProperty Name="Url" ColumnName="Url" />
-          <ScalarProperty Name="HDZoredernumber" ColumnName="HDZoredernumber" />
-          <ScalarProperty Name="Memberid" ColumnName="Memberid" />
-          <ScalarProperty Name="Ordernumber" ColumnName="Ordernumber" />
-          <ScalarProperty Name="Orderid" ColumnName="Orderid" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="Memberblacklist">
-      <EntityTypeMapping TypeName="HeOModel.Memberblacklist">
-        <MappingFragment StoreEntitySet="Memberblacklist">
-          <ScalarProperty Name="Createdate" ColumnName="Createdate" />
-          <ScalarProperty Name="Useragent" ColumnName="Useragent" />
-          <ScalarProperty Name="IP_Addr" ColumnName="IP_Addr" />
-          <ScalarProperty Name="Account" ColumnName="Account" />
-          <ScalarProperty Name="Memberid" ColumnName="Memberid" />
-          <ScalarProperty Name="Id" ColumnName="Id" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="Memberauthorization">
       <EntityTypeMapping TypeName="HeOModel.Memberauthorization">
         <MappingFragment StoreEntitySet="Memberauthorization">
@@ -260,32 +228,6 @@
           <ScalarProperty Name="User_agent" ColumnName="User_agent" />
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="Isweb" ColumnName="Isweb" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="Members">
-      <EntityTypeMapping TypeName="HeOModel.Members">
-        <MappingFragment StoreEntitySet="Members">
-          <ScalarProperty Name="Updatedate" ColumnName="Updatedate" />
-          <ScalarProperty Name="Createdate" ColumnName="Createdate" />
-          <ScalarProperty Name="Lastdate" ColumnName="Lastdate" />
-          <ScalarProperty Name="Logindate" ColumnName="Logindate" />
-          <ScalarProperty Name="Isreal" ColumnName="Isreal" />
-          <ScalarProperty Name="Useragent_phone" ColumnName="Useragent_phone" />
-          <ScalarProperty Name="Port" ColumnName="Port" />
-          <ScalarProperty Name="Ipaddress" ColumnName="Ipaddress" />
-          <ScalarProperty Name="Feedbackmoney" ColumnName="Feedbackmoney" />
-          <ScalarProperty Name="Facebookstatus" ColumnName="Facebookstatus" />
-          <ScalarProperty Name="Facebooklink" ColumnName="Facebooklink" />
-          <ScalarProperty Name="Password" ColumnName="Password" />
-          <ScalarProperty Name="Account" ColumnName="Account" />
-          <ScalarProperty Name="Name" ColumnName="Name" />
-          <ScalarProperty Name="Sex" ColumnName="Sex" />
-          <ScalarProperty Name="Facebookcookie" ColumnName="Facebookcookie" />
-          <ScalarProperty Name="Levelid" ColumnName="Levelid" />
-          <ScalarProperty Name="Memberid" ColumnName="Memberid" />
-          <ScalarProperty Name="Is_import" ColumnName="Is_import" />
-          <ScalarProperty Name="Isenable" ColumnName="Isenable" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -344,6 +286,65 @@
           <ScalarProperty Name="Status" ColumnName="Status" />
           <ScalarProperty Name="Memberid" ColumnName="Memberid" />
           <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Memberblacklist">
+      <EntityTypeMapping TypeName="HeOModel.Memberblacklist">
+        <MappingFragment StoreEntitySet="Memberblacklist">
+          <ScalarProperty Name="Createdate" ColumnName="Createdate" />
+          <ScalarProperty Name="Useragent" ColumnName="Useragent" />
+          <ScalarProperty Name="IP_Addr" ColumnName="IP_Addr" />
+          <ScalarProperty Name="Account" ColumnName="Account" />
+          <ScalarProperty Name="Memberid" ColumnName="Memberid" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Order">
+      <EntityTypeMapping TypeName="HeOModel.Order">
+        <MappingFragment StoreEntitySet="Order">
+          <ScalarProperty Name="Createdate" ColumnName="Createdate" />
+          <ScalarProperty Name="Updatedate" ColumnName="Updatedate" />
+          <ScalarProperty Name="Duedate" ColumnName="Duedate" />
+          <ScalarProperty Name="OrderStatus" ColumnName="OrderStatus" />
+          <ScalarProperty Name="Cost" ColumnName="Cost" />
+          <ScalarProperty Name="Remains" ColumnName="Remains" />
+          <ScalarProperty Name="Count" ColumnName="Count" />
+          <ScalarProperty Name="Message" ColumnName="Message" />
+          <ScalarProperty Name="Service" ColumnName="Service" />
+          <ScalarProperty Name="Isreal" ColumnName="Isreal" />
+          <ScalarProperty Name="Url" ColumnName="Url" />
+          <ScalarProperty Name="HDZoredernumber" ColumnName="HDZoredernumber" />
+          <ScalarProperty Name="Memberid" ColumnName="Memberid" />
+          <ScalarProperty Name="Ordernumber" ColumnName="Ordernumber" />
+          <ScalarProperty Name="Orderid" ColumnName="Orderid" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Members">
+      <EntityTypeMapping TypeName="HeOModel.Members">
+        <MappingFragment StoreEntitySet="Members">
+          <ScalarProperty Name="Updatedate" ColumnName="Updatedate" />
+          <ScalarProperty Name="Createdate" ColumnName="Createdate" />
+          <ScalarProperty Name="Lastdate" ColumnName="Lastdate" />
+          <ScalarProperty Name="Logindate" ColumnName="Logindate" />
+          <ScalarProperty Name="Isreal" ColumnName="Isreal" />
+          <ScalarProperty Name="Useragent_phone" ColumnName="Useragent_phone" />
+          <ScalarProperty Name="Port" ColumnName="Port" />
+          <ScalarProperty Name="Ipaddress" ColumnName="Ipaddress" />
+          <ScalarProperty Name="Feedbackmoney" ColumnName="Feedbackmoney" />
+          <ScalarProperty Name="Facebookstatus" ColumnName="Facebookstatus" />
+          <ScalarProperty Name="Facebookid" ColumnName="Facebookid" />
+          <ScalarProperty Name="Password" ColumnName="Password" />
+          <ScalarProperty Name="Account" ColumnName="Account" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Sex" ColumnName="Sex" />
+          <ScalarProperty Name="Facebookcookie" ColumnName="Facebookcookie" />
+          <ScalarProperty Name="Levelid" ColumnName="Levelid" />
+          <ScalarProperty Name="Memberid" ColumnName="Memberid" />
+          <ScalarProperty Name="Is_import" ColumnName="Is_import" />
+          <ScalarProperty Name="Isenable" ColumnName="Isenable" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

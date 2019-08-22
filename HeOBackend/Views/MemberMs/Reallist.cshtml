@@ -78,7 +78,7 @@
                     <!-- end widget content -->
 
                     <div class="text-center">
-                        @Html.PagedListPager(list: data, generatePageUrl: page => Url.Action("News", new { p = page }))
+                        @Html.PagedListPager(list: data, generatePageUrl: page => Url.Action("Reallist", new { p = page }))
                     </div>
 
                 </div>
@@ -120,6 +120,3 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
-@section scripts {
-
-}

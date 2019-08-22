@@ -35,7 +35,7 @@ namespace HeO.CheckFacebook
             string[] user_agent = new string[4];
             string[] status = new string[5];
             status[1] = "";
-            status[2] = "https://scontent.frmq2-1.fna.fbcdn.net/v/t1.0-1/c47.0.160.160a/p160x160/10354686_10150004552801856_220367501106153455_n.jpg?_nc_cat=1&_nc_oc=AQnwuPVNtEyWQ8DxG-_WU5TmHr2CRrJklH_3-Em1d-BBL7pBo_2onHA5Fqz-_GtlKu8&_nc_ht=scontent.frmq2-1.fna&oh=f85d870222f145ff686ba73eacee7778&oe=5DD8371E";;
+            status[2] = "";
             status[3] = "";
             status[4] = "";
             //string response1;
@@ -139,22 +139,16 @@ namespace HeO.CheckFacebook
                     if(driver.Url.IndexOf("error") != -1)
                     {
                         /*** 個人頁面 ****/
-                        driver.Navigate().GoToUrl("https://m.facebook.com/#!/profile.php");
-                        //IWebElement Setting = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/a[1]"));
-                        //Setting.Click();
-                        //System.Threading.Thread.Sleep(Delay());
-                        //IWebElement Profile = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/ul[1]/li[1]/div[1]/a[1]/div[1]/img[1]"));
-                        //Profile.Click();
-                        //IWebElement img = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[4]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/a[1]/div[1]/i[1]")); 
-                        //string[] imgdata = img.GetAttribute("style").Replace("\'", "\"").Split('\"');
-                        //string name = img.GetAttribute("aria-label");
-                        //status[0] = "成功登入!";
-                        //status[1] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
-                        //status[2] = imgdata[1].Replace("amp;", "");
-                        //status[3] = name;
-                        //status[4] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
-                        //System.Threading.Thread.Sleep(Delay());
-                        //driver.Quit();
+                        driver.Navigate().GoToUrl("https://m.facebook.com/profile.php");
+
+                        /*** 帳號需驗證 ***/
+                        if (driver.Url.IndexOf("checkpoint") != -1)
+                        {
+                            status[0] = "帳號未驗證";
+                            driver.Quit();
+                            content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
+                            return content;
+                        }
 
                         /*** 帳號需驗證 ***/
                         if (driver.Url.IndexOf("checkpoint") != -1)
@@ -166,10 +160,21 @@ namespace HeO.CheckFacebook
                         }
                         else
                         {
+                            string facebookcookie = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
+                            string facebookid = "";
+                            facebookcookie = facebookcookie.Replace(@"\", "'");     // 將\ 取代成 '
+                            var FacebookCookieObj = JsonConvert.DeserializeObject<dynamic>(facebookcookie); // FacebookCookieJson的json格式轉成物件
+                            foreach (var cookieobject in FacebookCookieObj)
+                            {
+                                if (cookieobject.Name == "c_user")
+                                {
+                                    facebookid = cookieobject.Value;
+                                }
+                            }
                             string name = driver.Title;
                             status[0] = "成功登入!";
-                            status[1] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
-                            status[2] = "https://scontent.frmq2-1.fna.fbcdn.net/v/t1.0-1/c47.0.160.160a/p160x160/10354686_10150004552801856_220367501106153455_n.jpg?_nc_cat=1&_nc_oc=AQnwuPVNtEyWQ8DxG-_WU5TmHr2CRrJklH_3-Em1d-BBL7pBo_2onHA5Fqz-_GtlKu8&_nc_ht=scontent.frmq2-1.fna&oh=f85d870222f145ff686ba73eacee7778&oe=5DD8371E";
+                            status[1] = facebookid;
+                            status[2] = "http://graph.facebook.com/"+ facebookid + "/picture?type=large";
                             status[3] = name;
                             status[4] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
                             System.Threading.Thread.Sleep(Delay());
@@ -181,32 +186,37 @@ namespace HeO.CheckFacebook
                     {
                         if (driver.Url.IndexOf("save-device") != -1)
                         {
-                            /*** 稍後再用按鈕 ****/
-                            IWebElement FB_continue = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[3]/div[1]/div[1]/div[1]/a[1]"));
-                            FB_continue.Click();
-                            System.Threading.Thread.Sleep(Delay());
+                            ///*** 稍後再用按鈕 ****/
+                            //IWebElement FB_continue = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[3]/div[1]/div[1]/div[1]/a[1]"));
+                            //FB_continue.Click();
+                            //System.Threading.Thread.Sleep(Delay());
                             /*** 個人頁面 ****/
-                            driver.Navigate().GoToUrl("https://m.facebook.com/#!/profile.php");
-                            //IWebElement Setting = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/a[1]"));
-                            //Setting.Click();
-                            //System.Threading.Thread.Sleep(Delay());
-                            //IWebElement Profile = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/ul[1]/li[1]/div[1]/a[1]/div[1]/img[1]"));
-                            //Profile.Click();
-                            //IWebElement img = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[4]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/a[1]/div[1]/i[1]"));
-                            //string[] imgdata = img.GetAttribute("style").Replace("\'", "\"").Split('\"');
-                            //string name = img.GetAttribute("aria-label");
-                            //status[0] = "成功登入!";
-                            //status[1] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
-                            //status[2] = imgdata[1].Replace("amp;", "");
-                            //status[3] = name;
-                            //status[4] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
-                            //System.Threading.Thread.Sleep(Delay());
-                            //driver.Quit();
+                            driver.Navigate().GoToUrl("https://m.facebook.com/profile.php");
 
+                            /*** 帳號需驗證 ***/
+                            if (driver.Url.IndexOf("checkpoint") != -1)
+                            {
+                                status[0] = "帳號未驗證";
+                                driver.Quit();
+                                content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
+                                return content;
+                            }
+
+                            string facebookcookie = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
+                            string facebookid = "";
+                            facebookcookie = facebookcookie.Replace(@"\", "'");     // 將\ 取代成 '
+                            var FacebookCookieObj = JsonConvert.DeserializeObject<dynamic>(facebookcookie); // FacebookCookieJson的json格式轉成物件
+                            foreach (var cookieobject in FacebookCookieObj)
+                            {
+                                if (cookieobject.Name == "c_user")
+                                {
+                                    facebookid = cookieobject.Value;
+                                }
+                            }
                             string name = driver.Title;
                             status[0] = "成功登入!";
-                            status[1] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
-                            status[2] = "https://scontent.frmq2-1.fna.fbcdn.net/v/t1.0-1/c47.0.160.160a/p160x160/10354686_10150004552801856_220367501106153455_n.jpg?_nc_cat=1&_nc_oc=AQnwuPVNtEyWQ8DxG-_WU5TmHr2CRrJklH_3-Em1d-BBL7pBo_2onHA5Fqz-_GtlKu8&_nc_ht=scontent.frmq2-1.fna&oh=f85d870222f145ff686ba73eacee7778&oe=5DD8371E";;
+                            status[1] = facebookid;
+                            status[2] = "http://graph.facebook.com/" + facebookid + "/picture?type=large";
                             status[3] = name;
                             status[4] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
                             System.Threading.Thread.Sleep(Delay());
@@ -216,26 +226,32 @@ namespace HeO.CheckFacebook
                         else if (driver.Url.IndexOf("gettingstarted") != -1)
                         {
                             /*** 個人頁面 ****/
-                            driver.Navigate().GoToUrl("https://m.facebook.com/#!/profile.php");
-                            //IWebElement Setting = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/a[1]"));
-                            //Setting.Click();
-                            //System.Threading.Thread.Sleep(Delay());
-                            //IWebElement Profile = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/ul[1]/li[1]/div[1]/a[1]/div[1]/img[1]"));
-                            //Profile.Click();
-                            //IWebElement img = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[4]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/a[1]/div[1]/i[1]"));
-                            //string[] imgdata = img.GetAttribute("style").Replace("\'", "\"").Split('\"');
-                            //string name = img.GetAttribute("aria-label");
-                            //status[0] = "成功登入!";
-                            //status[1] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
-                            //status[2] = imgdata[1].Replace("amp;", "");
-                            //status[3] = name;
-                            //status[4] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
-                            //System.Threading.Thread.Sleep(Delay());
-                            //driver.Quit();
+                            driver.Navigate().GoToUrl("https://m.facebook.com/profile.php");
+
+                            /*** 帳號需驗證 ***/
+                            if (driver.Url.IndexOf("checkpoint") != -1)
+                            {
+                                status[0] = "帳號未驗證";
+                                driver.Quit();
+                                content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
+                                return content;
+                            }
+
+                            string facebookcookie = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
+                            string facebookid = "";
+                            facebookcookie = facebookcookie.Replace(@"\", "'");     // 將\ 取代成 '
+                            var FacebookCookieObj = JsonConvert.DeserializeObject<dynamic>(facebookcookie); // FacebookCookieJson的json格式轉成物件
+                            foreach (var cookieobject in FacebookCookieObj)
+                            {
+                                if (cookieobject.Name == "c_user")
+                                {
+                                    facebookid = cookieobject.Value;
+                                }
+                            }
                             string name = driver.Title;
                             status[0] = "成功登入!";
-                            status[1] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
-                            status[2] = "https://scontent.frmq2-1.fna.fbcdn.net/v/t1.0-1/c47.0.160.160a/p160x160/10354686_10150004552801856_220367501106153455_n.jpg?_nc_cat=1&_nc_oc=AQnwuPVNtEyWQ8DxG-_WU5TmHr2CRrJklH_3-Em1d-BBL7pBo_2onHA5Fqz-_GtlKu8&_nc_ht=scontent.frmq2-1.fna&oh=f85d870222f145ff686ba73eacee7778&oe=5DD8371E";;
+                            status[1] = facebookid;
+                            status[2] = "http://graph.facebook.com/" + facebookid + "/picture?type=large";
                             status[3] = name;
                             status[4] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
                             System.Threading.Thread.Sleep(Delay());
@@ -245,26 +261,32 @@ namespace HeO.CheckFacebook
                         else if(driver.Url.IndexOf("home.php") != -1)
                         {
                             /*** 個人頁面 ****/
-                            driver.Navigate().GoToUrl("https://m.facebook.com/#!/profile.php");
-                            //IWebElement Setting = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/a[1]"));
-                            //Setting.Click();
-                            //System.Threading.Thread.Sleep(Delay());
-                            //IWebElement Profile = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/ul[1]/li[1]/div[1]/a[1]/div[1]/img[1]"));
-                            //Profile.Click();
-                            //IWebElement img = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[4]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/a[1]/div[1]/i[1]"));
-                            //string[] imgdata = img.GetAttribute("style").Replace("\'", "\"").Split('\"');
-                            //string name = img.GetAttribute("aria-label");
-                            //status[0] = "成功登入!";
-                            //status[1] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
-                            //status[2] = imgdata[1].Replace("amp;", "");
-                            //status[3] = name;
-                            //status[4] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
-                            //System.Threading.Thread.Sleep(Delay());
-                            //driver.Quit();
+                            driver.Navigate().GoToUrl("https://m.facebook.com/profile.php");
+
+                            /*** 帳號需驗證 ***/
+                            if (driver.Url.IndexOf("checkpoint") != -1)
+                            {
+                                status[0] = "帳號未驗證";
+                                driver.Quit();
+                                content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
+                                return content;
+                            }
+
+                            string facebookcookie = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
+                            string facebookid = "";
+                            facebookcookie = facebookcookie.Replace(@"\", "'");     // 將\ 取代成 '
+                            var FacebookCookieObj = JsonConvert.DeserializeObject<dynamic>(facebookcookie); // FacebookCookieJson的json格式轉成物件
+                            foreach (var cookieobject in FacebookCookieObj)
+                            {
+                                if (cookieobject.Name == "c_user")
+                                {
+                                    facebookid = cookieobject.Value;
+                                }
+                            }
                             string name = driver.Title;
                             status[0] = "成功登入!";
-                            status[1] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
-                            status[2] = "https://scontent.frmq2-1.fna.fbcdn.net/v/t1.0-1/c47.0.160.160a/p160x160/10354686_10150004552801856_220367501106153455_n.jpg?_nc_cat=1&_nc_oc=AQnwuPVNtEyWQ8DxG-_WU5TmHr2CRrJklH_3-Em1d-BBL7pBo_2onHA5Fqz-_GtlKu8&_nc_ht=scontent.frmq2-1.fna&oh=f85d870222f145ff686ba73eacee7778&oe=5DD8371E";;
+                            status[1] = facebookid;
+                            status[2] = "http://graph.facebook.com/" + facebookid + "/picture?type=large";
                             status[3] = name;
                             status[4] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
                             System.Threading.Thread.Sleep(Delay());
@@ -372,31 +394,46 @@ namespace HeO.CheckFacebook
                     if (driver.Url.IndexOf("save-device") != -1)
                     {
                         System.Threading.Thread.Sleep(Delay());
-                        /*** 稍後再用按鈕 ****/
-                        IWebElement FB_continue = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[3]/div[1]/div[1]/div[1]/a[1]"));
-                        FB_continue.Click();
-                        System.Threading.Thread.Sleep(Delay());
+                        ///*** 稍後再用按鈕 ****/
+                        //IWebElement FB_continue = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[3]/div[1]/div[1]/div[1]/a[1]"));
+                        //FB_continue.Click();
+                        //System.Threading.Thread.Sleep(Delay());
                         /*** 個人頁面 ****/
-                        driver.Navigate().GoToUrl("https://m.facebook.com/#!/profile.php");
-                        //IWebElement Setting = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/a[1]"));
-                        //Setting.Click();
-                        //System.Threading.Thread.Sleep(Delay());
-                        //IWebElement Profile = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/ul[1]/li[1]/div[1]/a[1]/div[1]/img[1]"));
-                        //Profile.Click();
-                        //IWebElement img = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[4]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/a[1]/div[1]/i[1]"));
-                        //string[] imgdata = img.GetAttribute("style").Replace("\'", "\"").Split('\"');
-                        //string name = img.GetAttribute("aria-label");
-                        //status[0] = "成功登入!";
-                        //status[1] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
-                        //status[2] = imgdata[1].Replace("amp;", "");
-                        //status[3] = name;
-                        //status[4] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
-                        //System.Threading.Thread.Sleep(Delay());
-                        //driver.Quit();
+                        driver.Navigate().GoToUrl("https://m.facebook.com/profile.php");
+
+                        /*** 帳號需驗證 ***/
+                        if (driver.Url.IndexOf("checkpoint") != -1)
+                        {
+                            status[0] = "帳號未驗證";
+                            driver.Quit();
+                            content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
+                            return content;
+                        }
+
+                        /*** 帳號需驗證 ***/
+                        if (driver.Url.IndexOf("checkpoint") != -1)
+                        {
+                            status[0] = "帳號未驗證";
+                            driver.Quit();
+                            content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
+                            return content;
+                        }
+
+                        string facebookcookie = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
+                        string facebookid = "";
+                        facebookcookie = facebookcookie.Replace(@"\", "'");     // 將\ 取代成 '
+                        var FacebookCookieObj = JsonConvert.DeserializeObject<dynamic>(facebookcookie); // FacebookCookieJson的json格式轉成物件
+                        foreach (var cookieobject in FacebookCookieObj)
+                        {
+                            if (cookieobject.Name == "c_user")
+                            {
+                                facebookid = cookieobject.Value;
+                            }
+                        }
                         string name = driver.Title;
                         status[0] = "成功登入!";
-                        status[1] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
-                        status[2] = "https://scontent.frmq2-1.fna.fbcdn.net/v/t1.0-1/c47.0.160.160a/p160x160/10354686_10150004552801856_220367501106153455_n.jpg?_nc_cat=1&_nc_oc=AQnwuPVNtEyWQ8DxG-_WU5TmHr2CRrJklH_3-Em1d-BBL7pBo_2onHA5Fqz-_GtlKu8&_nc_ht=scontent.frmq2-1.fna&oh=f85d870222f145ff686ba73eacee7778&oe=5DD8371E";;
+                        status[1] = facebookid;
+                        status[2] = "http://graph.facebook.com/" + facebookid + "/picture?type=large";
                         status[3] = name;
                         status[4] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
                         System.Threading.Thread.Sleep(Delay());
@@ -406,26 +443,32 @@ namespace HeO.CheckFacebook
                     else if (driver.Url.IndexOf("gettingstarted") != -1)
                     {
                         /*** 個人頁面 ****/
-                        driver.Navigate().GoToUrl("https://m.facebook.com/#!/profile.php");
-                        //IWebElement Setting = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/a[1]"));
-                        //Setting.Click();
-                        //System.Threading.Thread.Sleep(Delay());
-                        //IWebElement Profile = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/ul[1]/li[1]/div[1]/a[1]/div[1]/img[1]"));
-                        //Profile.Click();
-                        //IWebElement img = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[4]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/a[1]/div[1]/i[1]"));
-                        //string[] imgdata = img.GetAttribute("style").Replace("\'", "\"").Split('\"');
-                        //string name = img.GetAttribute("aria-label");
-                        //status[0] = "成功登入!";
-                        //status[1] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
-                        //status[2] = imgdata[1].Replace("amp;", "");
-                        //status[3] = name;
-                        //status[4] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
-                        //System.Threading.Thread.Sleep(Delay());
-                        //driver.Quit();
+                        driver.Navigate().GoToUrl("https://m.facebook.com/profile.php");
+
+                        /*** 帳號需驗證 ***/
+                        if (driver.Url.IndexOf("checkpoint") != -1)
+                        {
+                            status[0] = "帳號未驗證";
+                            driver.Quit();
+                            content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
+                            return content;
+                        }
+
+                        string facebookcookie = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
+                        string facebookid = "";
+                        facebookcookie = facebookcookie.Replace(@"\", "'");     // 將\ 取代成 '
+                        var FacebookCookieObj = JsonConvert.DeserializeObject<dynamic>(facebookcookie); // FacebookCookieJson的json格式轉成物件
+                        foreach (var cookieobject in FacebookCookieObj)
+                        {
+                            if (cookieobject.Name == "c_user")
+                            {
+                                facebookid = cookieobject.Value;
+                            }
+                        }
                         string name = driver.Title;
                         status[0] = "成功登入!";
-                        status[1] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
-                        status[2] = "https://scontent.frmq2-1.fna.fbcdn.net/v/t1.0-1/c47.0.160.160a/p160x160/10354686_10150004552801856_220367501106153455_n.jpg?_nc_cat=1&_nc_oc=AQnwuPVNtEyWQ8DxG-_WU5TmHr2CRrJklH_3-Em1d-BBL7pBo_2onHA5Fqz-_GtlKu8&_nc_ht=scontent.frmq2-1.fna&oh=f85d870222f145ff686ba73eacee7778&oe=5DD8371E";;
+                        status[1] = facebookid;
+                        status[2] = "http://graph.facebook.com/" + facebookid + "/picture?type=large";
                         status[3] = name;
                         status[4] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
                         System.Threading.Thread.Sleep(Delay());
@@ -435,26 +478,32 @@ namespace HeO.CheckFacebook
                     else if(driver.Url.IndexOf("home.php") != -1)
                     {
                         /*** 個人頁面 ****/
-                        driver.Navigate().GoToUrl("https://m.facebook.com/#!/profile.php");
-                        //IWebElement Setting = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/a[1]"));
-                        //Setting.Click();
-                        //System.Threading.Thread.Sleep(Delay());
-                        //IWebElement Profile = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/ul[1]/li[1]/div[1]/a[1]/div[1]/img[1]"));
-                        //Profile.Click();
-                        //IWebElement img = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[4]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/a[1]/div[1]/i[1]"));
-                        //string[] imgdata = img.GetAttribute("style").Replace("\'", "\"").Split('\"');
-                        //string name = img.GetAttribute("aria-label");
-                        //status[0] = "成功登入!";
-                        //status[1] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
-                        //status[2] = imgdata[1].Replace("amp;", "");
-                        //status[3] = name;
-                        //status[4] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
-                        //System.Threading.Thread.Sleep(Delay());
-                        //driver.Quit();
+                        driver.Navigate().GoToUrl("https://m.facebook.com/profile.php");
+
+                        /*** 帳號需驗證 ***/
+                        if (driver.Url.IndexOf("checkpoint") != -1)
+                        {
+                            status[0] = "帳號未驗證";
+                            driver.Quit();
+                            content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
+                            return content;
+                        }
+
+                        string facebookcookie = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
+                        string facebookid = "";
+                        facebookcookie = facebookcookie.Replace(@"\", "'");     // 將\ 取代成 '
+                        var FacebookCookieObj = JsonConvert.DeserializeObject<dynamic>(facebookcookie); // FacebookCookieJson的json格式轉成物件
+                        foreach (var cookieobject in FacebookCookieObj)
+                        {
+                            if (cookieobject.Name == "c_user")
+                            {
+                                facebookid = cookieobject.Value;
+                            }
+                        }
                         string name = driver.Title;
                         status[0] = "成功登入!";
-                        status[1] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
-                        status[2] = "https://scontent.frmq2-1.fna.fbcdn.net/v/t1.0-1/c47.0.160.160a/p160x160/10354686_10150004552801856_220367501106153455_n.jpg?_nc_cat=1&_nc_oc=AQnwuPVNtEyWQ8DxG-_WU5TmHr2CRrJklH_3-Em1d-BBL7pBo_2onHA5Fqz-_GtlKu8&_nc_ht=scontent.frmq2-1.fna&oh=f85d870222f145ff686ba73eacee7778&oe=5DD8371E";;
+                        status[1] = facebookid;
+                        status[2] = "http://graph.facebook.com/" + facebookid + "/picture?type=large";
                         status[3] = name;
                         status[4] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
                         System.Threading.Thread.Sleep(Delay());
@@ -564,82 +613,71 @@ namespace HeO.CheckFacebook
                 if(driver.Url.IndexOf("save-device") != -1)
                 {
                     System.Threading.Thread.Sleep(Delay());
-                    /*** 稍後再用按鈕 ****/
-                    IWebElement FB_continue = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[3]/div[1]/div[1]/div[1]/a[1]"));
-                    FB_continue.Click();
-                    System.Threading.Thread.Sleep(Delay());
-                    /*** 個人頁面 ****/
-                    driver.Navigate().GoToUrl("https://m.facebook.com/#!/profile.php");
-                    //IWebElement Setting = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/a[1]"));
-                    //Setting.Click();
+                    ///*** 稍後再用按鈕 ****/
+                    //IWebElement FB_continue = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[3]/div[1]/div[1]/div[1]/a[1]"));
+                    //FB_continue.Click();
                     //System.Threading.Thread.Sleep(Delay());
-                    //IWebElement Profile = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/ul[1]/li[1]/div[1]/a[1]/div[1]/img[1]"));
-                    //Profile.Click();
+                    /*** 個人頁面 ****/
+                    driver.Navigate().GoToUrl("https://m.facebook.com/profile.php");
 
+                    /*** 帳號需驗證 ***/
+                    if (driver.Url.IndexOf("checkpoint") != -1)
+                    {
+                        status[0] = "帳號未驗證";
+                        driver.Quit();
+                        content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
+                        return content;
+                    }
+
+                    string facebookcookie = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
+                    string facebookid = "";
+                    facebookcookie = facebookcookie.Replace(@"\", "'");     // 將\ 取代成 '
+                    var FacebookCookieObj = JsonConvert.DeserializeObject<dynamic>(facebookcookie); // FacebookCookieJson的json格式轉成物件
+                    foreach (var cookieobject in FacebookCookieObj)
+                    {
+                        if (cookieobject.Name == "c_user")
+                        {
+                            facebookid = cookieobject.Value;
+                        }
+                    }
                     string name = driver.Title;
                     status[0] = "成功登入!";
-                    status[1] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
-                    status[2] = "https://scontent.frmq2-1.fna.fbcdn.net/v/t1.0-1/c47.0.160.160a/p160x160/10354686_10150004552801856_220367501106153455_n.jpg?_nc_cat=1&_nc_oc=AQnwuPVNtEyWQ8DxG-_WU5TmHr2CRrJklH_3-Em1d-BBL7pBo_2onHA5Fqz-_GtlKu8&_nc_ht=scontent.frmq2-1.fna&oh=f85d870222f145ff686ba73eacee7778&oe=5DD8371E";
+                    status[1] = facebookid;
+                    status[2] = "http://graph.facebook.com/" + facebookid + "/picture?type=large";
                     status[3] = name;
                     status[4] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
                     System.Threading.Thread.Sleep(Delay());
                     driver.Quit();
-                    //driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(300);
-                    //try
-                    //{                        
-                    //    IWebElement img = driver.FindElement(By.XPath("/html/body/div[1]/div/div[4]/div/div[1]/div/div[1]/div/div[1]/div[2]/div/a/div/i"));                        
-                    //    string[] imgdata = img.GetAttribute("style").Replace("\'", "\"").Split('\"');
-                    //    string name = img.GetAttribute("aria-label");
-                    //    status[0] = "成功登入!";
-                    //    status[1] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
-                    //    status[2] = imgdata[1].Replace("amp;", "");
-                    //    status[3] = name;
-                    //    status[4] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
-                    //    System.Threading.Thread.Sleep(Delay());
-                    //    driver.Quit();
-                    //}
-                    //catch
-                    //{
-                    //    string name = driver.Title;                     
-                    //    //IWebElement img = driver.FindElement(By.XPath("/html/body/div[1]/div/div[4]/div/div[1]/div/div[1]/div/div[1]/div[2]/div[1]/div/div/i"));
-                    //    //string[] imgdata = img.GetAttribute("style").Replace("\'", "\"").Split('\"');
-                    //    //string name = img.GetAttribute("aria-label");                       
-                    //    status[0] = "成功登入!";
-                    //    status[1] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
-                    //    status[2] = "https://scontent.frmq2-1.fna.fbcdn.net/v/t1.0-1/c47.0.160.160a/p160x160/10354686_10150004552801856_220367501106153455_n.jpg?_nc_cat=1&_nc_oc=AQnwuPVNtEyWQ8DxG-_WU5TmHr2CRrJklH_3-Em1d-BBL7pBo_2onHA5Fqz-_GtlKu8&_nc_ht=scontent.frmq2-1.fna&oh=f85d870222f145ff686ba73eacee7778&oe=5DD8371E";
-                    //    status[3] = name;
-                    //    status[4] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
-                    //    System.Threading.Thread.Sleep(Delay());
-                    //    driver.Quit();
-
-                    //}
-
                 }
                 /**** 你可能認識的人 or 請使用Facebook app ****/
                 else if (driver.Url.IndexOf("gettingstarted") != -1)
                 {
-                    driver.Navigate().GoToUrl("https://m.facebook.com/#!/profile.php");
                     /*** 個人頁面 ****/
-
-                    //IWebElement Setting = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/a[1]"));
-                    //Setting.Click();
-                    //System.Threading.Thread.Sleep(Delay());
-                    //IWebElement Profile = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/ul[1]/li[1]/div[1]/a[1]/div[1]/img[1]"));
-                    //Profile.Click();
-                    //IWebElement img = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[4]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/a[1]/div[1]/i[1]"));
-                    //string[] imgdata = img.GetAttribute("style").Replace("\'", "\"").Split('\"');
-                    //string name = img.GetAttribute("aria-label");
-                    //status[0] = "成功登入!";
-                    //status[1] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
-                    //status[2] = imgdata[1].Replace("amp;", "");
-                    //status[3] = name;
-                    //status[4] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
-                    //System.Threading.Thread.Sleep(Delay());
-                    //driver.Quit();
+                    driver.Navigate().GoToUrl("https://m.facebook.com/profile.php");
+                    
+                    /*** 帳號需驗證 ***/
+                    if (driver.Url.IndexOf("checkpoint") != -1)
+                    {
+                        status[0] = "帳號未驗證";
+                        driver.Quit();
+                        content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
+                        return content;
+                    }
+                    string facebookcookie = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
+                    string facebookid = "";
+                    facebookcookie = facebookcookie.Replace(@"\", "'");     // 將\ 取代成 '
+                    var FacebookCookieObj = JsonConvert.DeserializeObject<dynamic>(facebookcookie); // FacebookCookieJson的json格式轉成物件
+                    foreach (var cookieobject in FacebookCookieObj)
+                    {
+                        if (cookieobject.Name == "c_user")
+                        {
+                            facebookid = cookieobject.Value;
+                        }
+                    }
                     string name = driver.Title;
                     status[0] = "成功登入!";
-                    status[1] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
-                    status[2] = "https://scontent.frmq2-1.fna.fbcdn.net/v/t1.0-1/c47.0.160.160a/p160x160/10354686_10150004552801856_220367501106153455_n.jpg?_nc_cat=1&_nc_oc=AQnwuPVNtEyWQ8DxG-_WU5TmHr2CRrJklH_3-Em1d-BBL7pBo_2onHA5Fqz-_GtlKu8&_nc_ht=scontent.frmq2-1.fna&oh=f85d870222f145ff686ba73eacee7778&oe=5DD8371E";;
+                    status[1] = facebookid;
+                    status[2] = "http://graph.facebook.com/" + facebookid + "/picture?type=large";
                     status[3] = name;
                     status[4] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
                     System.Threading.Thread.Sleep(Delay());
@@ -649,26 +687,30 @@ namespace HeO.CheckFacebook
                 else if(driver.Url.IndexOf("home.php") != -1)
                 {
                     /*** 個人頁面 ****/
-                    driver.Navigate().GoToUrl("https://m.facebook.com/#!/profile.php");
-                    //IWebElement Setting = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/a[1]"));
-                    //Setting.Click();
-                    //System.Threading.Thread.Sleep(Delay());
-                    //IWebElement Profile = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[6]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/ul[1]/li[1]/div[1]/a[1]/div[1]/img[1]"));
-                    //Profile.Click();
-                    //IWebElement img = driver.FindElement(By.XPath("/html[1]/body[1]/div[1]/div[1]/div[4]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/a[1]/div[1]/i[1]"));
-                    //string[] imgdata = img.GetAttribute("style").Replace("\'", "\"").Split('\"');
-                    //string name = img.GetAttribute("aria-label");
-                    //status[0] = "成功登入!";
-                    //status[1] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
-                    //status[2] = imgdata[1].Replace("amp;", "");
-                    //status[3] = name;
-                    //status[4] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
-                    //System.Threading.Thread.Sleep(Delay());
-                    //driver.Quit();
+                    driver.Navigate().GoToUrl("https://m.facebook.com/profile.php");
+                    /*** 帳號需驗證 ***/
+                    if (driver.Url.IndexOf("checkpoint") != -1)
+                    {
+                        status[0] = "帳號未驗證";
+                        driver.Quit();
+                        content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
+                        return content;
+                    }
+                    string facebookcookie = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
+                    string facebookid = "";
+                    facebookcookie = facebookcookie.Replace(@"\", "'");     // 將\ 取代成 '
+                    var FacebookCookieObj = JsonConvert.DeserializeObject<dynamic>(facebookcookie); // FacebookCookieJson的json格式轉成物件
+                    foreach (var cookieobject in FacebookCookieObj)
+                    {
+                        if (cookieobject.Name == "c_user")
+                        {
+                            facebookid = cookieobject.Value;
+                        }
+                    }
                     string name = driver.Title;
                     status[0] = "成功登入!";
-                    status[1] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
-                    status[2] = "https://scontent.frmq2-1.fna.fbcdn.net/v/t1.0-1/c47.0.160.160a/p160x160/10354686_10150004552801856_220367501106153455_n.jpg?_nc_cat=1&_nc_oc=AQnwuPVNtEyWQ8DxG-_WU5TmHr2CRrJklH_3-Em1d-BBL7pBo_2onHA5Fqz-_GtlKu8&_nc_ht=scontent.frmq2-1.fna&oh=f85d870222f145ff686ba73eacee7778&oe=5DD8371E";
+                    status[1] = facebookid;
+                    status[2] = "http://graph.facebook.com/" + facebookid + "/picture?type=large";
                     status[3] = name;
                     status[4] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
                     System.Threading.Thread.Sleep(Delay());
@@ -699,35 +741,35 @@ namespace HeO.CheckFacebook
                 return response;
             }
         }
-
+            
         [HttpGet]
-        public string BackendCkeckFacebook(string Facebooklink)
+        public string BackendCkeckFacebook(string Facebookid)
         {
-            string status = "";
-            if (Facebooklink.IndexOf("facebook.com") != -1)
-            {         
-                ///**** 寫入TXT檔 *****/       
-                //using (StreamWriter sw = new StreamWriter(@"C:\Users\wadmin\Desktop\TestFile.txt", true))
-                //{
-                //    sw.Write(Facebooklink);
-                //    sw.Write(Environment.NewLine);
-                //}
-                FirefoxProfile profile = new FirefoxProfile();
-                FirefoxOptions options = new FirefoxOptions();
-                options.Profile = profile;
-                options.SetPreference("dom.webnotifications.enabled", false);
-                IWebDriver driver = new FirefoxDriver(options);
-                driver.Navigate().GoToUrl(Facebooklink);
-                if (driver.Title.IndexOf("找不到網頁") != -1)
-                {
-                    status = "需驗證";
-                }
-                else
-                {
-                    status = "已驗證";
-                }
-                driver.Quit();                
+            string status = "";            
+            int number = 1;
+            /**** 寫入TXT檔 *****/
+            using (StreamWriter sw = new StreamWriter(@"C:\Users\wadmin\Desktop\TestFile.txt", true))
+            {
+                sw.Write(Facebookid);
+                sw.Write(Environment.NewLine);
+                number++;
             }
+            FirefoxProfile profile = new FirefoxProfile();
+            FirefoxOptions options = new FirefoxOptions();
+            options.Profile = profile;
+            options.SetPreference("dom.webnotifications.enabled", false);
+            IWebDriver driver = new FirefoxDriver(options);
+            driver.Navigate().GoToUrl("http://graph.facebook.com/" + Facebookid + "/picture?type=large");
+            System.Threading.Thread.Sleep(10);
+            if (driver.Title.IndexOf("HsTZSDw4avx") != -1)
+            {
+                status = "需驗證";
+            }
+            else
+            {
+                status = "已驗證";
+            }
+            driver.Quit();                
             return status;
         }
 

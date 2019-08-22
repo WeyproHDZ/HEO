@@ -17,6 +17,7 @@ using Microsoft.AspNet.SignalR;
 using System.Threading.Tasks;
 using Owin;
 using Microsoft.Owin;
+using System.Web.WebSockets;
 //using System.Web.Http;
 //using System.Net.Http;
 //using System.Net.WebSockets;
@@ -78,9 +79,9 @@ namespace HeO.Controllers
         public ActionResult Order(Order order)
         {
             int Now = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds - 28800;      // 目前時間的總秒數
-            Guid Vipid = memberlevelService.Get().Where(a => a.Levelname == "VIP").FirstOrDefault().Levelid;    // VIPID
+            //Guid Vipid = memberlevelService.Get().Where(a => a.Levelname == "VIP").FirstOrDefault().Levelid;    // VIPID
 
-            int membersCount = membersService.Get().Where(a => a.Levelid != Vipid).Where(x => x.Logindate <= Now).Where(b => b.Memberloginrecord.OrderByDescending(x => x.Createdate).FirstOrDefault().Status == 1).Count();    // 扣除Vip會員的所有可用人數
+            int membersCount = membersService.Get().Where(x => x.Logindate >= Now).Where(b => b.Memberloginrecord.OrderByDescending(x => x.Createdate).FirstOrDefault().Status == 1).Count();    // 扣除Vip會員的所有可用人數
             if (order.Count > membersCount)
             {
                 ViewBag.TotalNumber = membersService.Get().Count();         // 會員總人數
@@ -100,52 +101,33 @@ namespace HeO.Controllers
             }
             if (order.Url.IndexOf("facebook.com") != -1 && order.Count != null)
             {
-                string Url = order.Url.Replace(" ", "");         // 將訂單的空白字元砍掉
-                Guid Memberid = Guid.Parse(Session["Memberid"].ToString());
-                int? MemberCooldown = member.Memberlevel.Memberlevelcooldown.FirstOrDefault().Cooldowntime;           // 該會員的冷卻時間(一般/VIP)
-
-                if (member.Isreal == true)
+                if(order.Url.IndexOf("photos") != -1 || order.Url.IndexOf("posts") != -1 || order.Url.IndexOf("video") != -1 || order.Url.IndexOf("permalink") != -1)
                 {
-                    Guid Realid = memberlevelService.Get().Where(a => a.Levelname == "真人").FirstOrDefault().Levelid;        // 取得真人ID
-                    int? RealCooldowntime = memberlevelcooldownService.Get().Where(a => a.Levelid == Realid).FirstOrDefault().Cooldowntime;      // 取得真人的冷卻時間
-                    if (MemberCooldown > RealCooldowntime)
+                    string Url = order.Url.Replace(" ", "");         // 將訂單的空白字元砍掉
+                    Guid Memberid = Guid.Parse(Session["Memberid"].ToString());
+                    int? MemberCooldown = member.Memberlevel.Memberlevelcooldown.FirstOrDefault().Cooldowntime;           // 該會員的冷卻時間(一般/VIP)
+
+                    if (member.Isreal == true)
                     {
-                        Cooldowntime = RealCooldowntime;
+                        Guid Realid = memberlevelService.Get().Where(a => a.Levelname == "真人").FirstOrDefault().Levelid;        // 取得真人ID
+                        int? RealCooldowntime = memberlevelcooldownService.Get().Where(a => a.Levelid == Realid).FirstOrDefault().Cooldowntime;      // 取得真人的冷卻時間
+                        if (MemberCooldown > RealCooldowntime)
+                        {
+                            Cooldowntime = RealCooldowntime;
+                        }
+                        else
+                        {
+                            Cooldowntime = MemberCooldown;
+                        }
                     }
                     else
                     {
                         Cooldowntime = MemberCooldown;
                     }
-                }
-                else
-                {
-                    Cooldowntime = MemberCooldown;
-                }
-                IEnumerable<Order> old_order = orderService.Get().Where(a => a.Memberid == Memberid).OrderByDescending(o => o.Createdate);
-                if (old_order.ToList().Count() == 0)
-                {
-                    if (TryUpdateModel(order, new string[] { "Count" }) && ModelState.IsValid)
+                    IEnumerable<Order> old_order = orderService.Get().Where(a => a.Memberid == Memberid).OrderByDescending(o => o.Createdate);
+                    if (old_order.ToList().Count() == 0)
                     {
-                        order.Orderid = Guid.NewGuid();
-                        order.Createdate = DateTime.Now;
-                        order.Updatedate = DateTime.Now;
-                        order.Memberid = Memberid;
-                        order.Remains = order.Count;
-                        order.Url = Url;
-                        order.Ordernumber = "heoorder" + DateTime.Now.ToString("yyyyMMddHHmmssfff");
-                        order.Service = "讚";
-                        orderService.Create(order);
-                        orderService.SaveChanges();
-                    }
-                    return RedirectToAction("OrderResult");
-                }
-                else
-                {
-                    DateTime date = old_order.FirstOrDefault().Createdate.AddSeconds(Convert.ToDouble(Cooldowntime));
-
-                    if (DateTime.Now > date)
-                    {
-                        if (TryUpdateModel(order, new string[] { "Count", }) && ModelState.IsValid)
+                        if (TryUpdateModel(order, new string[] { "Count" }) && ModelState.IsValid)
                         {
                             order.Orderid = Guid.NewGuid();
                             order.Createdate = DateTime.Now;
@@ -162,10 +144,41 @@ namespace HeO.Controllers
                     }
                     else
                     {
-                        double time = ((date - DateTime.Now).TotalSeconds);
-                        Session["Date"] = Convert.ToInt16(time);
-                        return RedirectToAction("OrderCooldown");
+                        DateTime date = old_order.FirstOrDefault().Createdate.AddSeconds(Convert.ToDouble(Cooldowntime));
+
+                        if (DateTime.Now > date)
+                        {
+                            if (TryUpdateModel(order, new string[] { "Count", }) && ModelState.IsValid)
+                            {
+                                order.Orderid = Guid.NewGuid();
+                                order.Createdate = DateTime.Now;
+                                order.Updatedate = DateTime.Now;
+                                order.Memberid = Memberid;
+                                order.Remains = order.Count;
+                                order.Url = Url;
+                                order.Ordernumber = "heoorder" + DateTime.Now.ToString("yyyyMMddHHmmssfff");
+                                order.Service = "讚";
+                                orderService.Create(order);
+                                orderService.SaveChanges();
+                            }
+                            return RedirectToAction("OrderResult");
+                        }
+                        else
+                        {
+                            double time = ((date - DateTime.Now).TotalSeconds);
+                            Session["Date"] = Convert.ToInt16(time);
+                            return RedirectToAction("OrderCooldown");
+                        }
                     }
+                }
+                else
+                {
+                    ViewBag.TotalNumber = membersService.Get().Count();         // 會員總人數
+                    Setting Setting = settingService.Get().FirstOrDefault();
+                    ViewBag.Max = Setting.Max;
+                    ViewBag.Min = Setting.Min;
+                    TempData["message"] = "網址輸入錯誤，請重新下單!!!";
+                    return RedirectToAction("Order", "OrderMs");
                 }
             }
             else if(order.Url.Contains("'") || order.Url.Contains("\"") || order.Count == null)     // 亂輸入者，則被寫到黑名單的表裡面，並記載IP、Useragent、MemberId
@@ -222,10 +235,10 @@ namespace HeO.Controllers
         public void userConnected()
         {
             Setting setting = settingService.Get().FirstOrDefault();                
-            Guid Vipid = memberlevelService.Get().Where(a => a.Levelname == "VIP").FirstOrDefault().Levelid;
+            //Guid Vipid = memberlevelService.Get().Where(a => a.Levelname == "VIP").FirstOrDefault().Levelid;
             int Now = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds - 28800;      // 目前時間的總秒數
-            var query = membersService.Get().Where(x => x.Levelid != Vipid).Where(a => a.Logindate >= Now).Count();
-
+            var query = membersService.Get().Where(a => a.Logindate >= Now).Count();
+            Clients.User(Context.ConnectionId);
             Clients.All.getList(query);                  
         }
 
@@ -241,53 +254,43 @@ namespace HeO.Controllers
         //    return base.OnDisconnected(true);
         //}
     }
+    #endregion  
+    public class WSChatController : System.Web.Http.ApiController
+    {
+        public System.Net.Http.HttpResponseMessage Get()
+        {
+            if (HttpContext.Current.IsWebSocketRequest)
+            {
+                HttpContext.Current.AcceptWebSocketRequest(ProcessWSChat);
+            }
+            return new System.Net.Http.HttpResponseMessage(HttpStatusCode.SwitchingProtocols);
+        }
+
+
+        private async Task ProcessWSChat(AspNetWebSocketContext arg)
+        {
+            System.Net.WebSockets.WebSocket socket = arg.WebSocket;
+            while (true)
+            {
+                ArraySegment<byte> buffer = new ArraySegment<byte>(new byte[1024]);
+                System.Net.WebSockets.WebSocketReceiveResult result = await socket.ReceiveAsync(buffer, System.Threading.CancellationToken.None);
+                if (socket.State == System.Net.WebSockets.WebSocketState.Open)
+                {
+                    string message = Encoding.UTF8.GetString(buffer.Array, 0, result.Count);
+                    string returnMessage = "You send :" + message + ". at" + DateTime.Now.ToLongTimeString();
+                    buffer = new ArraySegment<byte>(Encoding.UTF8.GetBytes(returnMessage));
+                    await socket.SendAsync(buffer, System.Net.WebSockets.WebSocketMessageType.Text, true, System.Threading.CancellationToken.None);
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
+    }
+    #region --訂單成功--
+
     #endregion
-
-    //#region --訂單成功--
-    //public class OrderHub : Hub
-    //{
-    //    private MembersService membersService;
-    //    private MemberlevelService memberlevelService;
-    //    public OrderHub()
-    //    {
-    //        membersService = new MembersService();
-    //        memberlevelService = new MemberlevelService();
-    //    }
-    //    static List<UserData> Userdata = new List<UserData>(0);
-    //    public string Url = "";
-    //    public void userConnected(Guid Memberid, string MemberRand)
-    //    {        
-    //        if (MemberRand.Equals("XkhVsa7rUv"))
-    //        {
-    //            Members Member = membersService.GetByID(Memberid);
-    //            Guid Vipid = memberlevelService.Get().Where(a => a.Levelname == "VIP").FirstOrDefault().Levelid;
-    //            if (!Member.Levelid.Equals(Vipid))
-    //            {
-    //                var query = from u in Userdata
-    //                            where u.Id == Context.ConnectionId
-    //                            select u;
-    //                if (query.Count() == 0)
-    //                {
-    //                    Userdata.Add(new UserData { Id = Context.ConnectionId });
-    //                }
-    //                Clients.All.getList(Userdata);
-    //            }
-    //        }
-    //    }
-
-    //    public override Task OnDisconnected(bool Order = true)
-    //    {
-    //        Clients.All.removeList(Context.ConnectionId);
-    //        var item = Userdata.FirstOrDefault(a => a.Id == Context.ConnectionId);
-    //        if (item != null)
-    //        {
-    //            Userdata.Remove(item);
-    //            Clients.All.onUserDisconnected(item.Id);
-    //        }
-    //        return base.OnDisconnected(true);
-    //    }
-    //}
-    //#endregion
 
     public class OrderData
     {

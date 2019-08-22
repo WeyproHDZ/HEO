@@ -40,11 +40,13 @@
                                             <option value="2" @(ViewBag.Sex == 2 ? "Selected" : "")>女性</option>                                            
                                         </select>
                                         <br />驗證狀態 : 
-                                            <input type="checkbox" name="Status" value="0"><i class="fa fa-question" aria-hidden="true" style="color:black"></i>
-                                            <input type="checkbox" name="Status" value="1"><i class="fa fa-check" aria-hidden="true" style="color:green"></i>
-                                            <input type="checkbox" name="Status" value="2"><i class="fa fa-times" aria-hidden="true" style="color:red"></i>
+                                            <input type="checkbox" name="Status" id="Status" value="0" group="0"><i class="fa fa-question" aria-hidden="true" style="color:black"></i>
+                                            <input type="checkbox" name="Status" id="Status" value="1" group="0"><i class="fa fa-check" aria-hidden="true" style="color:green"></i>
+                                            <input type="checkbox" name="Status" id="Status" value="2" group="0"><i class="fa fa-times" aria-hidden="true" style="color:red"></i>
                                         <br />
-                                        <button class="btn btn-info btn-labeled" type="submit"> <span class="btn-label"><i class="fa fa-search"></i></span>查詢</button>
+                                        <button class="btn btn-info btn-labeled" type="submit"><span class="btn-label"><i class="fa fa-search"></i></span>查詢</button>
+                                        <button class="btn btn-danger btn-labeled" type="button" id="deletechecked" onclick="DeleteChecked()"><span class="btn-label"><i class="fa fa-trash-o"></i></span>刪除</button>
+                                        <button class="btn btn-danger btn-labeled" type="button" id="blackchecked" onclick="BlackChecked()"><span class="btn-label"><i class="fa fa-ban"></i></span>加入黑名單</button>
                                     </div>                                    
                                     <div class="col-sm-5">
                                         <a class="btn btn-warning btn-labeled" id="authmember" onclick="auth()" href="@Url.Action("AllAuthMembers", "MemberMs")" target="_blank"> <span class="btn-label"><i class="fa fa-repeat"></i></span>驗證會員(all) </a>
@@ -64,6 +66,7 @@
                             <table class="table table-hover table-bordered table-striped smart-form">
                                 <thead>
                                     <tr>
+                                        <th width="3%" class="text-center"><input type="checkbox" name="Check" onclick="Checkall()"></th>
                                         <th width="5%" class="text-center">驗證狀態</th>
                                         <th width="3%" class="text-center">層級</th>
                                         <th width="3%" class="text-center">性別</th>
@@ -81,6 +84,7 @@
                                     @foreach (Members entity in data)
                                     {
                                         <tr>
+                                            <td><input type="checkbox" name="@entity.Memberid" value="1" id="Check"></td>                                            
                                             @if (entity.Memberloginrecord.OrderByDescending(a => a.Createdate).FirstOrDefault().Status == 0)
                                             {
                                                 <td class="text-center"><i class="fa fa-question" aria-hidden="true" style="color:black"></i></td>
@@ -108,7 +112,7 @@
                                             }
                                             <td class="text-center">@entity.Account</td>
                                             <td class="text-center">@entity.Name</td>
-                                            <td class="text-center"><a href="@entity.Facebooklink" target="_blank">連結</a></td>
+                                            <td class="text-center"><a href="https://www.facebook.com/profile.php?id=@entity.Facebookid" target="_blank">連結</a></td>
                                             @if (entity.Isreal == true)
                                             {
                                                 <td class="text-center"><i class="fa  fa-circle-o" aria-hidden="true" style="color:green"></i></td>
@@ -135,7 +139,6 @@
                     <div class="text-center">
                         @Html.PagedListPager(list: data, generatePageUrl: page => Url.Action("Members", new { p = page }))
                     </div>
-
                 </div>
 
             </article>
@@ -179,6 +182,74 @@
     <script>
         function auth() {
             alert("@ViewBag.message");
+        }
+
+        function Checkall() {
+            $.each($('tr').find('input#Check'), function () {
+                $(this).prop("checked", true);
+            });
+        }
+
+        function BlackChecked() {
+            var Memberid = [];
+            swal({
+                title: "確定要加入黑名單嗎?",
+                showCancelButton: true,
+                confirmButtonText: '確定！',
+                cancelButtonText: '取消！',
+                type: 'question',
+            }).then(function (e) {
+                $.each($('tr').find('input#Check'), function () {
+                    if ($(this).prop('checked') == true) {
+                        Memberid.push($(this).attr("name"));  //塞到陣列中
+                    }
+                });
+                $.ajax({
+                    url: '@Url.Action("AjaxBlackChecked", "Ajax")',
+                    data: { Memberid: Memberid },
+                    type: 'post',
+                    dateType: 'json',
+                    success: function (response) {
+                        swal({
+                            title: "已成功加入黑名單!",
+                            type: "success"
+                        }).then(function (e) {
+                            location.reload();
+                        });
+                    }
+                });
+            })
+        }
+        /*** 批量刪除 ***/
+        function DeleteChecked() {
+            var Memberid = [];
+            swal({
+                title:"確定要刪除嗎?",
+                showCancelButton: true,
+                confirmButtonText: '確定！', 
+                cancelButtonText: '取消！',
+                type:'question',
+            }).then(function(e){
+                $.each($('tr').find('input#Check'), function () {
+                    if ($(this).prop('checked') == true) {
+                        Memberid.push($(this).attr("name"));  //塞到陣列中
+                    }
+                });
+                $.ajax({
+                    url: '@Url.Action("AjaxDeleteChecked", "Ajax")',
+                    data: { Memberid: Memberid },
+                    type: 'post',
+                    dateType: 'json',
+                    success: function (response) {
+                        swal({
+                            title: "已成功刪除",
+                            type: "success"
+                        }).then(function (e) {
+                            location.reload();
+                        });
+                    }
+                });
+            })
         }
     </script>
 }

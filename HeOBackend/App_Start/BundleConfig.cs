@@ -38,7 +38,10 @@ namespace HeOBackend
                 "~/scripts/plugin/moment/moment.min.js",
                 "~/scripts/plugin/fullcalendar/jquery.fullcalendar.min.js"
                 ));
-
+            bundles.Add(new ScriptBundle("~/scripts/sweetalert").Include(
+                "~/scripts/plugin/sweetalert/sweetalert.min.js",
+                "~/scripts/plugin/sweetalert/sweetalert2.all.min.js"
+                ));
             bundles.Add(new ScriptBundle("~/scripts/charts").Include(
                 "~/scripts/plugin/easy-pie-chart/jquery.easy-pie-chart.min.js",
                 "~/scripts/plugin/sparkline/jquery.sparkline.min.js",

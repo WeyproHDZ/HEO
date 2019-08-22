@@ -54,7 +54,7 @@ namespace HeOBackend.Controllers
             if(search != null)
             {
                 IEnumerable<Feedbackproduct> feedbackproduct = feedbackproductService.Get();
-                var data = orderService.Get().Where(x => x.Ordernumber.Contains(search)).OrderBy(o => o.Createdate);
+                var data = orderService.Get().Where(x => x.Ordernumber.Contains(search) || (x.Url.Contains(search) || (x.Members.Account.Contains(search)))).OrderBy(o => o.Createdate);
                 ViewBag.pageNumber = p;
                 ViewBag.nextpageNumber = 1;
                 ViewBag.Order = data.ToPagedList(pageNumber: p, pageSize: 20);
@@ -92,7 +92,7 @@ namespace HeOBackend.Controllers
             if (search != null)
             {
                 IEnumerable<Feedbackproduct> feedbackproduct = feedbackproductService.Get();
-                var data = orderService.Get().Where(x => x.Ordernumber.Contains(search)).OrderBy(o => o.Createdate);
+                var data = orderService.Get().Where(x => x.Ordernumber.Contains(search) || (x.Url.Contains(search) || (x.Members.Account.Contains(search)))).OrderBy(o => o.Createdate);                
                 ViewBag.pageNumber = p;
                 ViewBag.nextpageNumber = 1;
                 ViewBag.Order = data.ToPagedList(pageNumber: p, pageSize: 20);

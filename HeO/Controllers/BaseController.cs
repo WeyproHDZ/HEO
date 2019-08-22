@@ -35,7 +35,7 @@ namespace HeO.Controllers
         {
             if (Session["Memberid"] != null)           
             {
-                int Now = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds;                                    // 目前時間總秒數
+                int Now = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds -28800;                                    // 目前時間總秒數
                 Guid Memberid = Guid.Parse((Session["Memberid"]).ToString());
                 Guid Normalid = memberlevelService.Get().Where(a => a.Levelname == "一般").FirstOrDefault().Levelid;      // 一般會員的ID
                 Members member = membersService.GetByID(Memberid);                                                        // 該會員的詳細資料
@@ -57,6 +57,7 @@ namespace HeO.Controllers
                         {
                             member.Levelid = Normalid;
                             membersService.SpecificUpdate(member, new string[] { "Levelid" });
+                            membersService.SaveChanges();
                         }
                     }
                 }

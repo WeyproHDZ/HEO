@@ -148,14 +148,14 @@
     <Property Name="Name" Type="nvarchar" MaxLength="50" />
     <Property Name="Account" Type="nvarchar" MaxLength="50" />
     <Property Name="Password" Type="nvarchar" MaxLength="100" />
-    <Property Name="Facebooklink" Type="nvarchar" MaxLength="500" />
+    <Property Name="Facebookid" Type="nvarchar" MaxLength="500" />
     <Property Name="Facebookstatus" Type="int" Nullable="false" />
     <Property Name="Feedbackmoney" Type="float" Nullable="false" />
     <Property Name="Ipaddress" Type="nvarchar" MaxLength="100" />
     <Property Name="Port" Type="int" />
     <Property Name="Useragent_phone" Type="nvarchar" MaxLength="500" />
     <Property Name="Isreal" Type="bit" Nullable="false" />
-    <Property Name="Logindate" Type="int" Nullable="false" />
+    <Property Name="Logindate" Type="bigint" Nullable="false" />
     <Property Name="Lastdate" Type="int" Nullable="false" />
     <Property Name="Createdate" Type="datetime" Nullable="false" />
     <Property Name="Updatedate" Type="datetime" />
@@ -187,7 +187,7 @@
     <Property Name="Ordernumber" Type="nvarchar" MaxLength="255" />
     <Property Name="Memberid" Type="uniqueidentifier" />
     <Property Name="HDZoredernumber" Type="nvarchar" MaxLength="255" />
-    <Property Name="Url" Type="nvarchar" MaxLength="500" />
+    <Property Name="Url" Type="ntext" />
     <Property Name="Isreal" Type="bit" Nullable="false" />
     <Property Name="Service" Type="nvarchar" MaxLength="255" />
     <Property Name="Message" Type="nvarchar" MaxLength="1000" />
@@ -195,6 +195,7 @@
     <Property Name="Remains" Type="int" />
     <Property Name="Cost" Type="float" Nullable="false" />
     <Property Name="OrderStatus" Type="int" Nullable="false" />
+    <Property Name="Duedate" Type="datetime" />
     <Property Name="Updatedate" Type="datetime" />
     <Property Name="Createdate" Type="datetime" Nullable="false" />
   </EntityType>
@@ -436,6 +437,18 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK_Memberblacklist_Members">
+    <End Role="Members" Type="Self.Members" Multiplicity="0..1" />
+    <End Role="Memberblacklist" Type="Self.Memberblacklist" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Members">
+        <PropertyRef Name="Memberid" />
+      </Principal>
+      <Dependent Role="Memberblacklist">
+        <PropertyRef Name="Memberid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK_Memberlevelcooldown_Memberlevel">
     <End Role="Memberlevel" Type="Self.Memberlevel" Multiplicity="0..1">
       <OnDelete Action="Cascade" />
@@ -622,6 +635,10 @@
     <AssociationSet Name="FK_Memberauthorization_Members" Association="Self.FK_Memberauthorization_Members">
       <End Role="Members" EntitySet="Members" />
       <End Role="Memberauthorization" EntitySet="Memberauthorization" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Memberblacklist_Members" Association="Self.FK_Memberblacklist_Members">
+      <End Role="Members" EntitySet="Members" />
+      <End Role="Memberblacklist" EntitySet="Memberblacklist" />
     </AssociationSet>
     <AssociationSet Name="FK_Memberlevelcooldown_Memberlevel" Association="Self.FK_Memberlevelcooldown_Memberlevel">
       <End Role="Memberlevel" EntitySet="Memberlevel" />

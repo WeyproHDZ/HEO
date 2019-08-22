@@ -19,3 +19,40 @@
         </div>
     </section>
 </main>
+
+@section scripts {
+<script type="text/javascript">
+var ws;
+$(
+function () {
+$("#btnConnect").click(function () {
+$("#messageSpan").text("Connection...");
+ws = new WebSocket("ws://" + window.location.hostname + ":" + window.location.port + "/OrderMs/WSChat");
+ws.onopen = function () {
+$("#messageSpan").text("Connected!");
+};
+ws.onmessage = function (result) {
+$("#messageSpan").text(result.data);
+};
+ws.onerror = function (error) {
+$("#messageSpan").text(error.data);
+};
+ws.onclose = function () {
+$("#messageSpan").text("Disconnected!");
+};
+});
+$("#btnSend").click(function () {
+if (ws.readyState == WebSocket.OPEN) {
+ws.send($("#txtInput").val());
+}
+else {
+$("messageSpan").text("Connection is Closed!");
+}
+});
+$("#btnDisconnect").click(function () {
+ws.close();
+});
+}
+);
+</script>
+}

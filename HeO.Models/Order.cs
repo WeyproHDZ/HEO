@@ -32,6 +32,7 @@ namespace HeO.Models
         public Nullable<int> Remains { get; set; }
         public double Cost { get; set; }
         public int OrderStatus { get; set; }
+        public Nullable<System.DateTime> Duedate { get; set; }
         public Nullable<System.DateTime> Updatedate { get; set; }
         public System.DateTime Createdate { get; set; }
     

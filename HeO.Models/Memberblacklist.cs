@@ -20,5 +20,7 @@ namespace HeO.Models
         public string IP_Addr { get; set; }
         public string Useragent { get; set; }
         public Nullable<System.DateTime> Createdate { get; set; }
+    
+        public virtual Members Members { get; set; }
     }
 }

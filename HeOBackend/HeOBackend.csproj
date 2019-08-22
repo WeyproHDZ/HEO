@@ -857,6 +857,8 @@
     <Content Include="Scripts\plugin\summernote\summernote.min.js" />
     <Content Include="Scripts\plugin\summernote\zh-TW.js" />
     <Content Include="Scripts\plugin\superbox\superbox.min.js" />
+    <Content Include="Scripts\plugin\sweetalert\sweetalert.min.js" />
+    <Content Include="Scripts\plugin\sweetalert\sweetalert2.all.min.js" />
     <Content Include="Scripts\plugin\throttle-denounce\jquery.ba-throttle-debounce.min.js" />
     <Content Include="Scripts\plugin\typeahead\typeahead.min.js" />
     <Content Include="Scripts\plugin\typeahead\typeaheadjs.min.js" />
@@ -885,6 +887,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\AjaxController.cs" />
     <Compile Include="Controllers\ApiController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\FeedbackMsController.cs" />

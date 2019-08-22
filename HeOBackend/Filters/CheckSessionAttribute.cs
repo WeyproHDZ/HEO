@@ -61,9 +61,9 @@ namespace HeOBackend
                     ac = ac.Replace("Productphotos", "Products");
                     ac = ac.Replace("Eventphotos", "Events");
                     ac = ac.Replace("details", "");
-                    ac = ac.Replace("AllAuth", "");
-                    ac = ac.Replace("Auth", "");
                     ac = ac.Replace("ErrorAuth", "");
+                    ac = ac.Replace("AllAuth", "");
+                    ac = ac.Replace("Auth", "");                    
                     ac = ac.Replace("Upload", "");
                     ac = ac.Replace("Viewfacebooklist", "");
                     Lims lim = limsService.Get().Where(a => a.Key.Contains(controller)).FirstOrDefault();

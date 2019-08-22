@@ -127,11 +127,13 @@ namespace HeOBackend.Controllers
             return RedirectToAction("Memberlevel");
         }
 
-        /**** 會員 新增/刪除/修改/匯入Excel/驗證帳號 ****/
+        /**** 會員 新增/全選/全選刪除/刪除/修改/匯入Excel/驗證帳號 ****/
         [CheckSession(IsAuth = true)]
         public ActionResult Members(int p = 1)
         {
+            //var data = membersService.Get().OrderByDescending(o => o.Createdate);
             var data = membersService.Get().OrderByDescending(o => o.Createdate);
+            ViewBag.totalCount = membersService.Get().Count();
             ViewBag.pageNumber = p;
             ViewBag.Members = data.ToPagedList(pageNumber: p, pageSize: 100);
             ViewBag.message = "按下確定後開始驗證帳號，請勿關閉分頁";
@@ -182,6 +184,7 @@ namespace HeOBackend.Controllers
                 data = data.Where(a => Status.Contains(a.Memberloginrecord.OrderByDescending(x => x.Createdate).FirstOrDefault().Status));
             }
             data = data.OrderByDescending(o => o.Createdate);
+            ViewBag.totalCount = data.Count();
             ViewBag.pageNumber = p;
             ViewBag.Members = data.ToPagedList(pageNumber: p, pageSize: 100);
             ViewBag.Account = account;
@@ -213,13 +216,13 @@ namespace HeOBackend.Controllers
             Useragent useragent = useragentService.Get().Where(a => a.Id == rnd_useragent).FirstOrDefault();
             /*** End Useragent ***/
 
-            if (TryUpdateModel(members , new string[] {"Sex" , "Account" , "Password" , "Facebookstauts" , "Facebooklink" , "Feedbackmoney" , "Name" , "Isenable"}) && ModelState.IsValid)
+            if (TryUpdateModel(members , new string[] {"Sex" , "Account" , "Password" , "Facebookstauts" , "Facebookid" , "Feedbackmoney" , "Name" , "Isenable"}) && ModelState.IsValid)
             {
                 members.Memberid = Guid.NewGuid();
                 members.Account = Regex.Replace(members.Account, @"[^a-z||A-Z||@||.||0-9]", "");         // 保留A-Z、a-z、0-9、小老鼠、小數點，其餘取代空值
                 members.Createdate = DateTime.Now;
                 members.Updatedate = DateTime.Now;
-                members.Lastdate = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds;      // 總秒數
+                members.Lastdate = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds - 28800;      // 總秒數
                 members.Isenable = 1;
                 members.Isreal = members.Isreal;
                 members.Levelid = members.Levelid;              
@@ -335,14 +338,14 @@ namespace HeOBackend.Controllers
                         member.Account = Regex.Replace(sheet.GetRow(i).GetCell(0).ToString(), @"[^a-z||A-Z||@||.||0-9]", "");         // 保留A-Z、a-z、0-9、小老鼠、小數點，其餘取代空值
                         member.Password = sheet.GetRow(i).GetCell(1).ToString();
                         member.Name = sheet.GetRow(i).GetCell(2).ToString();
-                        member.Facebooklink = sheet.GetRow(i).GetCell(3).ToString();
+                        member.Facebookid = sheet.GetRow(i).GetCell(3).ToString().Replace("https://www.facebook.com/profile.php?id=", "");
                         member.Levelid = Guid.Parse("0db21b54-35a7-400b-a8ea-e9c4c2879609");
                         member.Memberid = Guid.NewGuid();
                         member.Createdate = DateTime.Now;
                         member.Updatedate = DateTime.Now;
                         member.Isenable = 1;
                         member.Is_import = true;       // 是否匯入 【false : 前台登入 , true : 後台匯入】 
-                        member.Lastdate = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds;
+                        member.Lastdate = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds - 28800;
                         /*** 隨機指派手機版Useragent ***/
                         int useragent_phone = useragentService.Get().Where(a => a.Isweb == 1).Count();
                         Random rnd = new Random();
@@ -383,7 +386,7 @@ namespace HeOBackend.Controllers
             IEnumerable<Members> members = membersService.Get().Where(a => a.Memberloginrecord.OrderByDescending(x => x.Createdate).FirstOrDefault().Status != 2).ToList();            
             foreach (Members auth_member in members)
             {
-                string url = "http://heohelp.com:8080/Check/BackendCkeckFacebook?Facebooklink=" + auth_member.Facebooklink;
+                string url = "http://heohelp.com:8080/Check/BackendCkeckFacebook?Facebookid=" + auth_member.Facebookid;
                 WebRequest myReq = WebRequest.Create(url);
                 myReq.Method = "GET";
                 myReq.ContentType = "application/json; charset=UTF-8";
@@ -437,7 +440,7 @@ namespace HeOBackend.Controllers
             IEnumerable<Members> members = membersService.Get().ToList();
             foreach (Members auth_member in members)
             {
-                string url = "http://heofrontend.4webdemo.com:8080/Check/BackendCkeckFacebook?Facebooklink=" + auth_member.Facebooklink;
+                string url = "http://heofrontend.4webdemo.com:8080/Check/BackendCkeckFacebook?Facebookid=" + auth_member.Facebookid;
                 WebRequest myReq = WebRequest.Create(url);
                 myReq.Method = "GET";
                 myReq.ContentType = "application/json; charset=UTF-8";
@@ -491,7 +494,7 @@ namespace HeOBackend.Controllers
             IEnumerable<Members> members = membersService.Get().Where(a => a.Memberloginrecord.OrderByDescending(x => x.Createdate).FirstOrDefault().Status == 2).ToList();
             foreach (Members auth_member in members)
             {
-                string url = "http://heofrontend.4webdemo.com:8080/Check/BackendCkeckFacebook?Facebooklink=" + auth_member.Facebooklink;
+                string url = "http://heofrontend.4webdemo.com:8080/Check/BackendCkeckFacebook?Facebookid=" + auth_member.Facebookid;
                 WebRequest myReq = WebRequest.Create(url);
                 myReq.Method = "GET";
                 myReq.ContentType = "application/json; charset=UTF-8";
@@ -812,7 +815,7 @@ namespace HeOBackend.Controllers
         [HttpPost]
         public ActionResult EditReallist(Guid memberid , Members members , int status, Guid Levelid)
         {
-            membersService.SpecificUpdate(members, new string[] { "Facebooklink" });
+            membersService.SpecificUpdate(members, new string[] { "Facebookid" });
             members.Facebookstatus = status;
             if(status == 2)
             {
