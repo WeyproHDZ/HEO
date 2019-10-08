@@ -18,16 +18,13 @@
                     <!-- widget content -->
                     <div class="widget-body">
                         <div class="widget-body-toolbar">
-
                             <div class="row">
-
                                 <div class="form-inline">
                                     <div class="col-sm-10">
                                         <a href="@Url.Action("Order", "OrderMs", new { p = ViewBag.pageNumber, prev = ViewBag.prev })" class="btn btn-info">返回</a>
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                         <div class="table-responsive">
 
@@ -35,6 +32,7 @@
                                 <thead>
                                     <tr>
                                         <th width="10%" class="text-center">驗證狀態</th>
+                                        <th width="10%" class="text-center">帳號身分</th>
                                         <th width="10%" class="text-center">姓名</th>
                                         <th class="text-center">Facebook帳號</th>
                                     </tr>
@@ -45,15 +43,23 @@
                                         <tr>
                                             @if (entity.Members.Memberloginrecord.OrderByDescending(a => a.Createdate).FirstOrDefault().Status == 0)
                                             {
-                                            <td class="text-center"><i class="fa fa-question" aria-hidden="true" style="color:black"></i></td>
+                                                <td class="text-center"><i class="fa fa-question" aria-hidden="true" style="color:black"></i></td>
                                             }
-                                            else if(entity.Members.Memberloginrecord.OrderByDescending(a => a.Createdate).FirstOrDefault().Status == 1)
+                                            else if (entity.Members.Memberloginrecord.OrderByDescending(a => a.Createdate).FirstOrDefault().Status == 1)
                                             {
-                                            <td class="text-center"><i class="fa fa-check" aria-hidden="true" style="color:green"></i></td>
+                                                <td class="text-center"><i class="fa fa-check" aria-hidden="true" style="color:green"></i></td>
                                             }
                                             else
                                             {
-                                            <td class="text-center"><i class="fa fa-times" aria-hidden="true" style="color:red"></i></td>
+                                                <td class="text-center"><i class="fa fa-times" aria-hidden="true" style="color:red"></i></td>
+                                            }
+                                            @if (entity.Members.Is_import == true)
+                                            {
+                                                <td class="text-center"><i class="fa fa-android" aria-hidden="true" style="color:red"></i></td>
+                                            }
+                                            else
+                                            {
+                                                <td class="text-center"><i class="fa fa-male" aria-hidden="true" style="color:green"></i></td>
                                             }
                                             <td class="text-center">@entity.Members.Name</td>                               
                                             <td class="text-center">@entity.Facebookaccount</td>

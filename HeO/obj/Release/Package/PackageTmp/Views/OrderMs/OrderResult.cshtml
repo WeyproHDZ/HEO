@@ -3,7 +3,7 @@
         <div class="block_container">
             <div class="restrict allpadding">
                 <div class="result-block">
-                    <h1>下單成功，已加入排程!</h1>
+                    <h1 id="Status">下單成功，已加入排程!</h1>
                     <div class="controls_group">
                         <div class="result-title">正在運行的貼文網址：</div><a class="result-text" href="@ViewBag.Url" target="_blank">
                             @ViewBag.Url
@@ -11,7 +11,7 @@
                         </a>
                     </div>
                     <div class="controls_group">
-                        <div class="result-title">需求數量：</div>
+                        <div class="result-title" id="Number">需求數量：</div>
                         <div class="result-text">@ViewBag.Count</div>
                     </div>
                 </div>
@@ -21,38 +21,35 @@
 </main>
 
 @section scripts {
-<script type="text/javascript">
-var ws;
-$(
-function () {
-$("#btnConnect").click(function () {
-$("#messageSpan").text("Connection...");
-ws = new WebSocket("ws://" + window.location.hostname + ":" + window.location.port + "/OrderMs/WSChat");
-ws.onopen = function () {
-$("#messageSpan").text("Connected!");
-};
-ws.onmessage = function (result) {
-$("#messageSpan").text(result.data);
-};
-ws.onerror = function (error) {
-$("#messageSpan").text(error.data);
-};
-ws.onclose = function () {
-$("#messageSpan").text("Disconnected!");
-};
-});
-$("#btnSend").click(function () {
-if (ws.readyState == WebSocket.OPEN) {
-ws.send($("#txtInput").val());
-}
-else {
-$("messageSpan").text("Connection is Closed!");
-}
-});
-$("#btnDisconnect").click(function () {
-ws.close();
-});
-}
-);
-</script>
+    <script src="~/Scripts/jquery.signalR-2.4.1.js"></script>
+    <script src="/signalr/hubs"></script>
+    <script>        
+        var OrderNumber = '@Session["OrderNumber"]';
+        $(function () {            
+            // Declare a proxy to reference the hub.
+            var order = $.connection.orderSuccessHub;
+            // Start the connection.
+            $.connection.hub.start().done(function () {
+                order.server.userConnected(OrderNumber);//呼叫server
+            });
+
+            //讓server呼叫(抓取資料)
+            order.client.getList = function (userList) {              
+                if(userList){                    
+                    if (userList == 2) {                        
+                        $("#Status").html("已完成");                        
+                    }
+                    else if (userList == 3) {
+                        $("#Status").html("訂單失敗，請重新下單!");                        
+                    }
+                }
+            }
+
+            ////讓server呼叫(移除離開人員)
+            //order.client.onUserDisconnected = function () {
+            //    Now_Number--;
+            //    $(".online-number").html(Now_Number);
+            //}
+        });
+    </script>
 }

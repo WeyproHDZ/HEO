@@ -131,13 +131,24 @@ namespace HeOBackend.Controllers
         public JsonResult GetAccount(string Id, int number, string Ordernumber)
         {
             if (Id == "heo_order")
-            {                                                                         // 目前時間的總秒數
+            {
                 Setting setting = settingService.Get().FirstOrDefault();
-                Order order = orderService.Get().Where(a => a.Ordernumber == Ordernumber).FirstOrDefault();                                                     // 撈此訂單的詳細資料
-                Feedbackproduct feedbackproduct = feedbackproductService.Get().Where(a => a.Feedbackproductname.Contains(order.Service)).FirstOrDefault();      // 撈此訂單所需之產品的詳細資料
-                IEnumerable<Orderfaceooklist> orderfacebookList = orderfacebooklistService.Get().Where(a => a.Order.Ordernumber == Ordernumber);            // 撈此訂單之前的按讚名單紀錄
-                IEnumerable<Order> old_order = orderService.Get().Where(x => x.Ordernumber != order.Ordernumber).Where(c => c.Service == feedbackproduct.Feedbackproductname).Where(a => a.Url == order.Url);   // 撈所有訂單裡網址為此訂單的資料
+                Order order = orderService.Get().Where(a => a.Ordernumber == Ordernumber).FirstOrDefault();                                                     // 撈訂單的詳細資料
+                Feedbackproduct feedbackproduct = feedbackproductService.Get().Where(a => a.Feedbackproductname.Contains(order.Service)).FirstOrDefault();      // 撈訂單產品的詳細資料
+                IEnumerable<Orderfaceooklist> orderfacebookList = orderfacebooklistService.Get().Where(a => a.Order.Ordernumber == Ordernumber);            // 撈訂單之前的按讚名單紀錄
+                IEnumerable<Order> old_order = orderService.Get().Where(x => x.Ordernumber != order.Ordernumber).Where(c => c.Service == feedbackproduct.Feedbackproductname).Where(a => a.Url == order.Url);   // 撈所有訂單裡網址為訂單的資料
                 List<get_old_member> MemberList = new List<get_old_member>();
+                /**** 判斷訂單是不是HEO內部的單 ***/
+                if (order.Ordernumber.Contains("heo"))
+                {
+                    /*** 先將自己給排除掉 ****/
+                    MemberList.Add(
+                        new get_old_member
+                        {
+                            Memberid = order.Members.Memberid
+                        });
+                }               
+                /**** 將這張單的按讚列表的人排除掉 *****/
                 if(orderfacebookList.Count() > 0)
                 {
                     foreach(Orderfaceooklist thisorderfacebookList in orderfacebookList)
@@ -145,11 +156,12 @@ namespace HeOBackend.Controllers
                         MemberList.Add(
                             new get_old_member
                             {
-                                account = thisorderfacebookList.Facebookaccount
+                                Memberid = Guid.Parse(thisorderfacebookList.Memberid.ToString())
                             }
                         );
                     }
                 }
+                /*** 將同網址的訂單的按站讚列表的人排除掉 ****/
                 if (old_order.Count() > 0)
                 {
                     foreach (Order thisold_order in old_order)
@@ -160,79 +172,71 @@ namespace HeOBackend.Controllers
                             MemberList.Add(
                                 new get_old_member
                                 {
-                                    account = thisoldorderfaceooklist.Facebookaccount
+                                    Memberid = Guid.Parse(thisoldorderfaceooklist.Memberid.ToString())
                                 }
                             );
                         }
                     }
                 }
-                Guid VipLevelid = memberlevelService.Get().Where(a => a.Levelname == "VIP").FirstOrDefault().Levelid;                                           // VIP層級的ID
+
+                Guid VipLevelid = memberlevelService.Get().Where(a => a.Levelname == "VIP").FirstOrDefault().Levelid;   // VIP層級的ID
 
                 if (order.Ordernumber.Contains("heo"))
                 {
-                    /*** HEO內部下的訂單 ***/
+
+                    /*** HEO內部下的訂單 ***/                    
+                    List<get_member> AccountList = new List<get_member>();
                     /*** 先撈前台登入使用者 ***/
                     IEnumerable<Members> members = membersService.Get().Where(s => s.Is_import == false).Where(c => c.Levelid != VipLevelid).Where(x => x.Lastdate <= Now).Where(a => a.Logindate >= Now).Where(c => c.Memberloginrecord.OrderByDescending(a => a.Createdate).FirstOrDefault().Status == 1).OrderBy(x => x.Lastdate);       // 撈層級非VIP的帳號詳細資料
                     if (members != null)
-                    {
-                        List<get_member> AccountList = new List<get_member>();
-                        bool used_accoount = false;
+                    {                        
                         foreach (Members thismembers in members)
                         {
+                            bool used = false;
                             int loop;
-                            if (MemberList.Count() > 0)
-                            {
-                                for (loop = 0; loop < MemberList.Count(); loop++)
+                            for (loop = 0; loop < MemberList.Count(); loop++)
+                            {                                        
+                                if (thismembers.Memberid.Equals(MemberList[loop].Memberid) == true)
                                 {
-                                    if ((thismembers.Account.Equals(MemberList[loop].account)))
-                                    {
-                                        used_accoount = true;
-                                    }
+                                    used = true;
+                                }
+                                if (used == false)
+                                {
+                                    AccountList.Add(
+                                        new get_member
+                                        {
+                                            memberid = thismembers.Memberid,
+                                            account = thismembers.Account,
+                                            password = thismembers.Password,
+                                            useragent_phone = thismembers.Useragent_phone,
+                                            facebookcookie = thismembers.Facebookcookie,
+                                            duedate = (Now + 3600)
+                                        }
+                                    );
+                                    
                                 }
                             }
-
-                            if (!used_accoount)
-                            {
-                                AccountList.Add(
-                                    new get_member
-                                    {
-                                        memberid = thismembers.Memberid,
-                                        account = thismembers.Account,
-                                        password = thismembers.Password,
-                                        useragent_phone = thismembers.Useragent_phone,
-                                        facebookcookie = thismembers.Facebookcookie,
-                                        duedate = (Now+3600)
-                                    }
-                                );
-
-                            }
-                            used_accoount = false;
+                            used = false;
                         }
-
+                        
                         /*** 可用人數小於該訂單所需人數 ***/
-                        if (AccountList.Count < number)
-                        {
+                        if (AccountList.Count() < number)
+                        {                            
+                            bool used = false;
                             //int remains = number - AccountList.Count();
                             /**** 假設前台登入的都冷卻中，就拿後台匯入的機器人 ****/
-                            if (members.Count() == 0)
+                            members = membersService.Get().Where(s => s.Is_import == true).Where(x => x.Lastdate <= Now).Where(c => c.Memberloginrecord.OrderByDescending(a => a.Createdate).FirstOrDefault().Status != 2).OrderBy(x => x.Lastdate);
+                            foreach (Members thismembers in members)
                             {
-                                members = membersService.Get().Where(s => s.Is_import == true).Where(c => c.Levelid != VipLevelid).Where(x => x.Lastdate <= Now).Where(a => a.Logindate >= Now).Where(c => c.Memberloginrecord.OrderByDescending(a => a.Createdate).FirstOrDefault().Status == 1).OrderBy(x => x.Lastdate);       // 撈層級非VIP的帳號詳細資料
-                                used_accoount = false;
-                                foreach (Members thismembers in members)
-                                {
-                                    int loop;
-                                    if (MemberList.Count() > 0)
-                                    {
-                                        for (loop = 0; loop < MemberList.Count(); loop++)
-                                        {
-                                            if ((thismembers.Account.Equals(MemberList[loop].account)))
-                                            {
-                                                used_accoount = true;
-                                            }
-                                        }
+                                int loop;
+                                for (loop = 0; loop < MemberList.Count(); loop++)
+                                {                                    
+                                    if (thismembers.Memberid.Equals(MemberList[loop].Memberid) == true)
+                                    {                                        
+                                        used = true;
                                     }
 
-                                    if (!used_accoount)
+                                    if (used == false)
                                     {
                                         AccountList.Add(
                                             new get_member
@@ -244,13 +248,12 @@ namespace HeOBackend.Controllers
                                                 facebookcookie = thismembers.Facebookcookie,
                                                 duedate = (Now + 3600)
                                             }
-                                        );
-
+                                        );                                        
                                     }
-                                    used_accoount = false;
+                                    used = false;
                                 }
                             }
-                            if (AccountList.Count < number)
+                            if (AccountList.Count() < number)
                             {
                                 return this.Json("數量不足", JsonRequestBehavior.AllowGet);
                             }
@@ -263,13 +266,21 @@ namespace HeOBackend.Controllers
                                     member.Lastdate = Now + (int)setting.Time;
                                     membersService.SpecificUpdate(member, new string[] { "Lastdate" });
                                 }
+                                membersService.SaveChanges();
                             }
-                        }                        
+                        }
+                        foreach (get_member entity in AccountList.Take(number))
+                        {
+                            /*** 將此會員更新下次互惠時間 ****/
+                            Members member = membersService.GetByID(entity.memberid);
+                            member.Lastdate = Now + (int)setting.Time;
+                            membersService.SpecificUpdate(member, new string[] { "Lastdate" });
+                        }
                         membersService.SaveChanges();
                         return this.Json(AccountList.Take(number), JsonRequestBehavior.AllowGet);
                     }
                     else
-                    {
+                    {                        
                         return this.Json("數量不足", JsonRequestBehavior.AllowGet);
                     }
                 }
@@ -291,7 +302,7 @@ namespace HeOBackend.Controllers
                                 {
                                     for (loop = 0; loop < MemberList.Count(); loop++)
                                     {
-                                        if ((thismembers.Account.Equals(MemberList[loop].account)))
+                                        if ((thismembers.Memberid.Equals(MemberList[loop].Memberid)) == true)
                                         {
                                             used_accoount = true;
                                         }
@@ -341,7 +352,7 @@ namespace HeOBackend.Controllers
                     }
                     else
                     {
-                        IEnumerable<Members> members = membersService.Get().Where(x => x.Lastdate <= Now).Where(b => b.Memberloginrecord.OrderByDescending(x => x.Createdate).FirstOrDefault().Status == 1).Where(s => s.Memberauthorization.Where(q => q.Feedbackproductid == feedbackproduct.Feedbackproductid).FirstOrDefault().Checked == true).OrderBy(x => x.Lastdate);
+                        IEnumerable<Members> members = membersService.Get().Where(x => x.Lastdate <= Now).Where(b => b.Memberloginrecord.OrderByDescending(x => x.Createdate).FirstOrDefault().Status != 2).Where(s => s.Memberauthorization.Where(q => q.Feedbackproductid == feedbackproduct.Feedbackproductid).FirstOrDefault().Checked == true).OrderBy(x => x.Lastdate);
                         if (members != null)
                         {
                             List<get_member> AccountList = new List<get_member>();
@@ -353,7 +364,7 @@ namespace HeOBackend.Controllers
                                 {
                                     for (loop = 0; loop < MemberList.Count(); loop++)
                                     {
-                                        if ((thismembers.Account.Equals(MemberList[loop].account)))
+                                        if ((thismembers.Memberid.Equals(MemberList[loop].Memberid)) == true)
                                         {
                                             used_accoount = true;
                                         }
@@ -373,10 +384,6 @@ namespace HeOBackend.Controllers
                                             duedate = (Now+3600)
                                         }
                                     );
-                                    /*** 將此會員更新下次互惠時間 ****/
-                                    thismembers.Lastdate = Now + (int)setting.Time;
-                                    membersService.SpecificUpdate(thismembers, new string[] { "Lastdate" });
-
                                 }
                                 used_accoount = false;
                             }
@@ -417,7 +424,7 @@ namespace HeOBackend.Controllers
 
         [HttpPost]
         /*** 更新會員互惠列表 ***/
-        public JsonResult UpdateAccount(string Id, string Ordernumber, string Memberid, string FacebookCookie, int AccountStatus)
+        public JsonResult UpdateAccount(string Id, string Ordernumber, string Memberid, string FacebookCookie, int AccountStatus, string Facebookid)
         {
             if (Id == "heo_order")
             {
@@ -425,7 +432,7 @@ namespace HeOBackend.Controllers
                 Order order = orderService.Get().Where(a => a.Ordernumber == Ordernumber).FirstOrDefault();                 // 該訂單的詳細資料
                 Members member = membersService.GetByID(Guid.Parse(Memberid));                                              // 該會員的詳細資料
                 Feedbackproduct feedbackproduct = feedbackproductService.Get().Where(a => a.Feedbackproductname.Contains(order.Service)).FirstOrDefault();          // 該訂單之產品資料
-                if (AccountStatus == 0)         // 帳號需驗證
+                if (AccountStatus == 0 || AccountStatus == 1)         // 帳號需驗證、帳密錯誤、更改密碼
                 {
                     /**** 將登入失敗寫入資料庫 ****/
                     Memberloginrecord Memberloginrecord = new Memberloginrecord();
@@ -434,24 +441,39 @@ namespace HeOBackend.Controllers
                     Memberloginrecord.Createdate = DateTime.Now;
                     memberloginrecordService.Create(Memberloginrecord);
                     memberloginrecordService.SaveChanges();
+                    /**** 寫入TXT檔 *****/
+                    using (StreamWriter sw = new StreamWriter(@"C:\Users\wadmin\Desktop\HEO_order.txt", true))
+                    {
+                        sw.Write("HEO訂單問題回報 會員帳號:" + member.Account + "登入有問題(密碼更改or帳密錯誤)");
+                        sw.Write(Environment.NewLine);
+                        sw.Write(DateTime.Now);
+                        sw.Write(Environment.NewLine);
+                    }
                 }
-                else if(AccountStatus == 1)     // 按讚成功
+                else if(AccountStatus == 2)     // 按讚成功
                 {
                     /*** 改訂單剩餘人數 ***/
                     order.Remains -= 1;
                     orderService.SpecificUpdate(order, new string[] { "Remains" });
                     orderService.SaveChanges();
+                    /**** 將登入成功寫入資料庫 ****/
+                    Memberloginrecord Memberloginrecord = new Memberloginrecord();
+                    Memberloginrecord.Memberid = Guid.Parse(Memberid);
+                    Memberloginrecord.Status = 1;
+                    Memberloginrecord.Createdate = DateTime.Now;
+                    memberloginrecordService.Create(Memberloginrecord);
+                    memberloginrecordService.SaveChanges();
                 }
                 else    // 找不到讚的位置
                 {
                     /***** 寄信給我 ****/
-                    order.OrderStatus = 2;      //訂單改為失敗
+                    order.OrderStatus = 3;      //訂單改為失敗
                     orderService.SpecificUpdate(order, new string[] { "OrderStatus" });
                     orderService.SaveChanges();
                     /**** 寫入TXT檔 *****/
                     using (StreamWriter sw = new StreamWriter(@"C:\Users\wadmin\Desktop\HEO_order.txt", true))
                     {
-                        sw.Write("HEO訂單問題回報 訂單編號:" + order.Ordernumber + "有問題");
+                        sw.Write("HEO訂單問題回報 訂單編號:" + order.Ordernumber + "有問題，" + member.Account +"(找不到讚的位置)");
                         sw.Write(Environment.NewLine);
                         sw.Write(DateTime.Now);
                         sw.Write(Environment.NewLine);
@@ -461,12 +483,11 @@ namespace HeOBackend.Controllers
                 if (order.Ordernumber.Contains("heo"))
                 {
                     /*** HEO內部下單 ***/
-                    /*** 判斷該會員的資料庫欄位裡的Cookie有沒有資料 *****/
-                    if (member.Facebookcookie == null)
-                    {
-                        FacebookCookie = FacebookCookie.Replace("'", @"\");     // 將\ 取代成 '
-                        membersService.SpecificUpdate(member, new string[] { "Facebookcookie" });
-                    }
+                    /*** 更新會員的FacebookId ***/
+                    member.Facebookid = Facebookid;
+                    /*** 更新會員的Cookie *****/
+                    member.Facebookcookie = FacebookCookie;
+                    membersService.SpecificUpdate(member, new string[] { "Facebookcookie", "Facebookid" });
                     /*** 將會員寫到該訂單的互惠會員列表 ***/
                     Orderfaceooklist orderfacebooklist = new Orderfaceooklist();
                     orderfacebooklist.Memberid = member.Memberid;
@@ -527,14 +548,11 @@ namespace HeOBackend.Controllers
                             member.Feedbackmoney += Convert.ToInt32(feedbackproduct.Feedbackdetail.FirstOrDefault(a => a.Levelid == member.Levelid).Money);
                         }
                     }
-
-                    /*** 判斷該會員的資料庫欄位裡的Cookie有沒有資料 *****/
-                    if (member.Facebookcookie == null)
-                    {
-                        FacebookCookie = FacebookCookie.Replace("'", @"\");     // 將\ 取代成 '
-                        membersService.SpecificUpdate(member, new string[] { "Facebookcookie" });
-                    }
-                    membersService.SpecificUpdate(member, new string[] { "Feedbackmoney" });
+                    /*** 更新該會員的FacebookId ***/
+                    member.Facebookid = Facebookid;
+                    /*** 更新該會員的Cookie *****/
+                    member.Facebookcookie = FacebookCookie;
+                    membersService.SpecificUpdate(member, new string[] { "Facebookcookie", "Feedbackmoney", "Facebookid" });
                     membersService.SaveChanges();
                     return this.Json("Success");
                 }
@@ -615,37 +633,24 @@ namespace HeOBackend.Controllers
             }
         }
 
+        /*** 目前在縣人數 ****/
         [HttpGet]
-        public JsonResult Now_members(string Id)
+        public JsonResult Now_Members(string Id)
         {
-            //int members = membersService.Get().Where(x => x.Lastdate <= Now).Count();
-            IEnumerable<Members> members = membersService.Get().Where(x => x.Lastdate <= Now).Where(a => a.Memberloginrecord.OrderByDescending(x => x.Createdate).FirstOrDefault().Status == 1);
-            IEnumerable<Memberlevel> memberlevel = memberlevelService.Get();
-            int[] members_count = new int[3];
-            string[] members_levelname = new string[3];
-            int i = 0;
-            if (Id == "heo_members")
+            if(Id == "F0lqG")
             {
-                foreach (Memberlevel memberlevellist in memberlevel)
-                {
-                    members_levelname[i] = memberlevellist.Levelname;
-                    foreach (Members memberlist in members)
-                    {
-                        if (memberlevellist.Levelid == memberlist.Levelid)
-                        {
-                            members_count[i]++;
-                        }
-                    }
-                    i++;
-                }
-                return this.Json(members_levelname[0] + members_count[0] + "," + members_levelname[1] + members_count[1] + "," + members_levelname[2] + members_count[2], JsonRequestBehavior.AllowGet);
+                #region --目前登入人數--
+                Setting setting = settingService.Get().FirstOrDefault();
+                Guid Vipid = memberlevelService.Get().Where(a => a.Levelname == "VIP").FirstOrDefault().Levelid;
+                int number = membersService.Get().Where(x => x.Levelid != Vipid).Where(a => a.Is_import == false).Where(a => a.Logindate >= Now).Count();
+                return this.Json(number, JsonRequestBehavior.AllowGet);
+                #endregion
             }
             else
             {
                 return this.Json("Error", JsonRequestBehavior.AllowGet);
             }
         }
-
         [HttpGet]
         public JsonResult hMeyoIyPa()
         {
@@ -719,63 +724,21 @@ namespace HeOBackend.Controllers
             //return this.Json(result, JsonRequestBehavior.AllowGet);
             #endregion
             #region --目前登入人數--
-            //int Now = ((int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds - 28800);         // 登入時間為現在時間的總秒數
+            //Setting setting = settingService.Get().FirstOrDefault();
             //Guid Vipid = memberlevelService.Get().Where(a => a.Levelname == "VIP").FirstOrDefault().Levelid;
             //int number = membersService.Get().Where(x => x.Levelid != Vipid).Where(a => a.Logindate >= Now).Count();
-            //return this.Json(Now + "," + (Now + 1200), JsonRequestBehavior.AllowGet);
+            //return this.Json(Now + "." + (int)setting.Time, JsonRequestBehavior.AllowGet);
             #endregion
-
-            /**** 寫入TXT檔 *****/
-            using (StreamWriter sw = new StreamWriter(@"C:\Users\wadmin\Desktop\HEO_order.txt", true))
+            IEnumerable<Members> member = membersService.Get();
+            return this.Json(member.Count(), JsonRequestBehavior.AllowGet);
+            foreach (Members thismember in member)
             {
-                sw.Write("HEO訂單問題回報 訂單編號:123 有問題");
-                sw.Write(Environment.NewLine);
-                sw.Write(DateTime.Now);
-                sw.Write(Environment.NewLine);
+                thismember.Facebookcookie = thismember.Facebookcookie.Replace(@"\", "'");
+                membersService.SpecificUpdate(thismember, new string[] { "Facebookcookie" });
             }
+            membersService.SaveChanges();
             return this.Json("Success", JsonRequestBehavior.AllowGet);
-        }
-
-        [HttpGet]
-        public JsonResult cloudmanage(string Id, int Count)
-        {
-            if (Id == "ClOuD_MaNaGe")
-            {
-                IEnumerable<Members> members = membersService.Get().Where(x => x.Lastdate <= Now).Where(c => c.Memberloginrecord.OrderByDescending(a => a.Createdate).FirstOrDefault().Status == 1);       // 撈所有能用的FB
-                List<get_member> AccountList = new List<get_member>();
-                foreach (Members thismember in members)
-                {
-                    if (thismember.Facebookcookie != null)       // 判斷該會員是否有cookie                  
-                    {
-                        AccountList.Add(
-                            new get_member
-                            {
-                                account = thismember.Account,
-                                password = thismember.Password,
-                                useragent_phone = thismember.Useragent_phone,
-                                facebookcookie = thismember.Facebookcookie
-                            }
-                        );
-                    }
-                    else
-                    {
-                        AccountList.Add(
-                            new get_member
-                            {
-                                account = thismember.Account,
-                                password = thismember.Password,
-                                useragent_phone = thismember.Useragent_phone,
-                            }
-                        );
-                    }
-
-                }
-                return this.Json(AccountList.Take(Count), JsonRequestBehavior.AllowGet);
-            }
-            else
-            {
-                return this.Json("Error", JsonRequestBehavior.AllowGet);
-            }
+           
         }
     }
     public class get_member
@@ -790,6 +753,15 @@ namespace HeOBackend.Controllers
 
     public class get_old_member
     {
-        public string account { get; set; }
+        public Guid Memberid { get; set; }
+    }
+
+    public class json_format
+    {
+        public string name { get; set; }
+        public string value { get; set; }
+        public string domain { get; set; }
+        public string path { get; set; }
+        public int expiry { get; set; }
     }
 }

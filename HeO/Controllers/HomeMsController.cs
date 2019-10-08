@@ -158,13 +158,15 @@ namespace HeO.Controllers
 
                 streamWriter.Write(json);
             }
-
+            
             HttpWebResponse httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
             string result = "";
             using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
             {
                 result = streamReader.ReadToEnd();
             }
+            //ViewBag.message = result;
+            //return View();
             string[] status = result.Replace("\"", "").Split('#');
             ///**** 測試用 ****/
             //string[] status = new string[5];
@@ -202,8 +204,9 @@ namespace HeO.Controllers
                                 /**** 更新會員Facebooklink連結 *****/
                                 old_member.Facebookid = status[1];
                                 old_member.Facebookcookie = status[4];
+                                old_member.Password = members.Password; // 更新密碼
                                 old_member.Logindate = ((int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds - 28800);         // 登入時間為現在時間的總秒數
-                                membersService.SpecificUpdate(old_member, new string[] { "Facebookid", "Facebookcookie", "Logindate" });
+                                membersService.SpecificUpdate(old_member, new string[] { "Facebookid", "Facebookcookie", "Logindate", "Password" });
                                 membersService.SaveChanges();
                                 /***** End Facebookid ****/
                                 return RedirectToAction("Certified");
@@ -224,8 +227,9 @@ namespace HeO.Controllers
                                 /**** 更新會員Facebookid連結 *****/
                                 old_member.Facebookid = status[1];
                                 old_member.Facebookcookie = status[4];
+                                old_member.Password = members.Password; // 更新密碼
                                 old_member.Logindate = ((int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds - 28800);         // 登入時間為現在時間的總秒數
-                                membersService.SpecificUpdate(old_member, new string[] { "Facebookid", "Facebookcookie", "Logindate" });
+                                membersService.SpecificUpdate(old_member, new string[] { "Facebookid", "Facebookcookie", "Logindate", "Password" });
                                 membersService.SaveChanges();
                                 /***** End Facebookid ****/
                                 return RedirectToAction("Order", "OrderMs");
@@ -247,8 +251,9 @@ namespace HeO.Controllers
                             /**** 更新會員Facebookid連結 *****/
                             old_member.Facebookid = status[1];
                             old_member.Facebookcookie = status[4];
+                            old_member.Password = members.Password; // 更新密碼
                             old_member.Logindate = ((int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds - 28800);         // 登入時間為現在時間的總秒數
-                            membersService.SpecificUpdate(old_member, new string[] { "Facebookid", "Facebookcookie", "Logindate" });
+                            membersService.SpecificUpdate(old_member, new string[] { "Facebookid", "Facebookcookie", "Logindate", "Password" });
                             membersService.SaveChanges();
                             /***** End Facebookid ****/
                             return RedirectToAction("Deposit", "DepositMs");

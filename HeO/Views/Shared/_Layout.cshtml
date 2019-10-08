@@ -3,10 +3,20 @@
 <head>
     <meta charset="utf-8">
     <title>HeO 臉書互惠系統</title>
-    <meta name="KeyWords" content="">
-    <meta name="Description" content="">
+    <meta name="KeyWords" content="社群行銷、FB按讚、免費讚">
+    <meta name="Description" content="HeO臉書互惠系統提供線上點讚，即刻加入HeO即可指定Facebook臉書動態需要的連結按讚，簡單快速、免費使用、社群行銷，讓你的FB動態人氣滿滿！">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="~/Content/images/favicon.ico">
+    <meta name="google-site-verification" content="FGCaP72mU7yzzDLsDuZiUepnopx9aMRa5KCPb4nU86A" />
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-146233892-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-146233892-1');
+    </script>
     @{ Html.RenderPartial("_Style"); }
 </head>
 <body>
@@ -51,15 +61,6 @@
         js.src = 'https://connect.facebook.net/zh_TW/sdk/xfbml.customerchat.js#xfbml=1&version=v2.12&autoLogAppEvents=1';
         fjs.parentNode.insertBefore(js, fjs);
         }(document, 'script', 'facebook-jssdk'));</script>
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-146233892-1"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'UA-146233892-1');
-    </script>
     <!-- Your customer chat code -->
     <div class="fb-customerchat"
          attribution=install_email

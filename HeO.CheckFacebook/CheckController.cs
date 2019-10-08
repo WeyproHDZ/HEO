@@ -13,6 +13,12 @@ using System.Web;
 using System.Net.NetworkInformation;
 using Newtonsoft.Json;
 using System.Net.Http;
+using System.Threading.Tasks;
+using System.Net.WebSockets;
+using System.Threading;
+using System.Net;
+using System.Web.WebSockets;
+using System.Text.RegularExpressions;
 
 namespace HeO.CheckFacebook
 {
@@ -27,6 +33,7 @@ namespace HeO.CheckFacebook
             membersService = new MembersService();
         }
         [HttpPost]
+        /**** 前台登入 ****/
         public string CheckFacebook([FromBody] LoginJson loginJson)
         {
             string Account = loginJson.Account;
@@ -45,13 +52,15 @@ namespace HeO.CheckFacebook
             if(member != 0)     // 判斷資料庫裡是否有這個會員的資料
             {
                 Members members = membersService.Get().Where(a => a.Account == Account).FirstOrDefault();       // 撈該會員的詳細資料
-                if (members.Facebookcookie != null)      // 判斷該會員在資料庫裡是否有Cookie資料
-                {
-                    string FacebookCookieJson = members.Facebookcookie;      // 撈該會員資料庫裡的FacebookCookie欄位資料
-                    FacebookCookieJson = FacebookCookieJson.Replace(@"\", "'");     // 將\ 取代成 '
-                    var FacebookCookieObject = JsonConvert.DeserializeObject<dynamic>(FacebookCookieJson); // FacebookCookieJson的json格式轉成物件
+                if (members.Facebookcookie != null || members.Facebookcookie != "")      // 判斷該會員在資料庫裡是否有Cookie資料
+                {                   
+                    string FacebookCookieJson = members.Facebookcookie;      // 撈該會員資料庫裡的FacebookCookie欄位資料                    
+                    FacebookCookieJson = FacebookCookieJson.Replace("True", "true").Replace("False", "false").Replace("name", "Name").Replace("value", "Value").Replace("path", "Path").Replace("domain", "Domain").Replace("secure", "Secure").Replace("httpOnly", "IsHttpOnly").Replace("expiry", "Expiry");
+                    FacebookCookieJson = FacebookCookieJson.Replace("'", @"""");     // 將' 取代成 "
+                    FacebookCookieJson = FacebookCookieJson.Replace(@"\", @"""");    // 將\ 取代成 "
+                    
+                    var FacebookCookieObject = JsonConvert.DeserializeObject<dynamic>(FacebookCookieJson); // FacebookCookieJson的json格式轉成物件                   
                     var content = "";
-                    FirefoxProfile profile = new FirefoxProfile();
                     /*** 設定proxy ***/
                     //profile.SetPreference("network.proxy.type", 1);
                     //profile.SetPreference("network.proxy.http", "211.21.120.163");
@@ -61,34 +70,28 @@ namespace HeO.CheckFacebook
                     //profile.SetPreference("network.proxy.socks", "123.205.179.16");
                     //profile.SetPreference("network.proxy.socks_port", 4145);
                     /*** 設定useragent ***/
-                    profile.SetPreference("general.useragent.override", Useragent);
                     FirefoxOptions options = new FirefoxOptions();
+                    FirefoxProfile profile = new FirefoxProfile();
+                    options.SetPreference("dom.webnotifications.enabled", false);
+                    options.AddArgument("--user-agent=Mozilla/5.0 (iPad; CPU OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10A5355d Safari/8536.25");
                     /*** 無痕 ****/
                     options.AddArgument("--incognito");
                     ///*** 無頭 ***/
                     //options.AddArgument("--headless");
                     //options.AddArgument("--disable-gpu");
-                    options.Profile = profile;
-                    options.SetPreference("dom.webnotifications.enabled", false);
+
                     IWebDriver driver = new FirefoxDriver(options);
                     //driver.Navigate().GoToUrl("https://www.whatismyip.com.tw/");
                     driver.Navigate().GoToUrl("https://mobile.facebook.com");
                     driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(1000);
                     /**** 放大螢幕 ****/
                     driver.Manage().Window.Maximize();
-                    Cookie cookie;
+                    OpenQA.Selenium.Cookie cookie;
                     DateTime date;
                     foreach (var Object in FacebookCookieObject)
                     {
-                        if (Object.Expiry.ToString() != "")
-                        {
-                            date = Convert.ToDateTime(Object.Expiry);
-                            if (date.ToString() != "")
-                            {
-                                cookie = new Cookie(Object.Name.ToString(), Object.Value.ToString(), Object.Domain.ToString(), Object.Path.ToString(), Convert.ToDateTime(Object.Expiry.ToString()));
-                                driver.Manage().Cookies.AddCookie(cookie);
-                            }
-                        }
+                        int expiry = 0;
+                        cookie = new OpenQA.Selenium.Cookie(Object.Name.ToString(), Object.Value.ToString(), Object.Domain.ToString(), Object.Path.ToString(), null);
                     }
                     /*** 輸入帳號 ***/
                     IWebElement FB_Account = driver.FindElement(By.Id("m_login_email"));
@@ -149,15 +152,6 @@ namespace HeO.CheckFacebook
                             content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
                             return content;
                         }
-
-                        /*** 帳號需驗證 ***/
-                        if (driver.Url.IndexOf("checkpoint") != -1)
-                        {
-                            status[0] = "帳號未驗證";
-                            driver.Quit();
-                            content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
-                            return content;
-                        }
                         else
                         {
                             string facebookcookie = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
@@ -172,15 +166,26 @@ namespace HeO.CheckFacebook
                                 }
                             }
                             string name = driver.Title;
-                            status[0] = "成功登入!";
-                            status[1] = facebookid;
-                            status[2] = "http://graph.facebook.com/"+ facebookid + "/picture?type=large";
-                            status[3] = name;
-                            status[4] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
-                            System.Threading.Thread.Sleep(Delay());
-                            driver.Quit();
+                            driver.Navigate().GoToUrl("http://graph.facebook.com/" + facebookid + "/picture?type=large");
+                            /*** 判斷是否有大頭貼 *****/
+                            if (driver.Url.IndexOf("10354686_10150004552801856_220367501106153455_n.jpg") != -1 || driver.Url.IndexOf("1379841_10150004552801901_469209496895221757_n.jpg") != -1)
+                            {
+                                status[0] = "請放大頭貼後，再登入一次!";
+                                driver.Quit();
+                                content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
+                                return content;
+                            }
+                            else
+                            {
+                                status[0] = "成功登入!";
+                                status[1] = facebookid;
+                                status[2] = "http://graph.facebook.com/" + facebookid + "/picture?type=large";
+                                status[3] = name;
+                                status[4] = facebookcookie;
+                                System.Threading.Thread.Sleep(Delay());
+                                driver.Quit();
+                            }
                         }
-
                     }
                     else
                     {
@@ -201,26 +206,40 @@ namespace HeO.CheckFacebook
                                 content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
                                 return content;
                             }
-
-                            string facebookcookie = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
-                            string facebookid = "";
-                            facebookcookie = facebookcookie.Replace(@"\", "'");     // 將\ 取代成 '
-                            var FacebookCookieObj = JsonConvert.DeserializeObject<dynamic>(facebookcookie); // FacebookCookieJson的json格式轉成物件
-                            foreach (var cookieobject in FacebookCookieObj)
+                            else
                             {
-                                if (cookieobject.Name == "c_user")
+                                string facebookcookie = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
+                                string facebookid = "";
+                                facebookcookie = facebookcookie.Replace(@"\", "'");     // 將\ 取代成 '
+                                var FacebookCookieObj = JsonConvert.DeserializeObject<dynamic>(facebookcookie); // FacebookCookieJson的json格式轉成物件
+                                foreach (var cookieobject in FacebookCookieObj)
                                 {
-                                    facebookid = cookieobject.Value;
+                                    if (cookieobject.Name == "c_user")
+                                    {
+                                        facebookid = cookieobject.Value;
+                                    }
+                                }
+                                string name = driver.Title;
+                                driver.Navigate().GoToUrl("http://graph.facebook.com/" + facebookid + "/picture?type=large");
+                                /*** 判斷是否有大頭貼 *****/
+                                if (driver.Url.IndexOf("10354686_10150004552801856_220367501106153455_n.jpg") != -1 || driver.Url.IndexOf("1379841_10150004552801901_469209496895221757_n.jpg") != -1)
+                                {
+                                    status[0] = "請放大頭貼後，再登入一次!";
+                                    driver.Quit();
+                                    content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
+                                    return content;
+                                }
+                                else
+                                {
+                                    status[0] = "成功登入!";
+                                    status[1] = facebookid;
+                                    status[2] = "http://graph.facebook.com/" + facebookid + "/picture?type=large";
+                                    status[3] = name;
+                                    status[4] = facebookcookie;
+                                    System.Threading.Thread.Sleep(Delay());
+                                    driver.Quit();
                                 }
                             }
-                            string name = driver.Title;
-                            status[0] = "成功登入!";
-                            status[1] = facebookid;
-                            status[2] = "http://graph.facebook.com/" + facebookid + "/picture?type=large";
-                            status[3] = name;
-                            status[4] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
-                            System.Threading.Thread.Sleep(Delay());
-                            driver.Quit();
                         }
                         /**** 你可能認識的人 or 請使用Facebook app ****/
                         else if (driver.Url.IndexOf("gettingstarted") != -1)
@@ -236,27 +255,40 @@ namespace HeO.CheckFacebook
                                 content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
                                 return content;
                             }
-
-                            string facebookcookie = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
-                            string facebookid = "";
-                            facebookcookie = facebookcookie.Replace(@"\", "'");     // 將\ 取代成 '
-                            var FacebookCookieObj = JsonConvert.DeserializeObject<dynamic>(facebookcookie); // FacebookCookieJson的json格式轉成物件
-                            foreach (var cookieobject in FacebookCookieObj)
+                            else
                             {
-                                if (cookieobject.Name == "c_user")
+                                string facebookcookie = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
+                                string facebookid = "";
+                                facebookcookie = facebookcookie.Replace(@"\", "'");     // 將\ 取代成 '
+                                var FacebookCookieObj = JsonConvert.DeserializeObject<dynamic>(facebookcookie); // FacebookCookieJson的json格式轉成物件
+                                foreach (var cookieobject in FacebookCookieObj)
                                 {
-                                    facebookid = cookieobject.Value;
+                                    if (cookieobject.Name == "c_user")
+                                    {
+                                        facebookid = cookieobject.Value;
+                                    }
+                                }
+                                string name = driver.Title;
+                                driver.Navigate().GoToUrl("http://graph.facebook.com/" + facebookid + "/picture?type=large");
+                                /*** 判斷是否有大頭貼 *****/
+                                if (driver.Url.IndexOf("10354686_10150004552801856_220367501106153455_n.jpg") != -1 || driver.Url.IndexOf("1379841_10150004552801901_469209496895221757_n.jpg") != -1)
+                                {
+                                    status[0] = "請放大頭貼後，再登入一次!";
+                                    driver.Quit();
+                                    content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
+                                    return content;
+                                }
+                                else
+                                {
+                                    status[0] = "成功登入!";
+                                    status[1] = facebookid;
+                                    status[2] = "http://graph.facebook.com/" + facebookid + "/picture?type=large";
+                                    status[3] = name;
+                                    status[4] = facebookcookie;
+                                    System.Threading.Thread.Sleep(Delay());
+                                    driver.Quit();
                                 }
                             }
-                            string name = driver.Title;
-                            status[0] = "成功登入!";
-                            status[1] = facebookid;
-                            status[2] = "http://graph.facebook.com/" + facebookid + "/picture?type=large";
-                            status[3] = name;
-                            status[4] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
-                            System.Threading.Thread.Sleep(Delay());
-                            driver.Quit();
-
                         }
                         else if(driver.Url.IndexOf("home.php") != -1)
                         {
@@ -271,26 +303,40 @@ namespace HeO.CheckFacebook
                                 content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
                                 return content;
                             }
-
-                            string facebookcookie = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
-                            string facebookid = "";
-                            facebookcookie = facebookcookie.Replace(@"\", "'");     // 將\ 取代成 '
-                            var FacebookCookieObj = JsonConvert.DeserializeObject<dynamic>(facebookcookie); // FacebookCookieJson的json格式轉成物件
-                            foreach (var cookieobject in FacebookCookieObj)
+                            else
                             {
-                                if (cookieobject.Name == "c_user")
+                                string facebookcookie = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
+                                string facebookid = "";
+                                facebookcookie = facebookcookie.Replace(@"\", "'");     // 將\ 取代成 '
+                                var FacebookCookieObj = JsonConvert.DeserializeObject<dynamic>(facebookcookie); // FacebookCookieJson的json格式轉成物件
+                                foreach (var cookieobject in FacebookCookieObj)
                                 {
-                                    facebookid = cookieobject.Value;
+                                    if (cookieobject.Name == "c_user")
+                                    {
+                                        facebookid = cookieobject.Value;
+                                    }
+                                }
+                                string name = driver.Title;
+                                driver.Navigate().GoToUrl("http://graph.facebook.com/" + facebookid + "/picture?type=large");
+                                /*** 判斷是否有大頭貼 *****/
+                                if (driver.Url.IndexOf("10354686_10150004552801856_220367501106153455_n.jpg") != -1 || driver.Url.IndexOf("1379841_10150004552801901_469209496895221757_n.jpg") != -1)
+                                {
+                                    status[0] = "請放大頭貼後，再登入一次!";
+                                    driver.Quit();
+                                    content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
+                                    return content;
+                                }
+                                else
+                                {
+                                    status[0] = "成功登入!";
+                                    status[1] = facebookid;
+                                    status[2] = "http://graph.facebook.com/" + facebookid + "/picture?type=large";
+                                    status[3] = name;
+                                    status[4] = facebookcookie;
+                                    System.Threading.Thread.Sleep(Delay());
+                                    driver.Quit();
                                 }
                             }
-                            string name = driver.Title;
-                            status[0] = "成功登入!";
-                            status[1] = facebookid;
-                            status[2] = "http://graph.facebook.com/" + facebookid + "/picture?type=large";
-                            status[3] = name;
-                            status[4] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
-                            System.Threading.Thread.Sleep(Delay());
-                            driver.Quit();
                         }
                         else
                         {
@@ -302,9 +348,10 @@ namespace HeO.CheckFacebook
                                 content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
                                 return content;
                             }
-                            else if (driver.Url.IndexOf("save-device") == -1)
+                            else
                             /*** 帳密輸入錯誤 ***/
                             {
+                                System.Threading.Thread.Sleep(Delay());
                                 status[0] = "帳號密碼有誤!";
                                 driver.Quit();
                                 content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
@@ -320,7 +367,6 @@ namespace HeO.CheckFacebook
                 else
                 {
                     var content = "";
-                    FirefoxProfile profile = new FirefoxProfile();
                     /*** 設定proxy ***/
                     //profile.SetPreference("network.proxy.type", 1);
                     //profile.SetPreference("network.proxy.http", "211.21.120.163");
@@ -330,15 +376,16 @@ namespace HeO.CheckFacebook
                     //profile.SetPreference("network.proxy.socks", "123.205.179.16");
                     //profile.SetPreference("network.proxy.socks_port", 4145);
                     /*** 設定useragent ***/
-                    profile.SetPreference("general.useragent.override", Useragent);
                     FirefoxOptions options = new FirefoxOptions();
+                    FirefoxProfile profile = new FirefoxProfile();
+                    options.SetPreference("dom.webnotifications.enabled", false);
+                    options.AddArgument("--user-agent=Mozilla/5.0 (iPad; CPU OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10A5355d Safari/8536.25");
                     /*** 無痕 ****/
                     options.AddArgument("--incognito");
                     ///*** 無頭 ***/
                     //options.AddArgument("--headless");
                     //options.AddArgument("--disable-gpu");
-                    options.Profile = profile;
-                    options.SetPreference("dom.webnotifications.enabled", false);
+
                     IWebDriver driver = new FirefoxDriver(options);
                     //driver.Navigate().GoToUrl("https://www.whatismyip.com.tw/");
                     driver.Navigate().GoToUrl("https://mobile.facebook.com/");
@@ -409,35 +456,40 @@ namespace HeO.CheckFacebook
                             content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
                             return content;
                         }
-
-                        /*** 帳號需驗證 ***/
-                        if (driver.Url.IndexOf("checkpoint") != -1)
+                        else
                         {
-                            status[0] = "帳號未驗證";
-                            driver.Quit();
-                            content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
-                            return content;
-                        }
-
-                        string facebookcookie = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
-                        string facebookid = "";
-                        facebookcookie = facebookcookie.Replace(@"\", "'");     // 將\ 取代成 '
-                        var FacebookCookieObj = JsonConvert.DeserializeObject<dynamic>(facebookcookie); // FacebookCookieJson的json格式轉成物件
-                        foreach (var cookieobject in FacebookCookieObj)
-                        {
-                            if (cookieobject.Name == "c_user")
+                            string facebookcookie = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
+                            string facebookid = "";
+                            facebookcookie = facebookcookie.Replace(@"\", "'");     // 將\ 取代成 '
+                            var FacebookCookieObj = JsonConvert.DeserializeObject<dynamic>(facebookcookie); // FacebookCookieJson的json格式轉成物件
+                            foreach (var cookieobject in FacebookCookieObj)
                             {
-                                facebookid = cookieobject.Value;
+                                if (cookieobject.Name == "c_user")
+                                {
+                                    facebookid = cookieobject.Value;
+                                }
+                            }
+                            string name = driver.Title;
+                            driver.Navigate().GoToUrl("http://graph.facebook.com/" + facebookid + "/picture?type=large");
+                            /*** 判斷是否有大頭貼 *****/
+                            if (driver.Url.IndexOf("10354686_10150004552801856_220367501106153455_n.jpg") != -1 || driver.Url.IndexOf("1379841_10150004552801901_469209496895221757_n.jpg") != -1)
+                            {
+                                status[0] = "請放大頭貼後，再登入一次!";
+                                driver.Quit();
+                                content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
+                                return content;
+                            }
+                            else
+                            {
+                                status[0] = "成功登入!";
+                                status[1] = facebookid;
+                                status[2] = "http://graph.facebook.com/" + facebookid + "/picture?type=large";
+                                status[3] = name;
+                                status[4] = facebookcookie;
+                                System.Threading.Thread.Sleep(Delay());
+                                driver.Quit();
                             }
                         }
-                        string name = driver.Title;
-                        status[0] = "成功登入!";
-                        status[1] = facebookid;
-                        status[2] = "http://graph.facebook.com/" + facebookid + "/picture?type=large";
-                        status[3] = name;
-                        status[4] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
-                        System.Threading.Thread.Sleep(Delay());
-                        driver.Quit();
                     }
                     /**** 你可能認識的人 or 請使用Facebook app ****/
                     else if (driver.Url.IndexOf("gettingstarted") != -1)
@@ -453,27 +505,40 @@ namespace HeO.CheckFacebook
                             content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
                             return content;
                         }
-
-                        string facebookcookie = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
-                        string facebookid = "";
-                        facebookcookie = facebookcookie.Replace(@"\", "'");     // 將\ 取代成 '
-                        var FacebookCookieObj = JsonConvert.DeserializeObject<dynamic>(facebookcookie); // FacebookCookieJson的json格式轉成物件
-                        foreach (var cookieobject in FacebookCookieObj)
+                        else
                         {
-                            if (cookieobject.Name == "c_user")
+                            string facebookcookie = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
+                            string facebookid = "";
+                            facebookcookie = facebookcookie.Replace(@"\", "'");     // 將\ 取代成 '
+                            var FacebookCookieObj = JsonConvert.DeserializeObject<dynamic>(facebookcookie); // FacebookCookieJson的json格式轉成物件
+                            foreach (var cookieobject in FacebookCookieObj)
                             {
-                                facebookid = cookieobject.Value;
+                                if (cookieobject.Name == "c_user")
+                                {
+                                    facebookid = cookieobject.Value;
+                                }
+                            }
+                            string name = driver.Title;
+                            driver.Navigate().GoToUrl("http://graph.facebook.com/" + facebookid + "/picture?type=large");
+                            /*** 判斷是否有大頭貼 *****/
+                            if (driver.Url.IndexOf("10354686_10150004552801856_220367501106153455_n.jpg") != -1 || driver.Url.IndexOf("1379841_10150004552801901_469209496895221757_n.jpg") != -1)
+                            {
+                                status[0] = "請放大頭貼後，再登入一次!";
+                                driver.Quit();
+                                content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
+                                return content;
+                            }
+                            else
+                            {
+                                status[0] = "成功登入!";
+                                status[1] = facebookid;
+                                status[2] = "http://graph.facebook.com/" + facebookid + "/picture?type=large";
+                                status[3] = name;
+                                status[4] = facebookcookie;
+                                System.Threading.Thread.Sleep(Delay());
+                                driver.Quit();
                             }
                         }
-                        string name = driver.Title;
-                        status[0] = "成功登入!";
-                        status[1] = facebookid;
-                        status[2] = "http://graph.facebook.com/" + facebookid + "/picture?type=large";
-                        status[3] = name;
-                        status[4] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
-                        System.Threading.Thread.Sleep(Delay());
-                        driver.Quit();
-
                     }
                     else if(driver.Url.IndexOf("home.php") != -1)
                     {
@@ -488,26 +553,40 @@ namespace HeO.CheckFacebook
                             content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
                             return content;
                         }
-
-                        string facebookcookie = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
-                        string facebookid = "";
-                        facebookcookie = facebookcookie.Replace(@"\", "'");     // 將\ 取代成 '
-                        var FacebookCookieObj = JsonConvert.DeserializeObject<dynamic>(facebookcookie); // FacebookCookieJson的json格式轉成物件
-                        foreach (var cookieobject in FacebookCookieObj)
+                        else
                         {
-                            if (cookieobject.Name == "c_user")
+                            string facebookcookie = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
+                            string facebookid = "";
+                            facebookcookie = facebookcookie.Replace(@"\", "'");     // 將\ 取代成 '
+                            var FacebookCookieObj = JsonConvert.DeserializeObject<dynamic>(facebookcookie); // FacebookCookieJson的json格式轉成物件
+                            foreach (var cookieobject in FacebookCookieObj)
                             {
-                                facebookid = cookieobject.Value;
+                                if (cookieobject.Name == "c_user")
+                                {
+                                    facebookid = cookieobject.Value;
+                                }
+                            }
+                            string name = driver.Title;
+                            driver.Navigate().GoToUrl("http://graph.facebook.com/" + facebookid + "/picture?type=large");
+                            /*** 判斷是否有大頭貼 *****/
+                            if (driver.Url.IndexOf("10354686_10150004552801856_220367501106153455_n.jpg") != -1 || driver.Url.IndexOf("1379841_10150004552801901_469209496895221757_n.jpg") != -1)
+                            {
+                                status[0] = "請放大頭貼後，再登入一次!";
+                                driver.Quit();
+                                content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
+                                return content;
+                            }
+                            else
+                            {
+                                status[0] = "成功登入!";
+                                status[1] = facebookid;
+                                status[2] = "http://graph.facebook.com/" + facebookid + "/picture?type=large";
+                                status[3] = name;
+                                status[4] = facebookcookie;
+                                System.Threading.Thread.Sleep(Delay());
+                                driver.Quit();
                             }
                         }
-                        string name = driver.Title;
-                        status[0] = "成功登入!";
-                        status[1] = facebookid;
-                        status[2] = "http://graph.facebook.com/" + facebookid + "/picture?type=large";
-                        status[3] = name;
-                        status[4] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
-                        System.Threading.Thread.Sleep(Delay());
-                        driver.Quit();
                     }
                     else
                     {
@@ -519,7 +598,7 @@ namespace HeO.CheckFacebook
                             content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
                             return content;
                         }
-                        else if (driver.Url.IndexOf("save-device") == -1)
+                        else
                         /*** 帳密輸入錯誤 ***/
                         {
                             status[0] = "帳號密碼有誤!";
@@ -539,7 +618,6 @@ namespace HeO.CheckFacebook
             else
             {
                 var content = "";
-                FirefoxProfile profile = new FirefoxProfile();
                 /*** 設定proxy ***/
                 //profile.SetPreference("network.proxy.type", 1);
                 //profile.SetPreference("network.proxy.http", "211.21.120.163");
@@ -548,16 +626,17 @@ namespace HeO.CheckFacebook
                 //profile.SetPreference("network.proxy.ssl_port", 40135);
                 //profile.SetPreference("network.proxy.socks", "123.205.179.16");
                 //profile.SetPreference("network.proxy.socks_port", 4145);
-                /*** 設定useragent ***/
-                profile.SetPreference("general.useragent.override", Useragent);
+                /**** Useragent ****/
                 FirefoxOptions options = new FirefoxOptions();
+                FirefoxProfile profile = new FirefoxProfile();
+                options.SetPreference("dom.webnotifications.enabled", false);
+                options.AddArgument("--user-agent=Mozilla/5.0 (iPad; CPU OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10A5355d Safari/8536.25");
                 /*** 無痕 ****/
                 options.AddArgument("--incognito");
                 ///*** 無頭 ***/
                 //options.AddArgument("--headless");
                 //options.AddArgument("--disable-gpu");
-                options.Profile = profile;
-                options.SetPreference("dom.webnotifications.enabled", false);
+
                 IWebDriver driver = new FirefoxDriver(options);
                 //driver.Navigate().GoToUrl("https://www.whatismyip.com.tw/");
                 driver.Navigate().GoToUrl("https://mobile.facebook.com/");
@@ -628,26 +707,40 @@ namespace HeO.CheckFacebook
                         content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
                         return content;
                     }
-
-                    string facebookcookie = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
-                    string facebookid = "";
-                    facebookcookie = facebookcookie.Replace(@"\", "'");     // 將\ 取代成 '
-                    var FacebookCookieObj = JsonConvert.DeserializeObject<dynamic>(facebookcookie); // FacebookCookieJson的json格式轉成物件
-                    foreach (var cookieobject in FacebookCookieObj)
+                    else
                     {
-                        if (cookieobject.Name == "c_user")
+                        string facebookcookie = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
+                        string facebookid = "";
+                        facebookcookie = facebookcookie.Replace(@"\", "'");     // 將\ 取代成 '
+                        var FacebookCookieObj = JsonConvert.DeserializeObject<dynamic>(facebookcookie); // FacebookCookieJson的json格式轉成物件
+                        foreach (var cookieobject in FacebookCookieObj)
                         {
-                            facebookid = cookieobject.Value;
+                            if (cookieobject.Name == "c_user")
+                            {
+                                facebookid = cookieobject.Value;
+                            }
+                        }
+                        string name = driver.Title;
+                        driver.Navigate().GoToUrl("http://graph.facebook.com/" + facebookid + "/picture?type=large");
+                        /*** 判斷是否有大頭貼 *****/
+                        if (driver.Url.IndexOf("10354686_10150004552801856_220367501106153455_n.jpg") != -1 || driver.Url.IndexOf("1379841_10150004552801901_469209496895221757_n.jpg") != -1)
+                        {
+                            status[0] = "請放大頭貼後，再登入一次!";
+                            driver.Quit();
+                            content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
+                            return content;
+                        }
+                        else
+                        {
+                            status[0] = "成功登入!";
+                            status[1] = facebookid;
+                            status[2] = "http://graph.facebook.com/" + facebookid + "/picture?type=large";
+                            status[3] = name;
+                            status[4] = facebookcookie;
+                            System.Threading.Thread.Sleep(Delay());
+                            driver.Quit();
                         }
                     }
-                    string name = driver.Title;
-                    status[0] = "成功登入!";
-                    status[1] = facebookid;
-                    status[2] = "http://graph.facebook.com/" + facebookid + "/picture?type=large";
-                    status[3] = name;
-                    status[4] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
-                    System.Threading.Thread.Sleep(Delay());
-                    driver.Quit();
                 }
                 /**** 你可能認識的人 or 請使用Facebook app ****/
                 else if (driver.Url.IndexOf("gettingstarted") != -1)
@@ -663,26 +756,40 @@ namespace HeO.CheckFacebook
                         content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
                         return content;
                     }
-                    string facebookcookie = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
-                    string facebookid = "";
-                    facebookcookie = facebookcookie.Replace(@"\", "'");     // 將\ 取代成 '
-                    var FacebookCookieObj = JsonConvert.DeserializeObject<dynamic>(facebookcookie); // FacebookCookieJson的json格式轉成物件
-                    foreach (var cookieobject in FacebookCookieObj)
+                    else
                     {
-                        if (cookieobject.Name == "c_user")
+                        string facebookcookie = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
+                        string facebookid = "";
+                        facebookcookie = facebookcookie.Replace(@"\", "'");     // 將\ 取代成 '
+                        var FacebookCookieObj = JsonConvert.DeserializeObject<dynamic>(facebookcookie); // FacebookCookieJson的json格式轉成物件
+                        foreach (var cookieobject in FacebookCookieObj)
                         {
-                            facebookid = cookieobject.Value;
+                            if (cookieobject.Name == "c_user")
+                            {
+                                facebookid = cookieobject.Value;
+                            }
                         }
-                    }
-                    string name = driver.Title;
-                    status[0] = "成功登入!";
-                    status[1] = facebookid;
-                    status[2] = "http://graph.facebook.com/" + facebookid + "/picture?type=large";
-                    status[3] = name;
-                    status[4] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
-                    System.Threading.Thread.Sleep(Delay());
-                    driver.Quit();
-
+                        string name = driver.Title;
+                        driver.Navigate().GoToUrl("http://graph.facebook.com/" + facebookid + "/picture?type=large");
+                        /*** 判斷是否有大頭貼 *****/
+                        if (driver.Url.IndexOf("10354686_10150004552801856_220367501106153455_n.jpg") != -1 || driver.Url.IndexOf("1379841_10150004552801901_469209496895221757_n.jpg") != -1)
+                        {
+                            status[0] = "請放大頭貼後，再登入一次!";
+                            driver.Quit();
+                            content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
+                            return content;
+                        }
+                        else
+                        {
+                            status[0] = "成功登入!";
+                            status[1] = facebookid;
+                            status[2] = "http://graph.facebook.com/" + facebookid + "/picture?type=large";
+                            status[3] = name;
+                            status[4] = facebookcookie;
+                            System.Threading.Thread.Sleep(Delay());
+                            driver.Quit();
+                        }
+                    }               
                 }
                 else if(driver.Url.IndexOf("home.php") != -1)
                 {
@@ -696,25 +803,40 @@ namespace HeO.CheckFacebook
                         content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
                         return content;
                     }
-                    string facebookcookie = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
-                    string facebookid = "";
-                    facebookcookie = facebookcookie.Replace(@"\", "'");     // 將\ 取代成 '
-                    var FacebookCookieObj = JsonConvert.DeserializeObject<dynamic>(facebookcookie); // FacebookCookieJson的json格式轉成物件
-                    foreach (var cookieobject in FacebookCookieObj)
+                    else
                     {
-                        if (cookieobject.Name == "c_user")
+                        string facebookcookie = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
+                        string facebookid = "";
+                        facebookcookie = facebookcookie.Replace(@"\", "'");     // 將\ 取代成 '
+                        var FacebookCookieObj = JsonConvert.DeserializeObject<dynamic>(facebookcookie); // FacebookCookieJson的json格式轉成物件
+                        foreach (var cookieobject in FacebookCookieObj)
                         {
-                            facebookid = cookieobject.Value;
+                            if (cookieobject.Name == "c_user")
+                            {
+                                facebookid = cookieobject.Value;
+                            }
+                        }
+                        string name = driver.Title;
+                        driver.Navigate().GoToUrl("http://graph.facebook.com/" + facebookid + "/picture?type=large");
+                        /*** 判斷是否有大頭貼 *****/
+                        if (driver.Url.IndexOf("10354686_10150004552801856_220367501106153455_n.jpg") != -1 || driver.Url.IndexOf("1379841_10150004552801901_469209496895221757_n.jpg") != -1)
+                        {
+                            status[0] = "請放大頭貼後，再登入一次!";
+                            driver.Quit();
+                            content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
+                            return content;
+                        }
+                        else
+                        {
+                            status[0] = "成功登入!";
+                            status[1] = facebookid;
+                            status[2] = "http://graph.facebook.com/" + facebookid + "/picture?type=large";
+                            status[3] = name;
+                            status[4] = facebookcookie;
+                            System.Threading.Thread.Sleep(Delay());
+                            driver.Quit();
                         }
                     }
-                    string name = driver.Title;
-                    status[0] = "成功登入!";
-                    status[1] = facebookid;
-                    status[2] = "http://graph.facebook.com/" + facebookid + "/picture?type=large";
-                    status[3] = name;
-                    status[4] = Newtonsoft.Json.JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
-                    System.Threading.Thread.Sleep(Delay());
-                    driver.Quit();
                 }
                 else
                 {                    
@@ -726,7 +848,7 @@ namespace HeO.CheckFacebook
                         content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
                         return content;
                     }
-                    else if (driver.Url.IndexOf("save-device") == -1)
+                    else
                     /*** 帳密輸入錯誤 ***/
                     {
                         status[0] = "帳號密碼有誤!";
@@ -741,43 +863,45 @@ namespace HeO.CheckFacebook
                 return response;
             }
         }
-            
+
         [HttpGet]
+        /**** 後台驗證 ****/
         public string BackendCkeckFacebook(string Facebookid)
         {
-            string status = "";            
-            int number = 1;
-            /**** 寫入TXT檔 *****/
-            using (StreamWriter sw = new StreamWriter(@"C:\Users\wadmin\Desktop\TestFile.txt", true))
+            string status = "";
+            if (Regex.IsMatch(Facebookid, @"[^0-9]"))
             {
-                sw.Write(Facebookid);
-                sw.Write(Environment.NewLine);
-                number++;
+                FirefoxProfile profile = new FirefoxProfile();
+                FirefoxOptions options = new FirefoxOptions();
+                options.Profile = profile;
+                options.SetPreference("dom.webnotifications.enabled", false);
+                IWebDriver driver = new FirefoxDriver(options);
+                driver.Navigate().GoToUrl("http://graph.facebook.com/" + Facebookid + "/picture?type=large");
+                System.Threading.Thread.Sleep(10);
+
+                /**** 寫入TXT檔 *****/
+                using (StreamWriter sw = new StreamWriter(@"C:\Users\wadmin\Desktop\TestFile.txt", true))
+                {
+                    sw.Write(driver.Url);
+                    sw.Write(Environment.NewLine);
+                }
+                if (driver.Title.IndexOf("HsTZSDw4avx") != -1)
+                {
+                    status = "需驗證";
+                }
+                else
+                {
+                    status = "已驗證";
+                }
+                driver.Quit();
             }
-            FirefoxProfile profile = new FirefoxProfile();
-            FirefoxOptions options = new FirefoxOptions();
-            options.Profile = profile;
-            options.SetPreference("dom.webnotifications.enabled", false);
-            IWebDriver driver = new FirefoxDriver(options);
-            driver.Navigate().GoToUrl("http://graph.facebook.com/" + Facebookid + "/picture?type=large");
-            System.Threading.Thread.Sleep(10);
-            if (driver.Title.IndexOf("HsTZSDw4avx") != -1)
+            else if (Facebookid == "null")
             {
                 status = "需驗證";
             }
-            else
-            {
-                status = "已驗證";
-            }
-            driver.Quit();                
+
             return status;
         }
-
-        //[HttpPost]
-        //public string Login([FromBody] LoginJson loginJson)
-        //{
-        //    return test.password;
-        //}
 
         public class LoginJson
         {

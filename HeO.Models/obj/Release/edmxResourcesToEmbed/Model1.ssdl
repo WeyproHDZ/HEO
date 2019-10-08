@@ -187,7 +187,7 @@
     <Property Name="Ordernumber" Type="nvarchar" MaxLength="255" />
     <Property Name="Memberid" Type="uniqueidentifier" />
     <Property Name="HDZoredernumber" Type="nvarchar" MaxLength="255" />
-    <Property Name="Url" Type="ntext" />
+    <Property Name="Url" Type="nvarchar(max)" />
     <Property Name="Isreal" Type="bit" Nullable="false" />
     <Property Name="Service" Type="nvarchar" MaxLength="255" />
     <Property Name="Message" Type="nvarchar" MaxLength="1000" />

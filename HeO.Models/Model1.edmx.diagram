@@ -39,19 +39,19 @@
         <AssociationConnector Association="HeOModel.FK_Adminlims_Lims" />
         <AssociationConnector Association="HeOModel.FK_Lims_Lims1" />
         <EntityTypeShape EntityType="HeOModel.Setting" Width="1.5" PointX="15.375" PointY="8.75" />
-        <EntityTypeShape EntityType="HeOModel.Memberloginrecord" Width="1.5" PointX="5.25" PointY="25.625" />
-        <EntityTypeShape EntityType="HeOModel.Memberblacklist" Width="1.5" PointX="5.25" PointY="28.625" />
-        <EntityTypeShape EntityType="HeOModel.Order" Width="1.5" PointX="10.75" PointY="20.625" IsExpanded="true" />
-        <AssociationConnector Association="HeOModel.FK_Orderfaceooklist_Order" />
+        <EntityTypeShape EntityType="HeOModel.Memberloginrecord" Width="1.5" PointX="5.75" PointY="21" />
+        <EntityTypeShape EntityType="HeOModel.Memberblacklist" Width="1.5" PointX="5.875" PointY="23.5" />
         <EntityTypeShape EntityType="HeOModel.Members" Width="1.5" PointX="3" PointY="10.5" />
         <AssociationConnector Association="HeOModel.FK_Feedbackrecord_Members" />
         <AssociationConnector Association="HeOModel.FK_Memberauthorization_Members" />
         <AssociationConnector Association="HeOModel.FK_Memberblacklist_Members" />
         <AssociationConnector Association="HeOModel.FK_Members_Memberlevel" />
         <AssociationConnector Association="HeOModel.FK_Memberloginrecord_Members" />
-        <AssociationConnector Association="HeOModel.FK_Order_Members" />
         <AssociationConnector Association="HeOModel.FK_Orderfaceooklist_Members" />
         <AssociationConnector Association="HeOModel.FK_Viprecord_Members" />
+        <EntityTypeShape EntityType="HeOModel.Order" Width="1.5" PointX="10.125" PointY="18.875" />
+        <AssociationConnector Association="HeOModel.FK_Order_Members" />
+        <AssociationConnector Association="HeOModel.FK_Orderfaceooklist_Order" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

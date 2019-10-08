@@ -10,6 +10,7 @@ D:\web\HeO\HeO.Service\bin\roslyn\System.Reflection.Metadata.dll
 D:\web\HeO\HeO.Service\bin\roslyn\vbc.exe
 D:\web\HeO\HeO.Service\bin\roslyn\VBCSCompiler.exe
 D:\web\HeO\HeO.Service\bin\roslyn\VBCSCompiler.exe.config
+D:\web\HeO\HeO.Service\bin\HeO.Service.dll.config
 D:\web\HeO\HeO.Service\bin\HeO.Service.dll
 D:\web\HeO\HeO.Service\bin\HeO.Service.pdb
 D:\web\HeO\HeO.Service\bin\EntityFramework.dll
@@ -56,4 +57,3 @@ D:\web\HeO\HeO.Service\bin\zh-Hant\System.Web.Mvc.resources.dll
 D:\web\HeO\HeO.Service\obj\Debug\HeO.Service.csprojResolveAssemblyReference.cache
 D:\web\HeO\HeO.Service\obj\Debug\HeO.Service.dll
 D:\web\HeO\HeO.Service\obj\Debug\HeO.Service.pdb
-D:\web\HeO\HeO.Service\bin\HeO.Service.dll.config

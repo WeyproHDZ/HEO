@@ -127,7 +127,7 @@ namespace HeOBackend.Controllers
             return RedirectToAction("Memberlevel");
         }
 
-        /**** 會員 新增/全選/全選刪除/刪除/修改/匯入Excel/驗證帳號 ****/
+        /**** 會員 新增/全選/全選刪除/刪除/修改/匯入Excel/驗證打勾跟問號會員/驗證全部會員/驗證打叉會員/驗證單個會員 ****/
         [CheckSession(IsAuth = true)]
         public ActionResult Members(int p = 1)
         {
@@ -138,6 +138,15 @@ namespace HeOBackend.Controllers
             ViewBag.Members = data.ToPagedList(pageNumber: p, pageSize: 100);
             ViewBag.message = "按下確定後開始驗證帳號，請勿關閉分頁";
             LevelDropDownList("Members");
+
+            /*** 驗證狀態人數統計 ***/
+            ViewBag.Question = membersService.Get().Where(a => a.Memberloginrecord.OrderByDescending(x => x.Createdate).FirstOrDefault().Status == 0).Count();
+            ViewBag.Check = membersService.Get().Where(a => a.Memberloginrecord.OrderByDescending(x => x.Createdate).FirstOrDefault().Status == 1).Count();
+            ViewBag.Times = membersService.Get().Where(a => a.Memberloginrecord.OrderByDescending(x => x.Createdate).FirstOrDefault().Status == 2).Count();
+
+            /**** 判斷機器人及前台登出 ****/
+            ViewBag.Robot = membersService.Get().Where(a => a.Memberloginrecord.OrderByDescending(x => x.Createdate).FirstOrDefault().Status == 1).Where(a => a.Is_import == true).Count();
+            ViewBag.FrontLoginNumber = membersService.Get().Where(a => a.Memberloginrecord.OrderByDescending(x => x.Createdate).FirstOrDefault().Status == 1).Where(a => a.Is_import == false).Count();
             return View();
         }
         [CheckSession(IsAuth = true)]
@@ -189,6 +198,14 @@ namespace HeOBackend.Controllers
             ViewBag.Members = data.ToPagedList(pageNumber: p, pageSize: 100);
             ViewBag.Account = account;
 
+            /*** 驗證狀態人數統計 ***/
+            ViewBag.Question = membersService.Get().Where(a => a.Memberloginrecord.OrderByDescending(x => x.Createdate).FirstOrDefault().Status == 0).Count();
+            ViewBag.Check = membersService.Get().Where(a => a.Memberloginrecord.OrderByDescending(x => x.Createdate).FirstOrDefault().Status == 1).Count();
+            ViewBag.Times = membersService.Get().Where(a => a.Memberloginrecord.OrderByDescending(x => x.Createdate).FirstOrDefault().Status == 2).Count();
+
+            /**** 判斷機器人及前台登出 ****/
+            ViewBag.Robot = membersService.Get().Where(a => a.Memberloginrecord.OrderByDescending(x => x.Createdate).FirstOrDefault().Status == 1).Where(a => a.Is_import == true).Count();
+            ViewBag.FrontLoginNumber = membersService.Get().Where(a => a.Memberloginrecord.OrderByDescending(x => x.Createdate).FirstOrDefault().Status == 1).Where(a => a.Is_import == false).Count();
             LevelDropDownList("Members");
 
             return View();
@@ -222,11 +239,14 @@ namespace HeOBackend.Controllers
                 members.Account = Regex.Replace(members.Account, @"[^a-z||A-Z||@||.||0-9]", "");         // 保留A-Z、a-z、0-9、小老鼠、小數點，其餘取代空值
                 members.Createdate = DateTime.Now;
                 members.Updatedate = DateTime.Now;
-                members.Lastdate = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds - 28800;      // 總秒數
+                members.Lastdate = ((int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds) - 28800;      // 總秒數
                 members.Isenable = 1;
+                members.Is_import = true;
+                members.Logindate = 99999999999;
                 members.Isreal = members.Isreal;
                 members.Levelid = members.Levelid;              
                 members.Useragent_phone = useragent.User_agent;
+                members.Facebookid = members.Facebookid.Replace("https://www.facebook.com/profile.php?id=", "");
                 /**** 將會員寫進會員登入紀錄裡，預設狀態為0 【0 : 未驗證 , 1 : 已驗證 , 2 : 需驗證】 ****/
                 Memberloginrecord memberloginrecord = new Memberloginrecord();
                 memberloginrecord.Memberid = members.Memberid;
@@ -344,8 +364,9 @@ namespace HeOBackend.Controllers
                         member.Createdate = DateTime.Now;
                         member.Updatedate = DateTime.Now;
                         member.Isenable = 1;
+                        member.Logindate = 99999999999;
                         member.Is_import = true;       // 是否匯入 【false : 前台登入 , true : 後台匯入】 
-                        member.Lastdate = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds - 28800;
+                        member.Lastdate = ((int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds) - 28800;
                         /*** 隨機指派手機版Useragent ***/
                         int useragent_phone = useragentService.Get().Where(a => a.Isweb == 1).Count();
                         Random rnd = new Random();
@@ -386,7 +407,7 @@ namespace HeOBackend.Controllers
             IEnumerable<Members> members = membersService.Get().Where(a => a.Memberloginrecord.OrderByDescending(x => x.Createdate).FirstOrDefault().Status != 2).ToList();            
             foreach (Members auth_member in members)
             {
-                string url = "http://heohelp.com:8080/Check/BackendCkeckFacebook?Facebookid=" + auth_member.Facebookid;
+                string url = "http://cp4m.heohelp.com:8080/Check/BackendCkeckFacebook?Facebookid=" + auth_member.Facebookid;
                 WebRequest myReq = WebRequest.Create(url);
                 myReq.Method = "GET";
                 myReq.ContentType = "application/json; charset=UTF-8";
@@ -440,7 +461,7 @@ namespace HeOBackend.Controllers
             IEnumerable<Members> members = membersService.Get().ToList();
             foreach (Members auth_member in members)
             {
-                string url = "http://heofrontend.4webdemo.com:8080/Check/BackendCkeckFacebook?Facebookid=" + auth_member.Facebookid;
+                string url = "http://cp4m.heohelp.com:8080/Check/BackendCkeckFacebook?Facebookid=" + auth_member.Facebookid;
                 WebRequest myReq = WebRequest.Create(url);
                 myReq.Method = "GET";
                 myReq.ContentType = "application/json; charset=UTF-8";
@@ -494,7 +515,7 @@ namespace HeOBackend.Controllers
             IEnumerable<Members> members = membersService.Get().Where(a => a.Memberloginrecord.OrderByDescending(x => x.Createdate).FirstOrDefault().Status == 2).ToList();
             foreach (Members auth_member in members)
             {
-                string url = "http://heofrontend.4webdemo.com:8080/Check/BackendCkeckFacebook?Facebookid=" + auth_member.Facebookid;
+                string url = "http://cp4m.heohelp.com:8080/Check/BackendCkeckFacebook?Facebookid=" + auth_member.Facebookid;
                 WebRequest myReq = WebRequest.Create(url);
                 myReq.Method = "GET";
                 myReq.ContentType = "application/json; charset=UTF-8";
@@ -537,6 +558,55 @@ namespace HeOBackend.Controllers
             membersService.SaveChanges();
             TempData["message"] = "驗證已完成";
             return RedirectToAction("Members");
+        }
+
+        /**** 驗證單個會員 *****/
+        public ActionResult AuthByid(Guid Memberid)
+        {
+            Members Members = membersService.GetByID(Memberid);
+            string url = "http://cp4m.heohelp.com:8080/Check/BackendCkeckFacebook?Facebookid=" + Members.Facebookid;
+            WebRequest myReq = WebRequest.Create(url);
+            myReq.Method = "GET";
+            myReq.ContentType = "application/json; charset=UTF-8";
+            UTF8Encoding enc = new UTF8Encoding();
+            myReq.Headers.Remove("auth-token");
+            WebResponse wr = myReq.GetResponse();
+            Stream receiveStream = wr.GetResponseStream();
+            StreamReader reader = new StreamReader(receiveStream, Encoding.UTF8);
+            string content = reader.ReadToEnd();
+            content = content.Replace("\"", "");
+            if (content != "")       // 假設content不是空值時
+            {
+                if (content == "已驗證")
+                {
+                    Memberloginrecord loginrecord = new Memberloginrecord();
+                    loginrecord.Status = 1;
+                    loginrecord.Memberid = Members.Memberid;
+                    loginrecord.Createdate = DateTime.Now;
+                    memberloginrecordService.Create(loginrecord);
+                }
+                else
+                {
+                    Memberloginrecord loginrecord = new Memberloginrecord();
+                    loginrecord.Status = 2;
+                    loginrecord.Memberid = Members.Memberid;
+                    loginrecord.Createdate = DateTime.Now;
+                    memberloginrecordService.Create(loginrecord);
+                }
+            }
+            else
+            {
+                Memberloginrecord loginrecord = new Memberloginrecord();
+                loginrecord.Status = 0;
+                loginrecord.Memberid = Members.Memberid;
+                loginrecord.Createdate = DateTime.Now;
+                memberloginrecordService.Create(loginrecord);
+            }
+            memberloginrecordService.SaveChanges();
+            membersService.SaveChanges();
+            TempData["message"] = "驗證已完成";
+            return RedirectToAction("Members");
+
         }
         /**** VIP費用設定 新增/刪除/修改 ****/
         [CheckSession(IsAuth = true)]
@@ -602,17 +672,6 @@ namespace HeOBackend.Controllers
         }
 
         /**** VIP購買紀錄 新增/刪除/修改 ****/
-        //[HttpGet]
-        //[CheckSession(IsAuth = true)]
-        //public ActionResult Viprecord(int p = 1)
-        //{
-            
-        //    //MembersDropDownList();
-        //    var data = viprecordService.Get().OrderBy(o => o.Createdate);
-        //    ViewBag.pageNumber = p;
-        //    ViewBag.Viprecord = data.ToPagedList(pageNumber: p, pageSize: 20);
-        //    return View();
-        //}
         [CheckSession(IsAuth = true)]
         [HttpGet]
         public ActionResult Viprecord(string Account = "", int p = 1)

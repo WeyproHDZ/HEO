@@ -14,21 +14,12 @@ using System.Data.Entity;
 using System.Net;
 using System.Text.RegularExpressions;
 using Microsoft.AspNet.SignalR;
-using System.Threading.Tasks;
 using Owin;
 using Microsoft.Owin;
-using System.Web.WebSockets;
-//using System.Web.Http;
-//using System.Net.Http;
-//using System.Net.WebSockets;
 
 [assembly: OwinStartup(typeof(HeO.Controllers.Startup))]
 namespace HeO.Controllers
-{
-    public class global
-    {
-        public int count = 0;
-    }
+{    
     public class OrderMsController : BaseController
     {
         private OrderService orderService;
@@ -38,7 +29,7 @@ namespace HeO.Controllers
         private MemberblacklistService memberblacklistService;
         private SettingService settingService;
         
-        public int? Cooldowntime;
+        int? Cooldowntime;
         public OrderMsController()
         {
             orderService = new OrderService();
@@ -88,7 +79,7 @@ namespace HeO.Controllers
                 Setting Setting = settingService.Get().FirstOrDefault();
                 ViewBag.Max = Setting.Max;
                 ViewBag.Min = Setting.Min;
-                TempData["message"] = "數量錯誤，請重新下單!";
+                TempData["message"] = "數量錯誤，請重新下單!"+membersCount;
                 return RedirectToAction("Order", "OrderMs");
             }
             Members member = membersService.GetByID(Session["Memberid"]);
@@ -101,7 +92,7 @@ namespace HeO.Controllers
             }
             if (order.Url.IndexOf("facebook.com") != -1 && order.Count != null)
             {
-                if(order.Url.IndexOf("photos") != -1 || order.Url.IndexOf("posts") != -1 || order.Url.IndexOf("video") != -1 || order.Url.IndexOf("permalink") != -1)
+                if(order.Url.IndexOf("photos") != -1 || order.Url.IndexOf("posts") != -1 || order.Url.IndexOf("video") != -1 || order.Url.IndexOf("permalink") != -1 || order.Url.IndexOf("photo") != -1)
                 {
                     string Url = order.Url.Replace(" ", "");         // 將訂單的空白字元砍掉
                     Guid Memberid = Guid.Parse(Session["Memberid"].ToString());
@@ -136,6 +127,7 @@ namespace HeO.Controllers
                             order.Remains = order.Count;
                             order.Url = Url;
                             order.Ordernumber = "heoorder" + DateTime.Now.ToString("yyyyMMddHHmmssfff");
+                            Session["OrderNumber"] = order.Ordernumber;
                             order.Service = "讚";
                             orderService.Create(order);
                             orderService.SaveChanges();
@@ -157,6 +149,7 @@ namespace HeO.Controllers
                                 order.Remains = order.Count;
                                 order.Url = Url;
                                 order.Ordernumber = "heoorder" + DateTime.Now.ToString("yyyyMMddHHmmssfff");
+                                Session["OrderNumber"] = order.Ordernumber;
                                 order.Service = "讚";
                                 orderService.Create(order);
                                 orderService.SaveChanges();
@@ -207,6 +200,7 @@ namespace HeO.Controllers
         {
             Guid Memberid = Guid.Parse(Session["Memberid"].ToString());
             IEnumerable<Order> order = orderService.Get().Where(a => a.Memberid == Memberid).OrderByDescending(o => o.Createdate);
+            ViewBag.OrderNumber = Session["OrderNumber"];
             ViewBag.Url = order.FirstOrDefault().Url;
             ViewBag.Count = order.FirstOrDefault().Count;         
             return View();
@@ -237,7 +231,7 @@ namespace HeO.Controllers
             Setting setting = settingService.Get().FirstOrDefault();                
             //Guid Vipid = memberlevelService.Get().Where(a => a.Levelname == "VIP").FirstOrDefault().Levelid;
             int Now = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds - 28800;      // 目前時間的總秒數
-            var query = membersService.Get().Where(a => a.Logindate >= Now).Count();
+            var query = membersService.Get().Where(x => x.Is_import == false).Where(a => a.Logindate >= Now).Count();
             Clients.User(Context.ConnectionId);
             Clients.All.getList(query);                  
         }
@@ -255,41 +249,27 @@ namespace HeO.Controllers
         //}
     }
     #endregion  
-    public class WSChatController : System.Web.Http.ApiController
+    #region --訂單成功--
+    public class OrderSuccessHub : Hub
     {
-        public System.Net.Http.HttpResponseMessage Get()
+        private MembersService membersService;
+        private MemberlevelService memberlevelService;
+        private SettingService settingService;
+        private OrderService orderService;
+        public OrderSuccessHub()
         {
-            if (HttpContext.Current.IsWebSocketRequest)
-            {
-                HttpContext.Current.AcceptWebSocketRequest(ProcessWSChat);
-            }
-            return new System.Net.Http.HttpResponseMessage(HttpStatusCode.SwitchingProtocols);
+            membersService = new MembersService();
+            memberlevelService = new MemberlevelService();
+            settingService = new SettingService();
+            orderService = new OrderService();
         }
 
-
-        private async Task ProcessWSChat(AspNetWebSocketContext arg)
+        public void userConnected(string OrderNumber)
         {
-            System.Net.WebSockets.WebSocket socket = arg.WebSocket;
-            while (true)
-            {
-                ArraySegment<byte> buffer = new ArraySegment<byte>(new byte[1024]);
-                System.Net.WebSockets.WebSocketReceiveResult result = await socket.ReceiveAsync(buffer, System.Threading.CancellationToken.None);
-                if (socket.State == System.Net.WebSockets.WebSocketState.Open)
-                {
-                    string message = Encoding.UTF8.GetString(buffer.Array, 0, result.Count);
-                    string returnMessage = "You send :" + message + ". at" + DateTime.Now.ToLongTimeString();
-                    buffer = new ArraySegment<byte>(Encoding.UTF8.GetBytes(returnMessage));
-                    await socket.SendAsync(buffer, System.Net.WebSockets.WebSocketMessageType.Text, true, System.Threading.CancellationToken.None);
-                }
-                else
-                {
-                    break;
-                }
-            }
+            var query = orderService.Get().Where(a => a.Ordernumber == OrderNumber).FirstOrDefault().OrderStatus;
+            Clients.Client(connectionId: Context.ConnectionId).getList(query);
         }
     }
-    #region --訂單成功--
-
     #endregion
 
     public class OrderData
