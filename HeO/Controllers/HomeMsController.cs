@@ -47,7 +47,7 @@ namespace HeO.Controllers
         /*** 首頁 ***/
         public ActionResult Home()
         {
-            ViewBag.News = newsService.Get().Take(2).OrderByDescending(o => o.Date);
+            ViewBag.News = newsService.Get().OrderByDescending(o => o.Createdate).Take(2);
             return View();
         }
 
@@ -264,8 +264,8 @@ namespace HeO.Controllers
                 {
                     members.Memberid = Guid.NewGuid();
                     members.Levelid = NormalLevelid;
-                    members.Isenable = 1;
-                    members.Is_import = false;              // 是否匯入【false: 前台登入 , true : 後台匯入】
+                    members.Isenable = 1;                    
+                    members.Is_import = 0;              // 是否匯入【0: 前台登入 , 1 : 後台匯入 , 2 : 轉前台】
                     members.Account = Account;
                     members.Createdate = DateTime.Now;
                     members.Updatedate = DateTime.Now;

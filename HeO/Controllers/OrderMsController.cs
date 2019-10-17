@@ -231,7 +231,7 @@ namespace HeO.Controllers
             Setting setting = settingService.Get().FirstOrDefault();                
             //Guid Vipid = memberlevelService.Get().Where(a => a.Levelname == "VIP").FirstOrDefault().Levelid;
             int Now = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds - 28800;      // 目前時間的總秒數
-            var query = membersService.Get().Where(x => x.Is_import == false).Where(a => a.Logindate >= Now).Count();
+            var query = membersService.Get().Where(x => x.Is_import == 0 || x.Is_import == 2).Where(a => a.Logindate >= Now).Count();
             Clients.User(Context.ConnectionId);
             Clients.All.getList(query);                  
         }

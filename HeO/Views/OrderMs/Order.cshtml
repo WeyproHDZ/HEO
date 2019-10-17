@@ -109,7 +109,8 @@
             var url = $("#post").val();
             var input = $("#amount").val();
             var check = ($('#amount').val()).match(/^[0-9]*$/);
-            var Number = $(".online-number").html(Now_Number);
+            var Number = $(".online-number").html();
+            console.log(Number);
             if(Number < Max){
                 if((input > Now_Number || input <= 0) && (input.length != 0) && (check != null))
                 {

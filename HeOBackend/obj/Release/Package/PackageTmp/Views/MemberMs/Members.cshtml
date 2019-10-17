@@ -30,8 +30,7 @@
                                 <div class="form-inline">
                                     <div class="col-sm-7">
                                         帳號篩選 : <input type="text" name="account" id="account" class="form-control" value="@(ViewBag.Account)" />
-                                        <br />等級篩選 : 
-                                            @Html.DropDownListFor(model => model.Levelid , null , "--請選擇--", new Dictionary<string, object>() { { "class", "form-control" } })
+                                        <br />等級篩選 : @Html.DropDownListFor(model => model.Levelid , null , "--請選擇--", new Dictionary<string, object>() { { "class", "form-control" } })
                                         <br />性別篩選 : 
                                         <select class="form-control" name="Sex">
                                             <option value="3">--請選擇--</option>
@@ -47,6 +46,7 @@
                                         <button class="btn btn-info btn-labeled" type="submit"><span class="btn-label"><i class="fa fa-search"></i></span>查詢</button>
                                         <button class="btn btn-danger btn-labeled" type="button" id="deletechecked" onclick="DeleteChecked()"><span class="btn-label"><i class="fa fa-trash-o"></i></span>刪除</button>
                                         <button class="btn btn-danger btn-labeled" type="button" id="blackchecked" onclick="BlackChecked()"><span class="btn-label"><i class="fa fa-ban"></i></span>加入黑名單</button>
+                                        <button class="btn btn-primary btn-labeled" type="button" id="tofrontend" onclick="ToFrontend()"><span class="btn-label"><i class="fa fa-send"></i></span>轉前台</button>
                                     </div>                                    
                                     <div class="col-sm-5">
                                         <a class="btn btn-warning btn-labeled" id="authmember" onclick="auth()" href="@Url.Action("AllAuthMembers", "MemberMs")" target="_blank"> <span class="btn-label"><i class="fa fa-repeat"></i></span>驗證會員(all) </a>
@@ -66,6 +66,7 @@
                             <div class="members_status">                            
                                 <i class="fa fa fa-android" aria-hidden="true" style="color:red">@ViewBag.Robot 人</i>
                                 <i class="fa fa-male" aria-hidden="true" style="color:green">@ViewBag.FrontLoginNumber 人</i>
+                                <i class="fa fa fa-android" aria-hidden="true" style="color:blue">@ViewBag.RobotFrontLoginNumber 人</i>
                             </div>                            
                         </div>
                         <div class="table-responsive">
@@ -92,10 +93,14 @@
                                     @foreach (Members entity in data)
                                     {
                                         <tr>
-                                            <td><input type="checkbox" name="@entity.Memberid" value="1" id="Check"></td>                                            
-                                            @if (entity.Is_import == true)
+                                            <td><input type="checkbox" name="@entity.Memberid" value="1" id="Check"></td>
+                                            @if (entity.Is_import == 1)
                                             {
                                                 <td class="text-center"><i class="fa fa-android" aria-hidden="true" style="color:red"></i></td>
+                                            }
+                                            else if (entity.Is_import == 2)
+                                            {
+                                                <td class="text-center"><i class="fa fa-android" aria-hidden="true" style="color:blue"></i></td>
                                             }
                                             else
                                             {
@@ -260,6 +265,37 @@
                     success: function (response) {
                         swal({
                             title: "已成功刪除",
+                            type: "success"
+                        }).then(function (e) {
+                            location.reload();
+                        });
+                    }
+                });
+            })
+        }
+        /***** 轉入前台 ****/
+        function ToFrontend() {
+            var Memberid = [];
+            swal({
+                title: "確定轉入前台嗎?",
+                showCancelButton: true,
+                confirmButtonText: '確定！', 
+                cancelButtonText: '取消！',
+                type:'question',
+            }).then(function (e) {
+                $.each($('tr').find('input#Check'), function () {
+                    if ($(this).prop('checked') == true) {
+                        Memberid.push($(this).attr("name"));  //塞到陣列中
+                    }
+                });
+                $.ajax({
+                    url: '@Url.Action("AjaxToFrontend", "Ajax")',
+                    data: { Memberid: Memberid },
+                    type: 'post',
+                    dateType: 'json',
+                    success: function (response) {
+                        swal({
+                            title: "已成功轉入",
                             type: "success"
                         }).then(function (e) {
                             location.reload();

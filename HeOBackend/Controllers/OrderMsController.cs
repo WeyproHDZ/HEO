@@ -142,7 +142,7 @@ namespace HeOBackend.Controllers
             orderService.SaveChanges();
             if (prev == "order")
             {
-                return RedirectToAction("Order");
+                return RedirectToAction("Order", new { prev = prev });
             }
             else
             {

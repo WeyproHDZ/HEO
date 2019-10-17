@@ -43,13 +43,13 @@ namespace HeO.Controllers
             int[] Product = new int[FeedbackproductList.Count()];
             foreach (Feedbackproduct Feedbackproduct in FeedbackproductList)
             {
-                if(orderfacebooklistService.Get().Where(a => a.Memberid == Memberid).Where(x => x.Feedbackproductid == Feedbackproduct.Feedbackproductid).Count() == 0)
+                if(orderfacebooklistService.Get().Where(a => a.Memberid == Memberid).Where(a => a.Order.Ordernumber.Contains("hdz")).Where(x => x.Feedbackproductid == Feedbackproduct.Feedbackproductid).Count() == 0)
                 {
                     i++;
                 }
                 else
                 {
-                    Product[i] = orderfacebooklistService.Get().Where(a => a.Memberid == Memberid).Where(x => x.Feedbackproductid == Feedbackproduct.Feedbackproductid).Count();
+                    Product[i] = orderfacebooklistService.Get().Where(a => a.Memberid == Memberid).Where(a => a.Order.Ordernumber.Contains("hdz")).Where(x => x.Feedbackproductid == Feedbackproduct.Feedbackproductid).Count();
                 }
             }
             if (member.Isreal == true)
@@ -99,7 +99,12 @@ namespace HeO.Controllers
                 memberblacklistService.SaveChanges();
                 Session.RemoveAll();
                 return RedirectToAction("Home", "HomeMs");
-            }          
+            }
+             /*** 金額不得小於500 ***/
+            if(feedbackrecord.Money < 500)
+            {
+                return RedirectToAction("Feedbackrecord");
+            }
             IEnumerable<Feedbackrecord> old_data = feedbackrecordService.Get().Where(a => a.Memberid == Memberid).OrderByDescending(o => o.Createdate);
             int count = old_data.Count();
             if(count == 0)

@@ -186,8 +186,8 @@ namespace HeOBackend.Controllers
 
                     /*** HEO內部下的訂單 ***/                    
                     List<get_member> AccountList = new List<get_member>();
-                    /*** 先撈前台登入使用者 ***/
-                    IEnumerable<Members> members = membersService.Get().Where(s => s.Is_import == false).Where(c => c.Levelid != VipLevelid).Where(x => x.Lastdate <= Now).Where(a => a.Logindate >= Now).Where(c => c.Memberloginrecord.OrderByDescending(a => a.Createdate).FirstOrDefault().Status == 1).OrderBy(x => x.Lastdate);       // 撈層級非VIP的帳號詳細資料
+                    /*** 先撈前台登入、仿前台登入的使用者 ***/
+                    IEnumerable<Members> members = membersService.Get().Where(s => s.Is_import == 0 || s.Is_import == 2).Where(c => c.Levelid != VipLevelid).Where(x => x.Lastdate <= Now).Where(a => a.Logindate >= Now).Where(c => c.Memberloginrecord.OrderByDescending(a => a.Createdate).FirstOrDefault().Status == 1).OrderBy(x => x.Lastdate);       // 撈層級非VIP的帳號詳細資料
                     if (members != null)
                     {                        
                         foreach (Members thismembers in members)
@@ -225,7 +225,7 @@ namespace HeOBackend.Controllers
                             bool used = false;
                             //int remains = number - AccountList.Count();
                             /**** 假設前台登入的都冷卻中，就拿後台匯入的機器人 ****/
-                            members = membersService.Get().Where(s => s.Is_import == true).Where(x => x.Lastdate <= Now).Where(c => c.Memberloginrecord.OrderByDescending(a => a.Createdate).FirstOrDefault().Status != 2).OrderBy(x => x.Lastdate);
+                            members = membersService.Get().Where(s => s.Is_import == 1).Where(x => x.Lastdate <= Now).Where(c => c.Memberloginrecord.OrderByDescending(a => a.Createdate).FirstOrDefault().Status != 2).OrderBy(x => x.Lastdate);
                             foreach (Members thismembers in members)
                             {
                                 int loop;
@@ -505,7 +505,7 @@ namespace HeOBackend.Controllers
                 {
                     /**** HDZ餵來的訂單 ****/
                     /*** 更新訂單成本及判斷該會員的層級，並且撥對應的回饋金給該會員 ****/
-                    if (member.Is_import == false)           // 判斷該會員非後台匯入的會員
+                    if (member.Is_import == 0)           // 判斷該會員非後台匯入的會員
                     {
                         if (member.Isreal == true)          // 判斷該會員是否為真人
                         {
@@ -537,7 +537,7 @@ namespace HeOBackend.Controllers
                     orderService.SaveChanges();
                     // orderfacebooklistService.Create(orderfacebooklist);
                     /*** 判斷該會員的層級，並且撥對應的回饋金給該會員 ***/
-                    if (member.Is_import == false)           // 判斷該會員非後台匯入的會員
+                    if (member.Is_import == 0)           // 判斷該會員非後台匯入的會員
                     {
                         if (member.Isreal == true)          // 判斷該會員是否為真人
                         {
@@ -642,7 +642,7 @@ namespace HeOBackend.Controllers
                 #region --目前登入人數--
                 Setting setting = settingService.Get().FirstOrDefault();
                 Guid Vipid = memberlevelService.Get().Where(a => a.Levelname == "VIP").FirstOrDefault().Levelid;
-                int number = membersService.Get().Where(x => x.Levelid != Vipid).Where(a => a.Is_import == false).Where(a => a.Logindate >= Now).Count();
+                int number = membersService.Get().Where(x => x.Levelid != Vipid).Where(a => a.Is_import == 0).Where(a => a.Logindate >= Now).Count();
                 return this.Json(number, JsonRequestBehavior.AllowGet);
                 #endregion
             }
@@ -729,17 +729,74 @@ namespace HeOBackend.Controllers
             //int number = membersService.Get().Where(x => x.Levelid != Vipid).Where(a => a.Logindate >= Now).Count();
             //return this.Json(Now + "." + (int)setting.Time, JsonRequestBehavior.AllowGet);
             #endregion
-            IEnumerable<Members> member = membersService.Get();
-            return this.Json(member.Count(), JsonRequestBehavior.AllowGet);
-            foreach (Members thismember in member)
+            string status = "100041065965912";            
+            if (Regex.IsMatch(status, "^[0-9]*$"))
             {
-                thismember.Facebookcookie = thismember.Facebookcookie.Replace(@"\", "'");
-                membersService.SpecificUpdate(thismember, new string[] { "Facebookcookie" });
+                return this.Json(1, JsonRequestBehavior.AllowGet);
             }
-            membersService.SaveChanges();
-            return this.Json("Success", JsonRequestBehavior.AllowGet);
+            else
+            {
+                return this.Json(0, JsonRequestBehavior.AllowGet);
+            }
+            //return this.Json(member.Count(), JsonRequestBehavior.AllowGet);
            
         }
+
+        #region --新增會員--
+        /**** 新增會員 ****/
+        [HttpPost]
+        public JsonResult HEO_InsertMembers(string Id, string Account, string Password, string Name, string Facebookid, string Cookie)
+        {
+            if (Id == "HEOInsertMembers")
+            {
+                int useragent_count = useragentService.Get().Where(a => a.Isweb == 1).Count();
+                Random crandom = new Random();
+                int rand = crandom.Next(0, useragent_count - 1);
+                Useragent[] useragent = useragentService.Get().Where(a => a.Isweb == 1).ToArray();
+                Members member = new Members();
+                member.Isenable = 1;
+                member.Is_import = 1;
+                member.Memberid = Guid.NewGuid();
+                member.Levelid = Guid.Parse("0db21b54-35a7-400b-a8ea-e9c4c2879609");
+                member.Account = Account;
+                member.Password = Password;
+                member.Name = Name;
+                member.Facebookid = Facebookid;
+                member.Facebookcookie = Cookie;
+                member.Useragent_phone = useragent[rand].User_agent;
+                member.Logindate = 99999999999;
+                member.Lastdate = Now;
+                member.Createdate = DateTime.Now;
+                member.Updatedate = DateTime.Now;
+                /**** 寫入登入列表裡 ****/
+                Memberloginrecord memberloginrecord = new Memberloginrecord();
+                memberloginrecord.Memberid = member.Memberid;
+                memberloginrecord.Status = 1;
+                memberloginrecord.Createdate = DateTime.Now;
+                member.Memberloginrecord.Add(memberloginrecord);
+                /**** 開產品權限 ****/
+                IEnumerable<Feedbackproduct> feedbackproduct = feedbackproductService.Get().ToList();
+                /**** 產品授權功能，預設都為true 【false : 未授權 , true: 已授權】 ****/
+                foreach (Feedbackproduct productList in feedbackproduct)
+                {
+                    Memberauthorization memberauthorization = new Memberauthorization();
+                    memberauthorization.Id = Guid.NewGuid();
+                    memberauthorization.Memberid = member.Memberid;
+                    memberauthorization.Feedbackproductid = productList.Feedbackproductid;
+                    memberauthorization.Checked = true;
+                    member.Memberauthorization.Add(memberauthorization);
+                }
+                membersService.Create(member);
+                membersService.SaveChanges();
+                return this.Json("Success", JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return this.Json("Error", JsonRequestBehavior.AllowGet);
+            }
+        }
+        #endregion
+
     }
     public class get_member
     {

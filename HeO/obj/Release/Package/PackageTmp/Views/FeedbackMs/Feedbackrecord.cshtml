@@ -9,8 +9,8 @@
             @{ Html.RenderPartial("_Member"); }
             <div class="member_container">
                 <div class="content-block">
-                    <h1>您目前的獎勵金<span class="reward-number" id="number"> @ViewBag.Membermoney</span>$</h1>
-                    <div class="text">獎勵金累積5000$可轉換成台幣(需聯繫客服處理)。<br>目前獎勵金:台幣比值為1:0.5(5000獎勵金轉換2500台幣),僅限於HEO上的獎勵金,<br>若該獎勵金已轉去HDZ則不接受轉換現金。</div>
+                    <h1>您目前的獎勵金<span class="reward-number" id="number">$ @ViewBag.Membermoney</span></h1>
+                    <div class="text">獎勵金累積$500可轉到HDz平台使用。<br>獎勵金累積$5000可轉換成台幣(需聯繫客服處理)。<br>目前獎勵金:台幣比值為1:0.5(5000獎勵金轉換2500台幣),僅限於HEO上的獎勵金,若該獎勵金已轉去HDz則不接受轉換現金。</div>
                     <div class="main-content">
                                                
                         @if (Feedbackrecord.Where(a => a.Memberid == Guid.Parse(Session["Memberid"].ToString())).Count() != 0)
@@ -194,6 +194,13 @@
                     swal({
                         title: 'Error',
                         text: '請輸入大於0的數字',
+                        type: 'warning'
+                    });
+                }
+                else if($('#Money').val() < 500){
+                    swal({
+                        title: 'Error',
+                        text: '轉出金額必須大於500',
                         type: 'warning'
                     });
                 }

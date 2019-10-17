@@ -42,3 +42,4 @@ D:\web\HeO\HeO.Models\bin\zh-Hant\System.Web.Helpers.resources.dll
 D:\web\HeO\HeO.Models\bin\zh-Hant\System.Web.Mvc.resources.dll
 D:\web\HeO\HeO.Models\obj\Debug\HeO.Models.dll
 D:\web\HeO\HeO.Models\obj\Debug\HeO.Models.pdb
+D:\web\HeO\HeO.Models\obj\Debug\HeO.Models.csprojResolveAssemblyReference.cache

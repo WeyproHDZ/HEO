@@ -53,5 +53,20 @@ namespace HeOBackend.Controllers
             }
             return this.Json("Success");
         }
+
+        /**** 轉入前台 ****/
+        public JsonResult AjaxToFrontend(Guid[] Memberid)
+        {
+            if(Memberid != null)
+            {
+                foreach(Guid thismemberid in Memberid)
+                {
+                    Members member = membersService.GetByID(thismemberid);
+                    member.Is_import = 2;       // 是否匯入 【0 : 前台登入 , 1 : 後台匯入 , 2 : 轉前台】           
+                }
+                membersService.SaveChanges();
+            }
+            return this.Json("Success");
+        }
     }
 }

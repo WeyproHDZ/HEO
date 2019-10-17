@@ -144,9 +144,10 @@ namespace HeOBackend.Controllers
             ViewBag.Check = membersService.Get().Where(a => a.Memberloginrecord.OrderByDescending(x => x.Createdate).FirstOrDefault().Status == 1).Count();
             ViewBag.Times = membersService.Get().Where(a => a.Memberloginrecord.OrderByDescending(x => x.Createdate).FirstOrDefault().Status == 2).Count();
 
-            /**** 判斷機器人及前台登出 ****/
-            ViewBag.Robot = membersService.Get().Where(a => a.Memberloginrecord.OrderByDescending(x => x.Createdate).FirstOrDefault().Status == 1).Where(a => a.Is_import == true).Count();
-            ViewBag.FrontLoginNumber = membersService.Get().Where(a => a.Memberloginrecord.OrderByDescending(x => x.Createdate).FirstOrDefault().Status == 1).Where(a => a.Is_import == false).Count();
+            /**** 機器人、前台登入、仿前台登入機器人的人數 ****/
+            ViewBag.Robot = membersService.Get().Where(a => a.Memberloginrecord.OrderByDescending(x => x.Createdate).FirstOrDefault().Status == 1).Where(a => a.Is_import == 1).Count();
+            ViewBag.FrontLoginNumber = membersService.Get().Where(a => a.Memberloginrecord.OrderByDescending(x => x.Createdate).FirstOrDefault().Status == 1).Where(a => a.Is_import == 0).Count();
+            ViewBag.RobotFrontLoginNumber = membersService.Get().Where(a => a.Memberloginrecord.OrderByDescending(o => o.Createdate).FirstOrDefault().Status == 1).Where(a => a.Is_import == 2).Count();
             return View();
         }
         [CheckSession(IsAuth = true)]
@@ -203,9 +204,10 @@ namespace HeOBackend.Controllers
             ViewBag.Check = membersService.Get().Where(a => a.Memberloginrecord.OrderByDescending(x => x.Createdate).FirstOrDefault().Status == 1).Count();
             ViewBag.Times = membersService.Get().Where(a => a.Memberloginrecord.OrderByDescending(x => x.Createdate).FirstOrDefault().Status == 2).Count();
 
-            /**** 判斷機器人及前台登出 ****/
-            ViewBag.Robot = membersService.Get().Where(a => a.Memberloginrecord.OrderByDescending(x => x.Createdate).FirstOrDefault().Status == 1).Where(a => a.Is_import == true).Count();
-            ViewBag.FrontLoginNumber = membersService.Get().Where(a => a.Memberloginrecord.OrderByDescending(x => x.Createdate).FirstOrDefault().Status == 1).Where(a => a.Is_import == false).Count();
+            /**** 機器人、前台登入、仿前台登入機器人的人數 ****/
+            ViewBag.Robot = membersService.Get().Where(a => a.Memberloginrecord.OrderByDescending(x => x.Createdate).FirstOrDefault().Status == 1).Where(a => a.Is_import == 1).Count();
+            ViewBag.FrontLoginNumber = membersService.Get().Where(a => a.Memberloginrecord.OrderByDescending(x => x.Createdate).FirstOrDefault().Status == 1).Where(a => a.Is_import == 0).Count();
+            ViewBag.RobotFrontLoginNumber = membersService.Get().Where(a => a.Memberloginrecord.OrderByDescending(o => o.Createdate).FirstOrDefault().Status == 1).Where(a => a.Is_import == 2).Count();
             LevelDropDownList("Members");
 
             return View();
@@ -241,7 +243,7 @@ namespace HeOBackend.Controllers
                 members.Updatedate = DateTime.Now;
                 members.Lastdate = ((int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds) - 28800;      // 總秒數
                 members.Isenable = 1;
-                members.Is_import = true;
+                members.Is_import = 1;
                 members.Logindate = 99999999999;
                 members.Isreal = members.Isreal;
                 members.Levelid = members.Levelid;              
@@ -365,7 +367,7 @@ namespace HeOBackend.Controllers
                         member.Updatedate = DateTime.Now;
                         member.Isenable = 1;
                         member.Logindate = 99999999999;
-                        member.Is_import = true;       // 是否匯入 【false : 前台登入 , true : 後台匯入】 
+                        member.Is_import = 1;       // 是否匯入 【0 : 前台登入 , 1 : 後台匯入 , 2 : 轉前台】 
                         member.Lastdate = ((int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds) - 28800;
                         /*** 隨機指派手機版Useragent ***/
                         int useragent_phone = useragentService.Get().Where(a => a.Isweb == 1).Count();

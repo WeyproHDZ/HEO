@@ -140,7 +140,7 @@
       <PropertyRef Name="Memberid" />
     </Key>
     <Property Name="Isenable" Type="int" Nullable="false" />
-    <Property Name="Is_import" Type="bit" Nullable="false" />
+    <Property Name="Is_import" Type="int" />
     <Property Name="Memberid" Type="uniqueidentifier" Nullable="false" />
     <Property Name="Levelid" Type="uniqueidentifier" />
     <Property Name="Facebookcookie" Type="ntext" />

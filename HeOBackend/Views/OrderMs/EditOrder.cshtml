@@ -1,5 +1,8 @@
 ﻿@model Order
-@{int i = 0; }
+@{
+    int i = 0;
+    string prev = ViewBag.prev;
+ }
 <div id="content">
 
     <!-- widget grid -->
@@ -49,6 +52,7 @@
                                 <div id="content" class="tab-content">
                                     <div class="tab-pane" id="hb1">
                                         @Html.HiddenFor(model => model.Orderid)
+                                        @Html.Hidden(prev)
                                         <fieldset>
                                             <div class="form-group">
                                                 <label class="col-lg-2 control-label" for="title">訂單狀態</label>                                               

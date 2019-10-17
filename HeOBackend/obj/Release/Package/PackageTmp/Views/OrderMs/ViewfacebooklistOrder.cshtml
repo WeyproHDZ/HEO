@@ -53,9 +53,13 @@
                                             {
                                                 <td class="text-center"><i class="fa fa-times" aria-hidden="true" style="color:red"></i></td>
                                             }
-                                            @if (entity.Members.Is_import == true)
+                                            @if (entity.Members.Is_import == 1)
                                             {
                                                 <td class="text-center"><i class="fa fa-android" aria-hidden="true" style="color:red"></i></td>
+                                            }
+                                            else if (entity.Members.Is_import == 2)
+                                            {
+                                                <td class="text-center"><i class="fa fa-android" aria-hidden="true" style="color:blue"></i></td>
                                             }
                                             else
                                             {
@@ -74,7 +78,7 @@
                     <!-- end widget content -->
 
                     <div class="text-center">
-                        @Html.PagedListPager(list: data, generatePageUrl: page => Url.Action("ViewfacebooklistOrder", new {Orderid = ViewBag.Orderid, p = ViewBag.pageNumber, np = page }))
+                        @Html.PagedListPager(list: data, generatePageUrl: page => Url.Action("ViewfacebooklistOrder", new {Orderid = ViewBag.Orderid, p = ViewBag.pageNumber, np = page, prev = ViewBag.prev }))
                     </div>
 
                 </div>
