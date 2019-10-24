@@ -47,6 +47,11 @@ tr {
       border-bottom: none;
     }
   }
+  &.highlight {
+    td {
+      background-color: #F1E4FC;
+    }
+  }
 }
 
 /*第一欄第一列：左上*/

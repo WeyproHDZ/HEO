@@ -20,7 +20,51 @@ block main
           .controls_group
             .result-title 目前完成數量：
             .result-text 66
-        
+          .controls_group
+            .result-title 目前前五筆排程：
+            .rwd_table_wrapper
+              table
+                thead
+                  tr
+                    th 訂單
+                    th 姓名
+                    th 下單讚數
+                    th 狀態
+                    th 未完成讚數
+                tbody
+                  tr.highlight
+                    td.align_left 000005
+                    td JESSIE
+                    td 10
+                    td 等待中
+                    td 
+                  tr
+                    td.align_left 000005
+                    td JESSIE
+                    td 20
+                    td 運行中
+                    td 
+                  tr
+                    td.align_left 000005
+                    td JESSIE
+                    td 15
+                    td 失敗
+                    td 5
+                  tr
+                    td.align_left 000005
+                    td JESSIE
+                    td 26
+                    td 失敗
+                    td 4
+                  tr
+                    td.align_left 000005
+                    td JESSIE
+                    td 20
+                    td 已完成
+                    td 
+          .clear
+            a.btn(href="javascript:;" title="狀態刷新") 狀態刷新
+             
         //- 冷卻的運行狀態↓
         //- .result-block
         //-   h1 冷卻中...        
