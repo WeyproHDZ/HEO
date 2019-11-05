@@ -69,7 +69,6 @@ namespace HeOBackend.Controllers
                     OrderArray[2] = order.Url;
                     OrderArray[3] = order.Service;
                     OrderArray[4] = order.Message;
-                    OrderArray[5] = (Now + 3600).ToString();
 
                     return this.Json(OrderArray, JsonRequestBehavior.AllowGet);
                 }
@@ -96,19 +95,19 @@ namespace HeOBackend.Controllers
                 order.OrderStatus = 2;
                 orderService.SpecificUpdate(order, new string[] { "OrderStatus" });
                 orderService.SaveChanges();
-                /*** 判斷訂單是否是hdz餵來的 ***/
-                if (Ordernumber.Contains("Hdz"))
-                {
-                    /*** 回傳訂單編號及成功字眼到hdz ***/
-                    string url = "https://www.hdzbulk.com/index.php/backend/api_connect/get_heo_status/heo_order?Ordernumber=" + Ordernumber + "&&status=success";
-                    WebRequest myReq = WebRequest.Create(url);
-                    myReq.Method = "GET";
-                    myReq.ContentType = "application/json; charset=UTF-8";
-                    UTF8Encoding enc = new UTF8Encoding();
-                    myReq.Headers.Remove("auth-token");
-                    WebResponse wr = myReq.GetResponse();
-                    Stream receiveStream = wr.GetResponseStream();
-                }
+                ///*** 判斷訂單是否是hdz餵來的 ***/
+                //if (Ordernumber.Contains("Hdz"))
+                //{
+                //    /*** 回傳訂單編號及成功字眼到hdz ***/
+                //    string url = "https://www.hdzbulk.com/index.php/backend/api_connect/get_heo_status/heo_order?Ordernumber=" + Ordernumber + "&&status=success";
+                //    WebRequest myReq = WebRequest.Create(url);
+                //    myReq.Method = "GET";
+                //    myReq.ContentType = "application/json; charset=UTF-8";
+                //    UTF8Encoding enc = new UTF8Encoding();
+                //    myReq.Headers.Remove("auth-token");
+                //    WebResponse wr = myReq.GetResponse();
+                //    Stream receiveStream = wr.GetResponseStream();
+                //}
                 return this.Json("Success", JsonRequestBehavior.AllowGet);
             }
             else if(Ordernumber != null && Id == "heo_order" && status == "failed")
@@ -196,27 +195,27 @@ namespace HeOBackend.Controllers
                             int loop;
                             for (loop = 0; loop < MemberList.Count(); loop++)
                             {                                        
-                                if (thismembers.Memberid.Equals(MemberList[loop].Memberid) == true)
+                                if (thismembers.Memberid.Equals(MemberList[loop].Memberid))
                                 {
                                     used = true;
                                 }
-                                if (used == false)
-                                {
-                                    AccountList.Add(
-                                        new get_member
-                                        {
-                                            memberid = thismembers.Memberid,
-                                            account = thismembers.Account,
-                                            password = thismembers.Password,
-                                            useragent_phone = thismembers.Useragent_phone,
-                                            facebookcookie = thismembers.Facebookcookie,
-                                            duedate = (Now + 3600)
-                                        }
-                                    );
-                                    
-                                }
+
                             }
-                            used = false;
+                            if (used == false)
+                            {
+                                AccountList.Add(
+                                    new get_member
+                                    {
+                                        memberid = thismembers.Memberid,
+                                        account = thismembers.Account,
+                                        password = thismembers.Password,
+                                        useragent_phone = thismembers.Useragent_phone,
+                                        facebookcookie = thismembers.Facebookcookie,
+                                    }
+                                );
+                                used = false;
+                            }
+                            
                         }
                         
                         /*** 可用人數小於該訂單所需人數 ***/
@@ -231,25 +230,23 @@ namespace HeOBackend.Controllers
                                 int loop;
                                 for (loop = 0; loop < MemberList.Count(); loop++)
                                 {                                    
-                                    if (thismembers.Memberid.Equals(MemberList[loop].Memberid) == true)
+                                    if (thismembers.Memberid.Equals(MemberList[loop].Memberid))
                                     {                                        
                                         used = true;
-                                    }
-
-                                    if (used == false)
-                                    {
-                                        AccountList.Add(
-                                            new get_member
-                                            {
-                                                memberid = thismembers.Memberid,
-                                                account = thismembers.Account,
-                                                password = thismembers.Password,
-                                                useragent_phone = thismembers.Useragent_phone,
-                                                facebookcookie = thismembers.Facebookcookie,
-                                                duedate = (Now + 3600)
-                                            }
-                                        );                                        
-                                    }
+                                    }                                   
+                                }
+                                if (used == false)
+                                {
+                                    AccountList.Add(
+                                        new get_member
+                                        {
+                                            memberid = thismembers.Memberid,
+                                            account = thismembers.Account,
+                                            password = thismembers.Password,
+                                            useragent_phone = thismembers.Useragent_phone,
+                                            facebookcookie = thismembers.Facebookcookie,
+                                        }
+                                    );
                                     used = false;
                                 }
                             }
@@ -319,7 +316,6 @@ namespace HeOBackend.Controllers
                                             password = thismembers.Password,
                                             useragent_phone = thismembers.Useragent_phone,
                                             facebookcookie = thismembers.Facebookcookie,
-                                            duedate = (Now+3600)
                                         }
                                     );
                                 }
@@ -381,7 +377,6 @@ namespace HeOBackend.Controllers
                                             password = thismembers.Password,
                                             useragent_phone = thismembers.Useragent_phone,
                                             facebookcookie = thismembers.Facebookcookie,
-                                            duedate = (Now+3600)
                                         }
                                     );
                                 }
@@ -805,7 +800,6 @@ namespace HeOBackend.Controllers
         public string password { get; set; }
         public string useragent_phone { get; set; }
         public string facebookcookie { get; set; }
-        public int duedate { get; set; }
     }
 
     public class get_old_member

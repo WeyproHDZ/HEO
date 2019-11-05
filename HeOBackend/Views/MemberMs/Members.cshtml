@@ -1,5 +1,5 @@
 ﻿@{
-    var data = ViewBag.Members as IPagedList<Members>;
+    var data = ViewBag.Members;
     int x = 0;
     if (TempData.ContainsKey("message"))
     {
@@ -26,30 +26,34 @@
                         @using (Html.BeginForm("Members", "MemberMs", FormMethod.Post, new { @id = "form" }))
                         {
                         <div class="widget-body-toolbar">
-                            <div class="row">
+                            @*<div class="row">
                                 <div class="form-inline">
-                                    <div class="col-sm-7">
-                                        帳號篩選 : <input type="text" name="account" id="account" class="form-control" value="@(ViewBag.Account)" />
-                                        <br />等級篩選 : @Html.DropDownListFor(model => model.Levelid , null , "--請選擇--", new Dictionary<string, object>() { { "class", "form-control" } })
-                                        <br />性別篩選 : 
-                                        <select class="form-control" name="Sex">
-                                            <option value="3">--請選擇--</option>
-                                            <option value="0" @(ViewBag.Sex == 0 ? "Selected" : "")>未設定</option>
-                                            <option value="1" @(ViewBag.Sex == 1 ? "Selected" : "")>男性</option>
-                                            <option value="2" @(ViewBag.Sex == 2 ? "Selected" : "")>女性</option>                                            
-                                        </select>
-                                        <br />驗證狀態 : 
+                                    <div class="col-sm-5">
+                                        <div class="level-select input-group">
+                                            <div id="account" class="dataTables_filter">
+                                                <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span><input type="text" class="form-control" name="account" id="account" value="@(ViewBag.Account)">
+                                            </div>
+                                            <span class="input-group-addon">等級</span>
+                                            @Html.DropDownListFor(model => model.Levelid, null, "--請選擇--", new Dictionary<string, object>() { { "class", "form-control" } })
+                                            <span class="input-group-addon">性別</span>
+                                            <select class="form-control" name="Sex">
+                                                <option value="3">--請選擇--</option>
+                                                <option value="0" @(ViewBag.Sex == 0 ? "Selected" : "")>未設定</option>
+                                                <option value="1" @(ViewBag.Sex == 1 ? "Selected" : "")>男性</option>
+                                                <option value="2" @(ViewBag.Sex == 2 ? "Selected" : "")>女性</option>
+                                            </select>
+                                        </div>
+                                        驗證狀態 : 
                                             <input type="checkbox" name="Status" id="Status" value="0" group="0"><i class="fa fa-question" aria-hidden="true" style="color:black"></i>
                                             <input type="checkbox" name="Status" id="Status" value="1" group="0"><i class="fa fa-check" aria-hidden="true" style="color:green"></i>
                                             <input type="checkbox" name="Status" id="Status" value="2" group="0"><i class="fa fa-times" aria-hidden="true" style="color:red"></i>
-                                        <br />
                                         <button class="btn btn-info btn-labeled" type="submit"><span class="btn-label"><i class="fa fa-search"></i></span>查詢</button>
+                                    </div>                                    
+                                    <div class="col-sm-12">
+                                        <a class="btn btn-warning btn-labeled" id="authmember" onclick="auth()" href="@Url.Action("AllAuthMembers", "MemberMs")" target="_blank"> <span class="btn-label"><i class="fa fa-repeat"></i></span>驗證會員(all) </a>
                                         <button class="btn btn-danger btn-labeled" type="button" id="deletechecked" onclick="DeleteChecked()"><span class="btn-label"><i class="fa fa-trash-o"></i></span>刪除</button>
                                         <button class="btn btn-danger btn-labeled" type="button" id="blackchecked" onclick="BlackChecked()"><span class="btn-label"><i class="fa fa-ban"></i></span>加入黑名單</button>
                                         <button class="btn btn-primary btn-labeled" type="button" id="tofrontend" onclick="ToFrontend()"><span class="btn-label"><i class="fa fa-send"></i></span>轉前台</button>
-                                    </div>                                    
-                                    <div class="col-sm-5">
-                                        <a class="btn btn-warning btn-labeled" id="authmember" onclick="auth()" href="@Url.Action("AllAuthMembers", "MemberMs")" target="_blank"> <span class="btn-label"><i class="fa fa-repeat"></i></span>驗證會員(all) </a>
                                         <a class="btn btn-warning btn-labeled" id="authmember" onclick="auth()" href="@Url.Action("AuthMembers", "MemberMs")" target="_blank"> <span class="btn-label"><i class="fa fa-repeat"></i></span>驗證會員(v) & (?) </a>                                        
                                         <a class="btn btn-warning btn-labeled" id="authmember" onclick="auth()" href="@Url.Action("ErrorAuthMembers", "MemberMs")" target="_blank"> <span class="btn-label"><i class="fa fa-repeat"></i></span>驗證會員(x) </a>
                                         <a class="btn btn-success btn-labeled" href="@Url.Action("AddMembers", "MemberMs")"> <span class="btn-label"><i class="fa fa-plus"></i></span>新增會員 </a>
@@ -57,7 +61,7 @@
                                         <button class="btn btn-primary btn-labeled" data-toggle="modal" data-target="#UploadModal"><span class="btn-label"><i class="fa fa-upload"></i></span>匯入資料</button>
                                     </div>
                                 </div>
-                            </div>
+                            </div>*@
                             <div class="status_number">
                                 <i class="fa fa-question" aria-hidden="true" style="color:black">@ViewBag.Question 人</i>
                                 <i class="fa fa-check" aria-hidden="true" style="color:green">@ViewBag.Check 人</i>
@@ -67,10 +71,11 @@
                                 <i class="fa fa fa-android" aria-hidden="true" style="color:red">@ViewBag.Robot 人</i>
                                 <i class="fa fa-male" aria-hidden="true" style="color:green">@ViewBag.FrontLoginNumber 人</i>
                                 <i class="fa fa fa-android" aria-hidden="true" style="color:blue">@ViewBag.RobotFrontLoginNumber 人</i>
+                                轉前台人數 : @ViewBag.TotalRobotFrontLoginNumber
                             </div>                            
                         </div>
                         <div class="table-responsive">
-                            <table class="table table-hover table-bordered table-striped smart-form">
+                            <table id="dt_basic" class="table table-bordered table-striped text-center">
                                 <thead>
                                     <tr>
                                         <th width="3%" class="text-center"><input type="checkbox" name="Check" onclick="Checkall()"></th>
@@ -82,11 +87,11 @@
                                         <th width="10%" class="text-center">姓名</th>
                                         <th width="10%" class="text-center">連結</th>
                                         <th width="10%" class="text-center">是否真人帳號</th>
-                                        <th width="10%" class="text-center">驗證帳號</th>
+                                        @*<th width="10%" class="text-center">驗證帳號</th>*@
                                         <th width="10%" class="text-center">VIP購買紀錄</th>
                                         <th width="10%" class="text-center">回饋金申請紀錄</th>
                                         <th width="10%" class="text-center">編輯</th>
-                                        <th width="10%" class="text-center">刪除</th>
+                                        @*<th width="10%" class="text-center">刪除</th>*@
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -110,7 +115,7 @@
                                             {
                                                 <td class="text-center"><i class="fa fa-question" aria-hidden="true" style="color:black"></i></td>
                                             }
-                                            else if(entity.Memberloginrecord.OrderByDescending(a => a.Createdate).FirstOrDefault().Status == 1)
+                                            else if (entity.Memberloginrecord.OrderByDescending(a => a.Createdate).FirstOrDefault().Status == 1)
                                             {
                                                 <td class="text-center"><i class="fa fa-check" aria-hidden="true" style="color:green"></i></td>
                                             }
@@ -142,11 +147,11 @@
                                             {
                                                 <td class="text-center"><i class="fa fa-times" aria-hidden="true" style="color:red"></i></td>
                                             }
-                                            <td class="text-center"><a href="@Url.Action("AuthByid", "MemberMs", new { Memberid = entity.Memberid })" class="btn btn-info btn-xs"><i class="fa fa-play"></i></a></td>
+                                            @*<td class="text-center"><a href="@Url.Action("AuthByid", "MemberMs", new { Memberid = entity.Memberid })" class="btn btn-info btn-xs"><i class="fa fa-play"></i></a></td>*@
                                             <td class="text-center"><a href="@Url.Action("Viprecord", "MemberMs", new { Account = entity.Account })" class="btn btn-info btn-xs"><i class="fa fa-paper-plane-o"></i></a></td>
                                             <td class="text-center"><a href="@Url.Action("Feedbackrecord", "FeedbackMs", new { Account = entity.Account })" class="btn btn-info btn-xs"><i class="fa fa-book"></i></a></td>
                                             <td class="text-center"><a href="@Url.Action("EditMembers", "MemberMs", new { Memberid = entity.Memberid, p = ViewBag.pageNumber })" class="btn btn-info btn-xs"><i class="fa fa-edit"></i></a></td>
-                                            <td class="text-center"><a href="#" class="btn btn-danger btn-xs del" data-href="@Url.Action("DeleteMembers", "MemberMs", new { Memberid = entity.Memberid, p = ViewBag.pageNumber })" data-toggle="modal" data-target="#confirm-delete"><i class="fa fa-trash-o"></i></a></td>
+                                            @*<td class="text-center"><a href="#" class="btn btn-danger btn-xs del" data-href="@Url.Action("DeleteMembers", "MemberMs", new { Memberid = entity.Memberid, p = ViewBag.pageNumber })" data-toggle="modal" data-target="#confirm-delete"><i class="fa fa-trash-o"></i></a></td>*@
                                         </tr>
                                         x++;
                                     }
@@ -157,10 +162,6 @@
                         }
                     </div>
                     <!-- end widget content -->
-
-                    <div class="text-center">
-                        @Html.PagedListPager(list: data, generatePageUrl: page => Url.Action("Members", new { p = page }))
-                    </div>
                 </div>
 
             </article>
@@ -206,12 +207,92 @@
             alert("@ViewBag.message");
         }
 
+        $(document).ready(function () {
+            $('#dt_basic').DataTable({
+                "ordering": false,
+                "sDom": "<'dt-toolbar'<'col-sm-7 hidden-xs' f<'main-select input-group hidden-tablet'><'minor-select input-group hidden-tablet'>><'col-xs-12 col-sm-5'lT>>"
+                 + "t" + "<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
+                "oTableTools": {
+                    "aButtons": [{
+                        "sExtends": "text",
+                        "sButtonText": '<span class="btn-label" style="color:white"><i class="fa fa-trash-o"></i></span><span style="color:white">刪除</span>',
+                        "sButtonClass": "btn btn-danger btn-labeled hidden-tablet",
+                        "fnInit": function (nButton, oConfig) {
+                            $(nButton).css('margin-left', 5);
+                        },
+                        "fnClick": function (nButton, oConfig, oFlash) {
+                            DeleteChecked();
+                        }
+                    },{
+                        "sExtends": "text",
+                        "sButtonText": '<span class="btn-label" style="color:white"><i class="fa fa-ban"></i></span><span style="color:white">加入黑名單</span>',
+                        "sButtonClass": "btn btn-danger btn-labeled hidden-tablet",
+                        "fnInit": function (nButton, oConfig) {
+                            $(nButton).css('margin-left', 5);
+                        },
+                        "fnClick": function (nButton, oConfig, oFlash) {
+                            BlackChecked();
+                        }
+                    },{
+                        "sExtends": "text",
+                        "sButtonText": '<span class="btn-label" style="color:white"><i class="fa fa-send"></i></span><span style="color:white">轉前台</span>',
+                        "sButtonClass": "btn btn-primary btn-labeled hidden-tablet",
+                        "fnInit": function (nButton, oConfig) {
+                            $(nButton).css('margin-left', 5);
+                        },
+                        "fnClick": function (nButton, oConfig, oFlash) {
+                            ToFrontend();
+                        }
+                    },{
+                        "sExtends": "text",
+                        "sButtonText": '<span class="btn-label" style="color:white"><i class="fa fa-repeat"></i></span><span style="color:white">驗證帳號</span>',
+                        "sButtonClass": "btn btn-warning btn-labeled hidden-tablet",
+                        "fnInit": function (nButton, oConfig) {
+                            $(nButton).css('margin-left', 5);
+                        },
+                        "fnClick": function (nButton, oConfig, oFlash) {
+                            AuthMembers();
+                        }
+                    }]
+                }
+            });
+        });
+
+        //$(document).ready(function () {
+        //    $('#dt_basic').DataTable({
+        //        "processing": true,
+        //        "serverSide": true,
+        //        "displayStart": 1,
+        //        "pageLength": 10,
+        //        "oSearch": {"sSearch": "<?= $this->input->get('search[value]', true) ?>"},
+        //        "autoWidth": false,
+        //        "ordering": false,
+        //        "serverSide": true,
+        //        "sDom": "<'dt-toolbar'<'col-sm-9 hidden-xs' f<'orderStatus-select input-group'><'category-select input-group'><'area-select input-group'><'product-select input-group'><'remark-select input-group'>><'col-xs-12 col-sm-3'Tl>>"+ 
+        //        "t" + "<'dt-toolbar-footer'<'col-sm-5 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
+        //        "ajax": {
+        //            "url": "scripts/post.php",
+        //            "type": "POST"
+        //        },
+        //        "columns": [
+        //            { "data": 1 },
+        //            { "data": "last_name" },
+        //            { "data": "position" },
+        //            { "data": "office" },
+        //            { "data": "start_date" },
+        //            { "data": "salary" }
+        //        ]
+        //    });
+        //});
+
+        /**** 全選 ****/
         function Checkall() {
             $.each($('tr').find('input#Check'), function () {
                 $(this).prop("checked", true);
             });
         }
 
+        /**** 加入黑名單 ****/
         function BlackChecked() {
             var Memberid = [];
             swal({
@@ -248,7 +329,7 @@
             swal({
                 title:"確定要刪除嗎?",
                 showCancelButton: true,
-                confirmButtonText: '確定！', 
+                confirmButtonText: '確定！',
                 cancelButtonText: '取消！',
                 type:'question',
             }).then(function(e){
@@ -273,13 +354,14 @@
                 });
             })
         }
+
         /***** 轉入前台 ****/
         function ToFrontend() {
             var Memberid = [];
             swal({
                 title: "確定轉入前台嗎?",
                 showCancelButton: true,
-                confirmButtonText: '確定！', 
+                confirmButtonText: '確定！',
                 cancelButtonText: '取消！',
                 type:'question',
             }).then(function (e) {
@@ -293,6 +375,12 @@
                     data: { Memberid: Memberid },
                     type: 'post',
                     dateType: 'json',
+                    beforeSend:function(){
+                        swal({
+                            title: "請稍等!",                
+                            showConfirmButton: false
+                        });
+                    },
                     success: function (response) {
                         swal({
                             title: "已成功轉入",
@@ -304,5 +392,38 @@
                 });
             })
         }
+
+        /***** 驗證帳號 *****/
+        function AuthMembers() {
+            var Memberid = [];
+            swal({
+                title: "按下確定後開始驗證",
+                showCancelButton: true,
+                confirmButtonText: '確定！',
+                cancelButtonText: '取消！',
+                type: 'question',
+            }).then(function (e) {
+                $.each($('tr').find('input#Check'), function () {
+                    if ($(this).prop('checked') == true) {
+                        Memberid.push($(this).attr("name"));  //塞到陣列中
+                    }
+                });
+                $.ajax({
+                    url: '@Url.Action("AjaxAuthMembers", "Ajax")',
+                    data: { Memberid: Memberid },
+                    type: 'post',
+                    dateType: 'json',
+                    success: function (response) {
+                        swal({
+                            title: "驗證已完成",
+                            type: "success"
+                        }).then(function (e) {
+                            location.reload();
+                        });
+                    }
+                });
+            })
+        }
     </script>
 }
+@*<a class="btn btn-warning btn-labeled" id="authmember" onclick="auth()" href="@Url.Action("AllAuthMembers", "MemberMs")" target="_blank"> <span class="btn-label"><i class="fa fa-repeat"></i></span>驗證會員(all) </a>*@

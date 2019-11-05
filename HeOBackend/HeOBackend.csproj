@@ -888,6 +888,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AjaxController.cs" />
+    <Compile Include="Controllers\Ajax\AjaxMembersController.cs" />
     <Compile Include="Controllers\ApiController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\FeedbackMsController.cs" />
@@ -986,6 +987,7 @@
   <ItemGroup>
     <Folder Include="Content\img\realestate\thumbs\" />
     <Folder Include="FileUpload\" />
+    <Folder Include="Views\AjaxMembers\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\HeO.Libs\HeO.Libs.csproj">

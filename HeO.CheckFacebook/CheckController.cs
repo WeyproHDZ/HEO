@@ -149,7 +149,7 @@ namespace HeO.CheckFacebook
                         if (driver.Url.IndexOf("checkpoint") != -1)
                         {
                             status[0] = "帳號未驗證";
-                            // driver.Quit()();
+                            driver.Quit();
                             content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
                             return content;
                         }
@@ -172,7 +172,7 @@ namespace HeO.CheckFacebook
                             if (driver.Url.IndexOf("10354686_10150004552801856_220367501106153455_n.jpg") != -1 || driver.Url.IndexOf("1379841_10150004552801901_469209496895221757_n.jpg") != -1)
                             {
                                 status[0] = "請放大頭貼後，再登入一次!";
-                                // driver.Quit()();
+                                driver.Quit();
                                 content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
                                 return content;
                             }
@@ -184,7 +184,7 @@ namespace HeO.CheckFacebook
                                 status[3] = name;
                                 status[4] = facebookcookie;
                                 System.Threading.Thread.Sleep(Delay());
-                                // driver.Quit()();
+                                driver.Quit();
                             }
                         }
                     }
@@ -203,7 +203,7 @@ namespace HeO.CheckFacebook
                             if (driver.Url.IndexOf("checkpoint") != -1)
                             {
                                 status[0] = "帳號未驗證";
-                                // driver.Quit()();
+                                driver.Quit();
                                 content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
                                 return content;
                             }
@@ -226,7 +226,7 @@ namespace HeO.CheckFacebook
                                 if (driver.Url.IndexOf("10354686_10150004552801856_220367501106153455_n.jpg") != -1 || driver.Url.IndexOf("1379841_10150004552801901_469209496895221757_n.jpg") != -1)
                                 {
                                     status[0] = "請放大頭貼後，再登入一次!";
-                                    // driver.Quit()();
+                                    driver.Quit();
                                     content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
                                     return content;
                                 }
@@ -238,7 +238,7 @@ namespace HeO.CheckFacebook
                                     status[3] = name;
                                     status[4] = facebookcookie;
                                     System.Threading.Thread.Sleep(Delay());
-                                    // driver.Quit()();
+                                    driver.Quit();
                                 }
                             }
                         }
@@ -252,7 +252,7 @@ namespace HeO.CheckFacebook
                             if (driver.Url.IndexOf("checkpoint") != -1)
                             {
                                 status[0] = "帳號未驗證";
-                                // driver.Quit()();
+                                driver.Quit();
                                 content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
                                 return content;
                             }
@@ -275,7 +275,7 @@ namespace HeO.CheckFacebook
                                 if (driver.Url.IndexOf("10354686_10150004552801856_220367501106153455_n.jpg") != -1 || driver.Url.IndexOf("1379841_10150004552801901_469209496895221757_n.jpg") != -1)
                                 {
                                     status[0] = "請放大頭貼後，再登入一次!";
-                                    // driver.Quit()();
+                                    driver.Quit();
                                     content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
                                     return content;
                                 }
@@ -287,7 +287,7 @@ namespace HeO.CheckFacebook
                                     status[3] = name;
                                     status[4] = facebookcookie;
                                     System.Threading.Thread.Sleep(Delay());
-                                    // driver.Quit()();
+                                    driver.Quit();
                                 }
                             }
                         }
@@ -300,7 +300,7 @@ namespace HeO.CheckFacebook
                             if (driver.Url.IndexOf("checkpoint") != -1)
                             {
                                 status[0] = "帳號未驗證";
-                                // driver.Quit()();
+                                driver.Quit();
                                 content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
                                 return content;
                             }
@@ -323,7 +323,7 @@ namespace HeO.CheckFacebook
                                 if (driver.Url.IndexOf("10354686_10150004552801856_220367501106153455_n.jpg") != -1 || driver.Url.IndexOf("1379841_10150004552801901_469209496895221757_n.jpg") != -1)
                                 {
                                     status[0] = "請放大頭貼後，再登入一次!";
-                                    // driver.Quit()();
+                                    driver.Quit();
                                     content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
                                     return content;
                                 }
@@ -335,7 +335,7 @@ namespace HeO.CheckFacebook
                                     status[3] = name;
                                     status[4] = facebookcookie;
                                     System.Threading.Thread.Sleep(Delay());
-                                    // driver.Quit()();
+                                    driver.Quit();
                                 }
                             }
                         }
@@ -345,7 +345,7 @@ namespace HeO.CheckFacebook
                             if (driver.Url.IndexOf("checkpoint") != -1)
                             {
                                 status[0] = "帳號未驗證";
-                                // driver.Quit()();
+                                driver.Quit();
                                 content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
                                 return content;
                             }
@@ -354,7 +354,7 @@ namespace HeO.CheckFacebook
                             {
                                 System.Threading.Thread.Sleep(Delay());
                                 status[0] = "帳號密碼有誤!";
-                                // driver.Quit()();
+                                driver.Quit();
                                 content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
                                 return content;
                             }
@@ -362,7 +362,7 @@ namespace HeO.CheckFacebook
                     }                                                               
                     var response = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
                     System.Threading.Thread.Sleep(500);
-                    // driver.Quit()();
+                    driver.Quit();
                     return response;
                 }
                 else
@@ -454,7 +454,7 @@ namespace HeO.CheckFacebook
                         if (driver.Url.IndexOf("checkpoint") != -1)
                         {
                             status[0] = "帳號未驗證";
-                            // driver.Quit()();
+                            driver.Quit();
                             content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
                             return content;
                         }
@@ -477,7 +477,7 @@ namespace HeO.CheckFacebook
                             if (driver.Url.IndexOf("10354686_10150004552801856_220367501106153455_n.jpg") != -1 || driver.Url.IndexOf("1379841_10150004552801901_469209496895221757_n.jpg") != -1)
                             {
                                 status[0] = "請放大頭貼後，再登入一次!";
-                                // driver.Quit()();
+                                driver.Quit();
                                 content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
                                 return content;
                             }
@@ -489,7 +489,7 @@ namespace HeO.CheckFacebook
                                 status[3] = name;
                                 status[4] = facebookcookie;
                                 System.Threading.Thread.Sleep(Delay());
-                                // driver.Quit()();
+                                driver.Quit();
                             }
                         }
                     }
@@ -503,7 +503,7 @@ namespace HeO.CheckFacebook
                         if (driver.Url.IndexOf("checkpoint") != -1)
                         {
                             status[0] = "帳號未驗證";
-                            // driver.Quit()();
+                            driver.Quit();
                             content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
                             return content;
                         }
@@ -526,7 +526,7 @@ namespace HeO.CheckFacebook
                             if (driver.Url.IndexOf("10354686_10150004552801856_220367501106153455_n.jpg") != -1 || driver.Url.IndexOf("1379841_10150004552801901_469209496895221757_n.jpg") != -1)
                             {
                                 status[0] = "請放大頭貼後，再登入一次!";
-                                // driver.Quit()();
+                                driver.Quit();
                                 content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
                                 return content;
                             }
@@ -538,7 +538,7 @@ namespace HeO.CheckFacebook
                                 status[3] = name;
                                 status[4] = facebookcookie;
                                 System.Threading.Thread.Sleep(Delay());
-                                // driver.Quit()();
+                                driver.Quit();
                             }
                         }
                     }
@@ -551,7 +551,7 @@ namespace HeO.CheckFacebook
                         if (driver.Url.IndexOf("checkpoint") != -1)
                         {
                             status[0] = "帳號未驗證";
-                            // driver.Quit()();
+                            driver.Quit();
                             content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
                             return content;
                         }
@@ -574,7 +574,7 @@ namespace HeO.CheckFacebook
                             if (driver.Url.IndexOf("10354686_10150004552801856_220367501106153455_n.jpg") != -1 || driver.Url.IndexOf("1379841_10150004552801901_469209496895221757_n.jpg") != -1)
                             {
                                 status[0] = "請放大頭貼後，再登入一次!";
-                                // driver.Quit()();
+                                driver.Quit();
                                 content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
                                 return content;
                             }
@@ -586,7 +586,7 @@ namespace HeO.CheckFacebook
                                 status[3] = name;
                                 status[4] = facebookcookie;
                                 System.Threading.Thread.Sleep(Delay());
-                                // driver.Quit()();
+                                driver.Quit();
                             }
                         }
                     }
@@ -596,7 +596,7 @@ namespace HeO.CheckFacebook
                         if (driver.Url.IndexOf("checkpoint") != -1)
                         {
                             status[0] = "帳號未驗證";
-                            // driver.Quit()();
+                            driver.Quit();
                             content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
                             return content;
                         }
@@ -604,7 +604,7 @@ namespace HeO.CheckFacebook
                         /*** 帳密輸入錯誤 ***/
                         {
                             status[0] = "帳號密碼有誤!";
-                            // driver.Quit()();
+                            driver.Quit();
                             content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
                             return content;
                         }
@@ -612,7 +612,7 @@ namespace HeO.CheckFacebook
 
                     var response = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
                     System.Threading.Thread.Sleep(500);
-                    // driver.Quit()();
+                    driver.Quit();
                     return response;
                 }
             }
@@ -706,7 +706,7 @@ namespace HeO.CheckFacebook
                     if (driver.Url.IndexOf("checkpoint") != -1)
                     {
                         status[0] = "帳號未驗證";
-                        // driver.Quit()();
+                        driver.Quit();
                         content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
                         return content;
                     }
@@ -729,7 +729,7 @@ namespace HeO.CheckFacebook
                         if (driver.Url.IndexOf("10354686_10150004552801856_220367501106153455_n.jpg") != -1 || driver.Url.IndexOf("1379841_10150004552801901_469209496895221757_n.jpg") != -1)
                         {
                             status[0] = "請放大頭貼後，再登入一次!";
-                            // driver.Quit()();
+                            driver.Quit();
                             content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
                             return content;
                         }
@@ -741,7 +741,7 @@ namespace HeO.CheckFacebook
                             status[3] = name;
                             status[4] = facebookcookie;
                             System.Threading.Thread.Sleep(Delay());
-                            // driver.Quit()();
+                            driver.Quit();
                         }
                     }
                 }
@@ -755,7 +755,7 @@ namespace HeO.CheckFacebook
                     if (driver.Url.IndexOf("checkpoint") != -1)
                     {
                         status[0] = "帳號未驗證";
-                        // driver.Quit()();
+                        driver.Quit();
                         content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
                         return content;
                     }
@@ -778,7 +778,7 @@ namespace HeO.CheckFacebook
                         if (driver.Url.IndexOf("10354686_10150004552801856_220367501106153455_n.jpg") != -1 || driver.Url.IndexOf("1379841_10150004552801901_469209496895221757_n.jpg") != -1)
                         {
                             status[0] = "請放大頭貼後，再登入一次!";
-                            // driver.Quit()();
+                            driver.Quit();
                             content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
                             return content;
                         }
@@ -790,7 +790,7 @@ namespace HeO.CheckFacebook
                             status[3] = name;
                             status[4] = facebookcookie;
                             System.Threading.Thread.Sleep(Delay());
-                            // driver.Quit()();
+                            driver.Quit();
                         }
                     }               
                 }
@@ -802,7 +802,7 @@ namespace HeO.CheckFacebook
                     if (driver.Url.IndexOf("checkpoint") != -1)
                     {
                         status[0] = "帳號未驗證";
-                        // driver.Quit()();
+                        driver.Quit();
                         content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
                         return content;
                     }
@@ -825,7 +825,7 @@ namespace HeO.CheckFacebook
                         if (driver.Url.IndexOf("10354686_10150004552801856_220367501106153455_n.jpg") != -1 || driver.Url.IndexOf("1379841_10150004552801901_469209496895221757_n.jpg") != -1)
                         {
                             status[0] = "請放大頭貼後，再登入一次!";
-                            // driver.Quit()();
+                            driver.Quit();
                             content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
                             return content;
                         }
@@ -837,7 +837,7 @@ namespace HeO.CheckFacebook
                             status[3] = name;
                             status[4] = facebookcookie;
                             System.Threading.Thread.Sleep(Delay());
-                            // driver.Quit()();
+                            driver.Quit();
                         }
                     }
                 }
@@ -847,7 +847,7 @@ namespace HeO.CheckFacebook
                     if (driver.Url.IndexOf("checkpoint") != -1)
                     {
                         status[0] = "帳號未驗證";
-                        // driver.Quit()();
+                        driver.Quit();
                         content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
                         return content;
                     }
@@ -855,14 +855,14 @@ namespace HeO.CheckFacebook
                     /*** 帳密輸入錯誤 ***/
                     {
                         status[0] = "帳號密碼有誤!";
-                        // driver.Quit()();
+                        driver.Quit();
                         content = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
                         return content;
                     }
                 }                                            
                 var response = status[0] + "#" + status[1] + "#" + status[2] + "#" + status[3] + "#" + status[4];
                 System.Threading.Thread.Sleep(500);
-                // driver.Quit()();
+                driver.Quit();
                 return response;
             }
         }
@@ -899,7 +899,7 @@ namespace HeO.CheckFacebook
                 {
                     status = "已驗證";
                 }
-                driver.Quit();
+                driver.Quit();;
             }
             else if (Facebookid == "null")
             {

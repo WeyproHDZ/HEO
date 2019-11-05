@@ -47,7 +47,7 @@ namespace HeO.Controllers
         /*** 首頁 ***/
         public ActionResult Home()
         {
-            ViewBag.News = newsService.Get().OrderByDescending(o => o.Createdate).Take(2);
+            ViewBag.News = newsService.Get().OrderByDescending(o => o.Createdate).Take(5);
             return View();
         }
 
@@ -81,66 +81,9 @@ namespace HeO.Controllers
             }
             else
             {
-                /*** 隨機分配Useragent ****/                
-                Useragent ua_phone = useragentService.Get().Where(a => a.Isweb == 1).FirstOrDefault();
-                useragent_phone = ua_phone.User_agent;
-
-                /*** 存取他登入的useragent，將缺少的useragent用水庫補上 ***/
-                //if (Request.UserAgent.IndexOf("Windows") != -1)
-                //{
-                //    useragent_com = Request.UserAgent;
-                //}
-                //else if (Request.UserAgent.IndexOf("Macintosh") != -1)
-                //{
-                //    useragent_com = Request.UserAgent;
-                //}
-                //else if (Request.UserAgent.IndexOf("Linux") != -1)
-                //{
-                //    if (Request.UserAgent.IndexOf("Android") != -1)
-                //    {                       
-                //        useragent_phone = Request.UserAgent;
-                //    }
-                //    else
-                //    {                       
-                //        useragent_com = Request.UserAgent;
-                //    }
-                //}
-                //else
-                //{                    
-                //    useragent_phone = Request.UserAgent;
-                //}
-
-                //if (useragent_com == "")
-                //{
-                //    Useragent useragent = useragentService.Get().Where(a => a.Isweb == 0).Where(x => x.Date <= Now).OrderBy(x => x.Date).FirstOrDefault();
-                //    useragent.Date += 1800;
-                //    useragentService.SpecificUpdate(useragent, new string[] { "Date" });
-                //    useragentService.SaveChanges();
-                //    useragent_com = useragent.User_agent;
-                //}
-                //else
-                //{
-                //    Useragent useragent = useragentService.Get().Where(a => a.Isweb == 1).Where(x => x.Date <= Now).OrderBy(x => x.Date).FirstOrDefault();
-                //    useragent.Date += 1800;
-                //    useragentService.SpecificUpdate(useragent, new string[] { "Date" });
-                //    useragentService.SaveChanges();
-                //    useragent_phone = useragent.User_agent;
-                //}
+                /***** useragent *****/
+                useragent_phone = "Mozilla/5.0 (iPhone; CPU iPhone OS 11_1_2 like Mac OS X) AppleWebKit/604.3.5 (KHTML, like Gecko) Version/11.0 Mobile/15B202 Safari/604.1";
             }
-
-            /**** HTTP GET ****/
-            //string api_useragent = useragent_phone.Replace(" ", "*").Replace("/", "$");
-            //string url = "http://heohelp.com:8080/Check/CheckFacebook?Account=" + Account + "&Password=" + members.Password + "&Useragent=" + api_useragent;
-            //WebRequest myReq = WebRequest.Create(url);
-            //myReq.Method = "GET";
-            //myReq.ContentType = "application/json; charset=UTF-8";
-            //UTF8Encoding enc = new UTF8Encoding();
-            //myReq.Headers.Remove("auth-token");
-            //WebResponse wr = myReq.GetResponse();
-            //Stream receiveStream = wr.GetResponseStream();
-            //StreamReader reader = new StreamReader(receiveStream, Encoding.UTF8);
-            //string content = reader.ReadToEnd();
-            //string[] status = content.Replace("\"", "").Split('#');
 
             /**** HTTP POST ****/
             HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create("http://heohelp.com:8080/Check/CheckFacebook");
@@ -158,7 +101,7 @@ namespace HeO.Controllers
 
                 streamWriter.Write(json);
             }
-            
+
             HttpWebResponse httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
             string result = "";
             using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
@@ -262,6 +205,12 @@ namespace HeO.Controllers
                 }
                 if (TryUpdateModel(members, new string[] { "Password" }))
                 {
+                    /*** 隨機抓取Useragent ***/
+                    int useragentCount = useragentService.Get().Count();
+                    Useragent[] useragent = useragentService.Get().ToArray();
+                    Random crand = new Random();
+                    int rand = crand.Next(0, useragentCount - 1);                    
+                    /******* 新增會員 ********/
                     members.Memberid = Guid.NewGuid();
                     members.Levelid = NormalLevelid;
                     members.Isenable = 1;                    
@@ -270,7 +219,7 @@ namespace HeO.Controllers
                     members.Createdate = DateTime.Now;
                     members.Updatedate = DateTime.Now;
                     members.Facebookcookie = status[4];
-                    members.Useragent_phone = useragent_phone;
+                    members.Useragent_phone = useragent[rand].User_agent;
                     members.Lastdate = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds -28800;
                     members.Logindate = (int)(DateTime.Now - new DateTime(1970, 1, 1)).TotalSeconds - 28800;        // 紀錄目前登入時間
                     members.Name = status[3];

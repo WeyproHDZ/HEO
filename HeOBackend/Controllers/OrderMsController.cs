@@ -54,7 +54,7 @@ namespace HeOBackend.Controllers
             if(search != null)
             {
                 IEnumerable<Feedbackproduct> feedbackproduct = feedbackproductService.Get();
-                var data = orderService.Get().Where(x => x.Ordernumber.Contains(search) || (x.Url.Contains(search) || (x.Members.Account.Contains(search)))).OrderBy(o => o.Createdate);
+                var data = orderService.Get().Where(x => x.Ordernumber.Contains(search) || (x.Url.Contains(search) || (x.Members.Account.Contains(search)))).OrderByDescending(o => o.Createdate);
                 ViewBag.pageNumber = p;
                 ViewBag.nextpageNumber = 1;
                 ViewBag.Order = data.ToPagedList(pageNumber: p, pageSize: 20);
@@ -64,7 +64,7 @@ namespace HeOBackend.Controllers
             else
             {
                 IEnumerable<Feedbackproduct> feedbackproduct = feedbackproductService.Get();
-                var data = orderService.Get().OrderBy(o => o.Createdate);
+                var data = orderService.Get().OrderByDescending(o => o.Createdate);
                 ViewBag.pageNumber = p;
                 ViewBag.nextpageNumber = 1;
                 ViewBag.Order = data.ToPagedList(pageNumber: p, pageSize: 20);
@@ -77,7 +77,7 @@ namespace HeOBackend.Controllers
         public ActionResult OrderFree(int p = 1)
         {
             IEnumerable<Feedbackproduct> feedbackproduct = feedbackproductService.Get();
-            var data = orderService.Get().Where(a => a.Ordernumber.Contains("heoorder")).OrderByDescending(o => o.Createdate);
+            var data = orderService.Get().Where(a => a.Ordernumber.Contains("heo")).OrderByDescending(o => o.Createdate);
             ViewBag.pageNumber = p;
             ViewBag.nextpageNumber = 1;
             ViewBag.Order = data.ToPagedList(pageNumber: p, pageSize: 20);
@@ -92,7 +92,7 @@ namespace HeOBackend.Controllers
             if (search != null)
             {
                 IEnumerable<Feedbackproduct> feedbackproduct = feedbackproductService.Get();
-                var data = orderService.Get().Where(x => x.Ordernumber.Contains(search) || (x.Url.Contains(search) || (x.Members.Account.Contains(search)))).OrderBy(o => o.Createdate);                
+                var data = orderService.Get().Where(x => x.Ordernumber.Contains(search) || (x.Url.Contains(search) || (x.Members.Account.Contains(search)))).OrderByDescending(o => o.Createdate);                
                 ViewBag.pageNumber = p;
                 ViewBag.nextpageNumber = 1;
                 ViewBag.Order = data.ToPagedList(pageNumber: p, pageSize: 20);
@@ -102,7 +102,7 @@ namespace HeOBackend.Controllers
             else
             {
                 IEnumerable<Feedbackproduct> feedbackproduct = feedbackproductService.Get();
-                var data = orderService.Get().OrderBy(o => o.Createdate);
+                var data = orderService.Get().OrderByDescending(o => o.Createdate);
                 ViewBag.pageNumber = p;
                 ViewBag.nextpageNumber = 1;
                 ViewBag.Order = data.ToPagedList(pageNumber: p, pageSize: 20);

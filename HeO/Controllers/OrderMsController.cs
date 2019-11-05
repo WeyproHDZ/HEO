@@ -126,7 +126,7 @@ namespace HeO.Controllers
                             order.Memberid = Memberid;
                             order.Remains = order.Count;
                             order.Url = Url;
-                            order.Ordernumber = "heoorder" + DateTime.Now.ToString("yyyyMMddHHmmssfff");
+                            order.Ordernumber = "heo" + DateTime.Now.ToString("HHmmssfff");
                             Session["OrderNumber"] = order.Ordernumber;
                             order.Service = "讚";
                             orderService.Create(order);
@@ -148,7 +148,7 @@ namespace HeO.Controllers
                                 order.Memberid = Memberid;
                                 order.Remains = order.Count;
                                 order.Url = Url;
-                                order.Ordernumber = "heoorder" + DateTime.Now.ToString("yyyyMMddHHmmssfff");
+                                order.Ordernumber = "heo" + DateTime.Now.ToString("HHmmssfff");
                                 Session["OrderNumber"] = order.Ordernumber;
                                 order.Service = "讚";
                                 orderService.Create(order);
@@ -199,10 +199,34 @@ namespace HeO.Controllers
         public ActionResult OrderResult()
         {
             Guid Memberid = Guid.Parse(Session["Memberid"].ToString());
-            IEnumerable<Order> order = orderService.Get().Where(a => a.Memberid == Memberid).OrderByDescending(o => o.Createdate);
-            ViewBag.OrderNumber = Session["OrderNumber"];
-            ViewBag.Url = order.FirstOrDefault().Url;
-            ViewBag.Count = order.FirstOrDefault().Count;         
+            string OrderNumber = Session["OrderNumber"].ToString();
+            Order order = orderService.Get().Where(a => a.Memberid == Memberid).Where(x => x.Ordernumber == OrderNumber).FirstOrDefault();
+            IEnumerable<Order> orderList = orderService.Get().Where(a => a.Createdate < order.Createdate).OrderByDescending(o => o.Createdate).Take(4);
+            ViewBag.orderList = orderList;
+            /**** 最新的那筆(有換顏色的那筆) *****/
+            string status = "";
+            string name;
+            name = order.Members.Name.Substring(0, 1);
+            switch (order.OrderStatus)
+            {
+                case 0:
+                    status = "等待中";
+                    break;
+                case 1:
+                    status = "運行中";
+                    break;
+                case 2:
+                    status = "已成功";
+                    break;
+                default:
+                    status = "失敗";
+                    break;
+            }
+            ViewBag.OrderNumber = OrderNumber;
+            ViewBag.Url = order.Url;
+            ViewBag.Count = order.Count;
+            ViewBag.Status = status;
+            ViewBag.Name = name;
             return View();
         }
 

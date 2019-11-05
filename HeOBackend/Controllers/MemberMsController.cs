@@ -133,11 +133,10 @@ namespace HeOBackend.Controllers
         {
             //var data = membersService.Get().OrderByDescending(o => o.Createdate);
             var data = membersService.Get().OrderByDescending(o => o.Createdate);
-            ViewBag.totalCount = membersService.Get().Count();
-            ViewBag.pageNumber = p;
-            ViewBag.Members = data.ToPagedList(pageNumber: p, pageSize: 100);
-            ViewBag.message = "按下確定後開始驗證帳號，請勿關閉分頁";
-            LevelDropDownList("Members");
+            //ViewBag.pageNumber = p;
+            ViewBag.Members = data;
+            //ViewBag.message = "按下確定後開始驗證帳號，請勿關閉分頁";
+            //LevelDropDownList("Members");
 
             /*** 驗證狀態人數統計 ***/
             ViewBag.Question = membersService.Get().Where(a => a.Memberloginrecord.OrderByDescending(x => x.Createdate).FirstOrDefault().Status == 0).Count();
@@ -208,6 +207,7 @@ namespace HeOBackend.Controllers
             ViewBag.Robot = membersService.Get().Where(a => a.Memberloginrecord.OrderByDescending(x => x.Createdate).FirstOrDefault().Status == 1).Where(a => a.Is_import == 1).Count();
             ViewBag.FrontLoginNumber = membersService.Get().Where(a => a.Memberloginrecord.OrderByDescending(x => x.Createdate).FirstOrDefault().Status == 1).Where(a => a.Is_import == 0).Count();
             ViewBag.RobotFrontLoginNumber = membersService.Get().Where(a => a.Memberloginrecord.OrderByDescending(o => o.Createdate).FirstOrDefault().Status == 1).Where(a => a.Is_import == 2).Count();
+            ViewBag.TotalRobotFrontLoginNumber = membersService.Get().Where(a => a.Is_import == 2).Count();
             LevelDropDownList("Members");
 
             return View();
