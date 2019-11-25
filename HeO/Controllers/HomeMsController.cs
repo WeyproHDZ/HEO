@@ -72,7 +72,7 @@ namespace HeO.Controllers
         [HttpPost]
         public ActionResult Login(Members members)
         {
-            string Account = Regex.Replace(members.Account, @"[^a-z||A-Z||@||.||0-9]", "");         // 保留A-Z、a-z、0-9、小老鼠、小數點，其餘取代空值
+            string Account = Regex.Replace(members.Account, @"[^a-z||A-Z||@||.||0-9||_]", "");         // 保留A-Z、a-z、0-9、小老鼠、小數點，其餘取代空值
             Members thismember = membersService.Get().Where(a => a.Account == members.Account).FirstOrDefault();
             string useragent_phone = "";
             if (thismember != null)

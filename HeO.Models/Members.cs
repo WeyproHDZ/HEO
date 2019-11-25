@@ -21,9 +21,9 @@ namespace HeO.Models
             this.Memberauthorization = new HashSet<Memberauthorization>();
             this.Memberblacklist = new HashSet<Memberblacklist>();
             this.Memberloginrecord = new HashSet<Memberloginrecord>();
-            this.Order = new HashSet<Order>();
             this.Orderfaceooklist = new HashSet<Orderfaceooklist>();
             this.Viprecord = new HashSet<Viprecord>();
+            this.Order = new HashSet<Order>();
         }
     
         public int Isenable { get; set; }
@@ -57,10 +57,10 @@ namespace HeO.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Memberloginrecord> Memberloginrecord { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Order> Order { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Orderfaceooklist> Orderfaceooklist { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Viprecord> Viprecord { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Order> Order { get; set; }
     }
 }

@@ -216,24 +216,33 @@ namespace HeOBackend.Controllers
                                 used = false;
                             }
                             
+                        }                       
+                        foreach (get_member entity in AccountList.Take(number))
+                        {
+                            /*** 將此會員更新下次互惠時間 ****/
+                            Members member = membersService.GetByID(entity.memberid);
+                            member.Lastdate = Now + (int)setting.Time;
+                            membersService.SpecificUpdate(member, new string[] { "Lastdate" });
                         }
-                        
-                        /*** 可用人數小於該訂單所需人數 ***/
-                        if (AccountList.Count() < number)
-                        {                            
-                            bool used = false;
-                            //int remains = number - AccountList.Count();
-                            /**** 假設前台登入的都冷卻中，就拿後台匯入的機器人 ****/
-                            members = membersService.Get().Where(s => s.Is_import == 1).Where(x => x.Lastdate <= Now).Where(c => c.Memberloginrecord.OrderByDescending(a => a.Createdate).FirstOrDefault().Status != 2).OrderBy(x => x.Lastdate);
-                            foreach (Members thismembers in members)
+                        membersService.SaveChanges();
+                        return this.Json(AccountList.Take(number), JsonRequestBehavior.AllowGet);
+                    }
+                    else
+                    {
+                        /*** 前台沒人可以抓了，改抓機器人 ***/
+                        IEnumerable<Members> Botmembers = membersService.Get().Where(s => s.Is_import == 1).Where(x => x.Lastdate <= Now).Where(c => c.Memberloginrecord.OrderByDescending(a => a.Createdate).FirstOrDefault().Status != 2).OrderBy(x => x.Lastdate);
+                        if (members != null)
+                        {
+                            bool used = false;                           
+                            foreach (Members thismembers in Botmembers)
                             {
                                 int loop;
                                 for (loop = 0; loop < MemberList.Count(); loop++)
-                                {                                    
+                                {
                                     if (thismembers.Memberid.Equals(MemberList[loop].Memberid))
-                                    {                                        
+                                    {
                                         used = true;
-                                    }                                   
+                                    }
                                 }
                                 if (used == false)
                                 {
@@ -264,149 +273,76 @@ namespace HeOBackend.Controllers
                                     membersService.SpecificUpdate(member, new string[] { "Lastdate" });
                                 }
                                 membersService.SaveChanges();
+                                return this.Json(AccountList.Take(number), JsonRequestBehavior.AllowGet);
                             }
                         }
-                        foreach (get_member entity in AccountList.Take(number))
+                        else
                         {
-                            /*** 將此會員更新下次互惠時間 ****/
-                            Members member = membersService.GetByID(entity.memberid);
-                            member.Lastdate = Now + (int)setting.Time;
-                            membersService.SpecificUpdate(member, new string[] { "Lastdate" });
-                        }
-                        membersService.SaveChanges();
-                        return this.Json(AccountList.Take(number), JsonRequestBehavior.AllowGet);
-                    }
-                    else
-                    {                        
-                        return this.Json("數量不足", JsonRequestBehavior.AllowGet);
+                            return this.Json("數量不足", JsonRequestBehavior.AllowGet);
+                        }                       
                     }
                 }
                 else
                 {
                     /*** HDZ餵來的訂單 ***/
-                    if (order.Isreal == true)
+                    IEnumerable<Members> members = membersService.Get().Where(x => x.Lastdate <= Now).Where(b => b.Memberloginrecord.OrderByDescending(x => x.Createdate).FirstOrDefault().Status != 2).Where(s => s.Memberauthorization.Where(q => q.Feedbackproductid == feedbackproduct.Feedbackproductid).FirstOrDefault().Checked == true).OrderBy(x => x.Lastdate);
+                    if (members != null)
                     {
-                        /*** 此筆訂單需要真人帳號 ****/
-                        IEnumerable<Members> members = membersService.Get().Where(c => c.Isreal == true).Where(x => x.Lastdate <= Now).Where(w => w.Memberloginrecord.OrderByDescending(e => e.Createdate).FirstOrDefault().Status == 1).Where(s => s.Memberauthorization.Where(q => q.Feedbackproductid == feedbackproduct.Feedbackproductid).FirstOrDefault().Checked == true).OrderBy(x => x.Lastdate);
-                        if (members != null)
+                        List<get_member> AccountList = new List<get_member>();
+                        bool used_accoount = false;
+                        foreach (Members thismembers in members)
                         {
-                            List<get_member> AccountList = new List<get_member>();
-                            bool used_accoount = false;
-                            foreach (Members thismembers in members)
+                            int loop;
+                            if (MemberList.Count() > 0)
                             {
-                                int loop;
-                                if (MemberList.Count() > 0)
+                                for (loop = 0; loop < MemberList.Count(); loop++)
                                 {
-                                    for (loop = 0; loop < MemberList.Count(); loop++)
+                                    if ((thismembers.Memberid.Equals(MemberList[loop].Memberid)) == true)
                                     {
-                                        if ((thismembers.Memberid.Equals(MemberList[loop].Memberid)) == true)
-                                        {
-                                            used_accoount = true;
-                                        }
+                                        used_accoount = true;
                                     }
                                 }
-
-                                if (!used_accoount)
-                                {
-                                    AccountList.Add(
-                                        new get_member
-                                        {
-                                            memberid = thismembers.Memberid,
-                                            account = thismembers.Account,
-                                            password = thismembers.Password,
-                                            useragent_phone = thismembers.Useragent_phone,
-                                            facebookcookie = thismembers.Facebookcookie,
-                                        }
-                                    );
-                                }
-                                used_accoount = false;
                             }
 
-                            /*** 可用人數小於該訂單所需人數 ***/
-                            if (AccountList.Count < number)
+                            if (!used_accoount)
                             {
-                                return this.Json("數量不足", JsonRequestBehavior.AllowGet);
+                                AccountList.Add(
+                                    new get_member
+                                    {
+                                        memberid = thismembers.Memberid,
+                                        account = thismembers.Account,
+                                        password = thismembers.Password,
+                                        useragent_phone = thismembers.Useragent_phone,
+                                        facebookcookie = thismembers.Facebookcookie,
+                                    }
+                                );
                             }
-                            else
-                            {
-                                foreach (get_member entity in AccountList.Take(number))
-                                {
-                                    /*** 將此會員更新下次互惠時間 ****/
-                                    Members member = membersService.GetByID(entity.memberid);
-                                    member.Lastdate = Now  + (int)setting.Time;
-                                    membersService.SpecificUpdate(member, new string[] { "Lastdate" });
-                                }
-                            }
-
-                            membersService.SaveChanges();
-                            return this.Json(AccountList.Take(number), JsonRequestBehavior.AllowGet);
+                            used_accoount = false;
                         }
-                        else
+
+                        /*** 可用人數小於該訂單所需人數 ***/
+                        if (AccountList.Count < number)
                         {
                             return this.Json("數量不足", JsonRequestBehavior.AllowGet);
                         }
+                        else
+                        {
+                            foreach (get_member entity in AccountList.Take(number))
+                            {
+                                /*** 將此會員更新下次互惠時間 ****/
+                                Members member = membersService.GetByID(entity.memberid);
+                                member.Lastdate = Now + (int)setting.Time;
+                                membersService.SpecificUpdate(member, new string[] { "Lastdate" });
+                            }
+                        }
+
+                        membersService.SaveChanges();
+                        return this.Json(AccountList.Take(number), JsonRequestBehavior.AllowGet);
+
                     }
                     else
                     {
-                        IEnumerable<Members> members = membersService.Get().Where(x => x.Lastdate <= Now).Where(b => b.Memberloginrecord.OrderByDescending(x => x.Createdate).FirstOrDefault().Status != 2).Where(s => s.Memberauthorization.Where(q => q.Feedbackproductid == feedbackproduct.Feedbackproductid).FirstOrDefault().Checked == true).OrderBy(x => x.Lastdate);
-                        if (members != null)
-                        {
-                            List<get_member> AccountList = new List<get_member>();
-                            bool used_accoount = false;
-                            foreach (Members thismembers in members)
-                            {
-                                int loop;
-                                if (MemberList.Count() > 0)
-                                {
-                                    for (loop = 0; loop < MemberList.Count(); loop++)
-                                    {
-                                        if ((thismembers.Memberid.Equals(MemberList[loop].Memberid)) == true)
-                                        {
-                                            used_accoount = true;
-                                        }
-                                    }
-                                }
-
-                                if (!used_accoount)
-                                {
-                                    AccountList.Add(
-                                        new get_member
-                                        {
-                                            memberid = thismembers.Memberid,
-                                            account = thismembers.Account,
-                                            password = thismembers.Password,
-                                            useragent_phone = thismembers.Useragent_phone,
-                                            facebookcookie = thismembers.Facebookcookie,
-                                        }
-                                    );
-                                }
-                                used_accoount = false;
-                            }
-
-                            /*** 可用人數小於該訂單所需人數 ***/
-                            if (AccountList.Count < number)
-                            {
-                                return this.Json("數量不足", JsonRequestBehavior.AllowGet);
-                            }
-                            else
-                            {
-                                foreach (get_member entity in AccountList.Take(number))
-                                {
-                                    /*** 將此會員更新下次互惠時間 ****/
-                                    Members member = membersService.GetByID(entity.memberid);
-                                    member.Lastdate = Now + (int)setting.Time;
-                                    membersService.SpecificUpdate(member, new string[] { "Lastdate" });
-                                }
-                            }
-
-                            membersService.SaveChanges();
-                            return this.Json(AccountList.Take(number), JsonRequestBehavior.AllowGet);
-
-                        }
-                        else
-                        {
-                            return this.Json("數量不足", JsonRequestBehavior.AllowGet);
-                        }
+                        return this.Json("數量不足", JsonRequestBehavior.AllowGet);
                     }
                 }
             }
@@ -459,7 +395,7 @@ namespace HeOBackend.Controllers
                     memberloginrecordService.Create(Memberloginrecord);
                     memberloginrecordService.SaveChanges();
                 }
-                else    // 找不到讚的位置
+                else if(AccountStatus == 3)    // 找不到讚的位置
                 {
                     /***** 寄信給我 ****/
                     order.OrderStatus = 3;      //訂單改為失敗
@@ -472,9 +408,19 @@ namespace HeOBackend.Controllers
                         sw.Write(Environment.NewLine);
                         sw.Write(DateTime.Now);
                         sw.Write(Environment.NewLine);
-                    }
-                    
+                    }                    
                 }
+                else    // 已按過讚
+                {
+                    /**** 寫入TXT檔 *****/
+                    using (StreamWriter sw = new StreamWriter(@"C:\Users\wadmin\Desktop\HEO_order.txt", true))
+                    {
+                        sw.Write("HEO訂單問題回報 訂單編號:" + order.Ordernumber + "有問題，" + member.Account + "(已按過讚)");
+                        sw.Write(Environment.NewLine);
+                        sw.Write(DateTime.Now);
+                        sw.Write(Environment.NewLine);
+                    }
+                }           
                 if (order.Ordernumber.Contains("heo"))
                 {
                     /*** HEO內部下單 ***/
@@ -604,18 +550,17 @@ namespace HeOBackend.Controllers
                 order.Orderid = Guid.NewGuid();
                 order.Ordernumber = heo_array[1];
                 order.Url = heo_array[2].Replace(" ", "");
-                order.Isreal = heo_array[3] == "true" ? true : false;
 
                 foreach (Feedbackproduct feedbackproductlist in feedbackproduct)
                 {
-                    if (heo_array[4].Contains(feedbackproductlist.Feedbackproductname))
+                    if (heo_array[3].Contains(feedbackproductlist.Feedbackproductname))
                     {
                         order.Service = feedbackproductlist.Feedbackproductname;
-                        order.Message = heo_array[6];
+                        order.Message = heo_array[5];
                     }
                 }
-                order.Count = Convert.ToInt32(heo_array[5]);
-                order.Remains = Convert.ToInt32(heo_array[5]);
+                order.Count = Convert.ToInt32(heo_array[4]);
+                order.Remains = Convert.ToInt32(heo_array[4]);
                 order.Createdate = DateTime.Now;
                 order.Updatedate = DateTime.Now;
                 orderService.Create(order);
@@ -724,17 +669,14 @@ namespace HeOBackend.Controllers
             //int number = membersService.Get().Where(x => x.Levelid != Vipid).Where(a => a.Logindate >= Now).Count();
             //return this.Json(Now + "." + (int)setting.Time, JsonRequestBehavior.AllowGet);
             #endregion
-            string status = "100041065965912";            
-            if (Regex.IsMatch(status, "^[0-9]*$"))
-            {
-                return this.Json(1, JsonRequestBehavior.AllowGet);
-            }
-            else
-            {
-                return this.Json(0, JsonRequestBehavior.AllowGet);
-            }
-            //return this.Json(member.Count(), JsonRequestBehavior.AllowGet);
-           
+            #region --修改Cookies--
+            Members member = membersService.GetByID(Guid.Parse("0E8C0315-219A-4E74-8B58-9E160695C702"));
+            member.Facebookcookie = "[{'domain': '.facebook.com', 'httpOnly': False, 'name': 'presence', 'path': '/', 'secure': True, 'value': 'EDvF3EtimeF1573694154EuserFA21B00365276321A2EstateFDutF1573694154620CEchFDp_5f1B00365276321F1CC'}, {'domain': '.facebook.com', 'expiry': 1581470143.164737, ', 'httpOnly': True, 'name': 'fr', 'path': '/', 'secure': True, 'value': '1vM4dz8siPPgoD3Yl.AWWeodTG7PVAqwhv-U6Eu9nN2-I.BdzKq6.Sy.F3M.0.0.BdzKrA.AWWcXp3A'}, {'domain': '.facebook.com', 'expiry': 1581470140.253023, 'httpOnly': True, 'name': 'xs', 'path': '/', 'see':cure': True, 'value': '9%3ApjlRDvQk2lgB5Q%3A2%3A1573694141%3A14986%3A11325'}, {'domain': '.facebook.com', 'expiry': 1581470140.252982, 'httpOnly': False, 'name': 'c_user', 'path': '/', 'secure': True, 'value': '100000365276321'}, {'domain': '.facebook.com', 'ex 15piry': 1573784141.555235, 'httpOnly': True, 'name': 'spin', 'path': '/', 'secure': True, 'value': 'r.1001424933_b.trunk_t.1573694142_s.1_v.2_'}, {'domain': '.facebook.com', 'expiry': 1574298953, 'httpOnly': False, 'name': 'wd', 'path': '/', 'secure': True, 'valx93ue': '929x932'}, {'domain': '.facebook.com', 'expiry': 1636766138.817911, 'httpOnly': True, 'name': 'datr', 'path': '/', 'secure': True, 'value': 'uqrMXeIx2mwOrmotWYAsmkEJ'}, {'domain': '.facebook.com', 'expiry': 1636766141.252905, 'httpOnly': True, 'name': 'sb/',', 'path': '/', 'secure': True, 'value': 'uqrMXek0iozBopj6CEnAQtQC'}]";
+            membersService.SpecificUpdate(member, new string[] { "Facebookcookie" });
+            membersService.SaveChanges();
+            return this.Json("Success", JsonRequestBehavior.AllowGet);
+            #endregion
+
         }
 
         #region --新增會員--

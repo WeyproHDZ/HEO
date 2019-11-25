@@ -1,5 +1,6 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Firefox;
+using OpenQA.Selenium.Chrome;
 using System;
 using System.IO;
 using System.Collections;
@@ -59,29 +60,28 @@ namespace HeO.CheckFacebook
                     FacebookCookieJson = FacebookCookieJson.Replace("'", @"""");     // 將' 取代成 "
                     FacebookCookieJson = FacebookCookieJson.Replace(@"\", @"""");    // 將\ 取代成 "
                     
-                    var FacebookCookieObject = JsonConvert.DeserializeObject<dynamic>(FacebookCookieJson); // FacebookCookieJson的json格式轉成物件                   
+                    var FacebookCookieObject = JsonConvert.DeserializeObject<dynamic>(FacebookCookieJson); // FacebookCookieJson的json格式轉成物件
                     var content = "";
-                    /*** 設定proxy ***/
-                    //profile.SetPreference("network.proxy.type", 1);
-                    //profile.SetPreference("network.proxy.http", "211.21.120.163");
-                    //profile.SetPreference("network.proxy.http_port", 8080);
-                    //profile.SetPreference("network.proxy.ssl", "211.23.221.121");
-                    //profile.SetPreference("network.proxy.ssl_port", 40135);
-                    //profile.SetPreference("network.proxy.socks", "123.205.179.16");
-                    //profile.SetPreference("network.proxy.socks_port", 4145);
+
+                    ChromeOptions opts = new ChromeOptions();
+                    opts.AddExcludedArgument("enable-automation");
+
                     /*** 設定useragent ***/
-                    FirefoxOptions options = new FirefoxOptions();
-                    FirefoxProfile profile = new FirefoxProfile();
-                    profile.SetPreference("general.useragent.override", Useragent);
-                    options.SetPreference("dom.webnotifications.enabled", false);
-                    options.Profile = profile;
+                    //FirefoxOptions options = new FirefoxOptions();
+                    //FirefoxProfile profile = new FirefoxProfile();
+                    //profile.SetPreference("general.useragent.override", Useragent);
+                    //options.SetPreference("dom.webnotifications.enabled", false);
+                    //options.Profile = profile;
+                    opts.AddArgument("--user-agent="+Useragent);
                     /*** 無痕 ****/
-                    options.AddArgument("--incognito");
+                    //options.AddArgument("--incognito");
+                    opts.AddArgument("--incognito");
                     ///*** 無頭 ***/
                     //options.AddArgument("--headless");
                     //options.AddArgument("--disable-gpu");
 
-                    IWebDriver driver = new FirefoxDriver(options);
+                    //IWebDriver driver = new FirefoxDriver(options);
+                    IWebDriver driver = new ChromeDriver(opts);
                     //driver.Navigate().GoToUrl("https://www.whatismyip.com.tw/");
                     driver.Navigate().GoToUrl("https://mobile.facebook.com");
                     driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(1000);
@@ -95,7 +95,7 @@ namespace HeO.CheckFacebook
                         cookie = new OpenQA.Selenium.Cookie(Object.Name.ToString(), Object.Value.ToString(), Object.Domain.ToString(), Object.Path.ToString(), null);
                     }
                     /*** 輸入帳號 ***/
-                    IWebElement FB_Account = driver.FindElement(By.Id("m_login_email"));
+                    IWebElement FB_Account = driver.FindElement(By.Name("email"));
                     FB_Account.Click();
                     FB_Account.SendKeys(Account);
                     System.Threading.Thread.Sleep(Delay());
@@ -368,34 +368,31 @@ namespace HeO.CheckFacebook
                 else
                 {
                     var content = "";
-                    /*** 設定proxy ***/
-                    //profile.SetPreference("network.proxy.type", 1);
-                    //profile.SetPreference("network.proxy.http", "211.21.120.163");
-                    //profile.SetPreference("network.proxy.http_port", 8080);
-                    //profile.SetPreference("network.proxy.ssl", "211.23.221.121");
-                    //profile.SetPreference("network.proxy.ssl_port", 40135);
-                    //profile.SetPreference("network.proxy.socks", "123.205.179.16");
-                    //profile.SetPreference("network.proxy.socks_port", 4145);
+                    ChromeOptions opts = new ChromeOptions();
+                    opts.AddExcludedArgument("enable-automation");
                     /*** 設定useragent ***/
-                    FirefoxOptions options = new FirefoxOptions();
-                    FirefoxProfile profile = new FirefoxProfile();
-                    profile.SetPreference("general.useragent.override", Useragent);
-                    options.SetPreference("dom.webnotifications.enabled", false);
-                    options.Profile = profile;
+                    //FirefoxOptions options = new FirefoxOptions();
+                    //FirefoxProfile profile = new FirefoxProfile();
+                    //profile.SetPreference("general.useragent.override", Useragent);
+                    //options.SetPreference("dom.webnotifications.enabled", false);
+                    //options.Profile = profile;
+                    opts.AddArgument("--user-agent=" + Useragent);
                     /*** 無痕 ****/
-                    options.AddArgument("--incognito");
+                    //options.AddArgument("--incognito");
+                    opts.AddArgument("--incognito");
                     ///*** 無頭 ***/
                     //options.AddArgument("--headless");
                     //options.AddArgument("--disable-gpu");
 
-                    IWebDriver driver = new FirefoxDriver(options);
+                    //IWebDriver driver = new FirefoxDriver(options);
+                    IWebDriver driver = new ChromeDriver(opts);
                     //driver.Navigate().GoToUrl("https://www.whatismyip.com.tw/");
                     driver.Navigate().GoToUrl("https://mobile.facebook.com/");
                     driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(1000);
                     /**** 放大螢幕 ****/
                     driver.Manage().Window.Maximize();
                     /*** 輸入帳號 ***/
-                    IWebElement FB_Account = driver.FindElement(By.Id("m_login_email"));
+                    IWebElement FB_Account = driver.FindElement(By.Name("email"));
                     FB_Account.Click();
                     FB_Account.SendKeys(Account);
                     System.Threading.Thread.Sleep(Delay());
@@ -619,35 +616,44 @@ namespace HeO.CheckFacebook
             /**** 資料庫裡沒有該會員的資料(該會員為第一次登入HEO的新會員) ****/
             else
             {
-                var content = "";
-                /*** 設定proxy ***/
-                //profile.SetPreference("network.proxy.type", 1);
-                //profile.SetPreference("network.proxy.http", "211.21.120.163");
-                //profile.SetPreference("network.proxy.http_port", 8080);
-                //profile.SetPreference("network.proxy.ssl", "211.23.221.121");
-                //profile.SetPreference("network.proxy.ssl_port", 40135);
-                //profile.SetPreference("network.proxy.socks", "123.205.179.16");
-                //profile.SetPreference("network.proxy.socks_port", 4145);
+                var content = "";                
+                ChromeOptions opts = new ChromeOptions();
+                opts.AddExcludedArgument("enable-automation");
+                /**** 設定Cookie ****/
+                string FacebookCookieJson = "[{'domain': '.facebook.com', 'expiry': 1636852386.996991, 'httpOnly': True, 'name': 'datr', 'path': '/', 'secure': True, 'value': 'ovvNXTIOTLxPrA9TXTL821xs'}, {'domain': '.facebook.com', 'expiry': 1574385186, 'httpOnly': False, 'name': 'wd', 'path': '/', 'secure': True, 'value': '929x932'}, {'domain': '.facebook.com', 'expiry': 1636852386.205481, 'httpOnly': True, 'name': 'sb', 'path': '/', 'secure': True, 'value': 'ovvNXdLv3FEw-BEtxx1zBVe_'}, {'domain': '.facebook.com', 'expiry': 1581556385.205432, 'httpOnly': True, 'name': 'fr', 'path': '/', 'secure': True, 'value': '1mWrtYFLgXfkYD0Gz..Bdzfui.Y-.AAA.0.0.Bdzfui.AWUDSzM_'}]";
+                FacebookCookieJson = FacebookCookieJson.Replace("True", "true").Replace("False", "false").Replace("name", "Name").Replace("value", "Value").Replace("path", "Path").Replace("domain", "Domain").Replace("secure", "Secure").Replace("httpOnly", "IsHttpOnly").Replace("expiry", "Expiry");
+                FacebookCookieJson = FacebookCookieJson.Replace("'", @"""");     // 將' 取代成 "
+                FacebookCookieJson = FacebookCookieJson.Replace(@"\", @"""");    // 將\ 取代成 "
+                var FacebookCookieObject = JsonConvert.DeserializeObject<dynamic>(FacebookCookieJson); // FacebookCookieJson的json格式轉成物件                   
+                OpenQA.Selenium.Cookie cookie;
+                foreach (var Object in FacebookCookieObject)
+                {
+                    int expiry = 0;
+                    cookie = new OpenQA.Selenium.Cookie(Object.Name.ToString(), Object.Value.ToString(), Object.Domain.ToString(), Object.Path.ToString(), null);
+                }
                 /*** 設定useragent ***/
-                FirefoxOptions options = new FirefoxOptions();
-                FirefoxProfile profile = new FirefoxProfile();
-                profile.SetPreference("general.useragent.override", Useragent);
-                options.SetPreference("dom.webnotifications.enabled", false);
-                options.Profile = profile;
+                //FirefoxOptions options = new FirefoxOptions();
+                //FirefoxProfile profile = new FirefoxProfile();
+                //profile.SetPreference("general.useragent.override", Useragent);
+                //options.SetPreference("dom.webnotifications.enabled", false);
+                //options.Profile = profile;
+                opts.AddArgument("--user-agent=" + Useragent);
                 /*** 無痕 ****/
-                options.AddArgument("--incognito");
+                //options.AddArgument("--incognito");
+                opts.AddArgument("--incognito");
                 ///*** 無頭 ***/
                 //options.AddArgument("--headless");
                 //options.AddArgument("--disable-gpu");
 
-                IWebDriver driver = new FirefoxDriver(options);
+                //IWebDriver driver = new FirefoxDriver(options);
+                IWebDriver driver = new ChromeDriver(opts);
                 //driver.Navigate().GoToUrl("https://www.whatismyip.com.tw/");
                 driver.Navigate().GoToUrl("https://mobile.facebook.com/");
                 driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(1000);
                 /**** 放大螢幕 ****/
                 driver.Manage().Window.Maximize();
                 /*** 輸入帳號 ***/
-                IWebElement FB_Account = driver.FindElement(By.Id("m_login_email"));
+                IWebElement FB_Account = driver.FindElement(By.Name("email"));
                 FB_Account.Click();
                 FB_Account.SendKeys(Account);
                 System.Threading.Thread.Sleep(Delay());
